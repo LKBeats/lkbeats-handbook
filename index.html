@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LKBeats Handbook V14 - Premium Firebase Build</title>
+    <!-- Tailwind CSS for utility styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for structural icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <script>
@@ -57,6 +60,7 @@
 </head>
 <body class="bg-[#05020a] text-zinc-100 min-h-screen font-sans flex flex-col relative overflow-x-hidden">
 
+    <!-- TOP HEADER / NAV -->
     <header class="border-b border-fuchsia-950/40 bg-[#11091c]/80 backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
             <div class="max-w-[33%] w-1/3 md:max-w-none md:w-auto shrink-0 cursor-pointer" id="nav-logo">
@@ -91,6 +95,7 @@
 
     <main class="flex-grow flex flex-col relative">
         
+        <!-- ================= VIEW 1: HOME ================= -->
         <section id="view-home" class="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col justify-center flex-grow w-full relative z-10">
             <div class="text-center mb-12 flex flex-col items-center">
                 <span class="px-4 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-xs font-black tracking-widest uppercase mb-6 inline-block">
@@ -123,7 +128,7 @@
                         <p class="text-zinc-400 text-sm mb-4" data-i18n="cardLevelsDesc">Encuentra todos los charts que he realizado para Beaclone / BSCM / beatcharts</p>
                     </div>
                     <div>
-                        <span class="bg-orange-950/40 px-2 py-1 rounded border border-orange-900/30 text-xs text-orange-400 font-bold"><span id="home-levels-count">0</span> Tracks</span>
+                        <span class="bg-orange-950/40 px-2 py-1 rounded border border-orange-900/30 text-xs text-orange-400 font-bold"><span id="home-levels-count">0</span> <span data-i18n="countCharts">Charts</span></span>
                     </div>
                 </div>
 
@@ -143,6 +148,13 @@
                 </div>
             </div>
 
+            <!-- DISCLAIMER SECTION -->
+            <div class="bg-zinc-950/60 border border-zinc-900 rounded-2xl p-4 text-center text-xs text-zinc-500 mb-10">
+                <div class="font-bold uppercase tracking-widest mb-1" data-i18n="disclaimerTitle">Deslinde de Responsabilidad</div>
+                <div data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes de portada pertenecen a sus respectivos propietarios y desarrolladores originales.</div>
+            </div>
+
+            <!-- Footer Links Manager Box -->
             <div id="footer-links-management-box" class="hidden bg-[#11091c] border border-orange-500/30 rounded-2xl p-6 shadow-xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-yellow-500"></div>
                 <h2 class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="footerMenuTitle">Links del Menú Inferior</h2>
@@ -163,6 +175,7 @@
             </div>
         </section>
 
+        <!-- ================= VIEW 2: CHARTS REGISTRY ================= -->
         <section id="view-levels" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
             <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-orange-500/30 rounded-2xl mb-6 w-max">
                 <i class="fa-solid fa-chevron-left text-orange-500"></i> <span data-i18n="backHome">Volver</span>
@@ -208,7 +221,7 @@
                         </div>
                         <div>
                             <div class="flex items-center justify-between mb-1">
-                                <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="formRelease">Fecha</label>
+                                <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="formRelease">Fecha de lanzamiento</label>
                                 <button type="button" id="btn-picker-lvl" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar Fecha</button>
                             </div>
                             <input type="date" id="lvlDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
@@ -224,7 +237,17 @@
                     </form>
                 </div>
 
-                <div id="levels-table-container" class="w-full overflow-hidden flex flex-col space-y-4 flex-grow">
+                <div id="levels-table-container" class="w-full overflow-hidden flex flex-col space-y-3 flex-grow">
+                    <!-- Charts/Songs Unified Header -->
+                    <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between">
+                        <div class="text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">
+                            Charts / <span data-i18n="bannerSongs">Canciones</span>
+                        </div>
+                        <div class="text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400">
+                            <span data-i18n="txtTotal">Total</span>: <span id="counter-charts-header">0</span> Charts
+                        </div>
+                    </div>
+
                     <div id="levels-table-wrapper" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                         <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
                             <thead>
@@ -235,8 +258,8 @@
                                     <th class="p-2 sm:p-4 w-28 sm:w-44" data-i18n="formGenre">Género</th>
                                     <th class="p-4 w-32" data-i18n="formDifficulty">Dificultad</th>
                                     <th class="p-4 w-24" data-i18n="formEdition">Edición</th>
-                                    <th class="p-4 w-24" data-i18n="formRelease">Lanzamiento</th>
-                                    <th class="p-4 text-center w-52" data-i18n="thPlatformDl">Descargas</th>
+                                    <th class="p-4 w-24 whitespace-nowrap" data-i18n="formRelease">Fecha de lanzamiento</th>
+                                    <th class="p-4 text-center w-52" data-i18n="thPlatformDl">Descarga</th>
                                     <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                 </tr>
                             </thead>
@@ -247,6 +270,7 @@
             </div>
         </section>
 
+        <!-- ================= VIEW 3: SKINS REGISTRY ================= -->
         <section id="view-cosmetics" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
             <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-fuchsia-500/30 rounded-2xl mb-6 w-max">
                 <i class="fa-solid fa-chevron-left text-fuchsia-500"></i> <span data-i18n="backHome">Volver</span>
@@ -275,16 +299,18 @@
                         </div>
                         <div>
                             <div class="flex items-center justify-between mb-1">
-                                <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="listRelease">Fecha</label>
+                                <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="formRelease">Fecha de lanzamiento</label>
                                 <button type="button" id="btn-picker-cos" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar Fecha</button>
                             </div>
                             <input type="date" id="cosDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
                         
+                        <!-- Infinite Ascending Ordered Inspiration Engine -->
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1">URLs Imagen Inspiración</label>
                             <div id="dynamic-insp-inputs-container" class="space-y-2">
-                                </div>
+                                <!-- Generated Dynamic Content Fields Target Router -->
+                            </div>
                         </div>
 
                         <div>
@@ -305,6 +331,7 @@
                 </div>
 
                 <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-10 flex-grow">
+                    <!-- Beatstar -->
                     <div class="flex flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between">
                             <div class="h-10 max-w-[180px] sm:max-w-[240px]">
@@ -317,10 +344,10 @@
                                 <thead>
                                     <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                         <th class="p-4 text-center w-12">#</th>
-                                        <th class="p-2 sm:p-4 w-20 sm:w-32" data-i18n="thIcon">Icono</th>
+                                        <th class="p-2 sm:p-4 w-24 sm:w-36" data-i18n="thIcon">Icono</th>
                                         <th class="p-2 sm:p-4" data-i18n="thSkinInfo">Información</th>
                                         <th class="p-4 text-center w-36" data-i18n="thPreview">Preview</th>
-                                        <th class="p-4 text-center w-44" data-i18n="thDlLinks">Descargas</th>
+                                        <th class="p-4 text-center w-44" data-i18n="thDlLinks">Descarga</th>
                                         <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                     </tr>
                                 </thead>
@@ -329,10 +356,12 @@
                         </div>
                     </div>
 
+                    <!-- Tapwave -->
                     <div class="flex flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between">
-                            <div class="h-10 max-w-[180px] sm:max-w-[240px]">
-                                <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full max-h-10 object-contain">
+                            <div class="h-12 max-w-[200px] sm:max-w-[280px]">
+                                <!-- Upgraded scaling metric resolution parameters natively -->
+                                <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full w-auto object-contain max-h-12">
                             </div>
                             <div class="text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400"><span data-i18n="txtTotal">Total</span>: <span id="counter-tapwave">0</span> Skins</div>
                         </div>
@@ -341,10 +370,10 @@
                                 <thead>
                                     <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                         <th class="p-4 text-center w-12">#</th>
-                                        <th class="p-2 sm:p-4 w-20 sm:w-32" data-i18n="thIcon">Icono</th>
+                                        <th class="p-2 sm:p-4 w-24 sm:w-36" data-i18n="thIcon">Icono</th>
                                         <th class="p-2 sm:p-4" data-i18n="thSkinInfo">Información</th>
                                         <th class="p-4 text-center w-36" data-i18n="thPreview">Preview</th>
-                                        <th class="p-4 text-center w-44" data-i18n="thDlLinks">Descargas</th>
+                                        <th class="p-4 text-center w-44" data-i18n="thDlLinks">Descarga</th>
                                         <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                     </tr>
                                 </thead>
@@ -357,6 +386,7 @@
         </section>
     </main>
 
+    <!-- FOOTER -->
     <footer class="border-t border-fuchsia-950/20 bg-[#05020a] py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-end gap-4">
             <div class="flex items-center gap-3">
@@ -373,6 +403,7 @@
         </div>
     </footer>
 
+    <!-- ================= ASYNC SAFE CORE ENGINE & SDK JAVASCRIPT ================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -401,37 +432,41 @@
         const translations = {
             es: {
                 tagUpdate: "ÚLTIMA FECHA DE ACTUALIZACIÓN", storyTitle: "Bienvenido al LKBeats Handbook",
-                storyParagraph1: "Aquí encontrarás todo el contenido que he creado para Beatclone/Beatcharts/TapWave/BSCM",
+                storyParagraph1: "Aquí encontrarás todo el contenido que he creado para Beatclone/Beatcharts/TapWave/BSCM.",
                 storyMission: "Mi misión: Crear contenido de calidad que sea accesible para todos.",
                 storyParagraph2: "Mi visión: Lograr que la mayor cantidad de gente posible disfrute de Beatstar.",
                 cardLevelsTitle: "Charts", cardLevelsDesc: "Encuentra todos los charts que he realizado para Beaclone / BSCM / beatcharts",
                 cardCosmeticsTitle: "Skins", cardCosmeticsDesc: "Encuentra todas las skins que he realizado para Beaclone / TapWave",
-                disclaimerTitle: "Deslinde de Responsabilidad", disclaimerContent: "Este contenido pertenece a sus respectivos propietarios.",
+                disclaimerTitle: "Deslinde de Responsabilidad", 
+                disclaimerContent: "Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes de portada pertenecen a sus respectivos propietarios y desarrolladores originales.",
                 navLevels: "Charts", navCosmetics: "Skins", backHome: "Volver", levelsPageTitle: "Charts", cosmeticsPageTitle: "Skins",
                 addLevelTitle: "Nuevo Registro", addCosmeticTitle: "Nuevo Cosmético", btnRegister: "Registrar", emptyDatabase: "No hay registros.",
                 formSong: "Canción", formArtist: "Artista", formGenre: "Género", formDifficulty: "Dificultad", formEdition: "Edición",
-                formRelease: "Fecha de Lanzamiento", formUrlsTitle: "Enlaces de Descarga", listName: "Nombre", listArtist: "Artista",
-                listRelease: "Fecha", listInsp: "Inspirado en", thArt: "Arte", thSongArtist: "Canción", thPlatformDl: "Descargas",
-                thIcon: "Icono", thSkinInfo: "Información", thPreview: "Preview", thDlLinks: "Enlaces", btnChangeDate: "Cambiar Fecha",
+                formRelease: "Fecha de lanzamiento", formUrlsTitle: "Enlaces de Descarga", listName: "Nombre", listArtist: "Artista",
+                listRelease: "Fecha de lanzamiento", listInsp: "Inspirado en", thArt: "Arte", thSongArtist: "Canción / Artista", thPlatformDl: "Descarga",
+                thIcon: "Icono", thSkinInfo: "Información", thPreview: "Preview", thDlLinks: "Descarga", btnChangeDate: "Cambiar Fecha",
                 thActions: "Acciones", btnEdit: "Editar", btnDelete: "Eliminar", diffNormal: "Normal", diffHard: "Difícil", diffExtreme: "Extremo",
                 noLinks: "No hay enlaces", formSkinFor: "Skin para...", btnUploadLogo: "Subir Imagen", txtImageLoaded: "Cargado", txtTotal: "Total",
-                footerMenuTitle: "Links del Menú Inferior"
+                footerMenuTitle: "Links del Menú Inferior", bannerSongs: "Canciones", countCharts: "Charts"
             },
             en: {
                 tagUpdate: "LAST UPDATE TIMESTAMP", storyTitle: "Welcome to the LKBeats Handbook",
-                storyParagraph1: "Here you'll find all the content I've created.",
-                storyMission: "My mission: Accessible quality content.", storyParagraph2: "My vision: Enjoy Beatstar.",
-                cardLevelsTitle: "Charts", cardLevelsDesc: "Find all charts.", cardCosmeticsTitle: "Skins", cardCosmeticsDesc: "Find all skins.",
-                disclaimerTitle: "Disclaimer", disclaimerContent: "Trademarks belong to owners.",
+                storyParagraph1: "Here you'll find all the content I've created for Beatclone/Beatcharts/TapWave/BSCM.",
+                storyMission: "My mission: To create quality content that is accesible to everyone.",
+                storyParagraph2: "My vision: To ensure that as many people as posible enjoy Beatstar.",
+                cardLevelsTitle: "Charts", cardLevelsDesc: "Find all the charts I've made for Beatclone / BSCM / beatcharts",
+                cardCosmeticsTitle: "Skins", cardCosmeticsDesc: "Find all the skins I've made for Beatclone / TapWave",
+                disclaimerTitle: "Disclaimer", 
+                disclaimerContent: "This content was created purely for recreational and entertainment purposes for the community. All registered trademarks, logos, visual assets, and cover images belong to their respective owners and original developers.",
                 navLevels: "Charts", navCosmetics: "Skins", backHome: "Back", levelsPageTitle: "Charts", cosmeticsPageTitle: "Skins",
-                addLevelTitle: "Create Track", addCosmeticTitle: "Create Asset", btnRegister: "Deploy", emptyDatabase: "No records.",
-                formSong: "Track Name", formArtist: "Artist", formGenre: "Genre", formDifficulty: "Difficulty", formEdition: "Edition",
+                addLevelTitle: "New Record", addCosmeticTitle: "New Cosmetic", btnRegister: "Register", emptyDatabase: "No records.",
+                formSong: "Song", formArtist: "Artist", formGenre: "Genre", formDifficulty: "Difficulty", formEdition: "Edition",
                 formRelease: "Release Date", formUrlsTitle: "Download Links", listName: "Name", listArtist: "Artist",
-                listRelease: "Date", listInsp: "Inspired by", thArt: "Art", thSongArtist: "Track", thPlatformDl: "Downloads",
-                thIcon: "Icon", thSkinInfo: "Information", thPreview: "Preview", thDlLinks: "Links", btnChangeDate: "Change Date",
+                listRelease: "Release Date", listInsp: "Inspired by", thArt: "Art", thSongArtist: "Song / Artist", thPlatformDl: "Download",
+                thIcon: "Icon", thSkinInfo: "Information", thPreview: "Preview", thDlLinks: "Download", btnChangeDate: "Change Date",
                 thActions: "Actions", btnEdit: "Edit", btnDelete: "Delete", diffNormal: "Normal", diffHard: "Hard", diffExtreme: "Extreme",
-                noLinks: "No links", formSkinFor: "Skin for...", btnUploadLogo: "Upload", txtImageLoaded: "Loaded", txtTotal: "Total",
-                footerMenuTitle: "Bottom Menu Links"
+                noLinks: "No links", formSkinFor: "Skin for...", btnUploadLogo: "Upload Image", txtImageLoaded: "Loaded", txtTotal: "Total",
+                footerMenuTitle: "Bottom Menu Links", bannerSongs: "Songs", countCharts: "Charts"
             }
         };
 
@@ -452,7 +487,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // CORRECTED ATTACHMENTS ROOT REGISTRATION
+        // CORES DIRECT ROUTERS
         document.getElementById('nav-logo').addEventListener('click', () => navigateTo('home'));
         document.getElementById('btn-nav-levels').addEventListener('click', () => navigateTo('levels'));
         document.getElementById('btn-nav-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
@@ -477,7 +512,12 @@
             const app = initializeApp(firebaseConfig);
             db = getDatabase(app);
 
-            onValue(ref(db, 'levels'), (snap) => { levels = snap.val() ? Object.values(snap.val()) : []; renderLevelsTable(); updateDashboardCounts(); });
+            onValue(ref(db, 'levels'), (snap) => { 
+                levels = snap.val() ? Object.values(snap.val()) : []; 
+                renderLevelsTable(); 
+                updateDashboardCounts(); 
+                if(document.getElementById('counter-charts-header')) document.getElementById('counter-charts-header').innerText = levels.length;
+            });
             onValue(ref(db, 'cosmetics'), (snap) => { cosmetics = snap.val() ? Object.values(snap.val()) : []; renderCosmeticsTables(); updateDashboardCounts(); });
             onValue(ref(db, 'footer_links'), (snap) => { if (snap.val()) { globalFooterLinks = snap.val(); syncFooterLinks(); } });
             onValue(ref(db, 'last_update_date'), (snap) => { if (snap.val()) document.getElementById('dynamic-update-date').innerText = snap.val(); });
@@ -591,7 +631,7 @@
                 return `
                     <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-extrabold" style="color:${color}; border-color:${color}40; background:${color}10">
                         <img src="${cName}.png" class="w-3 h-3 object-contain shrink-0 ${fClass}" alt="${trimmed}" onerror="this.style.display='none'">
-                        <span class="hidden sm:inline">${trimmed}</span>
+                        <span class="inline">${trimmed}</span>
                     </div>
                 `;
             }).join(' ');
@@ -616,7 +656,7 @@
                     <td class="p-4 text-center font-mono font-bold text-zinc-500">${i+1}</td>
                     <td class="p-2 sm:p-4"><div class="w-14 h-14 sm:w-24 sm:h-24 border border-fuchsia-950/40 rounded-xl overflow-hidden shadow-lg"><img src="${lvl.art}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='free_song_Image.png'"></div></td>
                     <td class="p-4"><div class="font-bold text-white text-xs sm:text-sm tracking-wide mb-0.5">${lvl.song}</div><div class="text-[10px] sm:text-xs text-zinc-500 font-normal">${lvl.artist}</div></td>
-                    <td class="p-1 sm:p-4 w-20 sm:w-44"><div class="flex flex-col gap-1 max-w-[140px]">${renderGenresBadgesHtml(lvl.genre)}</div></td>
+                    <td class="p-1 sm:p-4 w-24 sm:w-44"><div class="flex flex-col gap-1 max-w-[140px]">${renderGenresBadgesHtml(lvl.genre)}</div></td>
                     <td class="p-4"><div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg border ${bStyle}"><img src="${icon}" class="w-3.5 h-3.5 ${fClass}"><span>${diffText}</span></div></td>
                     <td class="p-4 font-medium text-zinc-300">${lvl.edition}</td>
                     <td class="p-4 font-mono text-zinc-400">${lvl.date}</td>
@@ -661,17 +701,18 @@
                 let inspMarkup = '';
                 if (cos.insp) {
                     let links = cos.insp.split(',').map(l => l.trim()).filter(Boolean);
-                    inspMarkup = `<div class="flex flex-wrap gap-1 mt-1 bg-black/30 p-1 rounded border border-fuchsia-950/20 w-max max-w-full">${links.map(l => `<div class="h-10 w-16 bg-zinc-950 flex items-center justify-center p-0.5 rounded"><img src="${l}" class="max-h-full max-w-full object-contain"></div>`).join('')}</div>`;
+                    // Upscaled dimension metrics parameters natively
+                    inspMarkup = `<div class="flex flex-wrap gap-1.5 mt-1 bg-black/30 p-1.5 rounded border border-fuchsia-950/20 w-max max-w-full">${links.map(l => `<div class="h-16 w-24 bg-zinc-950 flex items-center justify-center p-1 rounded border border-zinc-900"><img src="${l}" class="max-h-full max-w-full object-contain"></div>`).join('')}</div>`;
                 }
 
                 tr.innerHTML = `
                     <td class="p-4 text-center font-mono font-bold text-zinc-500">${cIndex}</td>
-                    <td class="p-2 sm:p-4"><div class="w-14 h-14 sm:w-20 sm:h-20 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1"><img src="${cos.icon}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'"></div></td>
+                    <td class="p-2 sm:p-4"><div class="w-20 h-20 sm:w-28 sm:h-28 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1"><img src="${cos.icon}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'"></div></td>
                     <td class="p-2 sm:p-4">
                         <ul class="space-y-1.5 list-none text-xs sm:text-sm text-zinc-400">
-                            <li><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs inline-block w-16 sm:w-20">${translations[currentLanguage].listName}:</span> <span class="text-white font-black tracking-wide text-xs sm:text-base">${cos.name}</span></li>
-                            <li><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs inline-block w-16 sm:w-20">${translations[currentLanguage].listArtist}:</span> <span class="text-zinc-300 font-semibold">${cos.artist}</span></li>
-                            <li><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs inline-block w-16 sm:w-20">${translations[currentLanguage].listRelease}:</span> <span class="font-mono text-zinc-400 text-xs">${cos.date}</span></li>
+                            <li><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs inline-block w-24 sm:w-28">${translations[currentLanguage].listName}:</span> <span class="text-white font-black tracking-wide text-xs sm:text-base">${cos.name}</span></li>
+                            <li><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs inline-block w-24 sm:w-28">${translations[currentLanguage].listArtist}:</span> <span class="text-zinc-300 font-semibold">${cos.artist}</span></li>
+                            <li><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs inline-block w-24 sm:w-28">${translations[currentLanguage].listRelease}:</span> <span class="font-mono text-zinc-400 text-xs">${cos.date}</span></li>
                             <li class="flex flex-col gap-1 pt-0.5"><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs">${translations[currentLanguage].listInsp}:</span> ${inspMarkup || 'N/A'}</li>
                         </ul>
                     </td>
@@ -707,7 +748,7 @@
             document.getElementById('counter-tapwave').innerText = cT;
         }
 
-        // DISPATCH MECHANISMS
+        // DISPATCH FORMS
         document.getElementById('level-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const checked = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
