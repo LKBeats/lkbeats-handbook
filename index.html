@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LKBeats Handbook V14 - Firebase Fixed Build</title>
-    <!-- Tailwind CSS for utility styling -->
+    <title>LKBeats Handbook V14 - Firebase Ultra Stable</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts for typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome for structural icons -->
+    <link href="https://fonts.googleapis.com/css2 family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <script>
@@ -43,11 +40,7 @@
         .glow-orange { box-shadow: 0 0 20px rgba(249, 115, 22, 0.2); }
         .glow-fuchsia { box-shadow: 0 0 20px rgba(217, 70, 239, 0.2); }
         
-        .force-white-icon {
-            filter: brightness(0) invert(1);
-            object-fit: contain;
-        }
-
+        .force-white-icon { filter: brightness(0) invert(1); object-fit: contain; }
         .filter-gray { filter: brightness(0) invert(0.6); }
         .filter-orange { filter: invert(53%) sepia(88%) saturate(1500%) hue-rotate(345deg) brightness(100%) contrast(105%); }
         .filter-red { filter: invert(16%) sepia(99%) saturate(7400%) hue-rotate(358deg) brightness(95%) contrast(118%); }
@@ -64,21 +57,20 @@
 </head>
 <body class="bg-[#05020a] text-zinc-100 min-h-screen font-sans flex flex-col relative overflow-x-hidden">
 
-    <!-- TOP HEADER / NAV -->
     <header class="border-b border-fuchsia-950/40 bg-[#11091c]/80 backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
             <div class="max-w-[33%] w-1/3 md:max-w-none md:w-auto shrink-0 cursor-pointer" id="nav-logo">
-                <img src="Agregar un título (1).png" alt="Handbook Title" class="h-10 md:h-8 w-full md:w-auto object-contain" id="img-logo-top">
+                <img src="Agregar un título (1).png" alt="Handbook Title" class="h-10 md:h-8 w-full md:w-auto object-contain">
             </div>
 
             <div class="flex items-center gap-2 sm:gap-4 ml-auto">
                 <div id="nav-shortcuts" class="hidden items-center gap-1 sm:gap-2">
                     <button id="btn-nav-levels" class="px-2 py-1.5 sm:px-3 rounded-lg text-xs sm:text-sm font-bold text-zinc-400 hover:text-white hover:bg-fuchsia-950/30 transition flex items-center gap-1.5">
-                        <img src="free_song_Image.png" alt="Charts" class="w-3.5 h-3.5 object-contain" id="img-nav-charts">
+                        <img src="free_song_Image.png" alt="Charts" class="w-3.5 h-3.5 object-contain">
                         <span data-i18n="navLevels">Charts</span>
                     </button>
                     <button id="btn-nav-cosmetics" class="px-2 py-1.5 sm:px-3 rounded-lg text-xs sm:text-sm font-bold text-zinc-400 hover:text-white hover:bg-fuchsia-950/30 transition flex items-center gap-1.5">
-                        <img src="BoxSprite_MerchSkin2.png" alt="Skins" class="w-3.5 h-3.5 object-contain" id="img-nav-skins">
+                        <img src="BoxSprite_MerchSkin2.png" alt="Skins" class="w-3.5 h-3.5 object-contain">
                         <span data-i18n="navCosmetics">Skins</span>
                     </button>
                 </div>
@@ -99,15 +91,13 @@
 
     <main class="flex-grow flex flex-col relative">
         
-        <!-- ================= VIEW 1: HOME ================= -->
         <section id="view-home" class="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col justify-center flex-grow w-full relative z-10">
             <div class="text-center mb-12 flex flex-col items-center">
                 <span class="px-4 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-xs font-black tracking-widest uppercase mb-6 inline-block">
                     <span data-i18n="tagUpdate">ÚLTIMA FECHA DE ACTUALIZACIÓN</span>: <span id="dynamic-update-date">2026-06-19</span>
                 </span>
-                
                 <div class="mb-6 max-w-full w-[500px]">
-                    <img src="Agregar un título (1).png" alt="Handbook Main Title" class="w-full object-contain mx-auto" id="img-logo-main">
+                    <img src="Agregar un título (1).png" alt="Handbook Main Title" class="w-full object-contain mx-auto">
                 </div>
             </div>
 
@@ -122,12 +112,11 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                <!-- Card: Charts -->
                 <div id="card-to-levels" class="group cursor-pointer rounded-2xl border border-fuchsia-950/60 bg-[#11091c]/40 p-6 transition transform hover:-translate-y-1 glow-orange flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-start mb-4">
-                            <div class="w-full h-32 rounded-xl overflow-hidden bg-black/20 border border-orange-500/20 shadow-inner flex items-center justify-center">
-                                <img src="free_song_Image.png" alt="Charts Asset" class="h-full object-contain" id="img-card-charts">
+                            <div class="w-full h-32 rounded-xl overflow-hidden bg-black/20 border border-orange-500/20 flex items-center justify-center">
+                                <img src="free_song_Image.png" alt="Charts Asset" class="h-full object-contain">
                             </div>
                         </div>
                         <h3 class="font-display font-black text-2xl text-zinc-100 mb-2 uppercase tracking-wide" data-i18n="cardLevelsTitle">Charts</h3>
@@ -138,12 +127,11 @@
                     </div>
                 </div>
 
-                <!-- Card: Skins -->
                 <div id="card-to-cosmetics" class="group cursor-pointer rounded-2xl border border-fuchsia-950/60 bg-[#11091c]/40 p-6 transition transform hover:-translate-y-1 glow-fuchsia flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-start mb-4">
-                            <div class="w-full h-32 rounded-xl overflow-hidden bg-black/20 border border-fuchsia-500/20 shadow-inner flex items-center justify-center">
-                                <img src="BoxSprite_MerchSkin2.png" alt="Skins Asset" class="h-full object-contain" id="img-card-skins">
+                            <div class="w-full h-32 rounded-xl overflow-hidden bg-black/20 border border-fuchsia-500/20 flex items-center justify-center">
+                                <img src="BoxSprite_MerchSkin2.png" alt="Skins Asset" class="h-full object-contain">
                             </div>
                         </div>
                         <h3 class="font-display font-black text-2xl text-zinc-100 mb-2 uppercase tracking-wide" data-i18n="cardCosmeticsTitle">Skins</h3>
@@ -155,283 +143,199 @@
                 </div>
             </div>
 
-            <!-- Footer Links Manager Container -->
             <div id="footer-links-management-box" class="hidden bg-[#11091c] border border-orange-500/30 rounded-2xl p-6 shadow-xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-yellow-500"></div>
                 <h2 class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="footerMenuTitle">Links del Menú Inferior</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
                     <div>
                         <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1">Beatclone URL</label>
-                        <input type="url" id="setupUrlBeatclone" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-lg focus:outline-none focus:border-orange-500 text-zinc-100">
+                        <input type="url" id="setupUrlBeatclone" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-lg text-zinc-100">
                     </div>
                     <div>
                         <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1">BSCM URL</label>
-                        <input type="url" id="setupUrlBscm" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-lg focus:outline-none focus:border-orange-500 text-zinc-100">
+                        <input type="url" id="setupUrlBscm" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-lg text-zinc-100">
                     </div>
                     <div>
                         <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1">beatcharts URL</label>
-                        <input type="url" id="setupUrlBeatcharts" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-lg focus:outline-none focus:border-orange-500 text-zinc-100">
+                        <input type="url" id="setupUrlBeatcharts" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-lg text-zinc-100">
                     </div>
                 </div>
-            </div>
-
-            <div class="rounded-xl border border-red-500/20 bg-red-500/5 p-5 text-xs">
-                <h4 class="font-black text-red-400 uppercase tracking-widest text-sm mb-2" data-i18n="disclaimerTitle">Deslinde de Responsabilidad</h4>
-                <p class="text-zinc-400 leading-relaxed text-sm" data-i18n="disclaimerContent">This content is created exclusively for entertainment purposes. It is not affiliated with, endorsed by, sponsored by, or connected to any artist, brand, company, or product mentioned. All trademarks, names, and copyrights belong to their respective owners.</p>
             </div>
         </section>
 
-        <!-- ================= VIEW 2: CHARTS REGISTRY ================= -->
         <section id="view-levels" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                <div>
-                    <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-orange-500/30 hover:border-orange-500/60 rounded-2xl transition-all duration-200 hover:scale-[1.05] active:scale-[0.95] mb-6 shadow-xl shadow-orange-950/20">
-                        <i class="fa-solid fa-chevron-left text-orange-500 group-hover:-translate-x-1.5 transition-transform"></i> <span data-i18n="backHome">Volver</span>
-                    </button>
-                    <div class="flex items-center gap-4">
-                        <h1 class="font-display font-black text-3xl text-white uppercase tracking-wide" data-i18n="levelsPageTitle">Charts</h1>
-                    </div>
-                </div>
-            </div>
-
+            <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-orange-500/30 rounded-2xl mb-6 w-max">
+                <i class="fa-solid fa-chevron-left text-orange-500"></i> <span data-i18n="backHome">Volver</span>
+            </button>
+            
             <div class="grid grid-cols-1 xl:grid-cols-4 gap-6 items-start">
-                <!-- Level Creator Form -->
-                <div id="level-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl relative xl:col-span-1">
-                    <h2 id="lvlFormTitle" class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="addLevelTitle">Nuevo Registro</h2>
+                <div id="level-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl xl:col-span-1">
+                    <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addLevelTitle">Nuevo Registro</h2>
                     <form id="level-form" class="space-y-3 text-xs">
-                        <input type="hidden" id="editingLvlId" value="">
+                        <input type="hidden" id="editingLvlId">
                         <div>
-                            <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1" data-i18n="formSong">Canción</label>
-                            <input type="text" id="lvlSong" required placeholder="p.ej., Spectrum Flare" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg focus:outline-none focus:border-orange-500 text-zinc-100">
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formSong">Canción</label>
+                            <input type="text" id="lvlSong" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
                         <div>
-                            <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1" data-i18n="formArtist">Artista</label>
-                            <input type="text" id="lvlArtist" required placeholder="p.ej., NextBeat" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg focus:outline-none focus:border-orange-500 text-zinc-100">
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formArtist">Artista</label>
+                            <input type="text" id="lvlArtist" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
                         <div>
-                            <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1" data-i18n="thArt">Arte</label>
-                            <div class="flex flex-col gap-1.5">
-                                <input type="file" id="lvlArtFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded-lg text-zinc-300">
-                                <input type="hidden" id="lvlArt" required>
-                            </div>
+                            <label class="block font-bold text-zinc-400 mb-1">URL de la Imagen de Arte</label>
+                            <input type="url" id="lvlArt" required placeholder="https://i.imgur.com/... o enlace de Discord" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
                         <div>
-                            <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1" data-i18n="formGenre">Género (Selecciona 1 o 2)</label>
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formGenre">Género</label>
                             <div id="genres-container" class="grid grid-cols-1 gap-1 max-h-36 overflow-y-auto border border-fuchsia-950 p-2 rounded-lg bg-[#05020a]"></div>
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1" data-i18n="formDifficulty">Dificultad</label>
-                                <select id="lvlDiff" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg focus:outline-none focus:border-orange-500 text-zinc-100">
+                                <label class="block font-bold text-zinc-400 mb-1" data-i18n="formDifficulty">Dificultad</label>
+                                <select id="lvlDiff" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                                     <option value="Normal">Normal</option>
                                     <option value="Hard" selected>Hard</option>
                                     <option value="Extreme">Extreme</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1" data-i18n="formEdition">Edición</label>
-                                <select id="lvlEdition" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg focus:outline-none focus:border-orange-500 text-zinc-100">
+                                <label class="block font-bold text-zinc-400 mb-1" data-i18n="formEdition">Edición</label>
+                                <select id="lvlEdition" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                                     <option value="Standard" selected>Standard</option>
                                     <option value="Deluxe">Deluxe</option>
                                 </select>
                             </div>
                         </div>
                         <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="formRelease">Fecha de Lanzamiento</label>
-                                <button type="button" id="btn-picker-lvl" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar Fecha</button>
-                            </div>
-                            <input type="date" id="lvlDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg focus:outline-none focus:border-orange-500 text-zinc-100">
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formRelease">Fecha</label>
+                            <input type="date" id="lvlDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
                         <div class="space-y-2 border-t border-fuchsia-950/40 pt-2">
-                            <span class="block font-black text-orange-400 uppercase tracking-widest text-[10px]" data-i18n="formUrlsTitle">Enlaces de Descarga</span>
-                            <input type="url" id="lvlDl1" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px] placeholder-optional" placeholder="Discord URL">
-                            <input type="url" id="lvlDl2" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px] placeholder-optional" placeholder="BSCM URL">
-                            <input type="url" id="lvlDl3" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px] placeholder-optional" placeholder="beatcharts URL">
+                            <input type="url" id="lvlDl1" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="Discord URL">
+                            <input type="url" id="lvlDl2" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="BSCM URL">
+                            <input type="url" id="lvlDl3" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="beatcharts URL">
                         </div>
-
-                        <button type="submit" id="lvlSubmitBtn" class="w-full py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-black font-black uppercase rounded-lg shadow transition active:scale-95 text-center block">
-                            <i class="fa-solid fa-plus mr-1"></i> <span data-i18n="btnRegister">Registrar</span>
+                        <button type="submit" id="lvlSubmitBtn" class="w-full py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-black font-black uppercase rounded-lg">
+                            <span data-i18n="btnRegister">Registrar</span>
                         </button>
                     </form>
                 </div>
 
-                <!-- Live Table Container -->
                 <div id="levels-table-container" class="xl:col-span-4 w-full overflow-hidden flex flex-col space-y-4">
-                    <div id="levels-empty" class="hidden text-center py-12 bg-[#11091c]/30 border border-dashed border-fuchsia-950 rounded-2xl flex flex-col items-center justify-center">
-                        <i class="fa-solid fa-music text-3xl text-fuchsia-950 mb-2"></i>
-                        <p class="text-zinc-500 font-medium text-xs" data-i18n="emptyDatabase">No hay registros indexados en este módulo.</p>
-                    </div>
-
                     <div id="levels-table-wrapper" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
-                        <table class="w-full text-left border-collapse min-w-[850px] md:min-w-[950px]">
+                        <table class="w-full text-left border-collapse min-w-[850px]">
                             <thead>
                                 <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                    <th class="p-3 md:p-4 text-center w-12">#</th>
-                                    <th class="p-3 md:p-4 w-32 md:w-40" data-i18n="thArt">Arte</th>
-                                    <th class="p-3 md:p-4" data-i18n="thSongArtist">Canción / Artista</th>
-                                    <th class="p-3 md:p-4 w-44 md:w-56" data-i18n="formGenre">Género</th>
-                                    <th class="p-3 md:p-4 w-32 md:w-40" data-i18n="formDifficulty">Dificultad</th>
-                                    <th class="p-3 md:p-4 w-24 md:w-28" data-i18n="formEdition">Edición</th>
-                                    <th class="p-3 md:p-4 w-24 md:w-28" data-i18n="formRelease">Fecha de Lanzamiento</th>
-                                    <th class="p-3 md:p-4 text-center w-52 md:w-60" data-i18n="thPlatformDl">Botones de Descarga</th>
-                                    <th class="p-3 md:p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
+                                    <th class="p-4 text-center w-12">#</th>
+                                    <th class="p-4 w-32" data-i18n="thArt">Arte</th>
+                                    <th class="p-4" data-i18n="thSongArtist">Canción / Artista</th>
+                                    <th class="p-4 w-44" data-i18n="formGenre">Género</th>
+                                    <th class="p-4 w-32" data-i18n="formDifficulty">Dificultad</th>
+                                    <th class="p-4 w-24" data-i18n="formEdition">Edición</th>
+                                    <th class="p-4 w-24" data-i18n="formRelease">Lanzamiento</th>
+                                    <th class="p-4 text-center w-52" data-i18n="thPlatformDl">Descargas</th>
+                                    <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="levels-tbody" class="divide-y divide-fuchsia-950/20 text-[11px] md:text-xs"></tbody>
+                            <tbody id="levels-tbody" class="divide-y divide-fuchsia-950/20 text-xs"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ================= VIEW 3: SKINS REGISTRY ================= -->
         <section id="view-cosmetics" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                <div>
-                    <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-fuchsia-500/30 hover:border-fuchsia-500/60 rounded-2xl transition-all duration-200 hover:scale-[1.05] active:scale-[0.95] mb-6 shadow-xl shadow-fuchsia-950/20">
-                        <i class="fa-solid fa-chevron-left text-fuchsia-500 group-hover:-translate-x-1.5 transition-transform"></i> <span data-i18n="backHome">Volver</span>
-                    </button>
-                    <div class="flex items-center gap-4">
-                        <h1 class="font-display font-black text-3xl text-white uppercase tracking-wide" data-i18n="cosmeticsPageTitle">Skins</h1>
-                    </div>
-                </div>
-            </div>
+            <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-fuchsia-500/30 rounded-2xl mb-6 w-max">
+                <i class="fa-solid fa-chevron-left text-fuchsia-500"></i> <span data-i18n="backHome">Volver</span>
+            </button>
 
             <div class="grid grid-cols-1 xl:grid-cols-4 gap-6 items-start">
-                <!-- Skin Creator Form -->
-                <div id="cosmetic-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl relative xl:col-span-1">
-                    <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-fuchsia-500 to-pink-500"></div>
-                    <h2 id="cosFormTitle" class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="addCosmeticTitle">Nuevo Cosmético</h2>
+                <div id="cosmetic-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl xl:col-span-1">
+                    <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addCosmeticTitle">Nuevo Cosmético</h2>
                     <form id="cosmetic-form" class="space-y-3 text-xs">
-                        <input type="hidden" id="editingCosId" value="">
+                        <input type="hidden" id="editingCosId">
                         <div>
-                            <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1" data-i18n="listName">Nombre</label>
-                            <input type="text" id="cosName" required placeholder="p.ej., Cyber Ninja" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg focus:outline-none focus:border-fuchsia-500 text-zinc-100">
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="listName">Nombre</label>
+                            <input type="text" id="cosName" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
                         <div>
-                            <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1" data-i18n="listArtist">Artista</label>
-                            <input type="text" id="cosArtist" required placeholder="p.ej., NextBeat" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg focus:outline-none focus:border-fuchsia-500 text-zinc-100">
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="listArtist">Artista</label>
+                            <input type="text" id="cosArtist" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
                         <div>
-                            <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1" data-i18n="thIcon">Icono</label>
-                            <div class="flex flex-col gap-1.5">
-                                <input type="file" id="cosIconFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded-lg text-zinc-300">
-                                <input type="hidden" id="cosIcon" required>
-                            </div>
+                            <label class="block font-bold text-zinc-400 mb-1">URL de la Imagen del Icono</label>
+                            <input type="url" id="cosIcon" required placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
-                        
                         <div>
-                            <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1" data-i18n="formPreviewType">Tipo de Preview (Elige una opción)</label>
-                            <div class="grid grid-cols-2 gap-2 mb-2">
-                                <button type="button" id="tab-video-mp4" class="py-1.5 px-2 bg-fuchsia-950 text-fuchsia-400 border border-fuchsia-500 rounded-lg font-bold tracking-wide transition uppercase">MP4 File</button>
-                                <button type="button" id="tab-video-yt" class="py-1.5 px-2 bg-zinc-900 text-zinc-400 border border-zinc-800 rounded-lg font-bold tracking-wide transition uppercase">YouTube</button>
-                            </div>
-                            <input type="hidden" id="cosVideoType" value="mp4">
-                            
-                            <div id="box-preview-mp4" class="block">
-                                <div class="flex flex-col gap-1.5">
-                                    <input type="file" id="cosVideoFile" accept="video/mp4" class="w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded-lg text-zinc-300">
-                                    <input type="hidden" id="cosVideo">
-                                </div>
-                            </div>
-                            
-                            <div id="box-preview-yt" class="hidden">
-                                <input type="url" id="cosVideoYtUrl" placeholder="https://www.youtube.com/watch?v=..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg focus:outline-none focus:border-fuchsia-500 text-zinc-100">
-                            </div>
+                            <label class="block font-bold text-zinc-400 mb-1">URL del Video o Enlace YouTube</label>
+                            <input type="url" id="cosVideo" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
-
                         <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="listRelease">Fecha de lanzamiento</label>
-                                <button type="button" id="btn-picker-cos" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar Fecha</button>
-                            </div>
-                            <input type="date" id="cosDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px] placeholder-optional">
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="listRelease">Fecha</label>
+                            <input type="date" id="cosDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
-                        
                         <div>
-                            <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1" data-i18n="listInsp">Inspirado en (Mínimo 1 imagen)</label>
-                            <div class="flex flex-col gap-2">
-                                <label class="w-full bg-[#05020a] hover:bg-zinc-900 border border-fuchsia-950 px-3 py-2 rounded-lg text-zinc-300 font-bold cursor-pointer transition flex items-center justify-center text-center gap-2">
-                                    <i class="fa-solid fa-images"></i>
-                                    <span id="cosBrandLogoLabel" data-i18n="btnUploadLogo">Subir Logos / Imágenes</span>
-                                    <input type="file" id="cosBrandLogoFile" accept="image/*" multiple class="hidden">
-                                </label>
-                                <div id="cos-preview-gallery-container" class="flex flex-col gap-1 pt-1"></div>
-                            </div>
+                            <label class="block font-bold text-zinc-400 mb-1">URL de Imagen Inspiración (1 sola URL directa)</label>
+                            <input type="url" id="cosInsp" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
-
                         <div>
-                            <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1" data-i18n="formSkinFor">Skin para...</label>
-                            <select id="cosTargetPlatform" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg focus:outline-none focus:border-fuchsia-500 text-zinc-100">
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formSkinFor">Skin para...</label>
+                            <select id="cosTargetPlatform" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                                 <option value="Beatstar" selected>Beatstar</option>
                                 <option value="TapWave">TapWave</option>
                             </select>
                         </div>
                         <div class="space-y-2 border-t border-fuchsia-950/40 pt-2">
-                            <span class="block font-black text-fuchsia-400 uppercase tracking-widest text-[10px]" data-i18n="formUrlsTitle">Enlaces de Descarga</span>
-                            <input type="url" id="cosDl1" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px] placeholder-optional" placeholder="Discord Link">
-                            <input type="url" id="cosDl2" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px] placeholder-optional" placeholder="BSCM Link">
+                            <input type="url" id="cosDl1" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="Discord Link">
+                            <input type="url" id="cosDl2" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="BSCM Link">
                         </div>
-
-                        <button type="submit" id="cosSubmitBtn" class="w-full py-2 bg-gradient-to-r from-fuchsia-500 to-pink-500 text-black font-black uppercase rounded-lg shadow transition active:scale-95 text-center block">
-                            <i class="fa-solid fa-plus mr-1"></i> <span data-i18n="btnRegister">Registrar</span>
+                        <button type="submit" id="cosSubmitBtn" class="w-full py-2 bg-gradient-to-r from-fuchsia-500 to-pink-500 text-black font-black uppercase rounded-lg">
+                            <span data-i18n="btnRegister">Registrar</span>
                         </button>
                     </form>
                 </div>
 
-                <!-- Live Layout Layout Multi Tables -->
                 <div id="cosmetics-table-container" class="xl:col-span-4 w-full overflow-hidden flex flex-col space-y-10">
-                    <!-- Section: Beatstar -->
                     <div class="flex flex-col space-y-3 w-full">
-                        <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between shadow-lg">
-                            <div class="h-10 max-w-[240px]">
-                                <img src="BeatstarWhiteLogo.png" alt="Beatstar Section Banner" class="h-full object-contain" id="img-logo-beatstar">
-                            </div>
-                            <div class="text-xs font-black tracking-widest bg-fuchsia-950/50 border border-fuchsia-800/40 px-3 py-1.5 rounded-xl text-fuchsia-400 uppercase">
-                                <span data-i18n="txtTotal">Total</span>: <span id="counter-beatstar">0</span> Skins
-                            </div>
+                        <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between">
+                            <img src="BeatstarWhiteLogo.png" alt="Beatstar" class="h-8 object-contain">
+                            <div class="text-xs font-bold bg-fuchsia-950/50 border border-fuchsia-800/40 px-3 py-1.5 rounded-xl text-fuchsia-400"><span data-i18n="txtTotal">Total</span>: <span id="counter-beatstar">0</span></div>
                         </div>
                         <div id="wrapper-beatstar" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
-                            <table class="w-full text-left border-collapse min-w-[850px] md:min-w-[950px]">
+                            <table class="w-full text-left border-collapse min-w-[850px]">
                                 <thead>
                                     <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                        <th class="p-3 md:p-4 text-center w-12">#</th>
-                                        <th class="p-3 md:p-4 w-32 md:w-40" data-i18n="thIcon">Icono</th>
-                                        <th class="p-3 md:p-4 w-64 md:w-80" data-i18n="thSkinInfo">Información de la Skin</th>
-                                        <th class="p-3 md:p-4 text-center w-36 md:w-44" data-i18n="thPreview">Preview (9:16)</th>
-                                        <th class="p-3 md:p-4 text-center w-44 md:w-52" data-i18n="thDlLinks">Enlaces de Descarga</th>
-                                        <th class="p-3 md:p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
+                                        <th class="p-4 text-center w-12">#</th>
+                                        <th class="p-4 w-32" data-i18n="thIcon">Icono</th>
+                                        <th class="p-4" data-i18n="thSkinInfo">Información</th>
+                                        <th class="p-4 text-center w-36" data-i18n="thPreview">Preview</th>
+                                        <th class="p-4 text-center w-44" data-i18n="thDlLinks">Descargas</th>
+                                        <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tbody-beatstar" class="divide-y divide-fuchsia-950/20 text-[11px] md:text-xs"></tbody>
+                                <tbody id="tbody-beatstar" class="divide-y divide-fuchsia-950/20 text-xs"></tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- Section: Tapwave -->
                     <div class="flex flex-col space-y-3 w-full">
-                        <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between shadow-lg">
-                            <div class="h-10 max-w-[240px]">
-                                <img src="TapWaveWhiteLogo.png" alt="TapWave Section Banner" class="h-full object-contain" id="img-logo-tapwave">
-                            </div>
-                            <div class="text-xs font-black tracking-widest bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400 uppercase">
-                                <span data-i18n="txtTotal">Total</span>: <span id="counter-tapwave">0</span> Skins
-                            </div>
+                        <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between">
+                            <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-8 object-contain">
+                            <div class="text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400"><span data-i18n="txtTotal">Total</span>: <span id="counter-tapwave">0</span></div>
                         </div>
                         <div id="wrapper-tapwave" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
-                            <table class="w-full text-left border-collapse min-w-[850px] md:min-w-[950px]">
+                            <table class="w-full text-left border-collapse min-w-[850px]">
                                 <thead>
                                     <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                        <th class="p-3 md:p-4 text-center w-12">#</th>
-                                        <th class="p-3 md:p-4 w-32 md:w-40" data-i18n="thIcon">Icono</th>
-                                        <th class="p-3 md:p-4 w-64 md:w-80" data-i18n="thSkinInfo">Información de la Skin</th>
-                                        <th class="p-3 md:p-4 text-center w-36 md:w-44" data-i18n="thPreview">Preview (9:16)</th>
-                                        <th class="p-3 md:p-4 text-center w-44 md:w-52" data-i18n="thDlLinks">Enlaces de Descarga</th>
-                                        <th class="p-3 md:p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
+                                        <th class="p-4 text-center w-12">#</th>
+                                        <th class="p-4 w-32" data-i18n="thIcon">Icono</th>
+                                        <th class="p-4" data-i18n="thSkinInfo">Información</th>
+                                        <th class="p-4 text-center w-36" data-i18n="thPreview">Preview</th>
+                                        <th class="p-4 text-center w-44" data-i18n="thDlLinks">Descargas</th>
+                                        <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tbody-tapwave" class="divide-y divide-fuchsia-950/20 text-[11px] md:text-xs"></tbody>
+                                <tbody id="tbody-tapwave" class="divide-y divide-fuchsia-950/20 text-xs"></tbody>
                             </table>
                         </div>
                     </div>
@@ -440,32 +344,26 @@
         </section>
     </main>
 
-    <!-- FOOTER -->
     <footer class="border-t border-fuchsia-950/20 bg-[#05020a] py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-end gap-4">
             <div class="flex items-center gap-3">
-                <a id="footer-link-beatclone" href="#" target="_blank" class="px-3 py-1.5 rounded-xl border border-zinc-800/80 bg-zinc-950/40 hover:border-orange-500/40 transition flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-white shadow-sm">
-                    <img src="Beatstar1.png" alt="Beatclone" class="w-4 h-4 force-white-icon" id="img-foot-beatclone">
-                    <span>Beatclone</span>
+                <a id="footer-link-beatclone" href="#" target="_blank" class="px-3 py-1.5 rounded-xl border border-zinc-800/80 bg-zinc-950/40 text-xs font-bold text-zinc-400 flex items-center gap-2">
+                    <img src="Beatstar1.png" alt="Beatclone" class="w-4 h-4 force-white-icon"><span>Beatclone</span>
                 </a>
-                <a id="footer-link-bscm" href="#" target="_blank" class="px-3 py-1.5 rounded-xl border border-zinc-800/80 bg-zinc-950/40 hover:border-orange-500/40 transition flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-white shadow-sm">
-                    <img src="BSCM_Logo.png" alt="BSCM" class="w-4 h-4 force-white-icon" id="img-foot-bscm">
-                    <span>BSCM</span>
+                <a id="footer-link-bscm" href="#" target="_blank" class="px-3 py-1.5 rounded-xl border border-zinc-800/80 bg-zinc-950/40 text-xs font-bold text-zinc-400 flex items-center gap-2">
+                    <img src="BSCM_Logo.png" alt="BSCM" class="w-4 h-4 force-white-icon"><span>BSCM</span>
                 </a>
-                <a id="footer-link-beatcharts" href="#" target="_blank" class="px-3 py-1.5 rounded-xl border border-zinc-800/80 bg-zinc-950/40 hover:border-orange-500/40 transition flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-white shadow-sm">
-                    <img src="beatcharts_Logo.png" alt="beatcharts" class="w-4 h-4 force-white-icon" id="img-foot-beatcharts">
-                    <span>beatcharts</span>
+                <a id="footer-link-beatcharts" href="#" target="_blank" class="px-3 py-1.5 rounded-xl border border-zinc-800/80 bg-zinc-950/40 text-xs font-bold text-zinc-400 flex items-center gap-2">
+                    <img src="beatcharts_Logo.png" alt="beatcharts" class="w-4 h-4 force-white-icon"><span>beatcharts</span>
                 </a>
             </div>
         </div>
     </footer>
 
-    <!-- ================= MODERN MODULAR FIREBASE IMPLEMENTATION (V10) ================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Real credentials from provided context[cite: 1]
         const firebaseConfig = {
           apiKey: "AIzaSyBmYQjQiHBH6pLqKNpjc3gNUsrF0fdYJsU",
           authDomain: "lkbeats-handbook.firebaseapp.com",
@@ -474,9 +372,8 @@
           storageBucket: "lkbeats-handbook.firebasestorage.app",
           messagingSenderId: "638032680948",
           appId: "1:638032680948:web:66d78be109a16356a80ba1"
-        };[cite: 1]
+        };
 
-        // Core App Framework State & Settings
         const genreList = [
             { color: "#bf2726", label: "Rock", filterClass: "filter-genre-rock" },
             { color: "#da6128", label: "Alternative", filterClass: "filter-genre-alternative" },
@@ -490,72 +387,36 @@
 
         const translations = {
             es: {
-                tagUpdate: "ÚLTIMA FECHA DE ACTUALIZACIÓN",
-                storyTitle: "Bienvenido al LKBeats Handbook",
+                tagUpdate: "ÚLTIMA FECHA DE ACTUALIZACIÓN", storyTitle: "Bienvenido al LKBeats Handbook",
                 storyParagraph1: "Aquí encontrarás todo el contenido que he creado para Beatclone/Beatcharts/TapWave/BSCM",
                 storyMission: "Mi misión: Crear contenido de calidad que sea accesible para todos.",
                 storyParagraph2: "Mi visión: Lograr que la mayor cantidad de gente posible disfrute de Beatstar.",
-                cardLevelsTitle: "Charts",
-                cardLevelsDesc: "Encuentra todos los charts que he realizado para Beaclone / BSCM / beatcharts",
-                cardCosmeticsTitle: "Skins",
-                cardCosmeticsDesc: "Encuentra todas las skins que he realizado para Beaclone / TapWave",
-                disclaimerTitle: "Deslinde de Responsabilidad",
-                disclaimerContent: "Este contenido es creado exclusivamente con fines de entretenimiento. No está afiliado, respaldado, patrocinado ni conectado con ningún artista, marca, empresa o producto mencionado. Todas las marcas comerciales, nombres y derechos de autor pertenecen a sus respectivos propietarios.",
-                navLevels: "Charts", navCosmetics: "Skins", backHome: "Volver",
-                levelsPageTitle: "Charts", cosmeticsPageTitle: "Skins",
-                addLevelTitle: "Nuevo Registro", addCosmeticTitle: "Nuevo Cosmético",
-                btnRegister: "Registrar",
-                emptyDatabase: "No hay registros indexados en este módulo.",
-                formSong: "Canción", formArtist: "Artista",
-                formGenre: "Género", formDifficulty: "Dificultad", formEdition: "Edición",
-                formRelease: "Fecha de Lanzamiento", formUrlsTitle: "Enlaces de Descarga",
-                listName: "Nombre", listArtist: "Artista", listRelease: "Fecha de lanzamiento", listInsp: "Inspirado en",
-                thArt: "Arte", thSongArtist: "Canción / Artista", thPlatformDl: "Botones de Descarga",
-                thIcon: "Icono", thSkinInfo: "Información de la Skin", thPreview: "Preview (9:16)", thDlLinks: "Enlaces de Descarga",
-                btnChangeDate: "Cambiar Fecha", thActions: "Acciones", btnEdit: "Editar", btnDelete: "Eliminar",
-                diffNormal: "Normal", diffHard: "Difícil", diffExtreme: "Extremo",
-                noLinks: "No hay enlaces disponibles",
-                formSkinFor: "Skin para...",
-                btnUploadLogo: "Subir Logos / Imágenes",
-                txtImageLoaded: "Imágenes cargadas",
-                txtTotal: "Total",
-                formPreviewType: "Tipo de Preview (Elige una opción)",
-                errMinImages: "Obligatoriamente debes subir al menos 1 imagen en el apartado 'Inspirado en'.",
-                footerMenuTitle: "Links del Menú Inferior"
+                cardLevelsTitle: "Charts", cardLevelsDesc: "Encuentra todos los charts que he realizado para Beaclone / BSCM / beatcharts",
+                cardCosmeticsTitle: "Skins", cardCosmeticsDesc: "Encuentra todas las skins que he realizado para Beaclone / TapWave",
+                disclaimerTitle: "Deslinde de Responsabilidad", disclaimerContent: "Este contenido pertenece a sus respectivos propietarios.",
+                navLevels: "Charts", navCosmetics: "Skins", backHome: "Volver", levelsPageTitle: "Charts", cosmeticsPageTitle: "Skins",
+                addLevelTitle: "Nuevo Registro", addCosmeticTitle: "Nuevo Cosmético", btnRegister: "Registrar", emptyDatabase: "No hay registros.",
+                formSong: "Canción", formArtist: "Artista", formGenre: "Género", formDifficulty: "Dificultad", formEdition: "Edición",
+                formRelease: "Fecha de Lanzamiento", formUrlsTitle: "Enlaces de Descarga", listName: "Nombre", listArtist: "Artista",
+                listRelease: "Fecha", listInsp: "Inspirado en", thArt: "Arte", thSongArtist: "Canción", thPlatformDl: "Descargas",
+                thIcon: "Icono", thSkinInfo: "Información", thPreview: "Preview", thDlLinks: "Enlaces", btnChangeDate: "Cambiar Fecha",
+                thActions: "Acciones", btnEdit: "Editar", btnDelete: "Eliminar", diffNormal: "Normal", diffHard: "Difícil", diffExtreme: "Extremo",
+                noLinks: "No hay enlaces", formSkinFor: "Skin para...", btnUploadLogo: "Subir Imagen", txtImageLoaded: "Cargado", txtTotal: "Total"
             },
             en: {
-                tagUpdate: "LAST UPDATE TIMESTAMP",
-                storyTitle: "Welcome to the LKBeats Handbook",
-                storyParagraph1: "Here you'll find all the content I've created for Beatclone/Beatcharts/TapWave/BSCM",
-                storyMission: "My mission: To create quality content that is accesible to everyone.",
-                storyParagraph2: "My vision: To ensure that as many people as posible enjoy Beatstar.",
-                cardLevelsTitle: "Charts",
-                cardLevelsDesc: "Find all the charts I've made for Beaclone / BSCM / beatcharts",
-                cardCosmeticsTitle: "Skins",
-                cardCosmeticsDesc: "Find all the skins I've made for Beaclone / TapWave",
-                disclaimerTitle: "Disclaimer",
-                disclaimerContent: "This content is created exclusively for entertainment purposes. It is not affiliated with, endorsed by, sponsored by, or connected to any artist, brand, company, or product mentioned. All trademarks, names, and copyrights belong to their respective owners.",
-                navLevels: "Charts", navCosmetics: "Skins", backHome: "Back",
-                levelsPageTitle: "Charts", cosmeticsPageTitle: "Skins",
-                addLevelTitle: "Create Track", addCosmeticTitle: "Create Asset",
-                btnRegister: "Deploy Entry",
-                emptyDatabase: "No records found matching the active module index tables.",
-                formSong: "Track Name", formArtist: "Artist",
-                formGenre: "Genre", formDifficulty: "Difficulty", formEdition: "Edition",
-                formRelease: "Release Date", formUrlsTitle: "Download Links",
-                listName: "Name", listArtist: "Artist", listRelease: "Release date", listInsp: "Inspired by",
-                thArt: "Art", thSongArtist: "Track / Artist", thPlatformDl: "Download Buttons",
-                thIcon: "Icon", thSkinInfo: "Skin Information", thPreview: "Preview (9:16)", thDlLinks: "Download Links",
-                btnChangeDate: "Change Date", thActions: "Actions", btnEdit: "Edit", btnDelete: "Delete",
-                diffNormal: "Normal", diffHard: "Hard", diffExtreme: "Extreme",
-                noLinks: "No available links",
-                formSkinFor: "Skin for...",
-                btnUploadLogo: "Upload Logos / Images",
-                txtImageLoaded: "Images loaded",
-                txtTotal: "Total",
-                formPreviewType: "Preview Type (Choose one option)",
-                errMinImages: "You must upload at least 1 image in the 'Inspired by' section.",
-                footerMenuTitle: "Bottom Menu Links"
+                tagUpdate: "LAST UPDATE TIMESTAMP", storyTitle: "Welcome to the LKBeats Handbook",
+                storyParagraph1: "Here you'll find all the content I've created.",
+                storyMission: "My mission: Accessible quality content.", storyParagraph2: "My vision: Enjoy Beatstar.",
+                cardLevelsTitle: "Charts", cardLevelsDesc: "Find all charts.", cardCosmeticsTitle: "Skins", cardCosmeticsDesc: "Find all skins.",
+                disclaimerTitle: "Disclaimer", disclaimerContent: "Trademarks belong to owners.",
+                navLevels: "Charts", navCosmetics: "Skins", backHome: "Back", levelsPageTitle: "Charts", cosmeticsPageTitle: "Skins",
+                addLevelTitle: "Create Track", addCosmeticTitle: "Create Asset", btnRegister: "Deploy", emptyDatabase: "No records.",
+                formSong: "Track Name", formArtist: "Artist", formGenre: "Genre", formDifficulty: "Difficulty", formEdition: "Edition",
+                formRelease: "Release Date", formUrlsTitle: "Download Links", listName: "Name", listArtist: "Artist",
+                listRelease: "Date", listInsp: "Inspired by", thArt: "Art", thSongArtist: "Track", thPlatformDl: "Downloads",
+                thIcon: "Icon", thSkinInfo: "Information", thPreview: "Preview", thDlLinks: "Links", btnChangeDate: "Change Date",
+                thActions: "Actions", btnEdit: "Edit", btnDelete: "Delete", diffNormal: "Normal", diffHard: "Hard", diffExtreme: "Extreme",
+                noLinks: "No links", formSkinFor: "Skin for...", btnUploadLogo: "Upload", txtImageLoaded: "Loaded", txtTotal: "Total"
             }
         };
 
@@ -564,81 +425,72 @@
         let levels = [];
         let cosmetics = [];
         let globalFooterLinks = { beatclone: '', bscm: '', beatcharts: '' };
-        let systemLastUpdate = '2026-06-19';
-        let base64InspImagesArray = [];
 
-        // App Navigation Engine Fix (Guaranteed to work instantly globally)
+        // 1. NAVIGATION ENGINE (Isolated and completely shielded from database events)
         function navigateTo(view) {
-            ['home', 'levels', 'cosmetics'].forEach(v => {
-                const target = document.getElementById(`view-${v}`);
-                if (target) target.classList.add('hidden');
-            });
-            const viewTarget = document.getElementById(`view-${view}`);
-            if (viewTarget) viewTarget.classList.remove('hidden');
-
+            ['home', 'levels', 'cosmetics'].forEach(v => document.getElementById(`view-${v}`)?.classList.add('hidden'));
+            document.getElementById(`view-${view}`)?.classList.remove('hidden');
             const shortcuts = document.getElementById('nav-shortcuts');
             const sep = document.getElementById('nav-separator');
-            if (view === 'home') {
-                if(shortcuts) shortcuts.classList.add('hidden'); 
-                if(sep) sep.classList.add('hidden');
-            } else {
-                if(shortcuts) { shortcuts.classList.remove('hidden'); shortcuts.classList.add('flex'); }
-                if(sep) sep.classList.remove('hidden');
-            }
+            if (view === 'home') { shortcuts?.classList.add('hidden'); sep?.classList.add('hidden'); }
+            else { shortcuts?.classList.remove('hidden'); shortcuts?.classList.add('flex'); sep?.classList.remove('hidden'); }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function promptCreatorAuth() {
-            if (isCreatorMode) {
-                isCreatorMode = false;
-                applyRoleUIVisibility();
-                return;
-            }
-            const pass = prompt(currentLanguage === 'es' ? "Ingrese la clave de creador:" : "Enter creator password:");
-            if (pass === "BeatstarTest") {
-                isCreatorMode = true;
-            } else if (pass !== null) {
-                alert(currentLanguage === 'es' ? "Clave incorrecta." : "Invalid credentials.");
-            }
+        // 2. LIFELINE RECOVERY BUTTONS ATTACHMENTS (Guaranteed Execution First)
+        document.getElementById('nav-logo').addEventListener('click', () => navigateTo('home'));
+        document.getElementById('btn-nav-levels').addEventListener('click', () => navigateTo('levels'));
+        document.getElementById('btn-nav-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
+        document.getElementById('card-to-levels').addEventListener('click', () => navigateTo('levels'));
+        document.getElementById('card-to-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
+        document.getElementById('auth-indicator').addEventListener('click', () => {
+            if (isCreatorMode) { isCreatorMode = false; applyRoleUIVisibility(); return; }
+            const pass = prompt("Clave:");
+            if (pass === "BeatstarTest") isCreatorMode = true;
             applyRoleUIVisibility();
+        });
+        document.getElementById('btn-lang-toggle').addEventListener('click', () => {
+            currentLanguage = currentLanguage === 'es' ? 'en' : 'es';
+            localStorage.setItem('nexus_lang', currentLanguage);
+            applyLanguagePack();
+        });
+        document.querySelectorAll('.btn-back-to-home').forEach(btn => btn.addEventListener('click', () => navigateTo('home')));
+
+        // 3. SECURE ASYNC FIREBASE CONNECTION
+        let db = null;
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getDatabase(app);
+
+            onValue(ref(db, 'levels'), (snap) => { levels = snap.val() ? Object.values(snap.val()) : []; renderLevelsTable(); updateDashboardCounts(); });
+            onValue(ref(db, 'cosmetics'), (snap) => { cosmetics = snap.val() ? Object.values(snap.val()) : []; renderCosmeticsTables(); updateDashboardCounts(); });
+            onValue(ref(db, 'footer_links'), (snap) => { if (snap.val()) { globalFooterLinks = snap.val(); syncFooterLinks(); } });
+            onValue(ref(db, 'last_update_date'), (snap) => { if (snap.val()) document.getElementById('dynamic-update-date').innerText = snap.val(); });
+        } catch (e) { console.error("Firebase async capture initialization suspended: ", e); }
+
+        // 4. RENDERING ARCHITECTURE FOR STRINGS AND CLEAN EXTERNAL URLS ONLY
+        function parseYoutubeEmbedUrl(url) {
+            if (!url) return '';
+            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+            let match = url.match(regExp);
+            return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
         }
 
         function applyRoleUIVisibility() {
-            const lockIcon = document.getElementById('auth-lock-icon');
             const label = document.getElementById('auth-label');
-            const lvlFormBox = document.getElementById('level-form-container');
-            const lvlTableBox = document.getElementById('levels-table-container');
-            const cosFormBox = document.getElementById('cosmetic-form-container');
-            const cosTableBox = document.getElementById('cosmetics-table-container');
-            const linksFormBox = document.getElementById('footer-links-management-box');
+            const icon = document.getElementById('auth-lock-icon');
+            if (label) label.innerText = isCreatorMode ? "Creador" : "Visitor";
+            if (icon) icon.className = isCreatorMode ? "fa-solid fa-lock-open text-emerald-400" : "fa-solid fa-lock text-zinc-600";
             
-            if (isCreatorMode) {
-                if(lockIcon) lockIcon.className = "fa-solid fa-lock-open text-emerald-400";
-                if(label) label.innerText = currentLanguage === 'es' ? "Creador" : "Creator";
-                if (lvlFormBox) lvlFormBox.classList.remove('hidden');
-                if (lvlTableBox) { lvlTableBox.classList.remove('xl:col-span-4'); lvlTableBox.classList.add('xl:col-span-3'); }
-                if (cosFormBox) cosFormBox.classList.remove('hidden');
-                if (cosTableBox) { cosTableBox.classList.remove('xl:col-span-4'); cosTableBox.classList.add('xl:col-span-3'); }
-                if (linksFormBox) linksFormBox.classList.remove('hidden');
-                document.querySelectorAll('.creator-action-header').forEach(el => el.classList.remove('hidden'));
-            } else {
-                if(lockIcon) lockIcon.className = "fa-solid fa-lock text-zinc-600";
-                if(label) label.innerText = currentLanguage === 'es' ? "Visitante" : "Visitor";
-                if (lvlFormBox) lvlFormBox.classList.add('hidden');
-                if (lvlTableBox) { lvlTableBox.classList.remove('xl:col-span-3'); lvlTableBox.classList.add('xl:col-span-4'); }
-                if (cosFormBox) cosFormBox.classList.add('hidden');
-                if (cosTableBox) { cosTableBox.classList.remove('xl:col-span-3'); cosTableBox.classList.add('xl:col-span-4'); }
-                if (linksFormBox) border = linksFormBox.classList.add('hidden');
-                document.querySelectorAll('.creator-action-header').forEach(el => el.classList.add('hidden'));
-            }
-            renderLevelsTable();
-            renderCosmeticsTables();
-            updateDashboardCounts();
-            syncFooterLinksInputsValues();
+            ['level-form-container', 'cosmetic-form-container', 'footer-links-management-box'].forEach(id => {
+                document.getElementById(id)?.classList.toggle('hidden', !isCreatorMode);
+            });
+            document.querySelectorAll('.creator-action-header').forEach(el => el.classList.toggle('hidden', !isCreatorMode));
+            renderLevelsTable(); renderCosmeticsTables();
         }
 
         function applyLanguagePack() {
-            document.getElementById('lang-label').innerText = currentLanguage;
+            document.getElementById('lang-label').innerText = currentLanguage.toUpperCase();
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[currentLanguage][key]) el.innerText = translations[currentLanguage][key];
@@ -646,193 +498,33 @@
             applyRoleUIVisibility();
         }
 
-        // --- ATTACH BASE INTERFACES LISTENERS FIRST (Ensures navigation never crashes) ---
-        document.getElementById('nav-logo').addEventListener('click', () => navigateTo('home'));
-        document.getElementById('btn-nav-levels').addEventListener('click', () => navigateTo('levels'));
-        document.getElementById('btn-nav-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
-        document.getElementById('card-to-levels').addEventListener('click', () => navigateTo('levels'));
-        document.getElementById('card-to-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
-        document.getElementById('auth-indicator').addEventListener('click', promptCreatorAuth);
-        document.getElementById('btn-lang-toggle').addEventListener('click', () => { 
-            currentLanguage = currentLanguage === 'es' ? 'en' : 'es'; 
-            localStorage.setItem('nexus_lang', currentLanguage); 
-            applyLanguagePack(); 
-        });
-        document.querySelectorAll('.btn-back-to-home').forEach(btn => btn.addEventListener('click', () => navigateTo('home')));
-
-        // --- FIREBASE INITIALIZATION BOOTSTRAP PIPELINE ---
-        let db = null;
-        try {
-            const app = initializeApp(firebaseConfig);[cite: 1]
-            db = getDatabase(app);
-
-            // Realtime Streams Subscriptions setup protected under runtime capture
-            onValue(ref(db, 'levels'), (snapshot) => {
-                const val = snapshot.val();
-                levels = val ? Object.values(val) : [];
-                renderLevelsTable();
-                updateDashboardCounts();
-            }, (err) => console.warn("Firebase rules/read delay:", err));
-
-            onValue(ref(db, 'cosmetics'), (snapshot) => {
-                const val = snapshot.val();
-                cosmetics = val ? Object.values(val) : [];
-                renderCosmeticsTables();
-                updateDashboardCounts();
-            }, (err) => console.warn("Firebase rules/read delay:", err));
-
-            onValue(ref(db, 'footer_links'), (snapshot) => {
-                const val = snapshot.val();
-                if (val) {
-                    globalFooterLinks = val;
-                    syncFooterLinksInputsValues();
-                }
-            });
-
-            onValue(ref(db, 'last_update_date'), (snapshot) => {
-                const val = snapshot.val();
-                if (val) {
-                    systemLastUpdate = val;
-                    document.querySelectorAll('#dynamic-update-date').forEach(el => el.innerText = systemLastUpdate);
-                }
-            });
-        } catch (firebaseError) {
-            console.error("Firebase Initialization crashed safely:", firebaseError);
-        }
-
-        // --- DOM RENDER GENERATION FRAMEWORKS ---
-        function parseYoutubeEmbedUrl(url) {
-            if (!url) return '';
-            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
-            let match = url.match(regExp);
-            if (match && match[2].length == 11) {
-                return `https://www.youtube.com/embed/${match[2]}?autoplay=0&rel=0&modestbranding=1`;
-            }
-            return url;
-        }
-
-        function syncFooterLinksInputsValues() {
-            if (document.getElementById('setupUrlBeatclone')) {
-                document.getElementById('setupUrlBeatclone').value = globalFooterLinks.beatclone || '';
-                document.getElementById('setupUrlBscm').value = globalFooterLinks.bscm || '';
-                document.getElementById('setupUrlBeatcharts').value = globalFooterLinks.beatcharts || '';
-            }
-            const aB = document.getElementById('footer-link-beatclone');
-            const aS = document.getElementById('footer-link-bscm');
-            const aC = document.getElementById('footer-link-beatcharts');
-            if(aB) aB.href = globalFooterLinks.beatclone || '#';
-            if(aS) aS.href = globalFooterLinks.bscm || '#';
-            if(aC) aC.href = globalFooterLinks.beatcharts || '#';
-        }
-
-        function updateFooterExternalLinks() {
-            globalFooterLinks.beatclone = document.getElementById('setupUrlBeatclone').value.trim();
-            globalFooterLinks.bscm = document.getElementById('setupUrlBscm').value.trim();
-            globalFooterLinks.beatcharts = document.getElementById('setupUrlBeatcharts').value.trim();
-            if(db) set(ref(db, 'footer_links'), globalFooterLinks);
-        }
-
-        function buildGenresSelector() {
-            const container = document.getElementById('genres-container');
-            if(!container) return;
-            container.innerHTML = '';
-            genreList.forEach(g => {
-                const item = document.createElement('label');
-                item.className = "flex items-center gap-3 p-1.5 hover:bg-zinc-900 rounded cursor-pointer text-zinc-300";
-                item.innerHTML = `
-                    <input type="checkbox" name="lvlGenres" value="${g.label}" class="genre-checkbox accent-fuchsia-500">
-                    <span class="w-3.5 h-3.5 rounded-full inline-block shrink-0 shadow" style="background-color: ${g.color}"></span>
-                    <span class="font-extrabold text-sm text-zinc-200">${g.label}</span>
-                `;
-                item.querySelector('input').addEventListener('change', (e) => {
-                    const checked = document.querySelectorAll('.genre-checkbox:checked');
-                    if (checked.length > 2) {
-                        alert(currentLanguage === 'es' ? "Máximo 2 géneros." : "Maximum 2 genres.");
-                        e.target.checked = false;
-                    }
-                });
-                container.appendChild(item);
-            });
-        }
-
-        function renderGenresBadgesHtml(rawGenresString) {
-            if(!rawGenresString) return '';
-            return rawGenresString.split(' / ').map(genreName => {
-                const trimmed = genreName.trim();
-                const matched = genreList.find(g => g.label.toLowerCase() === trimmed.toLowerCase());
-                const color = matched ? matched.color : '#27EBF5';
-                const fClass = matched ? matched.filterClass : 'filter-genre-rnb';
-                let cName = trimmed === "Hip-Hop" ? "HipHop" : (trimmed === "RnB" ? "RnB" : trimmed.replace('/', '').replace(/\s+/g, ''));
-                return `
-                    <div class="inline-flex items-center gap-1.5 px-2 py-0.5 md:px-2.5 md:py-1 rounded-lg text-[10px] md:text-[11px] font-extrabold border shadow-sm shrink-0" style="background-color: ${color}15; border-color: ${color}40; color: ${color};">
-                        <img src="${cName}.png" class="w-3 h-3 md:w-3.5 md:h-3.5 object-contain shrink-0 ${fClass}" alt="${trimmed}" onerror="this.style.display='none'">
-                        <span>${trimmed}</span>
-                    </div>
-                `;
+        function renderGenresBadgesHtml(raw) {
+            if(!raw) return '';
+            return raw.split(' / ').map(g => {
+                const matched = genreList.find(item => item.label.toLowerCase() === g.trim().toLowerCase());
+                const color = matched ? matched.color : '#f97316';
+                return `<div class="inline-flex items-center px-2 py-0.5 rounded border text-[10px]" style="color:${color}; border-color:${color}40; background:${color}10"><span>${g}</span></div>`;
             }).join(' ');
         }
 
         function renderLevelsTable() {
             const tbody = document.getElementById('levels-tbody');
-            const empty = document.getElementById('levels-empty');
-            const wrapper = document.getElementById('levels-table-wrapper');
-            if(!tbody) return;
-            tbody.innerHTML = '';
-            if (levels.length === 0) {
-                if(empty) empty.classList.remove('hidden'); if(wrapper) wrapper.classList.add('hidden'); return;
-            }
-            if(empty) empty.classList.add('hidden'); if(wrapper) wrapper.classList.remove('hidden');
-
-            levels.forEach((lvl, index) => {
-                const dl1 = lvl.dl1 ? `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 border border-zinc-800 p-1.5 rounded-xl text-[10px] font-bold text-zinc-100 flex items-center justify-between transition"><span class="flex items-center gap-2"><img src="Discord_Logo.png" alt="Discord" class="w-3.5 h-3.5 force-white-icon"><span>Discord</span></span><i class="fa-solid fa-arrow-down"></i></a>` : '';
-                const dl2 = lvl.dl2 ? `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 border border-zinc-800 p-1.5 rounded-xl text-[10px] font-bold text-zinc-100 flex items-center justify-between transition"><span class="flex items-center gap-2"><img src="BSCM_Logo.png" alt="BSCM" class="w-3.5 h-3.5 force-white-icon"><span>BSCM</span></span><i class="fa-solid fa-arrow-down"></i></a>` : '';
-                const dl3 = lvl.dl3 ? `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 border border-zinc-800 p-1.5 rounded-xl text-[10px] font-bold text-zinc-100 flex items-center justify-between transition"><span class="flex items-center gap-2"><img src="beatcharts_Logo.png" alt="beatcharts" class="w-3.5 h-3.5 force-white-icon"><span>beatcharts</span></span><i class="fa-solid fa-arrow-down"></i></a>` : '';
-                const buttons = [dl1, dl2, dl3].filter(Boolean).join('') || `<span class="text-zinc-600 font-bold italic">${translations[currentLanguage].noLinks}</span>`;
-
-                let diffText = lvl.diff; let bStyle = "bg-orange-500/10 border-orange-500/30 text-orange-400"; let icon = "DifficultyLevel.png"; let fClass = "filter-orange";
-                if (lvl.diff === "Normal") { diffText = translations[currentLanguage].diffNormal; bStyle = "bg-zinc-500/10 border-zinc-500/30 text-zinc-400"; fClass = "filter-gray"; }
-                else if (lvl.diff === "Extreme") { diffText = translations[currentLanguage].diffExtreme; bStyle = "bg-red-500/10 border-red-500/30 text-red-500"; icon = "DifficultyExtreme.png"; fClass = "filter-red"; }
-
+            if(!tbody) return; tbody.innerHTML = '';
+            levels.forEach((lvl, i) => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-fuchsia-950/10 transition border-b border-fuchsia-950/20";
+                tr.className = "hover:bg-fuchsia-950/10 border-b border-fuchsia-950/10";
                 tr.innerHTML = `
-                    <td class="p-3 md:p-4 text-center font-mono font-bold text-zinc-500">${index + 1}</td>
-                    <td class="p-3 md:p-4"><div class="w-20 h-20 md:w-28 md:h-28 border border-fuchsia-950/80 rounded-xl overflow-hidden shadow-lg"><img src="${lvl.art}" class="w-full h-full object-cover"></div></td>
-                    <td class="p-3 md:p-4"><div class="font-bold text-white text-xs md:text-sm mb-0.5">${lvl.song}</div><div class="text-zinc-500 font-medium text-[10px]">${lvl.artist}</div></td>
-                    <td class="p-3 md:p-4"><div class="flex flex-col gap-1.5 max-w-[140px]">${renderGenresBadgesHtml(lvl.genre)}</div></td>
-                    <td class="p-3 md:p-4"><div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg border ${bStyle}"><img src="${icon}" class="w-3.5 h-3.5 ${fClass}"><span>${diffText}</span></div></td>
-                    <td class="p-3 md:p-4 font-medium text-zinc-300">${lvl.edition}</td>
-                    <td class="p-3 md:p-4 font-mono text-zinc-400">${lvl.date}</td>
-                    <td class="p-3 md:p-4"><div class="flex flex-col gap-1 justify-center max-w-[170px] mx-auto">${buttons}</div></td>
-                    <td class="p-3 md:p-4 text-center ${isCreatorMode ? '' : 'hidden'}">
-                        <div class="flex flex-col gap-1">
-                            <button class="btn-edit-lvl bg-white text-black text-[10px] font-black px-1.5 py-0.5 rounded shadow hover:bg-zinc-200 transition uppercase">${translations[currentLanguage].btnEdit}</button>
-                            <button class="btn-del-lvl bg-white text-red-600 text-[10px] font-black px-1.5 py-0.5 rounded shadow hover:bg-red-100 transition uppercase">${translations[currentLanguage].btnDelete}</button>
-                        </div>
-                    </td>
+                    <td class="p-4 text-center font-mono text-zinc-500">${i+1}</td>
+                    <td class="p-4"><img src="${lvl.art}" class="w-16 h-16 object-cover rounded-lg bg-zinc-900" onerror="this.src='free_song_Image.png'"></td>
+                    <td class="p-4 font-bold text-white">${lvl.song}<div class="text-xs text-zinc-500 font-normal">${lvl.artist}</div></td>
+                    <td class="p-4"><div class="flex flex-col gap-1">${renderGenresBadgesHtml(lvl.genre)}</div></td>
+                    <td class="p-4"><span class="px-2 py-0.5 border rounded text-[10px]">${lvl.diff}</span></td>
+                    <td class="p-4 text-zinc-400">${lvl.edition}</td>
+                    <td class="p-4 font-mono text-zinc-500">${lvl.date}</td>
+                    <td class="p-4"><div class="flex flex-col gap-1 max-w-[140px] mx-auto">${lvl.dl1 ? `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 p-1 text-center rounded text-[10px] font-bold border border-zinc-800">Discord</a>`:''} ${lvl.dl2 ? `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 p-1 text-center rounded text-[10px] font-bold border border-zinc-800">BSCM</a>`:''}</div></td>
+                    <td class="p-4 text-center ${isCreatorMode ? '':'hidden'}"><button class="btn-del-lvl bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold">X</button></td>
                 `;
-
-                const btnEdit = tr.querySelector('.btn-edit-lvl');
-                if(btnEdit) btnEdit.addEventListener('click', () => {
-                    document.getElementById('editingLvlId').value = lvl.id;
-                    document.getElementById('lvlSong').value = lvl.song;
-                    document.getElementById('lvlArtist').value = lvl.artist;
-                    document.getElementById('lvlArt').value = lvl.art;
-                    document.getElementById('lvlDiff').value = lvl.diff;
-                    document.getElementById('lvlEdition').value = lvl.edition || 'Standard';
-                    document.getElementById('lvlDate').value = lvl.date;
-                    document.getElementById('lvlDl1').value = lvl.dl1 || '';
-                    document.getElementById('lvlDl2').value = lvl.dl2 || '';
-                    document.getElementById('lvlDl3').value = lvl.dl3 || '';
-                    buildGenresSelector();
-                    const genresArr = lvl.genre.split(' / ');
-                    document.querySelectorAll('.genre-checkbox').forEach(cb => { if (genresArr.includes(cb.value)) cb.checked = true; });
-                    document.getElementById('lvlSubmitBtn').innerHTML = `<i class="fa-solid fa-floppy-disk mr-1"></i> <span>Save Changes</span>`;
-                });
-
-                const btnDel = tr.querySelector('.btn-del-lvl');
-                if(btnDel && db) btnDel.addEventListener('click', () => remove(ref(db, 'levels/' + lvl.id)));
-
+                tr.querySelector('.btn-del-lvl')?.addEventListener('click', () => { if(db) remove(ref(db, 'levels/' + lvl.id)); });
                 tbody.appendChild(tr);
             });
         }
@@ -840,241 +532,66 @@
         function renderCosmeticsTables() {
             const tbodyB = document.getElementById('tbody-beatstar');
             const tbodyT = document.getElementById('tbody-tapwave');
-            if(!tbodyB || !tbodyT) return;
-            tbodyB.innerHTML = ''; tbodyT.innerHTML = '';
+            if(!tbodyB || !tbodyT) return; tbodyB.innerHTML = ''; tbodyT.innerHTML = '';
 
-            let cB = 0; let cT = 0;
-            cosmetics.forEach((cos) => {
-                const isT = (cos.platform === 'TapWave');
-                if (isT) cT++; else cB++;
-                const cIndex = isT ? cT : cB;
-
-                const dl1 = cos.dl1 ? `<a href="${cos.dl1}" target="_blank" class="bg-zinc-900 border border-zinc-800 p-1.5 rounded-xl text-[10px] font-bold flex items-center justify-between transition"><span class="flex items-center gap-1.5"><img src="Discord_Logo.png" class="w-3.5 h-3.5 force-white-icon"><span>Discord</span></span><i class="fa-solid fa-download"></i></a>` : '';
-                const dl2 = cos.dl2 ? `<a href="${cos.dl2}" target="_blank" class="bg-zinc-900 border border-zinc-800 p-1.5 rounded-xl text-[10px] font-bold flex items-center justify-between transition"><span class="flex items-center gap-1.5"><img src="BSCM_Logo.png" class="w-3.5 h-3.5 force-white-icon"><span>BSCM</span></span><i class="fa-solid fa-download"></i></a>` : '';
-                const buttons = [dl1, dl2].filter(Boolean).join('') || `<span class="text-zinc-600 font-bold italic">${translations[currentLanguage].noLinks}</span>`;
-
-                let inspHtml = `<span class="text-zinc-600 italic">N/A</span>`;
-                let inspArr = Array.isArray(cos.insp) ? cos.insp : (cos.insp ? [cos.insp] : []);
-                if (inspArr.length === 1) {
-                    inspHtml = `<div class="h-20 w-40 bg-black/30 border border-fuchsia-950/50 rounded-xl p-1.5 flex items-center justify-center"><img src="${inspArr[0]}" class="max-h-full max-w-full object-contain rounded-md"></div>`;
-                } else if (inspArr.length > 1) {
-                    inspHtml = `<div class="grid grid-cols-2 gap-1 max-w-[160px] bg-[#05020a]/60 border border-fuchsia-950/30 p-1 rounded-lg">${inspArr.map(s => `<div class="h-10 bg-black/30 rounded p-0.5 flex items-center justify-center"><img src="${s}" class="max-h-full max-w-full object-contain"></div>`).join('')}</div>`;
-                }
-
-                let pMarkup = '';
-                if (cos.video && (cos.video.includes('youtube.com') || cos.video.includes('youtu.be'))) {
-                    pMarkup = `<div class="w-24 h-40 md:w-32 md:h-56 mx-auto rounded-xl overflow-hidden border border-fuchsia-950/80 bg-black"><iframe src="${parseYoutubeEmbedUrl(cos.video)}" class="w-full h-full border-0" allowfullscreen></iframe></div>`;
-                } else {
-                    pMarkup = `
-                        <div class="w-24 h-40 md:w-32 md:h-56 mx-auto rounded-xl overflow-hidden border border-fuchsia-950/80 bg-black relative flex flex-col justify-between">
-                            <video id="video-player-${cos.id}" src="${cos.video}" loop muted playsinline class="w-full h-full object-cover hidden"></video>
-                            <div id="video-poster-${cos.id}" class="w-full h-full bg-zinc-950 flex flex-col items-center justify-center p-2 text-center text-[9px] text-zinc-500 font-bold"><i class="fa-solid fa-circle-play text-lg text-fuchsia-500 mb-1.5"></i><span>MP4 Video Buffer</span></div>
-                            <button class="btn-play-video absolute bottom-1.5 right-1.5 w-6 h-6 bg-fuchsia-600 text-white rounded-full flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-[9px]"></i></button>
-                        </div>`;
-                }
-
+            cosmetics.forEach((cos, i) => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-fuchsia-950/10 transition border-b border-fuchsia-950/20";
+                tr.className = "hover:bg-fuchsia-950/10 border-b border-fuchsia-950/10";
+                
+                let pMarkup = cos.video ? `<div class="w-20 h-32 mx-auto border rounded bg-black overflow-hidden"><iframe src="${parseYoutubeEmbedUrl(cos.video)}" class="w-full h-full border-0"></iframe></div>` : '[No Preview]';
+                let inspMarkup = cos.insp ? `<img src="${cos.insp}" class="w-24 h-12 object-contain bg-zinc-900 rounded border">` : '';
+
                 tr.innerHTML = `
-                    <td class="p-3 md:p-4 text-center font-mono font-bold text-zinc-500">${cIndex}</td>
-                    <td class="p-3 md:p-4"><div class="w-20 h-20 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1"><img src="${cos.icon}" class="w-full h-full object-cover rounded-lg"></div></td>
-                    <td class="p-3 md:p-4">
-                        <ul class="space-y-1.5 list-none text-zinc-400">
-                            <li><span class="text-zinc-500 font-bold uppercase text-[10px] inline-block w-16">${translations[currentLanguage].listName}:</span> <span class="text-white font-black">${cos.name}</span></li>
-                            <li><span class="text-zinc-500 font-bold uppercase text-[10px] inline-block w-16">${translations[currentLanguage].listArtist}:</span> <span class="text-zinc-300 font-semibold">${cos.artist}</span></li>
-                            <li><span class="text-zinc-500 font-bold uppercase text-[10px] inline-block w-16">${translations[currentLanguage].listRelease}:</span> <span class="font-mono">${cos.date}</span></li>
-                            <li class="flex flex-col gap-1 pt-0.5"><span class="text-zinc-500 font-bold uppercase text-[10px]">${translations[currentLanguage].listInsp}:</span> ${inspHtml}</li>
-                        </ul>
-                    </td>
-                    <td class="p-3 md:p-4 text-center">${pMarkup}</td>
-                    <td class="p-3 md:p-4"><div class="flex flex-col gap-1 justify-center max-w-[150px] mx-auto">${buttons}</div></td>
-                    <td class="p-3 md:p-4 text-center ${isCreatorMode ? '' : 'hidden'}">
-                        <div class="flex flex-col gap-1">
-                            <button class="btn-edit-cos bg-white text-black text-[10px] font-black px-1.5 py-0.5 rounded shadow hover:bg-zinc-200 transition uppercase">${translations[currentLanguage].btnEdit}</button>
-                            <button class="btn-del-cos bg-white text-red-600 text-[10px] font-black px-1.5 py-0.5 rounded shadow hover:bg-red-100 transition uppercase">${translations[currentLanguage].btnDelete}</button>
-                        </div>
-                    </td>
+                    <td class="p-4 text-center font-mono text-zinc-500">${i+1}</td>
+                    <td class="p-4"><img src="${cos.icon}" class="w-16 h-16 object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'"></td>
+                    <td class="p-4 font-bold text-white">${cos.name}<div class="text-xs text-zinc-500 font-normal">${cos.artist}</div><div class="mt-2">${inspMarkup}</div></td>
+                    <td class="p-4 text-center">${pMarkup}</td>
+                    <td class="p-4"><div class="flex flex-col gap-1 max-w-[140px] mx-auto">${cos.dl1 ? `<a href="${cos.dl1}" target="_blank" class="bg-zinc-900 p-1 text-center rounded text-[10px] font-bold border border-zinc-800">Discord</a>`:''}</div></td>
+                    <td class="p-4 text-center ${isCreatorMode ? '':'hidden'}"><button class="btn-del-cos bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold">X</button></td>
                 `;
-
-                const btnPlay = tr.querySelector('.btn-play-video');
-                if (btnPlay) {
-                    btnPlay.addEventListener('click', () => {
-                        const vid = tr.querySelector(`#video-player-${cos.id}`);
-                        const pst = tr.querySelector(`#video-poster-${cos.id}`);
-                        const ico = btnPlay.querySelector('i');
-                        if (vid.classList.contains('hidden')) {
-                            vid.classList.remove('hidden'); pst.classList.add('hidden'); vid.load(); vid.play();
-                            ico.className = "fa-solid fa-pause text-[10px]";
-                        } else {
-                            if (vid.paused) { vid.play(); ico.className = "fa-solid fa-pause text-[10px]"; }
-                            else { vid.pause(); ico.className = "fa-solid fa-play text-[10px]"; }
-                        }
-                    });
-                }
-
-                const btnEdit = tr.querySelector('.btn-edit-cos');
-                if (btnEdit) {
-                    btnEdit.addEventListener('click', () => {
-                        document.getElementById('editingCosId').value = cos.id;
-                        document.getElementById('cosName').value = cos.name;
-                        document.getElementById('cosArtist').value = cos.artist;
-                        document.getElementById('cosIcon').value = cos.icon;
-                        document.getElementById('cosDate').value = cos.date;
-                        document.getElementById('cosTargetPlatform').value = cos.platform || 'Beatstar';
-                        document.getElementById('cosDl1').value = cos.dl1 || '';
-                        document.getElementById('cosDl2').value = cos.dl2 || '';
-                        if (cos.video && (cos.video.includes('youtube.com') || cos.video.includes('youtu.be'))) {
-                            document.getElementById('cosVideoType').value = 'youtube';
-                            document.getElementById('cosVideoYtUrl').value = cos.video;
-                            document.getElementById('box-preview-yt').classList.replace('hidden', 'block');
-                            document.getElementById('box-preview-mp4').classList.replace('block', 'hidden');
-                        } else {
-                            document.getElementById('cosVideoType').value = 'mp4';
-                            document.getElementById('cosVideo').value = cos.video || '';
-                            document.getElementById('box-preview-mp4').classList.replace('hidden', 'block');
-                            document.getElementById('box-preview-yt').classList.replace('block', 'hidden');
-                        }
-                        base64InspImagesArray = Array.isArray(cos.insp) ? [...cos.insp] : (cos.insp ? [cos.insp] : []);
-                        refreshInspGalleryUI();
-                        document.getElementById('cosSubmitBtn').innerHTML = `<i class="fa-solid fa-floppy-disk mr-1"></i> <span>Save Changes</span>`;
-                    });
-                }
-
-                const btnDel = tr.querySelector('.btn-del-cos');
-                if(btnDel && db) btnDel.addEventListener('click', () => remove(ref(db, 'cosmetics/' + cos.id)));
-
-                if (isT) tbodyT.appendChild(tr); else tbodyB.appendChild(tr);
+                tr.querySelector('.btn-del-cos')?.addEventListener('click', () => { if(db) remove(ref(db, 'cosmetics/' + cos.id)); });
+                
+                if (cos.platform === 'TapWave') tbodyT.appendChild(tr); else tbodyB.appendChild(tr);
             });
-
-            document.getElementById('counter-beatstar').innerText = cB;
-            document.getElementById('counter-tapwave').innerText = cT;
         }
 
-        // --- FORM SUBMISSIONS HANDLERS ---
+        // --- SUBMIT HANDLING PACKETS ---
         document.getElementById('level-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const checkedGenres = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
-            if (checkedGenres.length === 0 || !document.getElementById('lvlArt').value) {
-                alert("Completa todos los campos requeridos obligatorios."); return;
-            }
-            let lvlId = document.getElementById('editingLvlId').value || Date.now().toString();
+            const checked = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
+            let id = Date.now().toString();
             const data = {
-                id: lvlId,
-                song: document.getElementById('lvlSong').value.trim(),
-                artist: document.getElementById('lvlArtist').value.trim(),
-                art: document.getElementById('lvlArt').value,
-                genre: checkedGenres.join(' / '),
-                diff: document.getElementById('lvlDiff').value,
-                edition: document.getElementById('lvlEdition').value,
-                date: document.getElementById('lvlDate').value,
-                dl1: document.getElementById('lvlDl1').value.trim(),
-                dl2: document.getElementById('lvlDl2').value.trim(),
-                dl3: document.getElementById('lvlDl3').value.trim()
+                id: id, song: document.getElementById('lvlSong').value.trim(), artist: document.getElementById('lvlArtist').value.trim(),
+                art: document.getElementById('lvlArt').value.trim(), genre: checked.join(' / ') || 'General', diff: document.getElementById('lvlDiff').value,
+                edition: document.getElementById('lvlEdition').value, date: document.getElementById('lvlDate').value,
+                dl1: document.getElementById('lvlDl1').value.trim(), dl2: document.getElementById('lvlDl2').value.trim(), dl3: document.getElementById('lvlDl3').value.trim()
             };
-            if(db) {
-                set(ref(db, 'levels/' + lvlId), data).then(() => {
-                    set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
-                    document.getElementById('editingLvlId').value = "";
-                    document.getElementById('lvlSubmitBtn').innerHTML = `<i class="fa-solid fa-plus mr-1"></i> <span>Registrar</span>`;
-                    document.getElementById('level-form').reset(); buildGenresSelector();
-                });
-            }
+            if(db) set(ref(db, 'levels/' + id), data).then(() => { set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); document.getElementById('level-form').reset(); buildGenresSelector(); });
         });
 
         document.getElementById('cosmetic-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            if (!document.getElementById('cosIcon').value || base64InspImagesArray.length === 0) {
-                alert(translations[currentLanguage].errMinImages); return;
-            }
-            let cosId = document.getElementById('editingCosId').value || Date.now().toString();
-            let videoVal = document.getElementById('cosVideoType').value === 'youtube' ? document.getElementById('cosVideoYtUrl').value.trim() : document.getElementById('cosVideo').value;
-
+            let id = Date.now().toString();
             const data = {
-                id: cosId,
-                name: document.getElementById('cosName').value.trim(),
-                artist: document.getElementById('cosArtist').value.trim(),
-                icon: document.getElementById('cosIcon').value,
-                video: videoVal,
-                date: document.getElementById('cosDate').value,
-                insp: [...base64InspImagesArray],
-                platform: document.getElementById('cosTargetPlatform').value,
-                dl1: document.getElementById('cosDl1').value.trim(),
-                dl2: document.getElementById('cosDl2').value.trim()
+                id: id, name: document.getElementById('cosName').value.trim(), artist: document.getElementById('cosArtist').value.trim(),
+                icon: document.getElementById('cosIcon').value.trim(), video: document.getElementById('cosVideo').value.trim(),
+                date: document.getElementById('cosDate').value, insp: document.getElementById('cosInsp').value.trim(),
+                platform: document.getElementById('cosTargetPlatform').value, dl1: document.getElementById('cosDl1').value.trim(), dl2: document.getElementById('cosDl2').value.trim()
             };
-            if(db) {
-                set(ref(db, 'cosmetics/' + cosId), data).then(() => {
-                    set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
-                    document.getElementById('editingCosId').value = "";
-                    document.getElementById('cosSubmitBtn').innerHTML = `<i class="fa-solid fa-plus mr-1"></i> <span>Registrar</span>`;
-                    document.getElementById('cosmetic-form').reset(); base64InspImagesArray = []; refreshInspGalleryUI();
-                });
-            }
+            if(db) set(ref(db, 'cosmetics/' + id), data).then(() => { set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); document.getElementById('cosmetic-form').reset(); });
         });
 
-        // Binary to Base64 file loaders
-        document.getElementById('lvlArtFile').addEventListener('change', (e) => {
-            const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = (ev) => document.getElementById('lvlArt').value = ev.target.result; r.readAsDataURL(f); }
-        });
-        document.getElementById('cosIconFile').addEventListener('change', (e) => {
-            const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = (ev) => document.getElementById('cosIcon').value = ev.target.result; r.readAsDataURL(f); }
-        });
-        document.getElementById('cosVideoFile').addEventListener('change', (e) => {
-            const f = e.target.files[0]; if (f) document.getElementById('cosVideo').value = URL.createObjectURL(f);
-        });
-        document.getElementById('cosBrandLogoFile').addEventListener('change', (e) => {
-            let arr = Array.from(e.target.files); let count = 0;
-            arr.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = (ev) => { base64InspImagesArray.push(ev.target.result); count++; if (count === arr.length) refreshInspGalleryUI(); };
-                reader.readAsDataURL(file);
-            });
-            e.target.value = '';
-        });
-
-        function refreshInspGalleryUI() {
-            const c = document.getElementById('cos-preview-gallery-container'); if(!c) return; c.innerHTML = '';
-            base64InspImagesArray.forEach((src, idx) => {
-                const div = document.createElement('div');div.className = "flex items-center justify-between border border-fuchsia-950/60 bg-black/40 rounded-lg p-1.5 gap-2";
-                div.innerHTML = `<div class="h-9 w-14 bg-zinc-950 flex items-center justify-center"><img src="${src}" class="max-h-full max-w-full object-contain"></div><div class="flex items-center gap-1"><button type="button" class="btn-up-img w-5 h-5 bg-zinc-800 rounded text-[9px]"><i class="fa-solid fa-arrow-up"></i></button><button type="button" class="btn-down-img w-5 h-5 bg-zinc-800 rounded text-[9px]"><i class="fa-solid fa-arrow-down"></i></button><button type="button" class="btn-del-img w-5 h-5 bg-red-950/40 border border-red-900 rounded text-[9px]"><i class="fa-solid fa-trash-can"></i></button></div>`;
-                div.querySelector('.btn-up-img').addEventListener('click', () => { if (idx > 0) { let t = base64InspImagesArray[idx]; base64InspImagesArray[idx] = base64InspImagesArray[idx-1]; base64InspImagesArray[idx-1] = t; refreshInspGalleryUI(); } });
-                div.querySelector('.btn-down-img').addEventListener('click', () => { if (idx < base64InspImagesArray.length-1) { let t = base64InspImagesArray[idx]; base64InspImagesArray[idx] = base64InspImagesArray[idx+1]; base64InspImagesArray[idx+1] = t; refreshInspGalleryUI(); } });
-                div.querySelector('.btn-del-img').addEventListener('click', () => { base64InspImagesArray.splice(idx, 1); refreshInspGalleryUI(); });
-                c.appendChild(div);
-            });
-            document.getElementById('cosBrandLogoLabel').innerText = base64InspImagesArray.length > 0 ? `${translations[currentLanguage].txtImageLoaded} (${base64InspImagesArray.length})` : translations[currentLanguage].btnUploadLogo;
+        function syncFooterLinks() {
+            const aB = document.getElementById('footer-link-beatclone'); if(aB) aB.href = globalFooterLinks.beatclone || '#';
+            const aS = document.getElementById('footer-link-bscm'); if(aS) aS.href = globalFooterLinks.bscm || '#';
+            const aC = document.getElementById('footer-link-beatcharts'); if(aC) aC.href = globalFooterLinks.beatcharts || '#';
         }
-
-        // Preview Type Tab Switcher Fix
-        document.getElementById('tab-video-mp4').addEventListener('click', () => {
-            document.getElementById('cosVideoType').value = 'mp4';
-            document.getElementById('tab-video-mp4').className = "py-1.5 px-2 bg-fuchsia-950 text-fuchsia-400 border border-fuchsia-500 rounded-lg font-bold uppercase";
-            document.getElementById('tab-video-yt').className = "py-1.5 px-2 bg-zinc-900 text-zinc-400 border border-zinc-800 rounded-lg font-bold uppercase";
-            document.getElementById('box-preview-mp4').classList.replace('hidden', 'block');
-            document.getElementById('box-preview-yt').classList.replace('block', 'hidden');
-            document.getElementById('cosVideoYtUrl').value = "";
-        });
-
-        document.getElementById('tab-video-yt').addEventListener('click', () => {
-            document.getElementById('cosVideoType').value = 'youtube';
-            document.getElementById('tab-video-yt').className = "py-1.5 px-2 bg-fuchsia-950 text-fuchsia-400 border border-fuchsia-500 rounded-lg font-bold uppercase";
-            document.getElementById('tab-video-mp4').className = "py-1.5 px-2 bg-zinc-900 text-zinc-400 border border-zinc-800 rounded-lg font-bold uppercase";
-            document.getElementById('box-preview-yt').classList.replace('hidden', 'block');
-            document.getElementById('box-preview-mp4').classList.replace('block', 'hidden');
-            document.getElementById('cosVideo').value = ""; document.getElementById('cosVideoFile').value = "";
-        });
 
         function updateDashboardCounts() {
             if(document.getElementById('home-levels-count')) document.getElementById('home-levels-count').innerText = levels.length;
             if(document.getElementById('home-cosmetics-count')) document.getElementById('home-cosmetics-count').innerText = cosmetics.length;
         }
 
-        // Date Pickers Triggers
-        document.getElementById('btn-picker-lvl').addEventListener('click', () => document.getElementById('lvlDate').showPicker?.() || document.getElementById('lvlDate').focus());
-        document.getElementById('btn-picker-cos').addEventListener('click', () => document.getElementById('cosDate').showPicker?.() || document.getElementById('cosDate').focus());
-        
-        ['setupUrlBeatclone', 'setupUrlBscm', 'setupUrlBeatcharts'].forEach(id => document.getElementById(id).addEventListener('input', updateFooterExternalLinks));
-
-        // Initialize App State
         buildGenresSelector();
         applyLanguagePack();
     </script>
