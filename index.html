@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LKBeats Handbook  - Premium Firebase Build</title>
+    <title>LKBeats Handbook V14 - Premium Firebase Build</title>
     <!-- Tailwind CSS for utility styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts for typography -->
@@ -80,9 +80,10 @@
                 </div>
                 <div class="h-6 w-px bg-fuchsia-950/60 hidden" id="nav-separator"></div>
                 
-                <button id="auth-indicator" class="p-2 md:px-3 md:py-1.5 rounded-xl border border-zinc-800 bg-zinc-950/50 text-zinc-500 hover:text-white text-xs font-bold transition flex items-center gap-1.5">
+                <!-- Hidden on mobile to avoid unauthorized layout manipulation natively -->
+                <button id="auth-indicator" class="hidden md:flex p-2 md:px-3 md:py-1.5 rounded-xl border border-zinc-800 bg-zinc-950/50 text-zinc-500 hover:text-white text-xs font-bold transition items-center gap-1.5">
                     <i id="auth-lock-icon" class="fa-solid fa-lock"></i>
-                    <span id="auth-label" class="hidden md:inline">Visitor</span>
+                    <span id="auth-label">Visitor</span>
                 </button>
 
                 <button id="btn-lang-toggle" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl border border-fuchsia-500/30 bg-[#11091c] text-xs font-black tracking-wider text-fuchsia-400">
@@ -175,8 +176,8 @@
                 <i class="fa-solid fa-chevron-left text-orange-500"></i> <span data-i18n="backHome">Volver</span>
             </button>
             
-            <div class="grid grid-cols-1 xl:grid-cols-4 gap-6 items-start">
-                <div id="level-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl xl:col-span-1">
+            <div id="levels-layout-grid" class="flex flex-col gap-6 items-start w-full">
+                <div id="level-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addLevelTitle">Nuevo Registro</h2>
                     <form id="level-form" class="space-y-3 text-xs">
                         <input type="hidden" id="editingLvlId">
@@ -231,15 +232,15 @@
                     </form>
                 </div>
 
-                <div id="levels-table-container" class="xl:col-span-4 w-full overflow-hidden flex flex-col space-y-4">
+                <div id="levels-table-container" class="w-full overflow-hidden flex flex-col space-y-4 flex-grow">
                     <div id="levels-table-wrapper" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
-                        <table class="w-full text-left border-collapse min-w-[850px]">
+                        <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
                             <thead>
                                 <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                     <th class="p-4 text-center w-12">#</th>
-                                    <th class="p-4 w-32" data-i18n="thArt">Arte</th>
+                                    <th class="p-4 w-20 sm:w-32" data-i18n="thArt">Arte</th>
                                     <th class="p-4" data-i18n="thSongArtist">Canción / Artista</th>
-                                    <th class="p-4 w-44" data-i18n="formGenre">Género</th>
+                                    <th class="p-2 sm:p-4 w-28 sm:w-44" data-i18n="formGenre">Género</th>
                                     <th class="p-4 w-32" data-i18n="formDifficulty">Dificultad</th>
                                     <th class="p-4 w-24" data-i18n="formEdition">Edición</th>
                                     <th class="p-4 w-24" data-i18n="formRelease">Lanzamiento</th>
@@ -260,8 +261,8 @@
                 <i class="fa-solid fa-chevron-left text-fuchsia-500"></i> <span data-i18n="backHome">Volver</span>
             </button>
 
-            <div class="grid grid-cols-1 xl:grid-cols-4 gap-6 items-start">
-                <div id="cosmetic-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl xl:col-span-1">
+            <div id="cosmetics-layout-grid" class="flex flex-col gap-6 items-start w-full">
+                <div id="cosmetic-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addCosmeticTitle">Nuevo Cosmético</h2>
                     <form id="cosmetic-form" class="space-y-3 text-xs">
                         <input type="hidden" id="editingCosId">
@@ -288,10 +289,15 @@
                             </div>
                             <input type="date" id="cosDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
+                        
+                        <!-- Infinite Ascending Ordered Inspiration Engine -->
                         <div>
-                            <label class="block font-bold text-zinc-400 mb-1">URL de Imagen Inspiración (Soporta múltiples URLs separadas por comas)</label>
-                            <input type="text" id="cosInsp" placeholder="https://url1.com, https://url2.com" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                            <label class="block font-bold text-zinc-400 mb-1">URLs Imagen Inspiración</label>
+                            <div id="dynamic-insp-inputs-container" class="space-y-2">
+                                <!-- Generated Dynamic Content Fields Target Router -->
+                            </div>
                         </div>
+
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formSkinFor">Skin para...</label>
                             <select id="cosTargetPlatform" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
@@ -309,22 +315,22 @@
                     </form>
                 </div>
 
-                <div id="cosmetics-table-container" class="xl:col-span-4 w-full overflow-hidden flex flex-col space-y-10">
+                <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-10 flex-grow">
                     <!-- Beatstar -->
                     <div class="flex flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between">
-                            <div class="h-10 max-w-[240px]">
+                            <div class="h-10 max-w-[180px] sm:max-w-[240px]">
                                 <img src="BeatstarWhiteLogo.png" alt="Beatstar" class="h-full object-contain">
                             </div>
                             <div class="text-xs font-bold bg-fuchsia-950/50 border border-fuchsia-800/40 px-3 py-1.5 rounded-xl text-fuchsia-400"><span data-i18n="txtTotal">Total</span>: <span id="counter-beatstar">0</span> Skins</div>
                         </div>
                         <div id="wrapper-beatstar" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
-                            <table class="w-full text-left border-collapse min-w-[850px]">
+                            <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
                                 <thead>
                                     <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                         <th class="p-4 text-center w-12">#</th>
-                                        <th class="p-4 w-32" data-i18n="thIcon">Icono</th>
-                                        <th class="p-4" data-i18n="thSkinInfo">Información</th>
+                                        <th class="p-2 sm:p-4 w-20 sm:w-32" data-i18n="thIcon">Icono</th>
+                                        <th class="p-2 sm:p-4" data-i18n="thSkinInfo">Información</th>
                                         <th class="p-4 text-center w-36" data-i18n="thPreview">Preview</th>
                                         <th class="p-4 text-center w-44" data-i18n="thDlLinks">Descargas</th>
                                         <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
@@ -338,18 +344,19 @@
                     <!-- Tapwave -->
                     <div class="flex flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between">
-                            <div class="h-10 max-w-[240px]">
-                                <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full object-contain">
+                            <div class="h-10 max-w-[180px] sm:max-w-[240px]">
+                                <!-- Matching aspect ratios scaling perfectly now -->
+                                <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full max-h-10 object-contain">
                             </div>
                             <div class="text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400"><span data-i18n="txtTotal">Total</span>: <span id="counter-tapwave">0</span> Skins</div>
                         </div>
                         <div id="wrapper-tapwave" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
-                            <table class="w-full text-left border-collapse min-w-[850px]">
+                            <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
                                 <thead>
                                     <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                         <th class="p-4 text-center w-12">#</th>
-                                        <th class="p-4 w-32" data-i18n="thIcon">Icono</th>
-                                        <th class="p-4" data-i18n="thSkinInfo">Información</th>
+                                        <th class="p-2 sm:p-4 w-20 sm:w-32" data-i18n="thIcon">Icono</th>
+                                        <th class="p-2 sm:p-4" data-i18n="thSkinInfo">Información</th>
                                         <th class="p-4 text-center w-36" data-i18n="thPreview">Preview</th>
                                         <th class="p-4 text-center w-44" data-i18n="thDlLinks">Descargas</th>
                                         <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
@@ -394,7 +401,7 @@
           storageBucket: "lkbeats-handbook.firebasestorage.app",
           messagingSenderId: "638032680948",
           appId: "1:638032680948:web:66d78be109a16356a80ba1"
-        };
+        };[cite: 1]
 
         const genreList = [
             { color: "#bf2726", label: "Rock", filterClass: "filter-genre-rock" },
@@ -447,6 +454,7 @@
         let levels = [];
         let cosmetics = [];
         let globalFooterLinks = { beatclone: '', bscm: '', beatcharts: '' };
+        let currentInspUrlsArray = [""]; // State management routing for infinite cascading links
 
         function navigateTo(view) {
             ['home', 'levels', 'cosmetics'].forEach(v => document.getElementById(`view-${v}`)?.classList.add('hidden'));
@@ -458,7 +466,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // NAVIGATION ASSIGNMENT
+        // NAVIGATION LOGIC ROUTING
         document.getElementById('nav-logo').addEventListener('click', () => navigateTo('home'));
         document.getElementById('btn-nav-levels').addEventListener('click', () => navigateTo('levels'));
         document.getElementById('btn-nav-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
@@ -477,10 +485,10 @@
         });
         document.querySelectorAll('.btn-back-to-home').forEach(btn => btn.addEventListener('click', () => navigateTo('home')));
 
-        // BACKEND CONNECTIONS MANAGEMENT
+        // BACKEND CONTROLLERS
         let db = null;
         try {
-            const app = initializeApp(firebaseConfig);
+            const app = initializeApp(firebaseConfig);[cite: 1]
             db = getDatabase(app);
 
             onValue(ref(db, 'levels'), (snap) => { levels = snap.val() ? Object.values(snap.val()) : []; renderLevelsTable(); updateDashboardCounts(); });
@@ -496,6 +504,7 @@
             return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
         }
 
+        // PC UI Realignment Grid Layout Engine Fix
         function applyRoleUIVisibility() {
             const label = document.getElementById('auth-label');
             const icon = document.getElementById('auth-lock-icon');
@@ -506,6 +515,18 @@
                 document.getElementById(id)?.classList.toggle('hidden', !isCreatorMode);
             });
             document.querySelectorAll('.creator-action-header').forEach(el => el.classList.toggle('hidden', !isCreatorMode));
+
+            // PC Mode Layout Alignment: Flex alongside side-form instead of drifting under tables
+            const lvlGrid = document.getElementById('levels-layout-grid');
+            const cosGrid = document.getElementById('cosmetics-layout-grid');
+            if (isCreatorMode) {
+                lvlGrid?.classList.replace('flex-col', 'xl:flex-row');
+                cosGrid?.classList.replace('flex-col', 'xl:flex-row');
+            } else {
+                lvlGrid?.classList.replace('xl:flex-row', 'flex-col');
+                cosGrid?.classList.replace('xl:flex-row', 'flex-col');
+            }
+
             renderLevelsTable(); renderCosmeticsTables();
         }
 
@@ -537,6 +558,47 @@
             });
         }
 
+        // Infinite Cascending Ascending Dynamic Inputs Logic Framework
+        function renderDynamicInspInputs() {
+            const container = document.getElementById('dynamic-insp-inputs-container');
+            if(!container) return; container.innerHTML = '';
+            
+            currentInspUrlsArray.forEach((url, index) => {
+                const inputWrapper = document.createElement('div');
+                inputWrapper.className = "flex items-center gap-2";
+                inputWrapper.innerHTML = `
+                    <div class="bg-zinc-950 px-2 py-2 border border-fuchsia-950 rounded-lg text-zinc-500 font-mono font-bold text-xs">${index + 1}</div>
+                    <input type="url" value="${url}" placeholder="https://..." class="insp-url-field flex-grow bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100 text-xs">
+                    ${currentInspUrlsArray.length > 1 ? `<button type="button" class="btn-remove-insp-field p-2 bg-red-950/40 border border-red-900/30 text-red-400 hover:bg-red-900 hover:text-white rounded-lg transition"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+                `;
+
+                const field = inputWrapper.querySelector('.insp-url-field');
+                field.addEventListener('input', (e) => {
+                    currentInspUrlsArray[index] = e.target.value.trim();
+                    // Cascade check trigger condition: If last input is populated, append a clean slate link field
+                    if (index === currentInspUrlsArray.length - 1 && e.target.value.trim() !== "") {
+                        currentInspUrlsArray.push("");
+                        renderDynamicInspInputs();
+                        // Maintain tactical typing focus alignment natively
+                        setTimeout(() => {
+                            const updatedFields = container.querySelectorAll('.insp-url-field');
+                            updatedFields[index].focus();
+                        }, 10);
+                    }
+                });
+
+                inputWrapper.querySelector('.btn-remove-insp-field')?.addEventListener('click', () => {
+                    currentInspUrlsArray.splice(index, 1);
+                    if(currentInspUrlsArray.length === 0 || currentInspUrlsArray[currentInspUrlsArray.length - 1] !== "") {
+                        currentInspUrlsArray.push("");
+                    }
+                    renderDynamicInspInputs();
+                });
+
+                container.appendChild(inputWrapper);
+            });
+        }
+
         function renderGenresBadgesHtml(raw) {
             if(!raw) return '';
             return raw.split(' / ').map(g => {
@@ -548,7 +610,7 @@
                 return `
                     <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-extrabold" style="color:${color}; border-color:${color}40; background:${color}10">
                         <img src="${cName}.png" class="w-3 h-3 object-contain shrink-0 ${fClass}" alt="${trimmed}" onerror="this.style.display='none'">
-                        <span>${trimmed}</span>
+                        <span class="hidden sm:inline">${trimmed}</span>
                     </div>
                 `;
             }).join(' ');
@@ -571,13 +633,13 @@
 
                 tr.innerHTML = `
                     <td class="p-4 text-center font-mono font-bold text-zinc-500">${i+1}</td>
-                    <td class="p-4"><div class="w-20 h-20 md:w-24 md:h-24 border border-fuchsia-950/40 rounded-xl overflow-hidden shadow-lg"><img src="${lvl.art}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='free_song_Image.png'"></div></td>
-                    <td class="p-4"><div class="font-bold text-white text-sm tracking-wide mb-0.5">${lvl.song}</div><div class="text-xs text-zinc-500 font-normal">${lvl.artist}</div></td>
-                    <td class="p-4"><div class="flex flex-col gap-1 max-w-[140px]">${renderGenresBadgesHtml(lvl.genre)}</div></td>
+                    <td class="p-2 sm:p-4"><div class="w-14 h-14 sm:w-24 sm:h-24 border border-fuchsia-950/40 rounded-xl overflow-hidden shadow-lg"><img src="${lvl.art}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='free_song_Image.png'"></div></td>
+                    <td class="p-4"><div class="font-bold text-white text-xs sm:text-sm tracking-wide mb-0.5">${lvl.song}</div><div class="text-[10px] sm:text-xs text-zinc-500 font-normal">${lvl.artist}</div></td>
+                    <td class="p-1 sm:p-4 w-20 sm:w-44"><div class="flex flex-col gap-1 max-w-[140px]">${renderGenresBadgesHtml(lvl.genre)}</div></td>
                     <td class="p-4"><div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg border ${bStyle}"><img src="${icon}" class="w-3.5 h-3.5 ${fClass}"><span>${diffText}</span></div></td>
                     <td class="p-4 font-medium text-zinc-300">${lvl.edition}</td>
-                    <td class="p-4 font-mono text-zinc-500">${lvl.date}</td>
-                    <td class="p-4"><div class="flex flex-col gap-1 max-w-[150px] mx-auto">${lvl.dl1 ? `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 p-1 text-center rounded text-[10px] font-bold border border-zinc-800 flex items-center justify-center gap-1"><img src="Discord_Logo.png" class="w-3 h-3 force-white-icon">Discord</a>`:''} ${lvl.dl2 ? `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 p-1 text-center rounded text-[10px] font-bold border border-zinc-800 flex items-center justify-center gap-1"><img src="BSCM_Logo.png" class="w-3 h-3 force-white-icon">BSCM</a>`:''} ${lvl.dl3 ? `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 p-1 text-center rounded text-[10px] font-bold border border-zinc-800 flex items-center justify-center gap-1"><img src="beatcharts_Logo.png" class="w-3 h-3 force-white-icon">beatcharts</a>`:''}</div></td>
+                    <td class="p-4 font-mono text-zinc-400">${lvl.date}</td>
+                    <td class="p-4"><div class="flex flex-col gap-1 max-w-[160px] mx-auto">${lvl.dl1 ? `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 px-3 py-2 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 shadow hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-4 h-4 force-white-icon">Discord</a>`:''} ${lvl.dl2 ? `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 px-3 py-2 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 shadow hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-4 h-4 force-white-icon">BSCM</a>`:''} ${lvl.dl3 ? `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-3 py-2 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 shadow hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-4 h-4 force-white-icon">beatcharts</a>`:''}</div></td>
                     <td class="p-4 text-center ${isCreatorMode ? '':'hidden'}"><div class="flex flex-col gap-1"><button class="btn-edit-lvl bg-white text-black px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Edit</button><button class="btn-del-lvl bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Delete</button></div></td>
                 `;
 
@@ -618,22 +680,24 @@
                 let inspMarkup = '';
                 if (cos.insp) {
                     let links = cos.insp.split(',').map(l => l.trim()).filter(Boolean);
-                    inspMarkup = `<div class="grid grid-cols-2 gap-1 mt-1 bg-black/30 p-1 rounded border border-fuchsia-950/20">${links.map(l => `<img src="${l}" class="h-10 w-full object-contain rounded bg-zinc-950">`).join('')}</div>`;
+                    // Responsive bound box wrapping tight images avoiding dead space gaps layout
+                    inspMarkup = `<div class="flex flex-wrap gap-1 mt-1 bg-black/30 p-1 rounded border border-fuchsia-950/20 w-max max-w-full">${links.map(l => `<div class="h-10 w-16 bg-zinc-950 flex items-center justify-center p-0.5 rounded"><img src="${l}" class="max-h-full max-w-full object-contain"></div>`).join('')}</div>`;
                 }
 
                 tr.innerHTML = `
                     <td class="p-4 text-center font-mono font-bold text-zinc-500">${cIndex}</td>
-                    <td class="p-4"><div class="w-20 h-20 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1"><img src="${cos.icon}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'"></div></td>
-                    <td class="p-4">
-                        <ul class="space-y-1.5 list-none text-zinc-400">
-                            <li><span class="text-zinc-500 font-bold uppercase text-[10px] inline-block w-16">${translations[currentLanguage].listName}:</span> <span class="text-white font-black tracking-wide">${cos.name}</span></li>
-                            <li><span class="text-zinc-500 font-bold uppercase text-[10px] inline-block w-16">${translations[currentLanguage].listArtist}:</span> <span class="text-zinc-300 font-semibold">${cos.artist}</span></li>
-                            <li><span class="text-zinc-500 font-bold uppercase text-[10px] inline-block w-16">${translations[currentLanguage].listRelease}:</span> <span class="font-mono text-zinc-400">${cos.date}</span></li>
-                            <li class="flex flex-col gap-1 pt-0.5"><span class="text-zinc-500 font-bold uppercase text-[10px]">${translations[currentLanguage].listInsp}:</span> ${inspMarkup || 'N/A'}</li>
+                    <td class="p-2 sm:p-4"><div class="w-14 h-14 sm:w-20 sm:h-20 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1"><img src="${cos.icon}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'"></div></td>
+                    <td class="p-2 sm:p-4">
+                        <!-- Upgraded information typesetting font metrics resolution mapping -->
+                        <ul class="space-y-1.5 list-none text-xs sm:text-sm text-zinc-400">
+                            <li><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs inline-block w-16 sm:w-20">${translations[currentLanguage].listName}:</span> <span class="text-white font-black tracking-wide text-xs sm:text-base">${cos.name}</span></li>
+                            <li><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs inline-block w-16 sm:w-20">${translations[currentLanguage].listArtist}:</span> <span class="text-zinc-300 font-semibold">${cos.artist}</span></li>
+                            <li><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs inline-block w-16 sm:w-20">${translations[currentLanguage].listRelease}:</span> <span class="font-mono text-zinc-400 text-xs">${cos.date}</span></li>
+                            <li class="flex flex-col gap-1 pt-0.5"><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs">${translations[currentLanguage].listInsp}:</span> ${inspMarkup || 'N/A'}</li>
                         </ul>
                     </td>
                     <td class="p-4 text-center">${pMarkup}</td>
-                    <td class="p-4"><div class="flex flex-col gap-1 max-w-[140px] mx-auto">${cos.dl1 ? `<a href="${cos.dl1}" target="_blank" class="bg-zinc-900 p-1 text-center rounded text-[10px] font-bold border border-zinc-800 flex items-center justify-center gap-1"><img src="Discord_Logo.png" class="w-3 h-3 force-white-icon">Discord</a>`:''} ${cos.dl2 ? `<a href="${cos.dl2}" target="_blank" class="bg-zinc-900 p-1 text-center rounded text-[10px] font-bold border border-zinc-800 flex items-center justify-center gap-1"><img src="BSCM_Logo.png" class="w-3 h-3 force-white-icon">BSCM</a>`:''}</div></td>
+                    <td class="p-4"><div class="flex flex-col gap-1 max-w-[160px] mx-auto">${cos.dl1 ? `<a href="${cos.dl1}" target="_blank" class="bg-zinc-900 px-3 py-2 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 shadow hover:border-fuchsia-500/40 transition"><img src="Discord_Logo.png" class="w-4 h-4 force-white-icon">Discord</a>`:''} ${cos.dl2 ? `<a href="${cos.dl2}" target="_blank" class="bg-zinc-900 px-3 py-2 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 shadow hover:border-fuchsia-500/40 transition"><img src="BSCM_Logo.png" class="w-4 h-4 force-white-icon">BSCM</a>`:''}</div></td>
                     <td class="p-4 text-center ${isCreatorMode ? '':'hidden'}"><div class="flex flex-col gap-1"><button class="btn-edit-cos bg-white text-black px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Edit</button><button class="btn-del-cos bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Delete</button></div></td>
                 `;
                 
@@ -644,7 +708,13 @@
                     document.getElementById('cosIcon').value = cos.icon;
                     document.getElementById('cosVideo').value = cos.video;
                     document.getElementById('cosDate').value = cos.date;
-                    document.getElementById('cosInsp').value = cos.insp || '';
+                    
+                    // Parse back into cascading array structures upon edit selection mapping
+                    let cleanLinks = cos.insp ? cos.insp.split(',').map(l => l.trim()).filter(Boolean) : [];
+                    cleanLinks.push("");
+                    currentInspUrlsArray = cleanLinks;
+                    renderDynamicInspInputs();
+
                     document.getElementById('cosTargetPlatform').value = cos.platform;
                     document.getElementById('cosDl1').value = cos.dl1 || '';
                     document.getElementById('cosDl2').value = cos.dl2 || '';
@@ -659,7 +729,7 @@
             document.getElementById('counter-tapwave').innerText = cT;
         }
 
-        // FORM OPERATIONS
+        // FORM DISPATCH HANDLING
         document.getElementById('level-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const checked = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
@@ -676,13 +746,17 @@
         document.getElementById('cosmetic-form').addEventListener('submit', (e) => {
             e.preventDefault();
             let id = document.getElementById('editingCosId').value || Date.now().toString();
+            
+            // Collect cascading non-empty validation links fields array cleanly
+            let nonEmptylinks = currentInspUrlsArray.map(l => l.trim()).filter(Boolean);
+
             const data = {
                 id: id, name: document.getElementById('cosName').value.trim(), artist: document.getElementById('cosArtist').value.trim(),
                 icon: document.getElementById('cosIcon').value.trim(), video: document.getElementById('cosVideo').value.trim(),
-                date: document.getElementById('cosDate').value, insp: document.getElementById('cosInsp').value.trim(),
+                date: document.getElementById('cosDate').value, insp: nonEmptylinks.join(', '),
                 platform: document.getElementById('cosTargetPlatform').value, dl1: document.getElementById('cosDl1').value.trim(), dl2: document.getElementById('cosDl2').value.trim()
             };
-            if(db) set(ref(db, 'cosmetics/' + id), data).then(() => { set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); document.getElementById('cosmetic-form').reset(); document.getElementById('editingCosId').value = ''; document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnRegister; });
+            if(db) set(ref(db, 'cosmetics/' + id), data).then(() => { set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); document.getElementById('cosmetic-form').reset(); document.getElementById('editingCosId').value = ''; document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnRegister; currentInspUrlsArray = [""]; renderDynamicInspInputs(); });
         });
 
         function syncFooterLinks() {
@@ -696,11 +770,11 @@
             if(document.getElementById('home-cosmetics-count')) document.getElementById('home-cosmetics-count').innerText = cosmetics.length;
         }
 
-        // TRIGGER PICKERS
         document.getElementById('btn-picker-lvl').addEventListener('click', () => document.getElementById('lvlDate').showPicker?.() || document.getElementById('lvlDate').focus());
         document.getElementById('btn-picker-cos').addEventListener('click', () => document.getElementById('cosDate').showPicker?.() || document.getElementById('cosDate').focus());
 
         buildGenresSelector();
+        renderDynamicInspInputs();
         applyLanguagePack();
     </script>
 </body>
