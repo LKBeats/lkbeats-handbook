@@ -153,7 +153,7 @@
             <!-- DISCLAIMER SECTION -->
             <div class="bg-zinc-950/60 border border-zinc-900 rounded-2xl p-4 text-center text-xs text-zinc-500 mb-10">
                 <div class="font-bold uppercase tracking-widest mb-1" data-i18n="disclaimerTitle">Deslinde de Responsabilidad</div>
-                <div data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes de portada pertenecen a sus respectivos propietarios y desarrolladores originales.</div>
+                <div data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes pertenecen a sus respectivos propietarios y desarrolladores originales.</div>
             </div>
 
             <!-- Footer Links Manager Box -->
@@ -226,7 +226,7 @@
                         </div>
                         <div>
                             <div class="flex items-center justify-between mb-1">
-                                <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="formRelease">Fecha de lanzamiento</label>
+                                <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="formRelease">Lanzamiento</label>
                                 <button type="button" id="btn-picker-lvl" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar Fecha</button>
                             </div>
                             <input type="date" id="lvlDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
@@ -243,12 +243,12 @@
                 </div>
 
                 <div id="levels-table-container" class="w-full overflow-hidden flex flex-col space-y-3 flex-grow">
-                    <!-- Charts/Songs Header Banner -->
-                    <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between">
-                        <div class="text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">
+                    <!-- Charts/Songs Header Banner optimized for single-line text on all devices -->
+                    <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between whitespace-nowrap overflow-hidden">
+                        <div class="text-sm sm:text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400 truncate mr-2">
                             Charts / <span data-i18n="bannerSongs">Canciones</span>
                         </div>
-                        <div class="text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400">
+                        <div class="text-[10px] sm:text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-2.5 py-1.5 rounded-xl text-orange-400 shrink-0">
                             <span data-i18n="txtTotal">Total</span>: <span id="counter-charts-header">0</span> Charts
                         </div>
                     </div>
@@ -263,8 +263,8 @@
                                     <th class="p-2 sm:p-4 w-28 sm:w-44" data-i18n="formGenre">Género</th>
                                     <th class="p-4 text-center w-32" data-i18n="formDifficulty">Dificultad</th>
                                     <th class="p-4 text-center w-24" data-i18n="formEdition">Edición</th>
-                                    <th class="p-4 text-center w-24 whitespace-nowrap" data-i18n="formRelease">Fecha de lanzamiento</th>
-                                    <th class="p-4 text-center w-48 sm:w-56" data-i18n="thPlatformDl">Descarga</th>
+                                    <th class="p-4 text-center w-24 whitespace-nowrap" data-i18n="formRelease">Lanzamiento</th>
+                                    <th class="p-4 text-center w-52 sm:w-60" data-i18n="thPlatformDl">Descarga</th>
                                     <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                 </tr>
                             </thead>
@@ -304,7 +304,7 @@
                         </div>
                         <div>
                             <div class="flex items-center justify-between mb-1">
-                                <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="formRelease">Fecha de lanzamiento</label>
+                                <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="formRelease">Lanzamiento</label>
                                 <button type="button" id="btn-picker-cos" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar Fecha</button>
                             </div>
                             <input type="date" id="cosDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
@@ -351,7 +351,7 @@
                                         <th class="p-4 text-center w-12">#</th>
                                         <th class="p-2 sm:p-4 w-16 sm:w-36" data-i18n="thIcon">Icono</th>
                                         <th class="p-2 sm:p-4" data-i18n="thSkinInfo">Información</th>
-                                        <th class="p-4 text-center w-48 sm:w-56" data-i18n="thPreview">Preview</th>
+                                        <th class="p-4 text-center w-48 sm:w-64" data-i18n="thPreview">Preview</th>
                                         <th class="p-4 text-center w-52 sm:w-64" data-i18n="thDlLinks">Descarga</th>
                                         <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                     </tr>
@@ -376,7 +376,7 @@
                                         <th class="p-4 text-center w-12">#</th>
                                         <th class="p-2 sm:p-4 w-16 sm:w-36" data-i18n="thIcon">Icono</th>
                                         <th class="p-2 sm:p-4" data-i18n="thSkinInfo">Información</th>
-                                        <th class="p-4 text-center w-48 sm:w-56" data-i18n="thPreview">Preview</th>
+                                        <th class="p-4 text-center w-48 sm:w-64" data-i18n="thPreview">Preview</th>
                                         <th class="p-4 text-center w-52 sm:w-64" data-i18n="thDlLinks">Descarga</th>
                                         <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                     </tr>
@@ -442,12 +442,12 @@
                 cardLevelsTitle: "Charts", cardLevelsDesc: "Encuentra todos los charts que he realizado para Beaclone / BSCM / beatcharts",
                 cardCosmeticsTitle: "Skins", cardCosmeticsDesc: "Encuentra todas las skins que he realizado para Beaclone / TapWave",
                 disclaimerTitle: "Deslinde de Responsabilidad", 
-                disclaimerContent: "Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes de portada pertenecen a sus respectivos propietarios y desarrolladores originales.",
+                disclaimerContent: "Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes pertenecen a sus respectivos propietarios y desarrolladores originales.",
                 navLevels: "Charts", navCosmetics: "Skins", backHome: "Volver", levelsPageTitle: "Charts", cosmeticsPageTitle: "Skins",
                 addLevelTitle: "Nuevo Registro", addCosmeticTitle: "Nuevo Cosmético", btnRegister: "Registrar", emptyDatabase: "No hay registros.",
                 formSong: "Canción", formArtist: "Artista", formGenre: "Género", formDifficulty: "Dificultad", formEdition: "Edición",
-                formRelease: "Fecha de lanzamiento", formUrlsTitle: "Enlaces de Descarga", listName: "Nombre", listArtist: "Artista",
-                listRelease: "Fecha de lanzamiento", listInsp: "Inspirado en", thArt: "Arte", thSongArtist: "Canción / Artista", thPlatformDl: "Descarga",
+                formRelease: "Lanzamiento", formUrlsTitle: "Enlaces de Descarga", listName: "Nombre", listArtist: "Artista",
+                listRelease: "Lanzamiento", listInsp: "Inspirado en", thArt: "Arte", thSongArtist: "Canción / Artista", thPlatformDl: "Descarga",
                 thIcon: "Icono", thSkinInfo: "Información", thPreview: "Preview", thDlLinks: "Descarga", btnChangeDate: "Cambiar Fecha",
                 thActions: "Acciones", btnEdit: "Editar", btnDelete: "Eliminar", diffNormal: "Normal", diffHard: "Difícil", diffExtreme: "Extremo",
                 noLinks: "No hay enlaces", formSkinFor: "Skin para...", btnUploadLogo: "Subir Imagen", txtImageLoaded: "Cargado", txtTotal: "Total",
@@ -461,7 +461,7 @@
                 cardLevelsTitle: "Charts", cardLevelsDesc: "Find all the charts I've made for Beatclone / BSCM / beatcharts",
                 cardCosmeticsTitle: "Skins", cardCosmeticsDesc: "Find all the skins I've made for Beatclone / TapWave",
                 disclaimerTitle: "Disclaimer", 
-                disclaimerContent: "This content was created purely for recreational and entertainment purposes for the community. All registered trademarks, logos, visual assets, and cover images belong to their respective owners and original developers.",
+                disclaimerContent: "This content was created purely for recreational and entertainment purposes for the community. All registered trademarks, logos, visual assets, and images belong to their respective owners and original developers.",
                 navLevels: "Charts", navCosmetics: "Skins", backHome: "Back", levelsPageTitle: "Charts", cosmeticsPageTitle: "Skins",
                 addLevelTitle: "New Record", addCosmeticTitle: "New Cosmetic", btnRegister: "Register", emptyDatabase: "No records.",
                 formSong: "Song", formArtist: "Artist", formGenre: "Genre", formDifficulty: "Difficulty", formEdition: "Edition",
@@ -527,7 +527,6 @@
                 if (snap.val()) { 
                     globalFooterLinks = snap.val(); 
                     syncFooterLinks(); 
-                    // Populate fields when data arrives
                     if(document.getElementById('setupUrlBeatclone')) document.getElementById('setupUrlBeatclone').value = globalFooterLinks.beatclone || '';
                     if(document.getElementById('setupUrlBscm')) document.getElementById('setupUrlBscm').value = globalFooterLinks.bscm || '';
                     if(document.getElementById('setupUrlBeatcharts')) document.getElementById('setupUrlBeatcharts').value = globalFooterLinks.beatcharts || '';
@@ -688,7 +687,14 @@
                     </td>
                     <td class="p-4 text-center font-bold text-zinc-300 tracking-wide">${lvl.edition}</td>
                     <td class="p-4 text-center font-bold text-zinc-400 tracking-wide">${formatStringToDMY(lvl.date)}</td>
-                    <td class="p-4 text-center"><div class="flex flex-col gap-1 max-w-[140px] sm:max-w-[180px] mx-auto">${lvl.dl1 ? `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 shadow hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-3.5 h-3.5 force-white-icon">Discord</a>`:''} ${lvl.dl2 ? `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 shadow hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-3.5 h-3.5 force-white-icon">BSCM</a>`:''} ${lvl.dl3 ? `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 shadow hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-3.5 h-3.5 force-white-icon">beatcharts</a>`:''}</div></td>
+                    <!-- Optimized buttons layout: larger horizontal padding on mobile (px-5 sm:px-2) and upscaled white vector icons (w-4.5 h-4.5) -->
+                    <td class="p-4 text-center">
+                        <div class="flex flex-col gap-1 max-w-[160px] sm:max-w-[180px] mx-auto">
+                            ${lvl.dl1 ? `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 px-5 sm:px-2 py-1.5 text-center rounded-xl text-[11px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-4.5 h-4.5 sm:w-5 sm:h-5 force-white-icon">Discord</a>`:''} 
+                            ${lvl.dl2 ? `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 px-5 sm:px-2 py-1.5 text-center rounded-xl text-[11px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-4.5 h-4.5 sm:w-5 sm:h-5 force-white-icon">BSCM</a>`:''} 
+                            ${lvl.dl3 ? `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-5 sm:px-2 py-1.5 text-center rounded-xl text-[11px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-4.5 h-4.5 sm:w-5 sm:h-5 force-white-icon">beatcharts</a>`:''}
+                        </div>
+                    </td>
                     <td class="p-4 text-center ${isCreatorMode ? '':'hidden'}"><div class="flex flex-col gap-1"><button class="btn-edit-lvl bg-white text-black px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Edit</button><button class="btn-del-lvl bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Delete</button></div></td>
                 `;
 
@@ -724,12 +730,14 @@
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-fuchsia-950/10 transition border-b border-fuchsia-950/20";
                 
-                let pMarkup = cos.video ? `<div class="w-32 h-48 sm:w-40 sm:h-64 mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl"><iframe src="${parseYoutubeEmbedUrl(cos.video)}" class="w-full h-full border-0"></iframe></div>` : '[No Preview]';
+                // YouTube Embed Premium Scaling Framework maintaining its native cinematic 16:9 widescreen aspect ratio smoothly
+                let pMarkup = cos.video ? `<div class="w-40 h-24 sm:w-56 sm:h-32 mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl"><iframe src="${parseYoutubeEmbedUrl(cos.video)}" class="w-full h-full border-0"></iframe></div>` : '[No Preview]';
                 
                 let inspMarkup = '';
                 if (cos.insp) {
                     let links = cos.insp.split(',').map(l => l.trim()).filter(Boolean);
-                    inspMarkup = `<div class="flex flex-wrap gap-2 mt-1 bg-black/30 p-2 rounded border border-fuchsia-950/20 w-max max-w-full">${links.map(l => `<div class="h-20 w-32 xl:h-28 xl:w-44 bg-zinc-950 flex items-center justify-center p-1 rounded border border-zinc-900 shadow-inner"><img src="${l}" class="max-h-full max-w-full object-contain"></div>`).join('')}</div>`;
+                    // Upscaled Inspired-by section container architecture metrics for clear crisp rendering (h-24 w-36 / xl:h-36 xl:w-56)
+                    inspMarkup = `<div class="flex flex-wrap gap-2 mt-1 bg-black/30 p-2 rounded border border-fuchsia-950/20 w-max max-w-full">${links.map(l => `<div class="h-24 w-36 xl:h-36 xl:w-56 bg-zinc-950 flex items-center justify-center p-1 rounded border border-zinc-900 shadow-inner"><img src="${l}" class="max-h-full max-w-full object-contain"></div>`).join('')}</div>`;
                 }
 
                 tr.innerHTML = `
@@ -749,7 +757,8 @@
                         </ul>
                     </td>
                     <td class="p-4 text-center">${pMarkup}</td>
-                    <td class="p-4"><div class="flex flex-col gap-1.5 max-w-[190px] sm:max-w-[240px] mx-auto">${cos.dl1 ? `<a href="${cos.dl1}" target="_blank" class="bg-zinc-900 px-4 py-3 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-fuchsia-500/40 transition"><img src="Discord_Logo.png" class="w-4 h-4 force-white-icon">Discord</a>`:''} ${cos.dl2 ? `<a href="${cos.dl2}" target="_blank" class="bg-zinc-900 px-4 py-3 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-fuchsia-500/40 transition"><img src="BSCM_Logo.png" class="w-4 h-4 force-white-icon">BSCM</a>`:''}</div></td>
+                    <!-- Upscaled platform graphics inside cosmetics download anchors cleanly (w-4.5 h-4.5) -->
+                    <td class="p-4"><div class="flex flex-col gap-1.5 max-w-[190px] sm:max-w-[240px] mx-auto">${cos.dl1 ? `<a href="${cos.dl1}" target="_blank" class="bg-zinc-900 px-4 py-3 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-fuchsia-500/40 transition"><img src="Discord_Logo.png" class="w-4.5 h-4.5 sm:w-5 sm:h-5 force-white-icon">Discord</a>`:''} ${cos.dl2 ? `<a href="${cos.dl2}" target="_blank" class="bg-zinc-900 px-4 py-3 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-fuchsia-500/40 transition"><img src="BSCM_Logo.png" class="w-4.5 h-4.5 sm:w-5 sm:h-5 force-white-icon">BSCM</a>`:''}</div></td>
                     <td class="p-4 text-center ${isCreatorMode ? '':'hidden'}"><div class="flex flex-col gap-1"><button class="btn-edit-cos bg-white text-black px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Edit</button><button class="btn-del-cos bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Delete</button></div></td>
                 `;
                 
@@ -800,7 +809,7 @@
             let nonEmptylinks = currentInspUrlsArray.map(l => l.trim()).filter(Boolean);
 
             const data = {
-                id: id, name: document.getElementById('cosName').value.trim(), artist: document.getElementById('cosArtist').value.trim(),
+                id: id, name: document.getElementById('cosName').value.trim(), artist: document.getElementById('cosmetic-form').querySelector('#cosArtist').value.trim(),
                 icon: document.getElementById('cosIcon').value.trim(), video: document.getElementById('cosVideo').value.trim(),
                 date: document.getElementById('cosDate').value, insp: nonEmptylinks.join(', '),
                 platform: document.getElementById('cosTargetPlatform').value, dl1: document.getElementById('cosDl1').value.trim(), dl2: document.getElementById('cosDl2').value.trim()
