@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LKBeats Handbook V13 - Firebase Cloud Build</title>
+    <title>LKBeats Handbook - Firebase Cloud Build</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -484,7 +484,7 @@
 
 
     <script>
-        // ⚠️ REEMPLAZA ESTE BLOQUE CON TU CONFIGURACIÓN REAL DE FIREBASE COPIADA EN EL PASO 2:
+        // REEMPLAZA ESTE BLOQUE CON TU CONFIGURACIÓN REAL DE FIREBASE COPIADA EN EL PASO 2:
         const firebaseConfig = {
             apiKey: "AIzaSyBmYQjQiHBH6pLqKNpjc3gNUsrF0fdYJsU",
             authDomain: "lkbeats-handbook.firebaseapp.com",
@@ -601,36 +601,22 @@
         function refreshDynamicUpdateTimestamp() {
             document.querySelectorAll('#dynamic-update-date').forEach(el => el.innerText = systemLastUpdate);
         }
-
+        
+<script>
         // Realtime Firebase Stream Listeners Framework Pipeline Setup
-        db.ref('levels').on('value', (snapshot) => {
-             const val = snapshot.val();
-             // Convierte el objeto de Firebase en una lista limpia para la tabla
-             levels = val ? Object.values(val) : [];
-             renderLevelsTable();
-             updateDashboardCounts();
-         }, (error) => {
-             console.error("Error leyendo charts de Firebase:", error);
-         });
+db.ref('levels').on('value', (snapshot) => {
+            const val = snapshot.val();
+            levels = val ? Object.values(val) : [];
+            renderLevelsTable();
+            updateDashboardCounts();
+        });
 
         db.ref('cosmetics').on('value', (snapshot) => {
-             const val = snapshot.val();
-             // Convierte el objeto de Firebase en una lista limpia para la tabla
-             cosmetics = val ? Object.values(val) : [];
-            function parseYoutubeEmbedUrl(url) {
-             if (!url) return '';
-             let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
-             let match = url.match(regExp);
-             if (match && match[2].length == 11) {
-                 return `https://www.youtube.com/embed/${match[2]}?autoplay=0&rel=0&modestbranding=1`;
-             }
-             return url;
-         }
-             renderCosmeticsTables();
-             updateDashboardCounts();
-         }, (error) => {
-             console.error("Error leyendo skins de Firebase:", error);
-         });
+            const val = snapshot.val();
+            cosmetics = val ? Object.values(val) : [];
+            renderCosmeticsTables();
+            updateDashboardCounts();
+        });
 
         db.ref('footer_links').on('value', (snapshot) => {
             const val = snapshot.val();
@@ -641,12 +627,22 @@
         });
 
         db.ref('last_update_date').on('value', (snapshot) => {
-             const val = snapshot.val();
-             if (val) {
-                 systemLastUpdate = val;
-                 refreshDynamicUpdateTimestamp();
-             }
-         });
+            const val = snapshot.val();
+            if (val) {
+                systemLastUpdate = val;
+                refreshDynamicUpdateTimestamp();
+            }
+        });
+
+        function parseYoutubeEmbedUrl(url) {
+            if (!url) return '';
+            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+            let match = url.match(regExp);
+            if (match && match[2].length == 11) {
+                return `https://www.youtube.com/embed/${match[2]}?autoplay=0&rel=0&modestbranding=1`;
+            }
+            return url;
+        }
 
         function promptCreatorAuth() {
             if (isCreatorMode) {
@@ -736,6 +732,7 @@
             } else {
                 if(shortcuts) shortcuts.classList.remove('hidden'); 
                 if(shortcuts) shortcuts.classList.add('flex'); 
+                if(sep) sep.xl-class = ""; 
                 if(sep) sep.classList.remove('hidden');
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -927,7 +924,6 @@
             }).join(' ');
         }
 
-        // ================= LEVEL DATA TABLE RENDERING =================
         function renderLevelsTable() {
             const tbody = document.getElementById('levels-tbody');
             const empty = document.getElementById('levels-empty');
@@ -1029,7 +1025,6 @@
                 dl3: document.getElementById('lvlDl3').value.trim()
             };
 
-            // Saves directly to Firebase Realtime Database node in the cloud
             db.ref('levels/' + lvlId).set(data).then(() => {
                 const today = new Date().toISOString().split('T')[0];
                 db.ref('last_update_date').set(today);
@@ -1064,7 +1059,6 @@
             window.scrollTo({ top: document.getElementById('level-form-container').offsetTop, behavior: 'smooth' });
         }
 
-        // ================= MULTI-SECTION COSMETICS RENDERING =================
         function renderCosmeticsTables() {
             const tbodyBeatstar = document.getElementById('tbody-beatstar');
             const tbodyTapwave = document.getElementById('tbody-tapwave');
@@ -1208,7 +1202,7 @@
             if (chosenPreviewType === 'youtube') {
                 finalVideoAssetString = document.getElementById('cosVideoYtUrl').value.trim();
             } else {
-                finalVideoAssetString = document.getElementById('cosVideo').value;
+                finalVideoAssetString = document.getElementById('cosVideo');
             }
 
             let cosId = document.getElementById('editingCosId').value;
@@ -1227,7 +1221,6 @@
                 dl2: document.getElementById('cosDl2').value.trim()
             };
 
-            // Saves directly to Firebase Realtime Database node in the cloud
             db.ref('cosmetics/' + cosId).set(data).then(() => {
                 const today = new Date().toISOString().split('T')[0];
                 db.ref('last_update_date').set(today);
@@ -1274,7 +1267,6 @@
             window.scrollTo({ top: document.getElementById('cosmetic-form-container').offsetTop, behavior: 'smooth' });
         }
 
-        // Cloud delete pipelines triggered instantly
         function removeLevel(id) { db.ref('levels/' + id).remove(); }
         function removeCosmetic(id) { db.ref('cosmetics/' + id).remove(); }
         
@@ -1293,14 +1285,6 @@
             applyLanguagePack();
             renderFooterDOMAnchors();
         });
-        function parseYoutubeEmbedUrl(url) {
-    if (!url) return '';
-    let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
-    let match = url.match(regExp);
-    if (match && match[2].length == 11) {
-        return `https://www.youtube.com/embed/${match[2]}?autoplay=0&rel=0&modestbranding=1`;
-    }
-    return url;
     </script>
 </body>
 </html>
