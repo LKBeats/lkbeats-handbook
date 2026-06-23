@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LKBeats Handbook</title>
+    <title>LKBeats Handbook V14 - Premium Firebase Build</title>
+    <!-- Favicon Integration -->
+    <link rel="icon" type="image/png" href="LKB.png">
     <!-- Tailwind CSS for utility styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts for typography -->
@@ -158,7 +160,7 @@
             <div id="footer-links-management-box" class="hidden bg-[#11091c] border border-orange-500/30 rounded-2xl p-6 shadow-xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-yellow-500"></div>
                 <h2 class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="footerMenuTitle">Links del Menú Inferior</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs mb-4">
                     <div>
                         <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1">Beatclone URL</label>
                         <input type="url" id="setupUrlBeatclone" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-lg text-zinc-100">
@@ -172,6 +174,9 @@
                         <input type="url" id="setupUrlBeatcharts" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-lg text-zinc-100">
                     </div>
                 </div>
+                <button type="button" id="btn-save-footer-links" class="w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-black uppercase rounded-lg text-xs tracking-wider transition hover:opacity-90">
+                    Guardar Enlaces del Menú
+                </button>
             </div>
         </section>
 
@@ -486,7 +491,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // NAVIGATION ASSIGNMENT
+        // DEPLOY DIRECT BUTTON ROUTERS
         document.getElementById('nav-logo').addEventListener('click', () => navigateTo('home'));
         document.getElementById('btn-nav-levels').addEventListener('click', () => navigateTo('levels'));
         document.getElementById('btn-nav-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
@@ -505,7 +510,7 @@
         });
         document.querySelectorAll('.btn-back-to-home').forEach(btn => btn.addEventListener('click', () => navigateTo('home')));
 
-        // BACKEND SINKING CONNECTIONS
+        // BACKEND CONNECTIONS MANAGEMENT REF
         let db = null;
         try {
             const app = initializeApp(firebaseConfig);
@@ -518,7 +523,16 @@
                 if(document.getElementById('counter-charts-header')) document.getElementById('counter-charts-header').innerText = levels.length;
             });
             onValue(ref(db, 'cosmetics'), (snap) => { cosmetics = snap.val() ? Object.values(snap.val()) : []; renderCosmeticsTables(); updateDashboardCounts(); });
-            onValue(ref(db, 'footer_links'), (snap) => { if (snap.val()) { globalFooterLinks = snap.val(); syncFooterLinks(); } });
+            onValue(ref(db, 'footer_links'), (snap) => { 
+                if (snap.val()) { 
+                    globalFooterLinks = snap.val(); 
+                    syncFooterLinks(); 
+                    // Populate fields when data arrives
+                    if(document.getElementById('setupUrlBeatclone')) document.getElementById('setupUrlBeatclone').value = globalFooterLinks.beatclone || '';
+                    if(document.getElementById('setupUrlBscm')) document.getElementById('setupUrlBscm').value = globalFooterLinks.bscm || '';
+                    if(document.getElementById('setupUrlBeatcharts')) document.getElementById('setupUrlBeatcharts').value = globalFooterLinks.beatcharts || '';
+                } 
+            });
             onValue(ref(db, 'last_update_date'), (snap) => { if (snap.val()) document.getElementById('dynamic-update-date').innerText = formatStringToDMY(snap.val()); });
         } catch (e) { console.error(e); }
 
@@ -529,10 +543,9 @@
             return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
         }
 
-        // Tactical clean framework formatter to convert aaaa-mm-dd safely to dd/mm/aaaa
         function formatStringToDMY(rawDate) {
             if (!rawDate) return '';
-            if (rawDate.includes('/')) return rawDate; // structural bounce-back
+            if (rawDate.includes('/')) return rawDate; 
             const parts = rawDate.split('-');
             if (parts.length === 3) {
                 return `${parts[2]}/${parts[1]}/${parts[0]}`;
@@ -673,9 +686,7 @@
                             <span class="text-center font-bold tracking-wide">${diffText}</span>
                         </div>
                     </td>
-                    <!-- Centered layout metrics typography resolution for charts edition element -->
                     <td class="p-4 text-center font-bold text-zinc-300 tracking-wide">${lvl.edition}</td>
-                    <!-- Clean highly legible font-sans weighting transformation architecture instead of rough raw monospaces -->
                     <td class="p-4 text-center font-bold text-zinc-400 tracking-wide">${formatStringToDMY(lvl.date)}</td>
                     <td class="p-4 text-center"><div class="flex flex-col gap-1 max-w-[140px] sm:max-w-[180px] mx-auto">${lvl.dl1 ? `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 shadow hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-3.5 h-3.5 force-white-icon">Discord</a>`:''} ${lvl.dl2 ? `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 shadow hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-3.5 h-3.5 force-white-icon">BSCM</a>`:''} ${lvl.dl3 ? `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 shadow hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-3.5 h-3.5 force-white-icon">beatcharts</a>`:''}</div></td>
                     <td class="p-4 text-center ${isCreatorMode ? '':'hidden'}"><div class="flex flex-col gap-1"><button class="btn-edit-lvl bg-white text-black px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Edit</button><button class="btn-del-lvl bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Delete</button></div></td>
@@ -729,7 +740,6 @@
                             <li><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs inline-block w-24 sm:w-28">${translations[currentLanguage].listName}:</span> <span class="text-white font-black tracking-wide text-xs sm:text-base">${cos.name}</span></li>
                             <li><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs inline-block w-24 sm:w-28">${translations[currentLanguage].listArtist}:</span> <span class="text-zinc-300 font-semibold">${cos.artist}</span></li>
                             
-                            <!-- Mobile layout optimization: display date block elements beneath labels identically -->
                             <li class="flex flex-col sm:flex-row sm:items-center">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs inline-block w-full sm:w-28 mb-0.5 sm:mb-0">${translations[currentLanguage].listRelease}:</span> 
                                 <span class="font-sans font-bold text-zinc-400 text-xs sm:text-sm">${formatStringToDMY(cos.date)}</span>
@@ -796,6 +806,23 @@
                 platform: document.getElementById('cosTargetPlatform').value, dl1: document.getElementById('cosDl1').value.trim(), dl2: document.getElementById('cosDl2').value.trim()
             };
             if(db) set(ref(db, 'cosmetics/' + id), data).then(() => { set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); document.getElementById('cosmetic-form').reset(); document.getElementById('editingCosId').value = ''; document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnRegister; currentInspUrlsArray = [""]; renderDynamicInspInputs(); });
+        });
+
+        // Save Footer Links directly to Firebase RTDB
+        document.getElementById('btn-save-footer-links').addEventListener('click', () => {
+            const data = {
+                beatclone: document.getElementById('setupUrlBeatclone').value.trim(),
+                bscm: document.getElementById('setupUrlBscm').value.trim(),
+                beatcharts: document.getElementById('setupUrlBeatcharts').value.trim()
+            };
+            if(db) {
+                set(ref(db, 'footer_links'), data).then(() => {
+                    alert("¡Enlaces del menú inferior guardados con éxito en la base de datos!");
+                }).catch(err => {
+                    console.error("Error saving footer links:", err);
+                    alert("Hubo un problema al guardar los enlaces.");
+                });
+            }
         });
 
         function syncFooterLinks() {
