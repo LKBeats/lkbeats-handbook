@@ -99,7 +99,7 @@
         <section id="view-home" class="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col justify-center flex-grow w-full relative z-10">
             <div class="text-center mb-12 flex flex-col items-center">
                 <span class="px-4 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-xs font-black tracking-widest uppercase mb-6 inline-block">
-                    <span data-i18n="tagUpdate">ÚLTIMA FECHA DE ACTUALIZACIÓN</span>: <span id="dynamic-update-date">2026-06-19</span>
+                    <span data-i18n="tagUpdate">ÚLTIMA ACTUALIZACIÓN</span>: <span id="dynamic-update-date">2026-06-19</span>
                 </span>
                 <div class="mb-6 max-w-full w-[500px]">
                     <img src="Agregar un título (1).png" alt="Handbook Main Title" class="w-full object-contain mx-auto">
@@ -256,10 +256,10 @@
                                     <th class="p-4 w-20 sm:w-32" data-i18n="thArt">Arte</th>
                                     <th class="p-4" data-i18n="thSongArtist">Canción / Artista</th>
                                     <th class="p-2 sm:p-4 w-28 sm:w-44" data-i18n="formGenre">Género</th>
-                                    <th class="p-4 w-32" data-i18n="formDifficulty">Dificultad</th>
+                                    <th class="p-4 text-center w-32" data-i18n="formDifficulty">Dificultad</th>
                                     <th class="p-4 w-24" data-i18n="formEdition">Edición</th>
                                     <th class="p-4 w-24 whitespace-nowrap" data-i18n="formRelease">Fecha de lanzamiento</th>
-                                    <th class="p-4 text-center w-52 sm:w-64" data-i18n="thPlatformDl">Descarga</th>
+                                    <th class="p-4 text-center w-48 sm:w-56" data-i18n="thPlatformDl">Descarga</th>
                                     <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                 </tr>
                             </thead>
@@ -430,7 +430,7 @@
 
         const translations = {
             es: {
-                tagUpdate: "ÚLTIMA FECHA DE ACTUALIZACIÓN", storyTitle: "Bienvenido al LKBeats Handbook",
+                tagUpdate: "ÚLTIMA ACTUALIZACIÓN", storyTitle: "Bienvenido al LKBeats Handbook",
                 storyParagraph1: "Aquí encontrarás todo el contenido que he creado para Beatclone/Beatcharts/TapWave/BSCM.",
                 storyMission: "Mi misión: Crear contenido de calidad que sea accesible para todos.",
                 storyParagraph2: "Mi visión: Lograr que la mayor cantidad de gente posible disfrute de Beatstar.",
@@ -486,7 +486,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // NAVIGATION ASSIGNMENTS
+        // DEPLOY DIRECT BUTTON ROUTERS
         document.getElementById('nav-logo').addEventListener('click', () => navigateTo('home'));
         document.getElementById('btn-nav-levels').addEventListener('click', () => navigateTo('levels'));
         document.getElementById('btn-nav-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
@@ -505,7 +505,7 @@
         });
         document.querySelectorAll('.btn-back-to-home').forEach(btn => btn.addEventListener('click', () => navigateTo('home')));
 
-        // BACKEND CONTROLLERS
+        // BACKEND CONNECTIONS MANAGEMENT REF
         let db = null;
         try {
             const app = initializeApp(firebaseConfig);
@@ -656,10 +656,17 @@
                     <td class="p-2 sm:p-4"><div class="w-14 h-14 sm:w-24 sm:h-24 border border-fuchsia-950/40 rounded-xl overflow-hidden shadow-lg"><img src="${lvl.art}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='free_song_Image.png'"></div></td>
                     <td class="p-4"><div class="font-bold text-white text-xs sm:text-sm tracking-wide mb-0.5">${lvl.song}</div><div class="text-[10px] sm:text-xs text-zinc-500 font-normal">${lvl.artist}</div></td>
                     <td class="p-1 sm:p-4 w-24 sm:w-44"><div class="flex flex-col gap-1 max-w-[140px]">${renderGenresBadgesHtml(lvl.genre)}</div></td>
-                    <td class="p-4"><div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg border ${bStyle}"><img src="${icon}" class="w-3.5 h-3.5 ${fClass}"><span>${diffText}</span></div></td>
+                    <!-- Centered Difficulty Box Alignment Framework for Mobile Layout Metrics -->
+                    <td class="p-4 text-center">
+                        <div class="inline-flex items-center justify-center gap-1.5 px-2 py-1 rounded-lg border w-24 sm:w-28 ${bStyle} mx-auto">
+                            <img src="${icon}" class="w-3.5 h-3.5 ${fClass}">
+                            <span class="text-center font-bold tracking-wide">${diffText}</span>
+                        </div>
+                    </td>
                     <td class="p-4 font-medium text-zinc-300">${lvl.edition}</td>
                     <td class="p-4 font-mono text-zinc-400">${lvl.date}</td>
-                    <td class="p-4"><div class="flex flex-col gap-1.5 max-w-[190px] sm:max-w-[240px] mx-auto">${lvl.dl1 ? `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 px-4 py-3 text-center rounded-xl text-xs sm:text-sm font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-4 h-4 force-white-icon">Discord</a>`:''} ${lvl.dl2 ? `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 px-4 py-3 text-center rounded-xl text-xs sm:text-sm font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-4 h-4 force-white-icon">BSCM</a>`:''} ${lvl.dl3 ? `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-4 py-3 text-center rounded-xl text-xs sm:text-sm font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-4 h-4 force-white-icon">beatcharts</a>`:''}</div></td>
+                    <!-- Tactical Downscaled Size Metric Padding adjustment exclusively for charts buttons spacing parameters -->
+                    <td class="p-4 text-center"><div class="flex flex-col gap-1 max-w-[140px] sm:max-w-[180px] mx-auto">${lvl.dl1 ? `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 shadow hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-3.5 h-3.5 force-white-icon">Discord</a>`:''} ${lvl.dl2 ? `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 shadow hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-3.5 h-3.5 force-white-icon">BSCM</a>`:''} ${lvl.dl3 ? `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 shadow hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-3.5 h-3.5 force-white-icon">beatcharts</a>`:''}</div></td>
                     <td class="p-4 text-center ${isCreatorMode ? '':'hidden'}"><div class="flex flex-col gap-1"><button class="btn-edit-lvl bg-white text-black px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Edit</button><button class="btn-del-lvl bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Delete</button></div></td>
                 `;
 
@@ -695,19 +702,17 @@
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-fuchsia-950/10 transition border-b border-fuchsia-950/20";
                 
-                // Maximized responsive video preview display container to capture dead space layout
                 let pMarkup = cos.video ? `<div class="w-32 h-48 sm:w-40 sm:h-64 mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl"><iframe src="${parseYoutubeEmbedUrl(cos.video)}" class="w-full h-full border-0"></iframe></div>` : '[No Preview]';
                 
                 let inspMarkup = '';
                 if (cos.insp) {
                     let links = cos.insp.split(',').map(l => l.trim()).filter(Boolean);
-                    // Grand upscaled dimension metrics box layout for inspired thumbnail previews cleanly
-                    inspMarkup = `<div class="flex flex-wrap gap-2 mt-1 bg-black/30 p-2 rounded border border-fuchsia-950/20 w-max max-w-full">${links.map(l => `<div class="h-20 w-32 bg-zinc-950 flex items-center justify-center p-1 rounded border border-zinc-900 shadow-inner"><img src="${l}" class="max-h-full max-w-full object-contain"></div>`).join('')}</div>`;
+                    // PC Mode Massive Upscaling Resolution framework mapping logic rules dynamically
+                    inspMarkup = `<div class="flex flex-wrap gap-2 mt-1 bg-black/30 p-2 rounded border border-fuchsia-950/20 w-max max-w-full">${links.map(l => `<div class="h-20 w-32 xl:h-28 xl:w-44 bg-zinc-950 flex items-center justify-center p-1 rounded border border-zinc-900 shadow-inner"><img src="${l}" class="max-h-full max-w-full object-contain"></div>`).join('')}</div>`;
                 }
 
                 tr.innerHTML = `
                     <td class="p-4 text-center font-mono font-bold text-zinc-500">${cIndex}</td>
-                    <!-- Mobile view downscales cleanly (w-16 h-16) while PC mode remains huge (sm:w-32 sm:h-32) -->
                     <td class="p-2 sm:p-4"><div class="w-16 h-16 sm:w-32 sm:h-32 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1"><img src="${cos.icon}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'"></div></td>
                     <td class="p-2 sm:p-4">
                         <ul class="space-y-1.5 list-none text-xs sm:text-sm text-zinc-400">
@@ -718,7 +723,7 @@
                         </ul>
                     </td>
                     <td class="p-4 text-center">${pMarkup}</td>
-                    <td class="p-4"><div class="flex flex-col gap-1.5 max-w-[190px] sm:max-w-[240px] mx-auto">${cos.dl1 ? `<a href="${cos.dl1}" target="_blank" class="bg-zinc-900 px-4 py-3 text-center rounded-xl text-xs sm:text-sm font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-fuchsia-500/40 transition"><img src="Discord_Logo.png" class="w-4 h-4 force-white-icon">Discord</a>`:''} ${cos.dl2 ? `<a href="${cos.dl2}" target="_blank" class="bg-zinc-900 px-4 py-3 text-center rounded-xl text-xs sm:text-sm font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-fuchsia-500/40 transition"><img src="BSCM_Logo.png" class="w-4 h-4 force-white-icon">BSCM</a>`:''}</div></td>
+                    <td class="p-4"><div class="flex flex-col gap-1.5 max-w-[190px] sm:max-w-[240px] mx-auto">${cos.dl1 ? `<a href="${cos.dl1}" target="_blank" class="bg-zinc-900 px-4 py-3 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-fuchsia-500/40 transition"><img src="Discord_Logo.png" class="w-4 h-4 force-white-icon">Discord</a>`:''} ${cos.dl2 ? `<a href="${cos.dl2}" target="_blank" class="bg-zinc-900 px-4 py-3 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-fuchsia-500/40 transition"><img src="BSCM_Logo.png" class="w-4 h-4 force-white-icon">BSCM</a>`:''}</div></td>
                     <td class="p-4 text-center ${isCreatorMode ? '':'hidden'}"><div class="flex flex-col gap-1"><button class="btn-edit-cos bg-white text-black px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Edit</button><button class="btn-del-cos bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Delete</button></div></td>
                 `;
                 
@@ -749,7 +754,7 @@
             document.getElementById('counter-tapwave').innerText = cT;
         }
 
-        // DISPATCH FORMS
+        // DISPATCH MECHANISMS FORMS
         document.getElementById('level-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const checked = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
@@ -774,7 +779,7 @@
                 date: document.getElementById('cosDate').value, insp: nonEmptylinks.join(', '),
                 platform: document.getElementById('cosTargetPlatform').value, dl1: document.getElementById('cosDl1').value.trim(), dl2: document.getElementById('cosDl2').value.trim()
             };
-            if(db) set(ref(db, 'cosmetics/' + id), data).then(() => { set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); document.getElementById('cosmetic-form').reset(); document.getElementById('editingCosId').value = ''; document.getElementById('editingCosSign').value = ''; document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnRegister; currentInspUrlsArray = [""]; renderDynamicInspInputs(); });
+            if(db) set(ref(db, 'cosmetics/' + id), data).then(() => { set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); document.getElementById('cosmetic-form').reset(); document.getElementById('editingCosId').value = ''; document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnRegister; currentInspUrlsArray = [""]; renderDynamicInspInputs(); });
         });
 
         function syncFooterLinks() {
