@@ -604,18 +604,24 @@
 
         // Realtime Firebase Stream Listeners Framework Pipeline Setup
         db.ref('levels').on('value', (snapshot) => {
-            const val = snapshot.val();
-            levels = val ? Object.values(val) : [];
-            renderLevelsTable();
-            updateDashboardCounts();
-        });
+             const val = snapshot.val();
+             // Convierte el objeto de Firebase en una lista limpia para la tabla
+             levels = val ? Object.values(val) : [];
+             renderLevelsTable();
+             updateDashboardCounts();
+         }, (error) => {
+             console.error("Error leyendo charts de Firebase:", error);
+         });
 
         db.ref('cosmetics').on('value', (snapshot) => {
-            const val = snapshot.val();
-            cosmetics = val ? Object.values(val) : [];
-            renderCosmeticsTables();
-            updateDashboardCounts();
-        });
+             const val = snapshot.val();
+             // Convierte el objeto de Firebase en una lista limpia para la tabla
+             cosmetics = val ? Object.values(val) : [];
+             renderCosmeticsTables();
+             updateDashboardCounts();
+         }, (error) => {
+             console.error("Error leyendo skins de Firebase:", error);
+         });
 
         db.ref('footer_links').on('value', (snapshot) => {
             const val = snapshot.val();
@@ -626,12 +632,12 @@
         });
 
         db.ref('last_update_date').on('value', (snapshot) => {
-            const val = snapshot.val();
-            if (val) {
-                systemLastUpdate = val;
-                refreshDynamicUpdateTimestamp();
-            }
-        });
+             const val = snapshot.val();
+             if (val) {
+                 systemLastUpdate = val;
+                 refreshDynamicUpdateTimestamp();
+             }
+         });
 
         function promptCreatorAuth() {
             if (isCreatorMode) {
