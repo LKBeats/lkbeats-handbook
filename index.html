@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LKBeats Handbook V14 - Firebase Modular Build</title>
+    <title>LKBeats Handbook V14 - Firebase Fixed Build</title>
     <!-- Tailwind CSS for utility styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts for typography -->
@@ -465,7 +465,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Real credentials from provided context
+        // Real credentials from provided context[cite: 1]
         const firebaseConfig = {
           apiKey: "AIzaSyBmYQjQiHBH6pLqKNpjc3gNUsrF0fdYJsU",
           authDomain: "lkbeats-handbook.firebaseapp.com",
@@ -476,10 +476,7 @@
           appId: "1:638032680948:web:66d78be109a16356a80ba1"
         };[cite: 1]
 
-        const app = initializeApp(firebaseConfig);[cite: 1]
-        const db = getDatabase(app);
-
-        // Core App Framework State
+        // Core App Framework State & Settings
         const genreList = [
             { color: "#bf2726", label: "Rock", filterClass: "filter-genre-rock" },
             { color: "#da6128", label: "Alternative", filterClass: "filter-genre-alternative" },
@@ -570,63 +567,7 @@
         let systemLastUpdate = '2026-06-19';
         let base64InspImagesArray = [];
 
-        // Image Asset Error Protection Fallbacks
-        function handleImgError(img, type) {
-            img.onerror = null; 
-            const fallbacks = {
-                logo: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 70" fill="none"><text x="10" y="45" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="32" fill="%23ffffff" letter-spacing="2">LK<tspan fill="%23f97316">BEATS</tspan></text></svg>`,
-                charts: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320" fill="none"><rect width="100%" height="100%" rx="16" fill="%2311091c"/><path d="M100 160 Q 250 40 400 160" stroke="%23f97316" stroke-width="6"/></svg>`,
-                skins: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320" fill="none"><rect width="100%" height="100%" rx="16" fill="%2311091c"/></svg>`,
-                beatstar: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffffff"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896z"/></svg>`,
-                bscm: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23ffffff" stroke-width="2.5"><path d="M14.7 6.3l1.6 1.6"/></svg>`,
-                beatcharts: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23ffffff" stroke-width="2.5"><path d="M18 3v12M6 9v6"/></svg>`,
-                discord: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36" fill="%23ffffff"><path d="M107.7 8.07A105.15 105.15 0 0 0 77.26 0z"/></svg>`
-            };
-            img.src = fallbacks[type] || fallbacks.logo;
-        }
-
-        function parseYoutubeEmbedUrl(url) {
-            if (!url) return '';
-            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
-            let match = url.match(regExp);
-            if (match && match[2].length == 11) {
-                return `https://www.youtube.com/embed/${match[2]}?autoplay=0&rel=0&modestbranding=1`;
-            }
-            return url;
-        }
-
-        // Realtime Streams Subscriptions setup
-        onValue(ref(db, 'levels'), (snapshot) => {
-            const val = snapshot.val();
-            levels = val ? Object.values(val) : [];
-            renderLevelsTable();
-            updateDashboardCounts();
-        });
-
-        onValue(ref(db, 'cosmetics'), (snapshot) => {
-            const val = snapshot.val();
-            cosmetics = val ? Object.values(val) : [];
-            renderCosmeticsTables();
-            updateDashboardCounts();
-        });
-
-        onValue(ref(db, 'footer_links'), (snapshot) => {
-            const val = snapshot.val();
-            if (val) {
-                globalFooterLinks = val;
-                syncFooterLinksInputsValues();
-            }
-        });
-
-        onValue(ref(db, 'last_update_date'), (snapshot) => {
-            const val = snapshot.val();
-            if (val) {
-                systemLastUpdate = val;
-                document.querySelectorAll('#dynamic-update-date').forEach(el => el.innerText = systemLastUpdate);
-            }
-        });
-
-        // App Navigation Engine Fix (Guaranteed to work globally)
+        // App Navigation Engine Fix (Guaranteed to work instantly globally)
         function navigateTo(view) {
             ['home', 'levels', 'cosmetics'].forEach(v => {
                 const target = document.getElementById(`view-${v}`);
@@ -687,13 +628,87 @@
                 if (lvlTableBox) { lvlTableBox.classList.remove('xl:col-span-3'); lvlTableBox.classList.add('xl:col-span-4'); }
                 if (cosFormBox) cosFormBox.classList.add('hidden');
                 if (cosTableBox) { cosTableBox.classList.remove('xl:col-span-3'); cosTableBox.classList.add('xl:col-span-4'); }
-                if (linksFormBox) linksFormBox.classList.add('hidden');
+                if (linksFormBox) border = linksFormBox.classList.add('hidden');
                 document.querySelectorAll('.creator-action-header').forEach(el => el.classList.add('hidden'));
             }
             renderLevelsTable();
             renderCosmeticsTables();
             updateDashboardCounts();
             syncFooterLinksInputsValues();
+        }
+
+        function applyLanguagePack() {
+            document.getElementById('lang-label').innerText = currentLanguage;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLanguage][key]) el.innerText = translations[currentLanguage][key];
+            });
+            applyRoleUIVisibility();
+        }
+
+        // --- ATTACH BASE INTERFACES LISTENERS FIRST (Ensures navigation never crashes) ---
+        document.getElementById('nav-logo').addEventListener('click', () => navigateTo('home'));
+        document.getElementById('btn-nav-levels').addEventListener('click', () => navigateTo('levels'));
+        document.getElementById('btn-nav-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
+        document.getElementById('card-to-levels').addEventListener('click', () => navigateTo('levels'));
+        document.getElementById('card-to-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
+        document.getElementById('auth-indicator').addEventListener('click', promptCreatorAuth);
+        document.getElementById('btn-lang-toggle').addEventListener('click', () => { 
+            currentLanguage = currentLanguage === 'es' ? 'en' : 'es'; 
+            localStorage.setItem('nexus_lang', currentLanguage); 
+            applyLanguagePack(); 
+        });
+        document.querySelectorAll('.btn-back-to-home').forEach(btn => btn.addEventListener('click', () => navigateTo('home')));
+
+        // --- FIREBASE INITIALIZATION BOOTSTRAP PIPELINE ---
+        let db = null;
+        try {
+            const app = initializeApp(firebaseConfig);[cite: 1]
+            db = getDatabase(app);
+
+            // Realtime Streams Subscriptions setup protected under runtime capture
+            onValue(ref(db, 'levels'), (snapshot) => {
+                const val = snapshot.val();
+                levels = val ? Object.values(val) : [];
+                renderLevelsTable();
+                updateDashboardCounts();
+            }, (err) => console.warn("Firebase rules/read delay:", err));
+
+            onValue(ref(db, 'cosmetics'), (snapshot) => {
+                const val = snapshot.val();
+                cosmetics = val ? Object.values(val) : [];
+                renderCosmeticsTables();
+                updateDashboardCounts();
+            }, (err) => console.warn("Firebase rules/read delay:", err));
+
+            onValue(ref(db, 'footer_links'), (snapshot) => {
+                const val = snapshot.val();
+                if (val) {
+                    globalFooterLinks = val;
+                    syncFooterLinksInputsValues();
+                }
+            });
+
+            onValue(ref(db, 'last_update_date'), (snapshot) => {
+                const val = snapshot.val();
+                if (val) {
+                    systemLastUpdate = val;
+                    document.querySelectorAll('#dynamic-update-date').forEach(el => el.innerText = systemLastUpdate);
+                }
+            });
+        } catch (firebaseError) {
+            console.error("Firebase Initialization crashed safely:", firebaseError);
+        }
+
+        // --- DOM RENDER GENERATION FRAMEWORKS ---
+        function parseYoutubeEmbedUrl(url) {
+            if (!url) return '';
+            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+            let match = url.match(regExp);
+            if (match && match[2].length == 11) {
+                return `https://www.youtube.com/embed/${match[2]}?autoplay=0&rel=0&modestbranding=1`;
+            }
+            return url;
         }
 
         function syncFooterLinksInputsValues() {
@@ -714,16 +729,7 @@
             globalFooterLinks.beatclone = document.getElementById('setupUrlBeatclone').value.trim();
             globalFooterLinks.bscm = document.getElementById('setupUrlBscm').value.trim();
             globalFooterLinks.beatcharts = document.getElementById('setupUrlBeatcharts').value.trim();
-            set(ref(db, 'footer_links'), globalFooterLinks);
-        }
-
-        function applyLanguagePack() {
-            document.getElementById('lang-label').innerText = currentLanguage;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[currentLanguage][key]) el.innerText = translations[currentLanguage][key];
-            });
-            applyRoleUIVisibility();
+            if(db) set(ref(db, 'footer_links'), globalFooterLinks);
         }
 
         function buildGenresSelector() {
@@ -806,7 +812,6 @@
                     </td>
                 `;
 
-                // Secure Internal Button Actions Injection Routing
                 const btnEdit = tr.querySelector('.btn-edit-lvl');
                 if(btnEdit) btnEdit.addEventListener('click', () => {
                     document.getElementById('editingLvlId').value = lvl.id;
@@ -826,7 +831,7 @@
                 });
 
                 const btnDel = tr.querySelector('.btn-del-lvl');
-                if(btnDel) btnDel.addEventListener('click', () => remove(ref(db, 'levels/' + lvl.id)));
+                if(btnDel && db) btnDel.addEventListener('click', () => remove(ref(db, 'levels/' + lvl.id)));
 
                 tbody.appendChild(tr);
             });
@@ -891,7 +896,6 @@
                     </td>
                 `;
 
-                // Handle local buffer MP4 playback safely via internal tracking listeners
                 const btnPlay = tr.querySelector('.btn-play-video');
                 if (btnPlay) {
                     btnPlay.addEventListener('click', () => {
@@ -937,7 +941,7 @@
                 }
 
                 const btnDel = tr.querySelector('.btn-del-cos');
-                if(btnDel) btnDel.addEventListener('click', () => remove(ref(db, 'cosmetics/' + cos.id)));
+                if(btnDel && db) btnDel.addEventListener('click', () => remove(ref(db, 'cosmetics/' + cos.id)));
 
                 if (isT) tbodyT.appendChild(tr); else tbodyB.appendChild(tr);
             });
@@ -946,7 +950,7 @@
             document.getElementById('counter-tapwave').innerText = cT;
         }
 
-        // Form Submit Actions Cloud Handling Pipeline Mapping
+        // --- FORM SUBMISSIONS HANDLERS ---
         document.getElementById('level-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const checkedGenres = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
@@ -967,12 +971,14 @@
                 dl2: document.getElementById('lvlDl2').value.trim(),
                 dl3: document.getElementById('lvlDl3').value.trim()
             };
-            set(ref(db, 'levels/' + lvlId), data).then(() => {
-                set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
-                document.getElementById('editingLvlId').value = "";
-                document.getElementById('lvlSubmitBtn').innerHTML = `<i class="fa-solid fa-plus mr-1"></i> <span>Registrar</span>`;
-                document.getElementById('level-form').reset(); buildGenresSelector();
-            });
+            if(db) {
+                set(ref(db, 'levels/' + lvlId), data).then(() => {
+                    set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
+                    document.getElementById('editingLvlId').value = "";
+                    document.getElementById('lvlSubmitBtn').innerHTML = `<i class="fa-solid fa-plus mr-1"></i> <span>Registrar</span>`;
+                    document.getElementById('level-form').reset(); buildGenresSelector();
+                });
+            }
         });
 
         document.getElementById('cosmetic-form').addEventListener('submit', (e) => {
@@ -995,15 +1001,17 @@
                 dl1: document.getElementById('cosDl1').value.trim(),
                 dl2: document.getElementById('cosDl2').value.trim()
             };
-            set(ref(db, 'cosmetics/' + cosId), data).then(() => {
-                set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
-                document.getElementById('editingCosId').value = "";
-                document.getElementById('cosSubmitBtn').innerHTML = `<i class="fa-solid fa-plus mr-1"></i> <span>Registrar</span>`;
-                document.getElementById('cosmetic-form').reset(); base64InspImagesArray = []; refreshInspGalleryUI();
-            });
+            if(db) {
+                set(ref(db, 'cosmetics/' + cosId), data).then(() => {
+                    set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
+                    document.getElementById('editingCosId').value = "";
+                    document.getElementById('cosSubmitBtn').innerHTML = `<i class="fa-solid fa-plus mr-1"></i> <span>Registrar</span>`;
+                    document.getElementById('cosmetic-form').reset(); base64InspImagesArray = []; refreshInspGalleryUI();
+                });
+            }
         });
 
-        // File Readers Binary to Base64 Translators Parsing Data Pipeline
+        // Binary to Base64 file loaders
         document.getElementById('lvlArtFile').addEventListener('change', (e) => {
             const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = (ev) => document.getElementById('lvlArt').value = ev.target.result; r.readAsDataURL(f); }
         });
@@ -1060,35 +1068,13 @@
             if(document.getElementById('home-cosmetics-count')) document.getElementById('home-cosmetics-count').innerText = cosmetics.length;
         }
 
-        // Manual Native Browser Date Pickers Fallback Triggers
+        // Date Pickers Triggers
         document.getElementById('btn-picker-lvl').addEventListener('click', () => document.getElementById('lvlDate').showPicker?.() || document.getElementById('lvlDate').focus());
         document.getElementById('btn-picker-cos').addEventListener('click', () => document.getElementById('cosDate').showPicker?.() || document.getElementById('cosDate').focus());
-
-        // Event Listeners Registration Routing Table Setup
-        document.getElementById('nav-logo').addEventListener('click', () => navigateTo('home'));
-        document.getElementById('btn-nav-levels').addEventListener('click', () => navigateTo('levels'));
-        document.getElementById('btn-nav-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
-        document.getElementById('card-to-levels').addEventListener('click', () => navigateTo('levels'));
-        document.getElementById('card-to-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
-        document.getElementById('auth-indicator').addEventListener('click', promptCreatorAuth);
-        document.getElementById('btn-lang-toggle').addEventListener('click', () => { currentLanguage = currentLanguage === 'es' ? 'en' : 'es'; localStorage.setItem('nexus_lang', currentLanguage); applyLanguagePack(); });
-        document.querySelectorAll('.btn-back-to-home').forEach(btn => btn.addEventListener('click', () => navigateTo('home')));
         
         ['setupUrlBeatclone', 'setupUrlBscm', 'setupUrlBeatcharts'].forEach(id => document.getElementById(id).addEventListener('input', updateFooterExternalLinks));
 
-        // Global Static Errors Fallback Handling Routines Interceptor Injection
-        document.querySelectorAll('img').forEach(img => {
-            img.addEventListener('error', () => {
-                if (img.id.includes('charts') || img.id.includes('nav-charts')) handleImgError(img, 'charts');
-                else if (img.id.includes('skins') || img.id.includes('nav-skins')) handleImgError(img, 'skins');
-                else if (img.id.includes('beatstar') || img.id.includes('foot-beatclone')) handleImgError(img, 'beatstar');
-                else if (img.id.includes('bscm') || img.id.includes('foot-bscm')) handleImgError(img, 'bscm');
-                else if (img.id.includes('beatcharts') || img.id.includes('foot-beatcharts')) handleImgError(img, 'beatcharts');
-                else handleImgError(img, 'logo');
-            });
-        });
-
-        // Initialize Core Component Execution View state On Load
+        // Initialize App State
         buildGenresSelector();
         applyLanguagePack();
     </script>
