@@ -156,7 +156,7 @@
                 <div data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes pertenecen a sus respectivos propietarios y desarrolladores originales.</div>
             </div>
 
-            <!-- Footer Links Manager Box with native autocomplete disabled -->
+            <!-- Footer Links Manager Box -->
             <div id="footer-links-management-box" class="hidden bg-[#11091c] border border-orange-500/30 rounded-2xl p-6 shadow-xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-yellow-500"></div>
                 <h2 class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="footerMenuTitle">Links del Menú Inferior</h2>
@@ -187,7 +187,6 @@
             </button>
             
             <div id="levels-layout-grid" class="flex flex-col gap-6 items-start w-full relative">
-                <!-- Level creation form configured with native autocomplete deactivated -->
                 <div id="level-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addLevelTitle">Nuevo Chart</h2>
                     <form id="level-form" autocomplete="off" class="space-y-3 text-xs">
@@ -283,7 +282,6 @@
             </button>
 
             <div id="cosmetics-layout-grid" class="flex flex-col gap-6 items-start w-full relative">
-                <!-- Skin creation form configured with native autocomplete deactivated -->
                 <div id="cosmetic-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addCosmeticTitle">Nueva Skin</h2>
                     <form id="cosmetic-form" autocomplete="off" class="space-y-3 text-xs">
@@ -312,7 +310,6 @@
                             <input type="date" id="cosDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
                         
-                        <!-- Infinite Ascending Ordered Inspiration Engine mapped into Brand URLs context references -->
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formBrandUrl">URL de la marca</label>
                             <div id="dynamic-insp-inputs-container" class="space-y-2">
@@ -455,7 +452,7 @@
                 noLinks: "No hay enlaces", formSkinFor: "Skin para...", btnUploadLogo: "Subir Imagen", txtImageLoaded: "Cargado", txtTotal: "Total",
                 footerMenuTitle: "Links del Menú Inferior", bannerSongs: "Canciones", countCharts: "Charts",
                 roleVisitor: "Visita", roleCreator: "Creador", formArtUrl: "URL del Arte", formIconUrl: "URL del Icono", formVideoUrl: "URL del Video",
-                formBrandUrl: "URL de la marca", txtNoLinksAvailable: "Sin links disponibles"
+                formBrandUrl: "URL de la marca", txtNoLinksAvailable: "Sin links disponibles", btnSaveChanges: "Guardar Cambios"
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -476,7 +473,7 @@
                 noLinks: "No links", formSkinFor: "Skin for...", btnUploadLogo: "Upload Image", txtImageLoaded: "Loaded", txtTotal: "Total",
                 footerMenuTitle: "Bottom Menu Links", bannerSongs: "Songs", countCharts: "Charts",
                 roleVisitor: "Guest", roleCreator: "Creator", formArtUrl: "Art URL", formIconUrl: "Icon URL", formVideoUrl: "Video URL",
-                formBrandUrl: "Brand URL", txtNoLinksAvailable: "No links available"
+                formBrandUrl: "Brand URL", txtNoLinksAvailable: "No links available", btnSaveChanges: "Save Changes"
             }
         };
 
@@ -724,9 +721,8 @@
                     document.getElementById('lvlDl1').value = lvl.dl1 || '';
                     document.getElementById('lvlDl2').value = lvl.dl2 || '';
                     document.getElementById('lvlDl3').value = lvl.dl3 || '';
-                    document.getElementById('lvlSubmitBtn').innerText = "Save Changes";
+                    document.getElementById('lvlSubmitBtn').innerText = translations[currentLanguage].btnSaveChanges;
                     
-                    // Lógica para mapear y auto-seleccionar las casillas de géneros registradas en el chart activo
                     const currentGenresArray = lvl.genre ? lvl.genre.split(' / ').map(g => g.trim().toLowerCase()) : [];
                     const checkboxes = document.querySelectorAll('.genre-checkbox');
                     checkboxes.forEach(cb => {
@@ -750,14 +746,21 @@
                 const cIndex = isT ? cT : cB;
 
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-fuchsia-950/10 transition border-b border-fuchsia-950/20";
+                // Landscape responsive optimization: Reduce vertical row paddings to pack more contents dynamically on landscape mobile screens
+                tr.className = "hover:bg-fuchsia-950/10 transition border-b border-fuchsia-950/20 max-sm:landscape:py-1";
                 
-                let pMarkup = cos.video ? `<div class="w-28 h-48 sm:w-36 sm:h-64 mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl"><iframe src="${parseYoutubeEmbedUrl(cos.video)}" class="w-full h-full border-0"></iframe></div>` : '[No Preview]';
+                let pMarkup = cos.video ? `<div class="w-28 h-48 sm:w-36 sm:h-64 mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl max-sm:landscape:h-32 max-sm:landscape:w-20"><iframe src="${parseYoutubeEmbedUrl(cos.video)}" class="w-full h-full border-0"></iframe></div>` : '[No Preview]';
                 
                 let inspMarkup = '';
                 if (cos.insp) {
                     let links = cos.insp.split(',').map(l => l.trim()).filter(Boolean);
-                    inspMarkup = `<div class="flex flex-wrap gap-2 mt-1 bg-black/30 p-2 rounded border border-fuchsia-950/20 w-max max-w-full">${links.map(l => `<div class="h-24 w-36 xl:h-36 xl:w-56 bg-zinc-950 flex items-center justify-center p-1 rounded border border-zinc-900 shadow-inner"><img src="${l}" class="max-h-full max-w-full object-contain"></div>`).join('')}</div>`;
+                    const isMultiple = links.length >= 2;
+                    // Dynamic brand images layout sizing structure engine based on files quantity
+                    const imgClass = isMultiple 
+                        ? "h-16 w-24 sm:h-20 sm:w-32 object-contain bg-zinc-950 border border-zinc-900 rounded p-1 shadow"
+                        : "h-24 w-36 xl:h-36 xl:w-56 object-contain bg-zinc-950 border border-zinc-900 rounded p-1 shadow";
+
+                    inspMarkup = `<div class="flex flex-wrap gap-2 mt-1 bg-black/30 p-2 rounded border border-fuchsia-950/20 max-w-full sm:max-w-md xl:max-w-xl">${links.map(l => `<div class="${imgClass} flex items-center justify-center"><img src="${l}" class="max-h-full max-w-full object-contain"></div>`).join('')}</div>`;
                 }
 
                 let linksLayout = '';
@@ -766,35 +769,36 @@
                 } else {
                     linksLayout = `
                         <div class="flex flex-col gap-1.5 max-w-[190px] sm:max-w-[240px] mx-auto">
-                            ${cos.dl1 ? `<a href="${cos.dl1}" target="_blank" class="bg-zinc-900 px-4 py-3 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-fuchsia-500/40 transition"><img src="Discord_Logo.png" class="w-3.5 h-3.5 sm:w-5 sm:h-5 force-white-icon">Discord</a>`:''} 
+                            ${cos.dl1 ? `<a href="${cos.dl1}" target="_blank" class="bg-zinc-900 px-4 py-2 sm:py-3 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-fuchsia-500/40 transition"><img src="Discord_Logo.png" class="w-3.5 h-3.5 sm:w-5 sm:h-5 force-white-icon">Discord</a>`:''} 
                             ${cos.dl2 ? `<a href="${cos.dl2}" target="_blank" class="bg-zinc-900 px-4 py-3 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-fuchsia-500/40 transition"><img src="BSCM_Logo.png" class="w-3.5 h-3.5 sm:w-5 sm:h-5 force-white-icon">BSCM</a>`:''}
                         </div>
                     `;
                 }
 
+                // Vertical break-words text wrapper updates to securely constrain text lists from running off screen edges
                 tr.innerHTML = `
-                    <td class="p-4 text-center font-mono font-bold text-zinc-500">${cIndex}</td>
-                    <td class="p-2 sm:p-4"><div class="w-16 h-16 sm:w-32 sm:h-32 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1"><img src="${cos.icon}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'"></div></td>
-                    <td class="p-2 sm:p-4">
-                        <ul class="space-y-2 list-none text-xs sm:text-sm text-zinc-400">
-                            <li class="flex flex-col sm:flex-row sm:items-baseline">
-                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 mb-0.5 sm:mb-0">${translations[currentLanguage].listName}:</span> 
-                                <span class="text-white font-black tracking-wide text-xs sm:text-base">${cos.name}</span>
+                    <td class="p-2 sm:p-4 text-center font-mono font-bold text-zinc-500 max-sm:landscape:p-1">${cIndex}</td>
+                    <td class="p-2 sm:p-4 max-sm:landscape:p-1"><div class="w-16 h-16 sm:w-32 sm:h-32 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1 max-sm:landscape:w-12 max-sm:landscape:h-12"><img src="${cos.icon}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'"></div></td>
+                    <td class="p-2 sm:p-4 max-sm:landscape:p-1 max-w-[180px] sm:max-w-xs md:max-w-md lg:max-w-lg xl:max-w-2xl break-words whitespace-normal">
+                        <ul class="space-y-2 list-none text-sm sm:text-base text-zinc-300 max-sm:landscape:space-y-0.5 max-sm:landscape:text-xs">
+                            <li class="flex flex-col sm:flex-row sm:items-baseline break-words whitespace-normal">
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listName}:</span> 
+                                <span class="text-white font-black tracking-wide text-base sm:text-xl break-all whitespace-normal block">${cos.name}</span>
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:items-baseline break-words whitespace-normal">
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listArtist}:</span> 
+                                <span class="text-zinc-200 font-bold break-words whitespace-normal block">${cos.artist}</span>
                             </li>
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
-                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 mb-0.5 sm:mb-0">${translations[currentLanguage].listArtist}:</span> 
-                                <span class="text-zinc-300 font-semibold">${cos.artist}</span>
-                            </li>
-                            <li class="flex flex-col sm:flex-row sm:items-baseline">
-                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 mb-0.5 sm:mb-0">${translations[currentLanguage].listRelease}:</span> 
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listRelease}:</span> 
                                 <span class="font-sans font-bold text-zinc-400 text-xs sm:text-sm">${formatStringToDMY(cos.date)}</span>
                             </li>
                             <li class="flex flex-col gap-1 pt-0.5"><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs">${translations[currentLanguage].listInsp}:</span> ${inspMarkup || 'N/A'}</li>
                         </ul>
                     </td>
-                    <td class="p-4 text-center">${pMarkup}</td>
-                    <td class="p-4">${linksLayout}</td>
-                    <td class="p-4 text-center ${isCreatorMode ? '':'hidden'}"><div class="flex flex-col gap-1"><button class="btn-edit-cos bg-white text-black px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Edit</button><button class="btn-del-cos bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Delete</button></div></td>
+                    <td class="p-2 sm:p-4 text-center max-sm:landscape:p-1">${pMarkup}</td>
+                    <td class="p-2 sm:p-4 max-sm:landscape:p-1">${linksLayout}</td>
+                    <td class="p-2 sm:p-4 text-center max-sm:landscape:p-1 ${isCreatorMode ? '':'hidden'}"><div class="flex flex-col gap-1"><button class="btn-edit-cos bg-white text-black px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Edit</button><button class="btn-del-cos bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">Delete</button></div></td>
                 `;
                 
                 tr.querySelector('.btn-edit-cos')?.addEventListener('click', () => {
@@ -813,7 +817,7 @@
                     document.getElementById('cosTargetPlatform').value = cos.platform;
                     document.getElementById('cosDl1').value = cos.dl1 || '';
                     document.getElementById('cosDl2').value = cos.dl2 || '';
-                    document.getElementById('cosSubmitBtn').innerText = "Save Changes";
+                    document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnSaveChanges;
                 });
                 tr.querySelector('.btn-del-cos')?.addEventListener('click', () => { if(db && confirm("¿Eliminar?")) remove(ref(db, 'cosmetics/' + cos.id)); });
                 
