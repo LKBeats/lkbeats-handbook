@@ -175,7 +175,7 @@
                     </div>
                 </form>
                 <button type="button" id="btn-save-footer-links" class="w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-black uppercase rounded-lg text-xs tracking-wider transition hover:opacity-90">
-                    Guardar Enlaces del Menú
+                    <span data-i18n="btnSaveFooterLinks">Guardar Enlaces del Menú</span>
                 </button>
             </div>
         </section>
@@ -452,7 +452,8 @@
                 noLinks: "No hay enlaces", formSkinFor: "Skin para...", btnUploadLogo: "Subir Imagen", txtImageLoaded: "Cargado", txtTotal: "Total",
                 footerMenuTitle: "Links del Menú Inferior", bannerSongs: "Canciones", countCharts: "Charts",
                 roleVisitor: "Visita", roleCreator: "Creador", formArtUrl: "URL del Arte", formIconUrl: "URL del Icono", formVideoUrl: "URL del Video",
-                formBrandUrl: "URL de la marca", txtNoLinksAvailable: "Sin links disponibles", btnSaveChanges: "Guardar Cambios"
+                formBrandUrl: "URL de la marca", txtNoLinksAvailable: "Sin links disponibles", btnSaveChanges: "Guardar Cambios",
+                btnSaveFooterLinks: "Guardar Enlaces del Menú"
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -473,7 +474,8 @@
                 noLinks: "No links", formSkinFor: "Skin for...", btnUploadLogo: "Upload Image", txtImageLoaded: "Loaded", txtTotal: "Total",
                 footerMenuTitle: "Bottom Menu Links", bannerSongs: "Songs", countCharts: "Charts",
                 roleVisitor: "Guest", roleCreator: "Creator", formArtUrl: "Art URL", formIconUrl: "Icon URL", formVideoUrl: "Video URL",
-                formBrandUrl: "Brand URL", txtNoLinksAvailable: "No links available", btnSaveChanges: "Save Changes"
+                formBrandUrl: "Brand URL", txtNoLinksAvailable: "No links available", btnSaveChanges: "Save Changes",
+                btnSaveFooterLinks: "Save Menu Links"
             }
         };
 
@@ -687,7 +689,6 @@
             });
         }
 
-        // CONTROL DEL HISTORIAL E IDIOMAS COMPLETO TERMINADO
         function renderGenresBadgesHtml(raw) {
             if(!raw) return '';
             return raw.split(' / ').map(g => {
