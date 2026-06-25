@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LKBeats Handbook</title>
+    <!-- Favicon Integration -->
     <link class="favicon-node" rel="icon" type="image/png" href="LKB.png">
+    <!-- Tailwind CSS for utility styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for structural icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <script>
@@ -58,6 +62,7 @@
 </head>
 <body class="bg-[#05020a] text-zinc-100 min-h-screen font-sans flex flex-col relative overflow-x-hidden">
 
+    <!-- TOP HEADER / NAV -->
     <header class="border-b border-fuchsia-950/40 bg-[#11091c]/80 backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
             <div class="max-w-[33%] w-1/3 md:max-w-none md:w-auto shrink-0 cursor-pointer" id="nav-logo">
@@ -92,6 +97,7 @@
 
     <main class="flex-grow flex flex-col relative">
         
+        <!-- ================= VIEW 1: HOME ================= -->
         <section id="view-home" class="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col justify-center flex-grow w-full relative z-10">
             <div class="text-center mb-12 flex flex-col items-center">
                 <span class="px-4 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-xs font-black tracking-widest uppercase mb-6 inline-block">
@@ -144,11 +150,13 @@
                 </div>
             </div>
 
+            <!-- DISCLAIMER SECTION -->
             <div class="bg-zinc-950/60 border border-zinc-900 rounded-2xl p-4 text-center text-xs text-zinc-500 mb-10">
                 <div class="font-bold uppercase tracking-widest mb-1" data-i18n="disclaimerTitle">Deslinde de Responsabilidad</div>
-                <div data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes pertenecen a sus respectivos propietarios y desarrolladores originales.</div>
+                <div data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes pertenecen a sus respectivos propietarios y desarrolladores originales Leyendo que la administración de datos depende del token.</div>
             </div>
 
+            <!-- Footer Links Manager Box -->
             <div id="footer-links-management-box" class="hidden bg-[#11091c] border border-orange-500/30 rounded-2xl p-6 shadow-xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-yellow-500"></div>
                 <h2 class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="footerMenuTitle">Links del Menú Inferior</h2>
@@ -172,6 +180,7 @@
             </div>
         </section>
 
+        <!-- ================= VIEW 2: CHARTS REGISTRY ================= -->
         <section id="view-levels" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
             <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-orange-500/30 rounded-2xl mb-6 w-max">
                 <i class="fa-solid fa-chevron-left text-orange-500"></i> <span data-i18n="backHome">Volver</span>
@@ -233,32 +242,30 @@
                     </form>
                 </div>
 
-                <div id="levels-table-container" class="w-full overflow-hidden flex flex-col space-y-3 flex-grow relative">
+                <div id="levels-table-container" class="w-full overflow-hidden flex flex-col space-y-3 flex-grow">
+                    <!-- Standard Un-fixed Header Banner -->
+                    <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between whitespace-nowrap overflow-hidden">
+                        <div class="text-sm sm:text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400 truncate mr-2">
+                            Charts / <span data-i18n="bannerSongs">Canciones</span>
+                        </div>
+                        <div class="text-[10px] sm:text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-2.5 py-1.5 rounded-xl text-orange-400 shrink-0">
+                            <span data-i18n="txtTotal">Total</span>: <span id="counter-charts-header">0</span> Charts
+                        </div>
+                    </div>
+
                     <div id="levels-table-wrapper" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                         <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
-                            <thead class="sticky top-16 z-40 shadow-md">
-                                <tr>
-                                    <th colspan="9" class="p-0 border-0 bg-[#05020a]">
-                                        <div class="w-full bg-[#11091c]/95 backdrop-blur border-b border-fuchsia-950/60 p-4 flex items-center justify-between whitespace-nowrap overflow-hidden">
-                                            <div class="text-sm sm:text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400 truncate mr-2">
-                                                Charts / <span data-i18n="bannerSongs">Canciones</span>
-                                            </div>
-                                            <div class="text-[10px] sm:text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-2.5 py-1.5 rounded-xl text-orange-400 shrink-0">
-                                                <span data-i18n="txtTotal">Total</span>: <span id="counter-charts-header">0</span> Charts
-                                            </div>
-                                        </div>
-                                    </th>
-                                </tr>
+                            <thead>
                                 <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                    <th class="p-4 text-center w-12 bg-[#05020a]">#</th>
-                                    <th class="p-4 w-20 sm:w-32 bg-[#05020a]" data-i18n="thArt">Arte</th>
-                                    <th class="p-4 bg-[#05020a]" data-i18n="thSongArtist">Canción / Artista</th>
-                                    <th class="p-2 sm:p-4 w-28 sm:w-44 bg-[#05020a]" data-i18n="formGenre">Género</th>
-                                    <th class="p-4 text-center w-32 bg-[#05020a]" data-i18n="formDifficulty">Dificultad</th>
-                                    <th class="p-4 text-center w-24 bg-[#05020a]" data-i18n="formEdition">Edición</th>
-                                    <th class="p-4 text-center w-24 whitespace-nowrap bg-[#05020a]" data-i18n="formRelease">Lanzamiento</th>
-                                    <th class="p-4 text-center w-60 sm:w-64 min-w-[170px] bg-[#05020a]" data-i18n="thPlatformDl">Descarga</th>
-                                    <th class="p-4 text-center w-24 creator-action-header hidden bg-[#05020a]" data-i18n="thActions">Acciones</th>
+                                    <th class="p-4 text-center w-12">#</th>
+                                    <th class="p-4 w-20 sm:w-32" data-i18n="thArt">Arte</th>
+                                    <th class="p-4" data-i18n="thSongArtist">Canción / Artista</th>
+                                    <th class="p-2 sm:p-4 w-28 sm:w-44" data-i18n="formGenre">Género</th>
+                                    <th class="p-4 text-center w-32" data-i18n="formDifficulty">Dificultad</th>
+                                    <th class="p-4 text-center w-24" data-i18n="formEdition">Edición</th>
+                                    <th class="p-4 text-center w-24 whitespace-nowrap" data-i18n="formRelease">Lanzamiento</th>
+                                    <th class="p-4 text-center w-60 sm:w-64 min-w-[170px]" data-i18n="thPlatformDl">Descarga</th>
+                                    <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="levels-tbody" class="divide-y divide-fuchsia-950/20 text-xs"></tbody>
@@ -268,6 +275,7 @@
             </div>
         </section>
 
+        <!-- ================= VIEW 3: SKINS REGISTRY ================= -->
         <section id="view-cosmetics" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
             <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-fuchsia-500/30 rounded-2xl mb-6 w-max">
                 <i class="fa-solid fa-chevron-left text-fuchsia-500"></i> <span data-i18n="backHome">Volver</span>
@@ -305,7 +313,8 @@
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formBrandUrl">URL de la marca</label>
                             <div id="dynamic-insp-inputs-container" class="space-y-2">
-                                </div>
+                                <!-- Generated Dynamic Content Fields Target Router -->
+                            </div>
                         </div>
 
                         <div>
@@ -326,27 +335,29 @@
                 </div>
 
                 <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-10 flex-grow">
-                    <div class="flex flex-col w-full">
+                    <!-- Beatstar Segment Layout Block Target -->
+                    <div id="section-anchor-beatstar" class="flex flex-col space-y-3 w-full">
+                        <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
+                            <div class="h-10 max-w-[180px] sm:max-w-[240px]">
+                                <img src="BeatstarWhiteLogo.png" alt="Beatstar" class="h-full object-contain">
+                            </div>
+                            <div class="flex items-center gap-3 shrink-0">
+                                <div class="text-xs font-bold bg-fuchsia-950/50 border border-fuchsia-800/40 px-3 py-1.5 rounded-xl text-fuchsia-400"><span data-i18n="txtTotal">Total</span>: <span id="counter-beatstar">0</span> Skins</div>
+                                <button id="jump-to-tapwave" class="px-3 py-1.5 bg-zinc-900 border border-orange-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
+                                    <span data-i18n="jumpToTxt">Ir a</span> <img src="TapWaveWhiteLogo.png" class="h-3.5 w-auto object-contain">
+                                </button>
+                            </div>
+                        </div>
                         <div id="wrapper-beatstar" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                             <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
-                                <thead class="sticky top-16 z-40 shadow-md">
-                                    <tr>
-                                        <th colspan="6" class="p-0 border-0 bg-[#05020a]">
-                                            <div class="w-full bg-[#11091c]/95 backdrop-blur border-b border-fuchsia-950/60 p-4 flex items-center justify-between">
-                                                <div class="h-10 max-w-[180px] sm:max-w-[240px]">
-                                                    <img src="BeatstarWhiteLogo.png" alt="Beatstar" class="h-full object-contain">
-                                                </div>
-                                                <div class="text-xs font-bold bg-fuchsia-950/50 border border-fuchsia-800/40 px-3 py-1.5 rounded-xl text-fuchsia-400"><span data-i18n="txtTotal">Total</span>: <span id="counter-beatstar">0</span> Skins</div>
-                                            </div>
-                                        </th>
-                                    </tr>
+                                <thead>
                                     <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                        <th class="p-4 text-center w-12 bg-[#05020a]">#</th>
-                                        <th class="p-2 sm:p-4 w-16 sm:w-36 bg-[#05020a]" data-i18n="thIcon">Icono</th>
-                                        <th class="p-2 sm:p-4 bg-[#05020a]" data-i18n="thSkinInfo">Información</th>
-                                        <th class="p-4 text-center w-48 sm:w-64 bg-[#05020a]" data-i18n="thPreview">Preview</th>
-                                        <th class="p-4 text-center w-60 sm:w-64 min-w-[170px] bg-[#05020a]" data-i18n="thDlLinks">Descarga</th>
-                                        <th class="p-4 text-center w-24 creator-action-header hidden bg-[#05020a]" data-i18n="thActions">Acciones</th>
+                                        <th class="p-4 text-center w-12">#</th>
+                                        <th class="p-2 sm:p-4 w-16 sm:w-36" data-i18n="thIcon">Icono</th>
+                                        <th class="p-2 sm:p-4" data-i18n="thSkinInfo">Información</th>
+                                        <th class="p-4 text-center w-48 sm:w-64" data-i18n="thPreview">Preview</th>
+                                        <th class="p-4 text-center w-60 sm:w-64 min-w-[170px]" data-i18n="thDlLinks">Descarga</th>
+                                        <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbody-beatstar" class="divide-y divide-fuchsia-950/20 text-xs"></tbody>
@@ -354,27 +365,29 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col w-full">
+                    <!-- Tapwave Segment Layout Block Target -->
+                    <div id="section-anchor-tapwave" class="flex flex-col space-y-3 w-full">
+                        <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
+                            <div class="h-12 max-w-[220px] sm:max-w-[340px]">
+                                <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full w-auto object-contain max-h-12 scale-110 origin-left">
+                            </div>
+                            <div class="flex items-center gap-3 shrink-0">
+                                <div class="text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400"><span data-i18n="txtTotal">Total</span>: <span id="counter-tapwave">0</span> Skins</div>
+                                <button id="jump-to-beatstar" class="px-3 py-1.5 bg-zinc-900 border border-fuchsia-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
+                                    <span data-i18n="jumpToTxt">Ir a</span> <img src="BeatstarWhiteLogo.png" class="h-3 w-auto object-contain">
+                                </button>
+                            </div>
+                        </div>
                         <div id="wrapper-tapwave" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                             <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
-                                <thead class="sticky top-16 z-40 shadow-md">
-                                    <tr>
-                                        <th colspan="6" class="p-0 border-0 bg-[#05020a]">
-                                            <div class="w-full bg-[#11091c]/95 backdrop-blur border-b border-fuchsia-950/60 p-4 flex items-center justify-between">
-                                                <div class="h-12 max-w-[220px] sm:max-w-[340px]">
-                                                    <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full w-auto object-contain max-h-12 scale-110 origin-left">
-                                                </div>
-                                                <div class="text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400"><span data-i18n="txtTotal">Total</span>: <span id="counter-tapwave">0</span> Skins</div>
-                                            </div>
-                                        </th>
-                                    </tr>
+                                <thead>
                                     <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                        <th class="p-4 text-center w-12 bg-[#05020a]">#</th>
-                                        <th class="p-2 sm:p-4 w-16 sm:w-36 bg-[#05020a]" data-i18n="thIcon">Icono</th>
-                                        <th class="p-2 sm:p-4 bg-[#05020a]" data-i18n="thSkinInfo">Información</th>
-                                        <th class="p-4 text-center w-48 sm:w-64 bg-[#05020a]" data-i18n="thPreview">Preview</th>
-                                        <th class="p-4 text-center w-60 sm:w-64 min-w-[170px] bg-[#05020a]" data-i18n="thDlLinks">Descarga</th>
-                                        <th class="p-4 text-center w-24 creator-action-header hidden bg-[#05020a]" data-i18n="thActions">Acciones</th>
+                                        <th class="p-4 text-center w-12">#</th>
+                                        <th class="p-2 sm:p-4 w-16 sm:w-36" data-i18n="thIcon">Icono</th>
+                                        <th class="p-2 sm:p-4" data-i18n="thSkinInfo">Información</th>
+                                        <th class="p-4 text-center w-48 sm:w-64" data-i18n="thPreview">Preview</th>
+                                        <th class="p-4 text-center w-60 sm:w-64 min-w-[170px]" data-i18n="thDlLinks">Descarga</th>
+                                        <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbody-tapwave" class="divide-y divide-fuchsia-950/20 text-xs"></tbody>
@@ -386,6 +399,7 @@
         </section>
     </main>
 
+    <!-- FOOTER -->
     <footer class="border-t border-fuchsia-950/20 bg-[#05020a] py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-end gap-4">
             <div class="flex items-center gap-3">
@@ -402,6 +416,7 @@
         </div>
     </footer>
 
+    <!-- ================= ASYNC SAFE CORE ENGINE & SDK JAVASCRIPT ================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -436,7 +451,7 @@
                 cardLevelsTitle: "Charts", cardLevelsDesc: "Encuentra todos los charts que he realizado para Beaclone / BSCM / beatcharts",
                 cardCosmeticsTitle: "Skins", cardCosmeticsDesc: "Encuentra todas las skins que he realizado para Beaclone / TapWave",
                 disclaimerTitle: "Deslinde de Responsabilidad", 
-                disclaimerContent: "Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes pertenecen a sus respectivos propietarios y desarrolladores originales.",
+                disclaimerContent: "Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes pertenecen a sus respectivos propietarios y desarrolladores originales Leyendo que la administración de datos depende del token.",
                 navLevels: "Charts", navCosmetics: "Skins", backHome: "Volver", levelsPageTitle: "Charts", cosmeticsPageTitle: "Skins",
                 addLevelTitle: "Nuevo Chart", addCosmeticTitle: "Nueva Skin", btnRegister: "Registrar", emptyDatabase: "No hay registros.",
                 formSong: "Canción", formArtist: "Artista", formGenre: "Género", formDifficulty: "Dificultad", formEdition: "Edición",
@@ -448,7 +463,7 @@
                 footerMenuTitle: "Links del Menú Inferior", bannerSongs: "Canciones", countCharts: "Charts",
                 roleVisitor: "Visita", roleCreator: "Creador", formArtUrl: "URL del Arte", formIconUrl: "URL del Icono", formVideoUrl: "URL del Video",
                 formBrandUrl: "URL de la marca", txtNoLinksAvailable: "Sin links disponibles", btnSaveChanges: "Guardar Cambios",
-                btnSaveFooterLinks: "Guardar Enlaces del Menú"
+                btnSaveFooterLinks: "Guardar Enlaces del Menú", jumpToTxt: "Ir a"
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -470,7 +485,7 @@
                 footerMenuTitle: "Bottom Menu Links", bannerSongs: "Songs", countCharts: "Charts",
                 roleVisitor: "Guest", roleCreator: "Creator", formArtUrl: "Art URL", formIconUrl: "Icon URL", formVideoUrl: "Video URL",
                 formBrandUrl: "Brand URL", txtNoLinksAvailable: "No links available", btnSaveChanges: "Save Changes",
-                btnSaveFooterLinks: "Save Menu Links"
+                btnSaveFooterLinks: "Save Menu Links", jumpToTxt: "Go to"
             }
         };
 
@@ -481,7 +496,7 @@
         let globalFooterLinks = { beatclone: '', bscm: '', beatcharts: '' };
         let currentInspUrlsArray = [""];
 
-        // HISTORIAL DE NAVEGACIÓN INTELIGENTE (Boton Atrás Nativo Móvil/PC)
+        // HISTORIAL DE NAVEGACIÓN INTELIGENTE (Boton Atrás Nativo)
         function navigateTo(view, pushState = true) {
             ['home', 'levels', 'cosmetics'].forEach(v => document.getElementById(`view-${v}`)?.classList.add('hidden'));
             document.getElementById(`view-${view}`)?.classList.remove('hidden');
@@ -512,6 +527,14 @@
             } else {
                 navigateTo('home', false);
             }
+        });
+
+        // DISPATCH QUICK SCROLL JUMP TARGET BUTTONS
+        document.getElementById('jump-to-tapwave').addEventListener('click', () => {
+            document.getElementById('section-anchor-tapwave')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        document.getElementById('jump-to-beatstar').addEventListener('click', () => {
+            document.getElementById('section-anchor-beatstar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
 
         // DEPLOY DIRECT BUTTON ROUTERS
@@ -565,7 +588,6 @@
             return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
         }
 
-        // DEPLOY ENGINES CORE RESOLVERS
         function formatStringToDMY(rawDate) {
             if (!rawDate) return '';
             if (rawDate.includes('/')) return rawDate; 
