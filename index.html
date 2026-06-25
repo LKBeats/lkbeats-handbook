@@ -187,7 +187,7 @@
             </button>
             
             <div id="levels-layout-grid" class="flex flex-col gap-6 items-start w-full relative">
-                <div id="level-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto">
+                <div id="level-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto z-30">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addLevelTitle">Nuevo Chart</h2>
                     <form id="level-form" autocomplete="off" class="space-y-3 text-xs">
                         <input type="hidden" id="editingLvlId">
@@ -243,8 +243,8 @@
                 </div>
 
                 <div id="levels-table-container" class="w-full overflow-hidden flex flex-col space-y-3 flex-grow">
-                    <!-- Charts/Songs Header Banner -->
-                    <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between whitespace-nowrap overflow-hidden">
+                    <!-- Charts/Songs Header Banner Sticky -->
+                    <div class="w-full bg-[#11091c]/95 backdrop-blur border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between whitespace-nowrap overflow-hidden sticky top-16 z-40 shadow-md">
                         <div class="text-sm sm:text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400 truncate mr-2">
                             Charts / <span data-i18n="bannerSongs">Canciones</span>
                         </div>
@@ -264,7 +264,7 @@
                                     <th class="p-4 text-center w-32" data-i18n="formDifficulty">Dificultad</th>
                                     <th class="p-4 text-center w-24" data-i18n="formEdition">Edición</th>
                                     <th class="p-4 text-center w-24 whitespace-nowrap" data-i18n="formRelease">Lanzamiento</th>
-                                    <th class="p-4 text-center w-52 sm:w-60" data-i18n="thPlatformDl">Descarga</th>
+                                    <th class="p-4 text-center w-60 sm:w-64 min-w-[170px]" data-i18n="thPlatformDl">Descarga</th>
                                     <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                 </tr>
                             </thead>
@@ -282,7 +282,7 @@
             </button>
 
             <div id="cosmetics-layout-grid" class="flex flex-col gap-6 items-start w-full relative">
-                <div id="cosmetic-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto">
+                <div id="cosmetic-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto z-30">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addCosmeticTitle">Nueva Skin</h2>
                     <form id="cosmetic-form" autocomplete="off" class="space-y-3 text-xs">
                         <input type="hidden" id="editingCosId">
@@ -337,7 +337,8 @@
                 <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-10 flex-grow">
                     <!-- Beatstar -->
                     <div class="flex flex-col space-y-3 w-full">
-                        <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between">
+                        <!-- Sticky Banner Beatstar -->
+                        <div class="w-full bg-[#11091c]/95 backdrop-blur border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between sticky top-16 z-40 shadow-md">
                             <div class="h-10 max-w-[180px] sm:max-w-[240px]">
                                 <img src="BeatstarWhiteLogo.png" alt="Beatstar" class="h-full object-contain">
                             </div>
@@ -351,7 +352,7 @@
                                         <th class="p-2 sm:p-4 w-16 sm:w-36" data-i18n="thIcon">Icono</th>
                                         <th class="p-2 sm:p-4" data-i18n="thSkinInfo">Información</th>
                                         <th class="p-4 text-center w-48 sm:w-64" data-i18n="thPreview">Preview</th>
-                                        <th class="p-4 text-center w-52 sm:w-64" data-i18n="thDlLinks">Descarga</th>
+                                        <th class="p-4 text-center w-60 sm:w-64 min-w-[170px]" data-i18n="thDlLinks">Descarga</th>
                                         <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                     </tr>
                                 </thead>
@@ -362,7 +363,8 @@
 
                     <!-- Tapwave -->
                     <div class="flex flex-col space-y-3 w-full">
-                        <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between">
+                        <!-- Sticky Banner Tapwave -->
+                        <div class="w-full bg-[#11091c]/95 backdrop-blur border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between sticky top-16 z-40 shadow-md">
                             <div class="h-12 max-w-[220px] sm:max-w-[340px]">
                                 <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full w-auto object-contain max-h-12 scale-110 origin-left">
                             </div>
@@ -376,7 +378,7 @@
                                         <th class="p-2 sm:p-4 w-16 sm:w-36" data-i18n="thIcon">Icono</th>
                                         <th class="p-2 sm:p-4" data-i18n="thSkinInfo">Información</th>
                                         <th class="p-4 text-center w-48 sm:w-64" data-i18n="thPreview">Preview</th>
-                                        <th class="p-4 text-center w-52 sm:w-64" data-i18n="thDlLinks">Descarga</th>
+                                        <th class="p-4 text-center w-60 sm:w-64 min-w-[170px]" data-i18n="thDlLinks">Descarga</th>
                                         <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                     </tr>
                                 </thead>
@@ -414,7 +416,8 @@
         const firebaseConfig = {
           apiKey: "AIzaSyBmYQjQiHBH6pLqKNpjc3gNUsrF0fdYJsU",
           authDomain: "lkbeats-handbook.firebaseapp.com",
-          databaseURL: "https://lkbeats-handbook-default-rtdb.firebaseio.com",
+          // Añadimos de forma permanente el token de seguridad ?auth=BeatstarTest
+          databaseURL: "https://lkbeats-handbook-default-rtdb.firebaseio.com?auth=BeatstarTest",
           projectId: "lkbeats-handbook",
           storageBucket: "lkbeats-handbook.firebasestorage.app",
           messagingSenderId: "638032680948",
@@ -632,6 +635,7 @@
             applyRoleUIVisibility();
         }
 
+        // CONTROL DEL HISTORIAL E IDIOMAS COMPLETO TERMINADO
         function buildGenresSelector() {
             const container = document.getElementById('genres-container');
             if(!container) return; container.innerHTML = '';
