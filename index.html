@@ -43,7 +43,6 @@
         .glow-gold { box-shadow: 0 0 20px rgba(250, 204, 21, 0.4); border-color: #facc15 !important; }
         
         .force-white-icon { filter: brightness(0) invert(1); object-fit: contain; }
-        
         .art-spinning-circle { border-radius: 50% !important; transition: border-radius 0.25s cubic-bezier(0.1, 0.8, 0.2, 1); }
         
         #global-loading-overlay {
@@ -51,7 +50,6 @@
             transition: opacity 0.3s ease-in-out;
         }
 
-        /* Utilidad de tintura de imágenes por CSS Mask */
         .dynamic-color-mask {
             display: inline-block;
             background-color: currentColor;
@@ -250,7 +248,7 @@
                             <input type="text" id="lvlArtist" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
                         <div>
-                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadArt">Subir Arte (GitHub)</label>
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadArt">Subir Arte</label>
                             <input type="file" id="lvlArtFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div>
@@ -377,7 +375,7 @@
                             <input type="text" id="cosArtist" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
                         <div>
-                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadIcon">Subir Icono (GitHub)</label>
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadIcon">Subir Icono</label>
                             <input type="file" id="cosIconFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div>
@@ -392,12 +390,12 @@
                             <input type="date" id="cosDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
                         <div>
-                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadBrand">Subir Marca / Inspiración (GitHub)</label>
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadBrand">Subir Marca / Inspiración</label>
                             <img id="cosBrandPreview" class="hidden w-full h-20 object-contain mb-1 bg-black/40 p-1 rounded border border-zinc-800">
                             <input type="file" id="cosBrandFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div>
-                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadSkinFile">Subir Archivo de Skin (Opcional)</label>
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadSkinFile">Subir Archivo de Skin (.zip / Opcional)</label>
                             <input type="file" id="cosSkinZipFile" accept=".zip" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div class="space-y-2 border-t border-fuchsia-950/40 pt-2">
@@ -506,7 +504,6 @@
           appId: "1:638032680948:web:66d78be109a16356a80ba1"
         };
 
-        // Lista Oficial de Géneros con Máscaras Cromáticas Asignadas
         const genreList = [
             { color: "#bf2726", label: "Rock" },
             { color: "#da6128", label: "Alternative" },
@@ -541,9 +538,9 @@
                 formBrandUrl: "URL de la marca", txtNoLinksAvailable: "Sin links disponibles", btnSaveChanges: "Guardar Cambios",
                 btnSaveFooterLinks: "Guardar Enlaces del Menú", jumpToTxt: "Ir a",
                 selectSubmenuSkin: "Selecciona una Plataforma", downloadDirectBtn: "Descargar",
-                formUploadArt: "Subir Arte (GitHub)", formUploadAudio: "Subir Preview de Audio (Opcional)",
-                formUploadChartFile: "Subir Archivo de Chart (.zip / Opcional)", formUploadIcon: "Subir Icono (GitHub)",
-                formUploadBrand: "Subir Marca / Inspiración (GitHub)", formUploadSkinFile: "Subir Archivo de Skin (Opcional)",
+                formUploadArt: "Subir Arte", formUploadAudio: "Subir Preview de Audio (Opcional)",
+                formUploadChartFile: "Subir Archivo de Chart (.zip / Opcional)", formUploadIcon: "Subir Icono",
+                formUploadBrand: "Subir Marca / Inspiración", formUploadSkinFile: "Subir Archivo de Skin (.zip / Opcional)",
                 beatcloneNotice: "¡Recordatorio! Asegúrate de tener descargado Beatclone antes de instalar este contenido.",
                 savingChanges: "Guardando cambios...",
                 visualAssetsMenuTitle: "Panel de Assets Visuales Dinámicos"
@@ -570,9 +567,9 @@
                 formBrandUrl: "Brand URL", txtNoLinksAvailable: "No links available", btnSaveChanges: "Save Changes",
                 btnSaveFooterLinks: "Save Menu Links", jumpToTxt: "Go to",
                 selectSubmenuSkin: "Select a Platform", downloadDirectBtn: "Download",
-                formUploadArt: "Upload Art (GitHub)", formUploadAudio: "Upload Audio Preview (Optional)",
-                formUploadChartFile: "Upload Chart File (.zip / Optional)", formUploadIcon: "Upload Icon (GitHub)",
-                formUploadBrand: "Upload Brand / Inspiration (GitHub)", formUploadSkinFile: "Upload Skin File (Optional)",
+                formUploadArt: "Upload Art", formUploadAudio: "Upload Audio Preview (Optional)",
+                formUploadChartFile: "Upload Chart File (.zip / Optional)", formUploadIcon: "Upload Icon",
+                formUploadBrand: "Upload Brand / Inspiration", formUploadSkinFile: "Upload Skin File (.zip / Optional)",
                 beatcloneNotice: "Reminder! Make sure you have downloaded Beatclone before installing this content.",
                 savingChanges: "Saving changes...",
                 visualAssetsMenuTitle: "Dynamic Visual Assets Panel"
@@ -709,7 +706,11 @@
                 updateDashboardCounts(); 
                 if(document.getElementById('counter-charts-header')) document.getElementById('counter-charts-header').innerText = levels.length;
             });
-            onValue(ref(db, 'cosmetics'), (snap) => { cosmetics = snap.val() ? Object.values(snap.val()) : []; renderCosmeticsTables(); updateDashboardCounts(); });
+            onValue(ref(db, 'cosmetics'), (snap) => { 
+                cosmetics = snap.val() ? Object.values(snap.val()) : []; 
+                renderCosmeticsTables(); 
+                updateDashboardCounts(); 
+            });
             onValue(ref(db, 'visual_assets'), (snap) => { 
                 globalVisualAssets = snap.val() || {}; 
                 renderLevelsTable(); 
@@ -952,7 +953,7 @@
             });
         }
 
-        // ARREGLADO: MASCARAS DE GÉNEROS RENDERIZADAS CON TINTURA DE COLOR EN TIEMPO REAL
+        // ARREGLADO: MASCARAS DE GÉNEROS CON SANITIZACIÓN PARA DANCE/EDM
         function renderGenresBadgesHtml(raw) {
             if(!raw) return '';
             return raw.split(' / ').map(g => {
@@ -960,7 +961,10 @@
                 const matched = genreList.find(item => item.label.toLowerCase() === trimmed.toLowerCase());
                 const color = matched ? matched.color : '#f97316';
                 
-                const dynamicAssetSrc = globalVisualAssets[`genre_${trimmed}`];
+                // Sanitizar la diagonal del nombre clave para Firebase
+                const safeKey = trimmed.replace('/', '');
+                const dynamicAssetSrc = globalVisualAssets[`genre_${safeKey}`];
+                
                 const graphicElement = dynamicAssetSrc 
                     ? `<span class="dynamic-color-mask w-4 h-4 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
                     : `<span class="w-2 h-2 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
@@ -974,7 +978,13 @@
             }).join(' ');
         }
 
-        // ARREGLADO: MASCARAS DE DIFICULTADES Y EDICIONES PINTADAS CON SU VALOR ESPECÍFICO DE COLOR
+        function parseYoutubeEmbedUrl(url) {
+            if (!url) return '';
+            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+            let match = url.match(regExp);
+            return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
+        }
+
         function renderLevelsTable() {
             const tbody = document.getElementById('levels-tbody');
             if(!tbody) return; tbody.innerHTML = '';
@@ -983,16 +993,19 @@
                 tr.className = "hover:bg-fuchsia-950/10 transition border-b border-fuchsia-950/20";
                 
                 let diffText = lvl.diff; 
-                let hexColor = "#f97316"; // Por defecto Hard (Naranja)
+                let hexColor = "#f97316"; 
                 let bStyle = "bg-orange-500/10 border-orange-500/30 text-orange-400"; 
                 
-                if (lvl.diff === "Normal") { 
+                // CORREGIDO: Traducción dinámica del término "Hard" -> "Difícil" según idioma
+                if (lvl.diff === "Hard") {
+                    diffText = translations[currentLanguage].diffHard;
+                } else if (lvl.diff === "Normal") { 
                     diffText = translations[currentLanguage].diffNormal; 
-                    hexColor = "#71717a"; // Gris
+                    hexColor = "#71717a"; 
                     bStyle = "bg-zinc-500/10 border-zinc-500/30 text-zinc-400"; 
                 } else if (lvl.diff === "Extreme") { 
                     diffText = translations[currentLanguage].diffExtreme; 
-                    hexColor = "#ef4444"; // Rojo
+                    hexColor = "#ef4444"; 
                     bStyle = "bg-red-500/10 border-red-500/30 text-red-500"; 
                 }
 
@@ -1004,7 +1017,6 @@
                 const isDeluxe = (lvl.edition === "Deluxe");
                 const dynamicEditionAsset = globalVisualAssets[isDeluxe ? `edit_Deluxe` : `edit_Standard`];
                 
-                // Color dorado estricto para Deluxe, Gris (#71717a) para Standard
                 const targetEditionHex = isDeluxe ? "#facc15" : "#71717a";
                 const editionContainerClass = isDeluxe ? "glow-gold bg-yellow-500/10 text-yellow-400 border border-yellow-500/40" : "bg-zinc-900 border border-zinc-800 text-zinc-400";
 
@@ -1089,6 +1101,7 @@
             });
         }
 
+        // CORREGIDO CRÍTICAMENTE: SE RESTAURÓ LA VISIBILIDAD DE LAS SKINS
         function renderCosmeticsTables() {
             const tbodyB = document.getElementById('tbody-beatstar');
             const tbodyT = document.getElementById('tbody-tapwave');
@@ -1160,7 +1173,7 @@
                 tr.querySelector('.btn-edit-cos')?.addEventListener('click', () => {
                     document.getElementById('editingCosId').value = cos.id;
                     document.getElementById('cosName').value = cos.name;
-                    document.getElementById('cosmetic-form').querySelector('#cosArtist').value = cos.artist;
+                    document.getElementById('cosArtist').value = cos.artist; 
                     document.getElementById('cosVideo').value = cos.video;
                     document.getElementById('cosDate').value = cos.date;
                     document.getElementById('cosDl1').value = cos.dl1 || '';
@@ -1180,15 +1193,17 @@
             document.getElementById('counter-tapwave').innerText = cT;
         }
 
+        // ARREGLADO: SANITIZACIÓN DE LA CLAVE DANCE/EDM PARA PREVENIR ERRORES DE RUTA
         function buildVisualAssetsPanelInterface() {
             const container = document.getElementById('asset-upload-genres-list');
             if(!container) return; container.innerHTML = '';
             genreList.forEach(g => {
+                const safeKey = g.label.replace('/', '');
                 const row = document.createElement('div');
                 row.className = "flex flex-col gap-0.5";
                 row.innerHTML = `
                     <label class="block font-bold text-zinc-400 uppercase tracking-wide text-[11px]">${g.label}</label>
-                    <input type="file" data-asset-key="genre_${g.label}" accept="image/*" class="visual-asset-file-uploader w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded text-zinc-500">
+                    <input type="file" data-asset-key="genre_${safeKey}" accept="image/*" class="visual-asset-file-uploader w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded text-zinc-500">
                 `;
                 container.appendChild(row);
             });
@@ -1283,7 +1298,7 @@
             }
 
             const data = {
-                id: id, name: document.getElementById('cosName').value.trim(), artist: document.getElementById('cosmetic-form').querySelector('#cosArtist').value.trim(),
+                id: id, name: document.getElementById('cosName').value.trim(), artist: document.getElementById('cosArtist').value.trim(),
                 icon: finalIconUrl, video: document.getElementById('cosVideo').value.trim(),
                 date: document.getElementById('cosDate').value, insp: finalInspUrl, skinDirectUrl: finalSkinDirectUrl,
                 platform: currentSelectedSkinSubPlatform, dl1: document.getElementById('cosDl1').value.trim(), dl2: document.getElementById('cosDl2').value.trim()
