@@ -43,28 +43,25 @@
         
         .force-white-icon { filter: brightness(0) invert(1); object-fit: contain; }
         .filter-gray { filter: brightness(0) invert(0.6); }
-        .filter-orange { filter: invert(53%) sepia(88%) saturate(1500%) hue-rotate(345deg) brightness(100%) contrast(105%); }
-        .filter-red { filter: invert(16%) sepia(99%) saturate(7400%) hue-rotate(358deg) brightness(95%) contrast(118%); }
 
-        .filter-genre-rock { filter: brightness(0) saturate(100%) invert(21%) sepia(100%) saturate(3577%) hue-rotate(354deg) brightness(84%) contrast(92%); }
-        .filter-genre-alternative { filter: invert(47%) sepia(81%) saturate(1212%) hue-rotate(346deg) brightness(93%) contrast(90%); }
-        .filter-genre-classical { filter: invert(72%) sepia(95%) saturate(3649%) hue-rotate(74deg) brightness(114%) contrast(126%); }
-        .filter-genre-country { filter: invert(36%) sepia(19%) saturate(1469%) hue-rotate(342deg) brightness(94%) contrast(85%); }
-        .filter-genre-danceedm { filter: invert(29%) sepia(84%) saturate(2310%) hue-rotate(258deg) brightness(85%) contrast(96%); }
-        .filter-genre-hiphop { filter: invert(36%) sepia(47%) saturate(5833%) hue-rotate(209deg) brightness(91%) contrast(89%); }
-        .filter-genre-pop { filter: invert(39%) sepia(63%) saturate(2150%) hue-rotate(313deg) brightness(85%) contrast(89%); }
-        .filter-genre-rnb { filter: invert(81%) sepia(45%) saturate(3025%) hue-rotate(152deg) brightness(101%) contrast(93%); }
-
-        @keyframes audio-wave-pulse {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.12); opacity: 0.8; }
+        .art-spinning-circle { border-radius: 50% !important; transition: border-radius 0.25s cubic-bezier(0.1, 0.8, 0.2, 1); }
+        
+        /* Loading overlay layer styles */
+        #global-loading-overlay {
+            backdrop-filter: blur(8px);
+            transition: opacity 0.3s ease-in-out;
         }
-        .audio-wave-active { animation: audio-wave-pulse 1.4s infinite ease-in-out; }
-        .art-spinning-circle { border-radius: 50% !important; transition: border-radius 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
     </style>
 </head>
 <body class="bg-[#05020a] text-zinc-100 min-h-screen font-sans flex flex-col relative overflow-x-hidden">
 
+    <!-- OVERLAY DE CARGA / LOADING SPINNER -->
+    <div id="global-loading-overlay" class="hidden fixed inset-0 bg-black/80 z-[100] flex-col items-center justify-center gap-4">
+        <div class="w-12 h-12 border-4 border-fuchsia-500 border-t-transparent rounded-full animate-spin"></div>
+        <p id="loading-overlay-text" class="text-sm font-black tracking-widest uppercase text-fuchsia-400">Guardando cambios...</p>
+    </div>
+
+    <!-- TOP HEADER / NAV -->
     <header class="border-b border-fuchsia-950/40 bg-[#11091c]/80 backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
             <div class="max-w-[33%] w-1/3 md:max-w-none md:w-auto shrink-0 cursor-pointer" id="nav-logo">
@@ -99,6 +96,7 @@
 
     <main class="flex-grow flex flex-col relative">
         
+        <!-- ================= VIEW 1: HOME ================= -->
         <section id="view-home" class="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col justify-center flex-grow w-full relative z-10">
             <div class="text-center mb-12 flex flex-col items-center">
                 <span class="px-4 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-xs font-black tracking-widest uppercase mb-6 inline-block">
@@ -114,7 +112,7 @@
                 <h2 class="font-display font-black text-2xl text-zinc-100 uppercase tracking-wide mb-4" data-i18n="storyTitle">Welcome to the LKBeats Handbook</h2>
                 <div class="max-w-3xl mx-auto text-zinc-300 text-sm sm:text-base leading-relaxed space-y-3 font-medium">
                     <p data-i18n="storyParagraph1">Here you'll find all the content I've created for Beatclone/Beatcharts/TapWave/BSCM.</p>
-                    <p data-i18n="storyMission" class="text-orange-400 font-semibold">My mission: To create quality content that is accesible to everyone.</p>
+                    <p data-i18n="storyMission" class="text-orange-400 font-semibold">Mi misión: To create quality content that is accesible to everyone.</p>
                     <p data-i18n="storyParagraph2" class="text-fuchsia-400 font-semibold">My vision: To ensure that as many people as posible enjoy Beatstar.</p>
                 </div>
             </div>
@@ -156,6 +154,7 @@
                 <div data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes pertenecen a sus respectivos propietarios y desarrolladores originales.</div>
             </div>
 
+            <!-- Footer Links Manager Box -->
             <div id="footer-links-management-box" class="hidden bg-[#11091c] border border-orange-500/30 rounded-2xl p-6 shadow-xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-yellow-500"></div>
                 <h2 class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="footerMenuTitle">Links del Menú Inferior</h2>
@@ -179,6 +178,7 @@
             </div>
         </section>
 
+        <!-- ================= VIEW 2: CHARTS REGISTRY ================= -->
         <section id="view-levels" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
             <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-orange-500/30 rounded-2xl mb-6 w-max">
                 <i class="fa-solid fa-chevron-left text-orange-500"></i> <span data-i18n="backHome">Volver</span>
@@ -263,7 +263,7 @@
                             <thead>
                                 <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                     <th class="p-4 text-center w-12">#</th>
-                                    <th class="p-4 w-24 sm:w-36 text-center" data-i18n="thArt">Arte</th>
+                                    <th class="p-4 w-28 sm:w-36 text-center" data-i18n="thArt">Arte</th>
                                     <th class="p-4" data-i18n="thSongArtist">Canción / Artista</th>
                                     <th class="p-2 sm:p-4 w-28 sm:w-44" data-i18n="formGenre">Género</th>
                                     <th class="p-4 text-center w-32" data-i18n="formDifficulty">Dificultad</th>
@@ -280,11 +280,13 @@
             </div>
         </section>
 
+        <!-- ================= VIEW 3: COSMETICS (SKINS SUBMENU) ================= -->
         <section id="view-cosmetics" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
             <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-fuchsia-500/30 rounded-2xl mb-6 w-max">
                 <i class="fa-solid fa-chevron-left text-fuchsia-500"></i> <span data-i18n="backHome">Volver</span>
             </button>
 
+            <!-- SUBMENÚ EXCLUSIVO DE SKINS CON TITULO CENTRAL -->
             <div id="cosmetics-submenu" class="w-full max-w-4xl mx-auto py-6 flex flex-col items-center">
                 <div class="text-center mb-8 flex flex-col items-center w-full">
                     <div class="mb-4 max-w-full w-[450px]">
@@ -309,6 +311,7 @@
                 </div>
             </div>
 
+            <!-- REGISTROS DE TABLAS AISLADOS -->
             <div id="cosmetics-active-workspace" class="hidden flex-col gap-6 items-start w-full relative">
                 <div id="cosmetic-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto z-30">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addCosmeticTitle">Nueva Skin</h2>
@@ -357,6 +360,7 @@
                 </div>
 
                 <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-10 flex-grow">
+                    <!-- Segmento Beatstar -->
                     <div id="container-workspace-beatstar" class="hidden flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
                             <div class="h-10 max-w-[50%] sm:max-w-[240px] flex-grow sm:flex-initial">
@@ -386,6 +390,7 @@
                         </div>
                     </div>
 
+                    <!-- Segmento Tapwave -->
                     <div id="container-workspace-tapwave" class="hidden flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
                             <div class="h-12 max-w-[50%] sm:max-w-[340px] flex-grow sm:flex-initial flex items-center">
@@ -419,6 +424,7 @@
         </section>
     </main>
 
+    <!-- FOOTER -->
     <footer class="border-t border-fuchsia-950/20 bg-[#05020a] py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-end gap-4">
             <div class="flex items-center gap-3">
@@ -450,14 +456,14 @@
         };
 
         const genreList = [
-            { color: "#bf2726", label: "Rock", filterClass: "filter-genre-rock" },
-            { color: "#da6128", label: "Alternative", filterClass: "filter-genre-alternative" },
-            { color: "#02fe03", label: "Classical", filterClass: "filter-genre-classical" },
-            { color: "#84532f", label: "Country", filterClass: "filter-genre-country" },
-            { color: "#8836c7", label: "Dance/EDM", filterClass: "filter-genre-danceedm" },
-            { color: "#2660d2", label: "Hip-Hop", filterClass: "filter-genre-hiphop" },
-            { color: "#c43d73", label: "Pop", filterClass: "filter-genre-pop" },
-            { color: "#019ac4", label: "RnB", filterClass: "filter-genre-rnb" }
+            { color: "#bf2726", label: "Rock" },
+            { color: "#da6128", label: "Alternative" },
+            { color: "#02fe03", label: "Classical" },
+            { color: "#84532f", label: "Country" },
+            { color: "#8836c7", label: "Dance/EDM" },
+            { color: "#2660d2", label: "Hip-Hop" },
+            { color: "#c43d73", label: "Pop" },
+            { color: "#019ac4", label: "RnB" }
         ];
 
         const translations = {
@@ -482,11 +488,12 @@
                 roleVisitor: "Visita", roleCreator: "Creador", formArtUrl: "URL del Arte", formIconUrl: "URL del Icono", formVideoUrl: "URL del Video",
                 formBrandUrl: "URL de la marca", txtNoLinksAvailable: "Sin links disponibles", btnSaveChanges: "Guardar Cambios",
                 btnSaveFooterLinks: "Guardar Enlaces del Menú", jumpToTxt: "Ir a",
-                selectSubmenuSkin: "Selecciona una Plataforma", downloadDirectBtn: "Descarga Directa",
+                selectSubmenuSkin: "Selecciona una Plataforma", downloadDirectBtn: "Descargar",
                 formUploadArt: "Subir Arte (GitHub)", formUploadAudio: "Subir Preview de Audio (Opcional)",
                 formUploadChartFile: "Subir Archivo de Chart (.zip / Opcional)", formUploadIcon: "Subir Icono (GitHub)",
                 formUploadBrand: "Subir Marca / Inspiración (GitHub)", formUploadSkinFile: "Subir Archivo de Skin (Opcional)",
-                beatcloneNotice: "¡Recordatorio! Asegúrate de tener descargado Beatclone antes de instalar este contenido."
+                beatcloneNotice: "¡Recordatorio! Asegúrate de tener descargado Beatclone antes de instalar este contenido.",
+                savingChanges: "Guardando cambios..."
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -509,11 +516,12 @@
                 roleVisitor: "Guest", roleCreator: "Creator", formArtUrl: "Art URL", formIconUrl: "Icon URL", formVideoUrl: "Video URL",
                 formBrandUrl: "Brand URL", txtNoLinksAvailable: "No links available", btnSaveChanges: "Save Changes",
                 btnSaveFooterLinks: "Save Menu Links", jumpToTxt: "Go to",
-                selectSubmenuSkin: "Select a Platform", downloadDirectBtn: "Direct Download",
+                selectSubmenuSkin: "Select a Platform", downloadDirectBtn: "Download",
                 formUploadArt: "Upload Art (GitHub)", formUploadAudio: "Upload Audio Preview (Optional)",
                 formUploadChartFile: "Upload Chart File (.zip / Optional)", formUploadIcon: "Upload Icon (GitHub)",
                 formUploadBrand: "Upload Brand / Inspiration (GitHub)", formUploadSkinFile: "Upload Skin File (Optional)",
-                beatcloneNotice: "Reminder! Make sure you have downloaded Beatclone before installing this content."
+                beatcloneNotice: "Reminder! Make sure you have downloaded Beatclone before installing this content.",
+                savingChanges: "Saving changes..."
             }
         };
 
@@ -524,15 +532,21 @@
         let globalFooterLinks = { beatclone: '', bscm: '', beatcharts: '' };
         let currentSelectedSkinSubPlatform = 'Beatstar'; 
 
-        // AUTENTICACIÓN SECURE GITHUB API
+        // AUTENTICACIÓN GITHUB API
         let githubToken = "";
         let githubUser = "";
         let githubRepo = "lkbeats-handbook";
 
+        // CONTEXTOS WEB AUDIO API REACTIVOS
+        let audioCtx = null;
+        let audioAnalyser = null;
+        let audioSource = null;
+        let canvasAnimationId = null;
+
         let activeAudioElement = null;
         let activeAudioButton = null;
         let activeAudioImg = null;
-        let activeAudioSvg = null;
+        let activeCanvas = null;
 
         function navigateTo(view, pushState = true) {
             ['home', 'levels', 'cosmetics'].forEach(v => document.getElementById(`view-${v}`)?.classList.add('hidden'));
@@ -549,10 +563,7 @@
                 sep?.classList.remove('hidden'); 
             }
             
-            if(view === 'cosmetics') {
-                resetCosmeticsSubmenuWorkspace();
-            }
-            
+            if(view === 'cosmetics') resetCosmeticsSubmenuWorkspace();
             if (pushState) history.pushState({ view: view }, '', '');
             window.scrollTo({ top: 0, behavior: 'smooth' });
             stopGlobalAudioPreview();
@@ -586,7 +597,6 @@
             else navigateTo('home', false);
         });
 
-        // PLATFORMS INTERSECTIONS SUBMENUS JUMPS
         document.getElementById('submenu-card-beatstar').addEventListener('click', () => openCosmeticsSubmenuPlatform('Beatstar'));
         document.getElementById('submenu-card-tapwave').addEventListener('click', () => openCosmeticsSubmenuPlatform('TapWave'));
         document.getElementById('btn-toggle-to-tapwave').addEventListener('click', () => openCosmeticsSubmenuPlatform('TapWave'));
@@ -598,7 +608,7 @@
         document.getElementById('card-to-levels').addEventListener('click', () => navigateTo('levels'));
         document.getElementById('card-to-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
         
-        // CORRECCIÓN ASÍNCRONA PARA PREVENIR EL CIERRE PREMATURO AL CAMBIAR DE VENTANA
+        // LOGIN SEGURO ARREGLADO CON FLUJOS REMOTOS REMOVIENDO EVENTOS DE ENFOQUE ERRÓNEOS
         document.getElementById('auth-indicator').addEventListener('click', async () => {
             if (isCreatorMode) { 
                 isCreatorMode = false; 
@@ -608,32 +618,23 @@
                 return; 
             }
             
-            // Retraso controlado para permitir estabilidad de enfoque en el DOM
-            await new Promise(resolve => setTimeout(resolve, 250));
-            
             const pass = prompt("Clave Admin:");
             if (pass === "BeatstarTest") {
-                await new Promise(resolve => setTimeout(resolve, 250));
                 const userInput = prompt("Introduce tu Usuario de GitHub:");
-                
-                if (userInput) {
-                    await new Promise(resolve => setTimeout(resolve, 250));
-                    const tokenInput = prompt("Introduce tu GitHub Personal Access Token (PAT):\n\n(Puedes cambiar de ventana de forma segura para copiarlo)");
-                    
-                    if(tokenInput) {
+                if (userInput && userInput.trim() !== "") {
+                    const tokenInput = prompt("Introduce tu GitHub Personal Access Token (PAT):");
+                    if(tokenInput && tokenInput.trim() !== "") {
                         githubToken = tokenInput.trim();
                         githubUser = userInput.trim();
                         isCreatorMode = true;
-                    } else {
-                        alert("Token no válido.");
+                        applyRoleUIVisibility();
+                        return;
                     }
-                } else {
-                    alert("Usuario no válido.");
                 }
+                alert("Credenciales de autenticación incompletas.");
             } else if (pass !== null) {
                 alert("Clave de administrador incorrecta.");
             }
-            applyRoleUIVisibility();
         });
 
         document.getElementById('btn-lang-toggle').addEventListener('click', () => {
@@ -668,12 +669,21 @@
             onValue(ref(db, 'last_update_date'), (snap) => { if (snap.val()) document.getElementById('dynamic-update-date').innerText = formatStringToDMY(snap.val()); });
         } catch (e) { console.error(e); }
 
-        // ENGINE SUBIDA DIRECTA API GITHUB VIA BASE64
+        function showLoadingOverlay() {
+            const overlay = document.getElementById('global-loading-overlay');
+            const text = document.getElementById('loading-overlay-text');
+            if(text) text.innerText = translations[currentLanguage].savingChanges || "Guardando...";
+            if(overlay) overlay.classList.remove('hidden');
+        }
+
+        function hideLoadingOverlay() {
+            const overlay = document.getElementById('global-loading-overlay');
+            if(overlay) overlay.classList.add('hidden');
+        }
+
+        // ENGINE SUBIDA DIRECTA API GITHUB
         async function uploadFileToGitHubContent(fileObject, targetFolder, customFileName) {
-            if(!githubToken || !githubUser) {
-                alert("Error: Token de GitHub no especificado.");
-                return "";
-            }
+            if(!githubToken || !githubUser) return "";
             const cleanName = customFileName.replace(/[^a-zA-Z0-9.\-_]/g, '_');
             const targetPath = `${targetFolder}/${Date.now()}_${cleanName}`;
             
@@ -698,12 +708,9 @@
                             const resJson = await response.json();
                             resolve(resJson.content.download_url);
                         } else {
-                            const errText = await response.text();
-                            console.error(errText);
                             reject("");
                         }
                     } catch(err) {
-                        console.error(err);
                         reject("");
                     }
                 };
@@ -717,6 +724,10 @@
         }
 
         function stopGlobalAudioPreview() {
+            if(canvasAnimationId) {
+                cancelAnimationFrame(canvasAnimationId);
+                canvasAnimationId = null;
+            }
             if(activeAudioElement) {
                 activeAudioElement.pause();
                 activeAudioElement = null;
@@ -729,14 +740,61 @@
                 activeAudioImg.classList.remove('art-spinning-circle');
                 activeAudioImg = null;
             }
-            if(activeAudioSvg) {
-                activeAudioSvg.classList.add('hidden');
-                activeAudioSvg.classList.remove('audio-wave-active');
-                activeAudioSvg = null;
+            if(activeCanvas) {
+                const ctx = activeCanvas.getContext('2d');
+                ctx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
+                activeCanvas = null;
             }
         }
 
-        function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, svgElement) {
+        // VISUALIZADOR RADIAL RADIANTE DE ONDAS DE AUDIO DE FRECUENCIA EN CANVAS (DE ACUERDO A IMAGE_4738BD.PNG)
+        function startRadialCanvasVisualizer(canvas, analyser) {
+            const ctx = canvas.getContext('2d');
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            
+            canvas.width = 140;
+            canvas.height = 140;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 46; // Ajustado para envolver el círculo de la carátula perfectamente
+
+            function draw() {
+                if(!activeCanvas || activeCanvas !== canvas) return;
+                canvasAnimationId = requestAnimationFrame(draw);
+                analyser.getByteFrequencyData(dataArray);
+                
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Renderizado simétrico de barras radiales de la frecuencia
+                const barCount = 90;
+                for (let i = 0; i < barCount; i++) {
+                    const angle = (i / barCount) * Math.PI * 2;
+                    const dataIndex = Math.floor((i / barCount) * bufferLength * 0.6);
+                    const rawValue = dataArray[dataIndex] || 0;
+                    
+                    // Altura e intensidad reactiva adaptativa
+                    const barHeight = (rawValue / 255) * 16; 
+                    
+                    const startX = centerX + Math.cos(angle) * radius;
+                    const startY = centerY + Math.sin(angle) * radius;
+                    const endX = centerX + Math.cos(angle) * (radius + barHeight);
+                    const endY = centerY + Math.sin(angle) * (radius + barHeight);
+                    
+                    ctx.strokeStyle = '#d946ef';
+                    ctx.lineWidth = 2;
+                    ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.moveTo(startX, startY);
+                    ctx.lineTo(endX, endY);
+                    ctx.stroke();
+                }
+            }
+            activeCanvas = canvas;
+            draw();
+        }
+
+        function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement) {
             if(activeAudioElement && activeAudioElement.src === audioUrl) {
                 stopGlobalAudioPreview();
                 return;
@@ -744,21 +802,41 @@
             
             stopGlobalAudioPreview();
 
+            // Configurar contexto de Audio Remoto
+            if(!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                audioAnalyser = audioCtx.createAnalyser();
+                audioAnalyser.fftSize = 256;
+            }
+
             const audio = new Audio(audioUrl);
+            audio.crossOrigin = "anonymous"; 
             activeAudioElement = audio;
             activeAudioButton = btnElement;
             activeAudioImg = imgElement;
-            activeAudioSvg = svgElement;
 
             btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
             imgElement.classList.add('art-spinning-circle');
-            svgElement.classList.remove('hidden');
-            svgElement.classList.add('audio-wave-active');
 
-            audio.play();
-            audio.onended = () => {
-                stopGlobalAudioPreview();
-            };
+            try {
+                if(!audioSource || audioSource.mediaElement !== audio) {
+                    audioSource = audioCtx.createMediaElementSource(audio);
+                    audioSource.connect(audioAnalyser);
+                    audioAnalyser.connect(audioCtx.destination);
+                }
+            } catch(e) {
+                // Prevenir duplicados de nodos del stream
+            }
+
+            if(audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            audio.play().then(() => {
+                startRadialCanvasVisualizer(canvasElement, audioAnalyser);
+            }).catch(err => console.error("Audio playback error:", err));
+
+            audio.onended = () => { stopGlobalAudioPreview(); };
         }
 
         function formatStringToDMY(rawDate) {
@@ -781,15 +859,11 @@
             document.querySelectorAll('.creator-action-header').forEach(el => el.classList.toggle('hidden', !isCreatorMode));
 
             const lvlGrid = document.getElementById('levels-layout-grid');
-            const cosGrid = document.getElementById('cosmetics-layout-grid');
             if (isCreatorMode) {
                 lvlGrid?.classList.replace('flex-col', 'xl:flex-row');
-                cosGrid?.classList.replace('flex-col', 'xl:flex-row');
             } else {
                 lvlGrid?.classList.replace('xl:flex-row', 'flex-col');
                 lvlGrid?.classList.add('flex-col');
-                cosGrid?.classList.replace('xl:flex-row', 'flex-col');
-                cosGrid?.classList.add('flex-col');
             }
 
             renderLevelsTable(); renderCosmeticsTables();
@@ -870,16 +944,17 @@
                 tr.innerHTML = `
                     <td class="p-4 text-center font-mono font-bold text-zinc-500">${i+1}</td>
                     <td class="p-4 text-center">
-                        <div class="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto">
-                            <svg class="absolute -inset-2 w-[calc(100%+16px)] h-[calc(100%+16px)] text-fuchsia-500 hidden z-0 pointer-events-none" viewBox="0 0 100 100">
-                                <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="6 4"/>
-                            </svg>
-                            <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover rounded-xl border border-fuchsia-950/40 shadow-lg relative z-10 bg-zinc-900" onerror="this.src='free_song_Image.png'">
-                            ${hasAudio ? `
-                                <button class="btn-play-audio-preview absolute bottom-0 right-0 w-6 h-6 bg-black/80 border border-fuchsia-500/60 rounded-full text-fuchsia-400 flex items-center justify-center shadow-lg transition hover:scale-110 z-20">
-                                    <i class="fa-solid fa-play text-[10px]"></i>
-                                </button>
-                            ` : ''}
+                        <div class="relative w-[100px] h-[100px] mx-auto flex items-center justify-center">
+                            <!-- CANVAS VISUALIZADOR RADIAL REACTIVO -->
+                            <canvas class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 relative z-10 overflow-hidden rounded-xl border border-fuchsia-950/40 shadow-lg">
+                                <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover rounded-xl bg-zinc-900" onerror="this.src='free_song_Image.png'">
+                                ${hasAudio ? `
+                                    <button class="btn-play-audio-preview absolute bottom-0 right-0 w-6 h-6 bg-black/80 border border-fuchsia-500/60 rounded-full text-fuchsia-400 flex items-center justify-center shadow-lg transition hover:scale-110 z-20">
+                                        <i class="fa-solid fa-play text-[10px]"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
                         </div>
                     </td>
                     <td class="p-4 min-w-[200px] sm:min-w-[320px] flex-1"><div class="font-bold text-white text-xs sm:text-sm tracking-wide mb-0.5 whitespace-normal break-words">${lvl.song}</div><div class="text-[10px] sm:text-xs text-zinc-500 font-normal whitespace-normal break-words">${lvl.artist}</div></td>
@@ -903,8 +978,8 @@
                 if(hasAudio) {
                     const btn = tr.querySelector('.btn-play-audio-preview');
                     const img = tr.querySelector('.target-lvl-art-img');
-                    const svg = tr.querySelector('svg');
-                    btn.addEventListener('click', () => toggleAudioPreviewEngine(lvl.audioDirectUrl, btn, img, svg));
+                    const canvas = tr.querySelector('canvas');
+                    btn.addEventListener('click', () => toggleAudioPreviewEngine(lvl.audioDirectUrl, btn, img, canvas));
                 }
 
                 if(lvl.chartDirectUrl) {
@@ -1024,9 +1099,11 @@
             document.getElementById('counter-tapwave').innerText = cT;
         }
 
-        // CONTROL FORMULARIOS CON AUTOMATIZACIÓN DE GITHUB API
+        // CONTROL FORMULARIOS CON OVERLAY DE CARGA Y PERSISTENCIA COMPLETA DE PARÁMETROS DE GÉNEROS
         document.getElementById('level-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            showLoadingOverlay();
+
             const checked = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
             let id = document.getElementById('editingLvlId').value || Date.now().toString();
             
@@ -1056,11 +1133,24 @@
                 edition: document.getElementById('lvlEdition').value, date: document.getElementById('lvlDate').value,
                 dl1: document.getElementById('lvlDl1').value.trim(), dl2: document.getElementById('lvlDl2').value.trim(), dl3: document.getElementById('lvlDl3').value.trim()
             };
-            if(db) set(ref(db, 'levels/' + id), data).then(() => { set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); document.getElementById('level-form').reset(); document.getElementById('editingLvlId').value = ''; document.getElementById('lvlSubmitBtn').innerText = translations[currentLanguage].btnRegister; buildGenresSelector(); });
+            if(db) {
+                set(ref(db, 'levels/' + id), data).then(() => { 
+                    set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
+                    document.getElementById('level-form').reset(); 
+                    document.getElementById('editingLvlId').value = ''; 
+                    document.getElementById('lvlSubmitBtn').innerText = translations[currentLanguage].btnRegister; 
+                    buildGenresSelector();
+                    hideLoadingOverlay();
+                }).catch(() => hideLoadingOverlay());
+            } else {
+                hideLoadingOverlay();
+            }
         });
 
         document.getElementById('cosmetic-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            showLoadingOverlay();
+
             let id = document.getElementById('editingCosId').value || Date.now().toString();
             
             let finalIconUrl = cosmetics.find(c => c.id === id)?.icon || "BoxSprite_MerchSkin2.png";
@@ -1088,7 +1178,18 @@
                 date: document.getElementById('cosDate').value, insp: finalInspUrl, skinDirectUrl: finalSkinDirectUrl,
                 platform: currentSelectedSkinSubPlatform, dl1: document.getElementById('cosDl1').value.trim(), dl2: document.getElementById('cosDl2').value.trim()
             };
-            if(db) set(ref(db, 'cosmetics/' + id), data).then(() => { set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); document.getElementById('cosmetic-form').reset(); document.getElementById('editingCosId').value = ''; document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnRegister; document.getElementById('cosBrandPreview').classList.add('hidden'); });
+            if(db) {
+                set(ref(db, 'cosmetics/' + id), data).then(() => { 
+                    set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
+                    document.getElementById('cosmetic-form').reset(); 
+                    document.getElementById('editingCosId').value = ''; 
+                    document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnRegister; 
+                    document.getElementById('cosBrandPreview').classList.add('hidden'); 
+                    hideLoadingOverlay();
+                }).catch(() => hideLoadingOverlay());
+            } else {
+                hideLoadingOverlay();
+            }
         });
 
         document.getElementById('btn-save-footer-links').addEventListener('click', () => {
