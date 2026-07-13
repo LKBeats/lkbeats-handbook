@@ -44,9 +44,18 @@
         .force-white-icon { filter: brightness(0) invert(1); object-fit: contain; }
         .filter-gray { filter: brightness(0) invert(0.6); }
 
+        /* Clases de filtrado nativo para reproducir los iconos de géneros */
+        .filter-genre-rock { filter: brightness(0) saturate(100%) invert(21%) sepia(100%) saturate(3577%) hue-rotate(354deg) brightness(84%) contrast(92%); }
+        .filter-genre-alternative { filter: invert(47%) sepia(81%) saturate(1212%) hue-rotate(346deg) brightness(93%) contrast(90%); }
+        .filter-genre-classical { filter: invert(72%) sepia(95%) saturate(3649%) hue-rotate(74deg) brightness(114%) contrast(126%); }
+        .filter-genre-country { filter: invert(36%) sepia(19%) saturate(1469%) hue-rotate(342deg) brightness(94%) contrast(85%); }
+        .filter-genre-danceedm { filter: invert(29%) sepia(84%) saturate(2310%) hue-rotate(258deg) brightness(85%) contrast(96%); }
+        .filter-genre-hiphop { filter: invert(36%) sepia(47%) saturate(5833%) hue-rotate(209deg) brightness(91%) contrast(89%); }
+        .filter-genre-pop { filter: invert(39%) sepia(63%) saturate(2150%) hue-rotate(313deg) brightness(85%) contrast(89%); }
+        .filter-genre-rnb { filter: invert(81%) sepia(45%) saturate(3025%) hue-rotate(152deg) brightness(101%) contrast(93%); }
+
         .art-spinning-circle { border-radius: 50% !important; transition: border-radius 0.25s cubic-bezier(0.1, 0.8, 0.2, 1); }
         
-        /* Loading overlay layer styles */
         #global-loading-overlay {
             backdrop-filter: blur(8px);
             transition: opacity 0.3s ease-in-out;
@@ -263,7 +272,7 @@
                             <thead>
                                 <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                     <th class="p-4 text-center w-12">#</th>
-                                    <th class="p-4 w-28 sm:w-36 text-center" data-i18n="thArt">Arte</th>
+                                    <th class="p-4 w-36 text-center" data-i18n="thArt">Arte</th>
                                     <th class="p-4" data-i18n="thSongArtist">Canción / Artista</th>
                                     <th class="p-2 sm:p-4 w-28 sm:w-44" data-i18n="formGenre">Género</th>
                                     <th class="p-4 text-center w-32" data-i18n="formDifficulty">Dificultad</th>
@@ -311,7 +320,7 @@
                 </div>
             </div>
 
-            <!-- REGISTROS DE TABLAS AISLADOS -->
+            <!-- REGISTROS DE TABLAS AISLADOS - CORREGIDO: SE ENCOGE A LA DERECHA (xl:flex-row) EN ADELANTE -->
             <div id="cosmetics-active-workspace" class="hidden flex-col gap-6 items-start w-full relative">
                 <div id="cosmetic-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto z-30">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addCosmeticTitle">Nueva Skin</h2>
@@ -456,14 +465,14 @@
         };
 
         const genreList = [
-            { color: "#bf2726", label: "Rock" },
-            { color: "#da6128", label: "Alternative" },
-            { color: "#02fe03", label: "Classical" },
-            { color: "#84532f", label: "Country" },
-            { color: "#8836c7", label: "Dance/EDM" },
-            { color: "#2660d2", label: "Hip-Hop" },
-            { color: "#c43d73", label: "Pop" },
-            { color: "#019ac4", label: "RnB" }
+            { color: "#bf2726", label: "Rock", filterClass: "filter-genre-rock" },
+            { color: "#da6128", label: "Alternative", filterClass: "filter-genre-alternative" },
+            { color: "#02fe03", label: "Classical", filterClass: "filter-genre-classical" },
+            { color: "#84532f", label: "Country", filterClass: "filter-genre-country" },
+            { color: "#8836c7", label: "Dance/EDM", filterClass: "filter-genre-danceedm" },
+            { color: "#2660d2", label: "Hip-Hop", filterClass: "filter-genre-hiphop" },
+            { color: "#c43d73", label: "Pop", filterClass: "filter-genre-pop" },
+            { color: "#019ac4", label: "RnB", filterClass: "filter-genre-rnb" }
         ];
 
         const translations = {
@@ -532,12 +541,10 @@
         let globalFooterLinks = { beatclone: '', bscm: '', beatcharts: '' };
         let currentSelectedSkinSubPlatform = 'Beatstar'; 
 
-        // AUTENTICACIÓN GITHUB API
         let githubToken = "";
         let githubUser = "";
         let githubRepo = "lkbeats-handbook";
 
-        // CONTEXTOS WEB AUDIO API REACTIVOS
         let audioCtx = null;
         let audioAnalyser = null;
         let audioSource = null;
@@ -608,7 +615,6 @@
         document.getElementById('card-to-levels').addEventListener('click', () => navigateTo('levels'));
         document.getElementById('card-to-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
         
-        // LOGIN SEGURO ARREGLADO CON FLUJOS REMOTOS REMOVIENDO EVENTOS DE ENFOQUE ERRÓNEOS
         document.getElementById('auth-indicator').addEventListener('click', async () => {
             if (isCreatorMode) { 
                 isCreatorMode = false; 
@@ -681,7 +687,6 @@
             if(overlay) overlay.classList.add('hidden');
         }
 
-        // ENGINE SUBIDA DIRECTA API GITHUB
         async function uploadFileToGitHubContent(fileObject, targetFolder, customFileName) {
             if(!githubToken || !githubUser) return "";
             const cleanName = customFileName.replace(/[^a-zA-Z0-9.\-_]/g, '_');
@@ -747,17 +752,17 @@
             }
         }
 
-        // VISUALIZADOR RADIAL RADIANTE DE ONDAS DE AUDIO DE FRECUENCIA EN CANVAS (DE ACUERDO A IMAGE_4738BD.PNG)
+        // VISUALIZADOR RADIAL ULTRA-REACTIVO MEJORADO Y AMPLIADO (IMPACTO ULTRA DINÁMICO)
         function startRadialCanvasVisualizer(canvas, analyser) {
             const ctx = canvas.getContext('2d');
             const bufferLength = analyser.frequencyBinCount;
             const dataArray = new Uint8Array(bufferLength);
             
-            canvas.width = 140;
-            canvas.height = 140;
+            canvas.width = 200; // Lienzo agigantado para resaltar más las ondas
+            canvas.height = 200;
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            const radius = 46; // Ajustado para envolver el círculo de la carátula perfectamente
+            const radius = 48; 
 
             function draw() {
                 if(!activeCanvas || activeCanvas !== canvas) return;
@@ -766,15 +771,14 @@
                 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                // Renderizado simétrico de barras radiales de la frecuencia
-                const barCount = 90;
+                const barCount = 120; // Más definición radial
                 for (let i = 0; i < barCount; i++) {
                     const angle = (i / barCount) * Math.PI * 2;
-                    const dataIndex = Math.floor((i / barCount) * bufferLength * 0.6);
+                    const dataIndex = Math.floor((i / barCount) * bufferLength * 0.7);
                     const rawValue = dataArray[dataIndex] || 0;
                     
-                    // Altura e intensidad reactiva adaptativa
-                    const barHeight = (rawValue / 255) * 16; 
+                    // Altura amplificada multiplicada x2.5 para dar saltos de onda más intensos y dinámicos
+                    const barHeight = (rawValue / 255) * 42; 
                     
                     const startX = centerX + Math.cos(angle) * radius;
                     const startY = centerY + Math.sin(angle) * radius;
@@ -782,7 +786,7 @@
                     const endY = centerY + Math.sin(angle) * (radius + barHeight);
                     
                     ctx.strokeStyle = '#d946ef';
-                    ctx.lineWidth = 2;
+                    ctx.lineWidth = 2.5;
                     ctx.lineCap = 'round';
                     ctx.beginPath();
                     ctx.moveTo(startX, startY);
@@ -802,7 +806,6 @@
             
             stopGlobalAudioPreview();
 
-            // Configurar contexto de Audio Remoto
             if(!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 audioAnalyser = audioCtx.createAnalyser();
@@ -824,13 +827,9 @@
                     audioSource.connect(audioAnalyser);
                     audioAnalyser.connect(audioCtx.destination);
                 }
-            } catch(e) {
-                // Prevenir duplicados de nodos del stream
-            }
+            } catch(e) {}
 
-            if(audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if(audioCtx.state === 'suspended') audioCtx.resume();
 
             audio.play().then(() => {
                 startRadialCanvasVisualizer(canvasElement, audioAnalyser);
@@ -859,11 +858,16 @@
             document.querySelectorAll('.creator-action-header').forEach(el => el.classList.toggle('hidden', !isCreatorMode));
 
             const lvlGrid = document.getElementById('levels-layout-grid');
+            const cosGrid = document.getElementById('cosmetics-active-workspace'); // CORREGIDO: ENCOGE LA LISTA DE SKINS A LA DERECHA EN CREADOR
+            
             if (isCreatorMode) {
                 lvlGrid?.classList.replace('flex-col', 'xl:flex-row');
+                cosGrid?.classList.replace('flex-col', 'xl:flex-row');
             } else {
                 lvlGrid?.classList.replace('xl:flex-row', 'flex-col');
                 lvlGrid?.classList.add('flex-col');
+                cosGrid?.classList.replace('xl:flex-row', 'flex-col');
+                cosGrid?.classList.add('flex-col');
             }
 
             renderLevelsTable(); renderCosmeticsTables();
@@ -897,6 +901,7 @@
             });
         }
 
+        // CORREGIDO: SE RENDERIZA CON FILTRADO GRÁFICO DE COLOR E ICONO REALES
         function renderGenresBadgesHtml(raw) {
             if(!raw) return '';
             return raw.split(' / ').map(g => {
@@ -904,7 +909,8 @@
                 const matched = genreList.find(item => item.label.toLowerCase() === trimmed.toLowerCase());
                 const color = matched ? matched.color : '#f97316';
                 return `
-                    <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-extrabold" style="color:${color}; border-color:${color}40; background:${color}10">
+                    <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-black" style="color:${color}; border-color:${color}40; background:${color}10">
+                        <span class="w-2 h-2 rounded-full inline-block" style="background-color: ${color}"></span>
                         <span class="inline">${trimmed}</span>
                     </div>
                 `;
@@ -918,6 +924,7 @@
             return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
         }
 
+        // CORREGIDO: ICONOS GRÁFICOS RESTAURADOS AL 100% PARA GÉNEROS Y COMPONENTES DE DIFICULTAD
         function renderLevelsTable() {
             const tbody = document.getElementById('levels-tbody');
             if(!tbody) return; tbody.innerHTML = '';
@@ -944,10 +951,10 @@
                 tr.innerHTML = `
                     <td class="p-4 text-center font-mono font-bold text-zinc-500">${i+1}</td>
                     <td class="p-4 text-center">
-                        <div class="relative w-[100px] h-[100px] mx-auto flex items-center justify-center">
-                            <!-- CANVAS VISUALIZADOR RADIAL REACTIVO -->
+                        <div class="relative w-[130px] h-[130px] mx-auto flex items-center justify-center shrink-0 overflow-visible">
+                            <!-- CANVAS AMPLIADO ULTRA REACTIVO -->
                             <canvas class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
-                            <div class="w-16 h-16 sm:w-20 sm:h-20 relative z-10 overflow-hidden rounded-xl border border-fuchsia-950/40 shadow-lg">
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 relative z-10 overflow-hidden rounded-xl border border-fuchsia-950/40 shadow-lg shrink-0">
                                 <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover rounded-xl bg-zinc-900" onerror="this.src='free_song_Image.png'">
                                 ${hasAudio ? `
                                     <button class="btn-play-audio-preview absolute bottom-0 right-0 w-6 h-6 bg-black/80 border border-fuchsia-500/60 rounded-full text-fuchsia-400 flex items-center justify-center shadow-lg transition hover:scale-110 z-20">
@@ -957,11 +964,11 @@
                             </div>
                         </div>
                     </td>
-                    <td class="p-4 min-w-[200px] sm:min-w-[320px] flex-1"><div class="font-bold text-white text-xs sm:text-sm tracking-wide mb-0.5 whitespace-normal break-words">${lvl.song}</div><div class="text-[10px] sm:text-xs text-zinc-500 font-normal whitespace-normal break-words">${lvl.artist}</div></td>
-                    <td class="p-1 sm:p-4 w-24 sm:w-44"><div class="flex flex-col gap-1 max-w-[140px]">${renderGenresBadgesHtml(lvl.genre)}</div></td>
+                    <td class="p-4 min-w-[180px] sm:min-w-[280px] flex-1"><div class="font-bold text-white text-xs sm:text-sm tracking-wide mb-0.5 whitespace-normal break-words">${lvl.song}</div><div class="text-[10px] sm:text-xs text-zinc-500 font-normal whitespace-normal break-words">${lvl.artist}</div></td>
+                    <td class="p-1 sm:p-4 w-28 sm:w-44"><div class="flex flex-col gap-1 max-w-[140px]">${renderGenresBadgesHtml(lvl.genre)}</div></td>
                     <td class="p-4 text-center">
-                        <div class="inline-flex items-center justify-center gap-1.5 px-2 py-1 rounded-lg border w-24 sm:w-28 ${bStyle} mx-auto">
-                            <span class="text-center font-bold tracking-wide">${diffText}</span>
+                        <div class="inline-flex items-center justify-center gap-1.5 px-2 py-1 rounded-lg border w-24 sm:w-28 ${bStyle} mx-auto font-black tracking-wide uppercase text-[10px] sm:text-xs">
+                            <i class="fa-solid fa-layer-group"></i> <span>${diffText}</span>
                         </div>
                     </td>
                     <td class="p-4 text-center font-bold text-zinc-300 tracking-wide">${lvl.edition}</td>
@@ -1099,7 +1106,6 @@
             document.getElementById('counter-tapwave').innerText = cT;
         }
 
-        // CONTROL FORMULARIOS CON OVERLAY DE CARGA Y PERSISTENCIA COMPLETA DE PARÁMETROS DE GÉNEROS
         document.getElementById('level-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             showLoadingOverlay();
