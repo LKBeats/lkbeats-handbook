@@ -40,19 +40,10 @@
         
         .glow-orange { box-shadow: 0 0 20px rgba(249, 115, 22, 0.2); }
         .glow-fuchsia { box-shadow: 0 0 20px rgba(217, 70, 239, 0.2); }
+        .glow-gold { box-shadow: 0 0 20px rgba(250, 204, 21, 0.4); border-color: #facc15 !important; }
         
         .force-white-icon { filter: brightness(0) invert(1); object-fit: contain; }
         .filter-gray { filter: brightness(0) invert(0.6); }
-
-        /* Clases de filtrado nativo para reproducir los iconos de géneros */
-        .filter-genre-rock { filter: brightness(0) saturate(100%) invert(21%) sepia(100%) saturate(3577%) hue-rotate(354deg) brightness(84%) contrast(92%); }
-        .filter-genre-alternative { filter: invert(47%) sepia(81%) saturate(1212%) hue-rotate(346deg) brightness(93%) contrast(90%); }
-        .filter-genre-classical { filter: invert(72%) sepia(95%) saturate(3649%) hue-rotate(74deg) brightness(114%) contrast(126%); }
-        .filter-genre-country { filter: invert(36%) sepia(19%) saturate(1469%) hue-rotate(342deg) brightness(94%) contrast(85%); }
-        .filter-genre-danceedm { filter: invert(29%) sepia(84%) saturate(2310%) hue-rotate(258deg) brightness(85%) contrast(96%); }
-        .filter-genre-hiphop { filter: invert(36%) sepia(47%) saturate(5833%) hue-rotate(209deg) brightness(91%) contrast(89%); }
-        .filter-genre-pop { filter: invert(39%) sepia(63%) saturate(2150%) hue-rotate(313deg) brightness(85%) contrast(89%); }
-        .filter-genre-rnb { filter: invert(81%) sepia(45%) saturate(3025%) hue-rotate(152deg) brightness(101%) contrast(93%); }
 
         .art-spinning-circle { border-radius: 50% !important; transition: border-radius 0.25s cubic-bezier(0.1, 0.8, 0.2, 1); }
         
@@ -158,9 +149,50 @@
                 </div>
             </div>
 
-            <div class="bg-zinc-950/60 border border-zinc-900 rounded-2xl p-4 text-center text-xs text-zinc-500 mb-10">
-                <div class="font-bold uppercase tracking-widest mb-1" data-i18n="disclaimerTitle">Deslinde de Responsabilidad</div>
-                <div data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes pertenecen a sus respectivos propietarios y desarrolladores originales.</div>
+            <!-- PANEL EXTRA DE ASSETS VISUALES DINÁMICOS DE LA ACTUALIZACIÓN MAESTRA -->
+            <div id="visual-assets-panel-box" class="hidden bg-[#11091c] border border-fuchsia-500/40 rounded-2xl p-6 shadow-2xl relative w-full mb-10">
+                <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-fuchsia-500 to-orange-500"></div>
+                <h2 class="font-display font-black text-base text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="visualAssetsMenuTitle">Panel de Assets Visuales Dinámicos</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs mb-4">
+                    <!-- Columna Géneros -->
+                    <div class="space-y-2 bg-black/30 p-3 rounded-xl border border-fuchsia-950/40">
+                        <div class="font-black text-fuchsia-400 uppercase tracking-wider mb-2 border-b border-fuchsia-950/30 pb-1" data-i18n="formGenre">Géneros</div>
+                        <div id="asset-upload-genres-list" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
+                    </div>
+                    <!-- Columna Dificultades -->
+                    <div class="space-y-2 bg-black/30 p-3 rounded-xl border border-fuchsia-950/40">
+                        <div class="font-black text-orange-400 uppercase tracking-wider mb-2 border-b border-fuchsia-950/30 pb-1" data-i18n="formDifficulty">Dificultades</div>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block font-bold text-zinc-400 mb-0.5 uppercase">Normal</label>
+                                <input type="file" data-asset-key="diff_Normal" accept="image/*" class="visual-asset-file-uploader w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded text-zinc-400">
+                            </div>
+                            <div>
+                                <label class="block font-bold text-zinc-400 mb-0.5 uppercase">Hard</label>
+                                <input type="file" data-asset-key="diff_Hard" accept="image/*" class="visual-asset-file-uploader w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded text-zinc-400">
+                            </div>
+                            <div>
+                                <label class="block font-bold text-zinc-400 mb-0.5 uppercase">Extreme</label>
+                                <input type="file" data-asset-key="diff_Extreme" accept="image/*" class="visual-asset-file-uploader w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded text-zinc-400">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Columna Ediciones -->
+                    <div class="space-y-2 bg-black/30 p-3 rounded-xl border border-fuchsia-950/40">
+                        <div class="font-black text-yellow-400 uppercase tracking-wider mb-2 border-b border-fuchsia-950/30 pb-1" data-i18n="formEdition">Edición</div>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block font-bold text-zinc-400 mb-0.5 uppercase">Standard</label>
+                                <input type="file" data-asset-key="edit_Standard" accept="image/*" class="visual-asset-file-uploader w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded text-zinc-400">
+                            </div>
+                            <div>
+                                <label class="block font-bold text-zinc-400 mb-0.5 uppercase">Deluxe</label>
+                                <input type="file" data-asset-key="edit_Deluxe" accept="image/*" class="visual-asset-file-uploader w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded text-zinc-400">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Footer Links Manager Box -->
@@ -184,6 +216,11 @@
                 <button type="button" id="btn-save-footer-links" class="w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-black uppercase rounded-lg text-xs tracking-wider transition hover:opacity-90">
                     <span data-i18n="btnSaveFooterLinks">Guardar Enlaces del Menú</span>
                 </button>
+            </div>
+
+            <div class="bg-zinc-950/60 border border-zinc-900 rounded-2xl p-4 text-center text-xs text-zinc-500 mb-10">
+                <div class="font-bold uppercase tracking-widest mb-1" data-i18n="disclaimerTitle">Deslinde de Responsabilidad</div>
+                <div data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes pertenecen a sus respectivos propietarios y desarrolladores originales.</div>
             </div>
         </section>
 
@@ -268,15 +305,15 @@
                     </div>
 
                     <div id="levels-table-wrapper" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
-                        <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
+                        <table class="w-full text-left border-collapse min-w-[700px] sm:min-w-[900px]">
                             <thead>
                                 <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                     <th class="p-4 text-center w-12">#</th>
                                     <th class="p-4 w-36 text-center" data-i18n="thArt">Arte</th>
                                     <th class="p-4" data-i18n="thSongArtist">Canción / Artista</th>
-                                    <th class="p-2 sm:p-4 w-28 sm:w-44" data-i18n="formGenre">Género</th>
+                                    <th class="p-2 sm:p-4 w-36" data-i18n="formGenre">Género</th>
                                     <th class="p-4 text-center w-32" data-i18n="formDifficulty">Dificultad</th>
-                                    <th class="p-4 text-center w-24" data-i18n="formEdition">Edición</th>
+                                    <th class="p-4 text-center w-36" data-i18n="formEdition">Edición</th>
                                     <th class="p-4 text-center w-24 whitespace-nowrap" data-i18n="formRelease">Lanzamiento</th>
                                     <th class="p-4 text-center w-60 sm:w-64 min-w-[170px]" data-i18n="thPlatformDl">Descarga</th>
                                     <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
@@ -320,7 +357,7 @@
                 </div>
             </div>
 
-            <!-- REGISTROS DE TABLAS AISLADOS - CORREGIDO: SE ENCOGE A LA DERECHA (xl:flex-row) EN ADELANTE -->
+            <!-- REGISTROS DE TABLAS AISLADOS Y BALANCEADOS -->
             <div id="cosmetics-active-workspace" class="hidden flex-col gap-6 items-start w-full relative">
                 <div id="cosmetic-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto z-30">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addCosmeticTitle">Nueva Skin</h2>
@@ -502,7 +539,8 @@
                 formUploadChartFile: "Subir Archivo de Chart (.zip / Opcional)", formUploadIcon: "Subir Icono (GitHub)",
                 formUploadBrand: "Subir Marca / Inspiración (GitHub)", formUploadSkinFile: "Subir Archivo de Skin (Opcional)",
                 beatcloneNotice: "¡Recordatorio! Asegúrate de tener descargado Beatclone antes de instalar este contenido.",
-                savingChanges: "Guardando cambios..."
+                savingChanges: "Guardando cambios...",
+                visualAssetsMenuTitle: "Panel de Assets Visuales Dinámicos"
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -530,7 +568,8 @@
                 formUploadChartFile: "Upload Chart File (.zip / Optional)", formUploadIcon: "Upload Icon (GitHub)",
                 formUploadBrand: "Upload Brand / Inspiration (GitHub)", formUploadSkinFile: "Upload Skin File (Optional)",
                 beatcloneNotice: "Reminder! Make sure you have downloaded Beatclone before installing this content.",
-                savingChanges: "Saving changes..."
+                savingChanges: "Saving changes...",
+                visualAssetsMenuTitle: "Dynamic Visual Assets Panel"
             }
         };
 
@@ -540,6 +579,7 @@
         let cosmetics = [];
         let globalFooterLinks = { beatclone: '', bscm: '', beatcharts: '' };
         let currentSelectedSkinSubPlatform = 'Beatstar'; 
+        let globalVisualAssets = {}; 
 
         let githubToken = "";
         let githubUser = "";
@@ -549,6 +589,7 @@
         let audioAnalyser = null;
         let audioSource = null;
         let canvasAnimationId = null;
+        let currentRotationAngle = 0; // Ángulo de rotación horaria constante
 
         let activeAudioElement = null;
         let activeAudioButton = null;
@@ -663,6 +704,10 @@
                 if(document.getElementById('counter-charts-header')) document.getElementById('counter-charts-header').innerText = levels.length;
             });
             onValue(ref(db, 'cosmetics'), (snap) => { cosmetics = snap.val() ? Object.values(snap.val()) : []; renderCosmeticsTables(); updateDashboardCounts(); });
+            onValue(ref(db, 'visual_assets'), (snap) => { 
+                globalVisualAssets = snap.val() || {}; 
+                renderLevelsTable(); // Re-renderizar con los assets cargados dinámicamente
+            });
             onValue(ref(db, 'footer_links'), (snap) => { 
                 if (snap.val()) { 
                     globalFooterLinks = snap.val(); 
@@ -750,15 +795,16 @@
                 ctx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
                 activeCanvas = null;
             }
+            currentRotationAngle = 0;
         }
 
-        // VISUALIZADOR RADIAL ULTRA-REACTIVO MEJORADO Y AMPLIADO (IMPACTO ULTRA DINÁMICO)
+        // VISUALIZADOR RADIAL REACTIVO EN SENTIDO HORARIO CONTINUO (ROTACIÓN CONSTANTE)
         function startRadialCanvasVisualizer(canvas, analyser) {
             const ctx = canvas.getContext('2d');
             const bufferLength = analyser.frequencyBinCount;
             const dataArray = new Uint8Array(bufferLength);
             
-            canvas.width = 200; // Lienzo agigantado para resaltar más las ondas
+            canvas.width = 200; 
             canvas.height = 200;
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
@@ -771,13 +817,16 @@
                 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                const barCount = 120; // Más definición radial
+                // Incrementar la velocidad de rotación angular progresivamente
+                currentRotationAngle += 0.008; 
+
+                const barCount = 120; 
                 for (let i = 0; i < barCount; i++) {
-                    const angle = (i / barCount) * Math.PI * 2;
+                    // Integración del ángulo base mapeado más la rotación continua en sentido horario
+                    const angle = ((i / barCount) * Math.PI * 2) + currentRotationAngle;
                     const dataIndex = Math.floor((i / barCount) * bufferLength * 0.7);
                     const rawValue = dataArray[dataIndex] || 0;
                     
-                    // Altura amplificada multiplicada x2.5 para dar saltos de onda más intensos y dinámicos
                     const barHeight = (rawValue / 255) * 42; 
                     
                     const startX = centerX + Math.cos(angle) * radius;
@@ -852,13 +901,13 @@
             if (label) label.innerText = isCreatorMode ? translations[currentLanguage].roleCreator : translations[currentLanguage].roleVisitor;
             if (icon) icon.className = isCreatorMode ? "fa-solid fa-lock-open text-emerald-400" : "fa-solid fa-lock text-zinc-600";
             
-            ['level-form-container', 'cosmetic-form-container', 'footer-links-management-box'].forEach(id => {
+            ['level-form-container', 'cosmetic-form-container', 'footer-links-management-box', 'visual-assets-panel-box'].forEach(id => {
                 document.getElementById(id)?.classList.toggle('hidden', !isCreatorMode);
             });
             document.querySelectorAll('.creator-action-header').forEach(el => el.classList.toggle('hidden', !isCreatorMode));
 
             const lvlGrid = document.getElementById('levels-layout-grid');
-            const cosGrid = document.getElementById('cosmetics-active-workspace'); // CORREGIDO: ENCOGE LA LISTA DE SKINS A LA DERECHA EN CREADOR
+            const cosGrid = document.getElementById('cosmetics-active-workspace');
             
             if (isCreatorMode) {
                 lvlGrid?.classList.replace('flex-col', 'xl:flex-row');
@@ -901,16 +950,23 @@
             });
         }
 
-        // CORREGIDO: SE RENDERIZA CON FILTRADO GRÁFICO DE COLOR E ICONO REALES
+        // CONTROL DINÁMICO ASIGNADOR DE ASSETS GRÁFICOS PERSONALIZADOS DESDE EL PANEL
         function renderGenresBadgesHtml(raw) {
             if(!raw) return '';
             return raw.split(' / ').map(g => {
                 const trimmed = g.trim();
                 const matched = genreList.find(item => item.label.toLowerCase() === trimmed.toLowerCase());
                 const color = matched ? matched.color : '#f97316';
+                
+                // Comprobar si existe un asset cargado en el panel dinámico para este género
+                const dynamicAssetSrc = globalVisualAssets[`genre_${trimmed}`];
+                const graphicElement = dynamicAssetSrc 
+                    ? `<img src="${dynamicAssetSrc}" class="w-4 h-4 object-contain">`
+                    : `<span class="w-2 h-2 rounded-full inline-block" style="background-color: ${color}"></span>`;
+
                 return `
                     <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-black" style="color:${color}; border-color:${color}40; background:${color}10">
-                        <span class="w-2 h-2 rounded-full inline-block" style="background-color: ${color}"></span>
+                        ${graphicElement}
                         <span class="inline">${trimmed}</span>
                     </div>
                 `;
@@ -924,7 +980,6 @@
             return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
         }
 
-        // CORREGIDO: ICONOS GRÁFICOS RESTAURADOS AL 100% PARA GÉNEROS Y COMPONENTES DE DIFICULTAD
         function renderLevelsTable() {
             const tbody = document.getElementById('levels-tbody');
             if(!tbody) return; tbody.innerHTML = '';
@@ -936,6 +991,21 @@
                 let bStyle = "bg-orange-500/10 border-orange-500/30 text-orange-400"; 
                 if (lvl.diff === "Normal") { diffText = translations[currentLanguage].diffNormal; bStyle = "bg-zinc-500/10 border-zinc-500/30 text-zinc-400"; }
                 else if (lvl.diff === "Extreme") { diffText = translations[currentLanguage].diffExtreme; bStyle = "bg-red-500/10 border-red-500/30 text-red-500"; }
+
+                // Identificar Dificultad Dinámica subida por el creador
+                const dynamicDiffAsset = globalVisualAssets[`diff_${lvl.diff}`];
+                const diffGraphic = dynamicDiffAsset 
+                    ? `<img src="${dynamicDiffAsset}" class="w-4 h-4 object-contain inline-block">`
+                    : `<i class="fa-solid fa-layer-group"></i>`;
+
+                // Identificar Edición Dinámica subida por el creador (Standard / Deluxe)
+                const isDeluxe = (lvl.edition === "Deluxe");
+                const dynamicEditionAsset = globalVisualAssets[isDeluxe ? `edit_Deluxe` : `edit_Standard`];
+                const editionContainerClass = isDeluxe ? "glow-gold bg-yellow-500/10 text-yellow-400 border border-yellow-500/40" : "bg-zinc-900 border border-zinc-800 text-zinc-300";
+
+                const editionGraphicMarkup = dynamicEditionAsset
+                    ? `<div class="flex items-center gap-1.5 justify-center px-2 py-1 rounded-lg ${editionContainerClass} font-black text-[10px] uppercase truncate"><img src="${dynamicEditionAsset}" class="w-4 h-4 object-contain"><span>${lvl.edition}</span></div>`
+                    : `<div class="flex items-center gap-1.5 justify-center px-2 py-1 rounded-lg ${editionContainerClass} font-black text-[10px] uppercase truncate"><span>${lvl.edition}</span></div>`;
 
                 const hasAudio = !!lvl.audioDirectUrl;
 
@@ -952,7 +1022,6 @@
                     <td class="p-4 text-center font-mono font-bold text-zinc-500">${i+1}</td>
                     <td class="p-4 text-center">
                         <div class="relative w-[130px] h-[130px] mx-auto flex items-center justify-center shrink-0 overflow-visible">
-                            <!-- CANVAS AMPLIADO ULTRA REACTIVO -->
                             <canvas class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
                             <div class="w-16 h-16 sm:w-20 sm:h-20 relative z-10 overflow-hidden rounded-xl border border-fuchsia-950/40 shadow-lg shrink-0">
                                 <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover rounded-xl bg-zinc-900" onerror="this.src='free_song_Image.png'">
@@ -965,13 +1034,13 @@
                         </div>
                     </td>
                     <td class="p-4 min-w-[180px] sm:min-w-[280px] flex-1"><div class="font-bold text-white text-xs sm:text-sm tracking-wide mb-0.5 whitespace-normal break-words">${lvl.song}</div><div class="text-[10px] sm:text-xs text-zinc-500 font-normal whitespace-normal break-words">${lvl.artist}</div></td>
-                    <td class="p-1 sm:p-4 w-28 sm:w-44"><div class="flex flex-col gap-1 max-w-[140px]">${renderGenresBadgesHtml(lvl.genre)}</div></td>
+                    <td class="p-1 sm:p-4 w-36"><div class="flex flex-col gap-1 max-w-[140px]">${renderGenresBadgesHtml(lvl.genre)}</div></td>
                     <td class="p-4 text-center">
                         <div class="inline-flex items-center justify-center gap-1.5 px-2 py-1 rounded-lg border w-24 sm:w-28 ${bStyle} mx-auto font-black tracking-wide uppercase text-[10px] sm:text-xs">
-                            <i class="fa-solid fa-layer-group"></i> <span>${diffText}</span>
+                            ${diffGraphic} <span>${diffText}</span>
                         </div>
                     </td>
-                    <td class="p-4 text-center font-bold text-zinc-300 tracking-wide">${lvl.edition}</td>
+                    <td class="p-4 text-center">${editionGraphicMarkup}</td>
                     <td class="p-4 text-center font-bold text-zinc-400 tracking-wide">${formatStringToDMY(lvl.date)}</td>
                     <td class="p-4 text-center">${linksLayout}</td>
                     <td class="p-4 text-center ${isCreatorMode ? '':'hidden'}">
@@ -1106,6 +1175,38 @@
             document.getElementById('counter-tapwave').innerText = cT;
         }
 
+        // GENERADOR DINÁMICO DE CARGA DE ELEMENTOS GRÁFICOS PARA EL PANEL EXTRA EN HOME
+        function buildVisualAssetsPanelInterface() {
+            const container = document.getElementById('asset-upload-genres-list');
+            if(!container) return; container.innerHTML = '';
+            genreList.forEach(g => {
+                const row = document.createElement('div');
+                row.className = "flex flex-col gap-0.5";
+                row.innerHTML = `
+                    <label class="block font-bold text-zinc-400 uppercase tracking-wide text-[11px]">${g.label}</label>
+                    <input type="file" data-asset-key="genre_${g.label}" accept="image/*" class="visual-asset-file-uploader w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded text-zinc-500">
+                `;
+                container.appendChild(row);
+            });
+
+            // Registrar los listeners para interceptar cargas asíncronas de imágenes base64
+            document.querySelectorAll('.visual-asset-file-uploader').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    const key = e.target.getAttribute('data-asset-key');
+                    if(file && key && db) {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = () => {
+                            set(ref(db, `visual_assets/${key}`), reader.result).then(() => {
+                                alert("¡Asset cargado con éxito en la Base de Datos!");
+                            });
+                        };
+                    }
+                });
+            });
+        }
+
         document.getElementById('level-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             showLoadingOverlay();
@@ -1222,6 +1323,7 @@
         document.getElementById('btn-picker-cos').addEventListener('click', () => document.getElementById('cosDate').showPicker?.() || document.getElementById('cosDate').focus());
 
         buildGenresSelector();
+        buildVisualAssetsPanelInterface();
         applyLanguagePack();
     </script>
 </body>
