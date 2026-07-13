@@ -4,15 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LKBeats Handbook</title>
-    <!-- Favicon Integration -->
     <link class="favicon-node" rel="icon" type="image/png" href="LKB.png">
-    <!-- Tailwind CSS for utility styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts for typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome for structural icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <script>
@@ -58,6 +54,13 @@
         .filter-genre-hiphop { filter: invert(36%) sepia(47%) saturate(5833%) hue-rotate(209deg) brightness(91%) contrast(89%); }
         .filter-genre-pop { filter: invert(39%) sepia(63%) saturate(2150%) hue-rotate(313deg) brightness(85%) contrast(89%); }
         .filter-genre-rnb { filter: invert(81%) sepia(45%) saturate(3025%) hue-rotate(152deg) brightness(101%) contrast(93%); }
+
+        @keyframes audio-wave-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.12); opacity: 0.8; }
+        }
+        .audio-wave-active { animation: audio-wave-pulse 1.4s infinite ease-in-out; }
+        .art-spinning-circle { border-radius: 50% !important; transition: border-radius 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
     </style>
 </head>
 <body class="bg-[#05020a] text-zinc-100 min-h-screen font-sans flex flex-col relative overflow-x-hidden">
@@ -150,7 +153,6 @@
                 </div>
             </div>
 
-            <!-- DISCLAIMER SECTION -->
             <div class="bg-zinc-950/60 border border-zinc-900 rounded-2xl p-4 text-center text-xs text-zinc-500 mb-10">
                 <div class="font-bold uppercase tracking-widest mb-1" data-i18n="disclaimerTitle">Deslinde de Responsabilidad</div>
                 <div data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes pertenecen a sus respectivos propietarios y desarrolladores originales.</div>
@@ -200,8 +202,12 @@
                             <input type="text" id="lvlArtist" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
                         <div>
-                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formArtUrl">URL del Arte</label>
-                            <input type="url" id="lvlArt" required placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadArt">Subir Arte (GitHub)</label>
+                            <input type="file" id="lvlArtFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadAudio">Subir Preview de Audio (Opcional)</label>
+                            <input type="file" id="lvlAudioFile" accept="audio/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formGenre">Género</label>
@@ -231,6 +237,10 @@
                             </div>
                             <input type="date" id="lvlDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
+                        <div>
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadChartFile">Subir Archivo de Chart (.zip / Opcional)</label>
+                            <input type="file" id="lvlChartZipFile" accept=".zip" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                        </div>
                         <div class="space-y-2 border-t border-fuchsia-950/40 pt-2">
                             <input type="url" id="lvlDl1" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="Discord URL">
                             <input type="url" id="lvlDl2" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="BSCM URL">
@@ -257,7 +267,7 @@
                             <thead>
                                 <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                     <th class="p-4 text-center w-12">#</th>
-                                    <th class="p-4 w-20 sm:w-32" data-i18n="thArt">Arte</th>
+                                    <th class="p-4 w-24 sm:w-36 text-center" data-i18n="thArt">Arte</th>
                                     <th class="p-4" data-i18n="thSongArtist">Canción / Artista</th>
                                     <th class="p-2 sm:p-4 w-28 sm:w-44" data-i18n="formGenre">Género</th>
                                     <th class="p-4 text-center w-32" data-i18n="formDifficulty">Dificultad</th>
@@ -274,13 +284,33 @@
             </div>
         </section>
 
-        <!-- ================= VIEW 3: SKINS REGISTRY ================= -->
+        <!-- ================= VIEW 3: COSMETICS (SKINS SUBMENU) ================= -->
         <section id="view-cosmetics" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
             <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-fuchsia-500/30 rounded-2xl mb-6 w-max">
                 <i class="fa-solid fa-chevron-left text-fuchsia-500"></i> <span data-i18n="backHome">Volver</span>
             </button>
 
-            <div id="cosmetics-layout-grid" class="flex flex-col gap-6 items-start w-full relative">
+            <!-- SUBMENÚ EXCLUSIVO DE SKINS DE LA GRAN ACTUALIZACIÓN -->
+            <div id="cosmetics-submenu" class="w-full max-w-4xl mx-auto py-10 flex flex-col items-center">
+                <h2 class="font-display font-black text-2xl uppercase tracking-wider mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500" data-i18n="selectSubmenuSkin">Selecciona una Plataforma</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+                    <div id="submenu-card-beatstar" class="cursor-pointer border border-fuchsia-950/80 bg-[#11091c]/60 rounded-2xl p-8 flex flex-col items-center justify-center text-center transform hover:-translate-y-1 transition shadow-xl glow-fuchsia">
+                        <div class="h-16 mb-4 flex items-center justify-center">
+                            <img src="BeatstarWhiteLogo.png" alt="Beatstar" class="h-full object-contain">
+                        </div>
+                        <span class="text-xs font-bold text-fuchsia-400 uppercase tracking-widest" data-i18n="navCosmetics">Skins</span>
+                    </div>
+                    <div id="submenu-card-tapwave" class="cursor-pointer border border-fuchsia-950/80 bg-[#11091c]/60 rounded-2xl p-8 flex flex-col items-center justify-center text-center transform hover:-translate-y-1 transition shadow-xl glow-orange">
+                        <div class="h-16 mb-4 flex items-center justify-center">
+                            <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full object-contain">
+                        </div>
+                        <span class="text-xs font-bold text-orange-400 uppercase tracking-widest" data-i18n="navCosmetics">Skins</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REGISTROS DE TABLAS AISLADOS -->
+            <div id="cosmetics-active-workspace" class="hidden flex-col gap-6 items-start w-full relative">
                 <div id="cosmetic-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto z-30">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addCosmeticTitle">Nueva Skin</h2>
                     <form id="cosmetic-form" autocomplete="off" class="space-y-3 text-xs">
@@ -294,8 +324,8 @@
                             <input type="text" id="cosArtist" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
                         <div>
-                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formIconUrl">URL del Icono</label>
-                            <input type="url" id="cosIcon" required placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadIcon">Subir Icono (GitHub)</label>
+                            <input type="file" id="cosIconFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formVideoUrl">URL del Video</label>
@@ -308,20 +338,13 @@
                             </div>
                             <input type="date" id="cosDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
-                        
                         <div>
-                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formBrandUrl">URL de la marca</label>
-                            <div id="dynamic-insp-inputs-container" class="space-y-2">
-                                <!-- Generated Dynamic Content Fields Target Router -->
-                            </div>
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadBrand">Subir Marca / Inspiración (GitHub)</label>
+                            <input type="file" id="cosBrandFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
-
                         <div>
-                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formSkinFor">Skin para...</label>
-                            <select id="cosTargetPlatform" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
-                                <option value="Beatstar" selected>Beatstar</option>
-                                <option value="TapWave">TapWave</option>
-                            </select>
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadSkinFile">Subir Archivo de Skin (Opcional)</label>
+                            <input type="file" id="cosSkinZipFile" accept=".zip" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div class="space-y-2 border-t border-fuchsia-950/40 pt-2">
                             <input type="url" id="cosDl1" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="Discord Link">
@@ -334,20 +357,20 @@
                 </div>
 
                 <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-10 flex-grow">
-                    <!-- Beatstar Table Segment Layout -->
-                    <div id="section-anchor-beatstar" class="flex flex-col space-y-3 w-full">
+                    <!-- Segmento Beatstar -->
+                    <div id="container-workspace-beatstar" class="hidden flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
                             <div class="h-10 max-w-[50%] sm:max-w-[240px] flex-grow sm:flex-initial">
                                 <img src="BeatstarWhiteLogo.png" alt="Beatstar" class="h-full w-full sm:w-auto object-contain object-left">
                             </div>
                             <div class="flex items-center gap-3 shrink-0">
                                 <div class="text-xs font-bold bg-fuchsia-950/50 border border-fuchsia-800/40 px-3 py-1.5 rounded-xl text-fuchsia-400 hidden sm:block"><span data-i18n="txtTotal">Total</span>: <span id="counter-beatstar">0</span> Skins</div>
-                                <button id="jump-to-tapwave" class="px-3 py-1.5 bg-zinc-900 border border-orange-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
+                                <button id="btn-toggle-to-tapwave" class="px-3 py-1.5 bg-zinc-900 border border-orange-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
                                     <span data-i18n="jumpToTxt">Ir a</span> <img src="TapWaveWhiteLogo.png" class="h-3.5 w-auto object-contain">
                                 </button>
                             </div>
                         </div>
-                        <div id="wrapper-beatstar" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
+                        <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                             <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
                                 <thead>
                                     <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
@@ -364,20 +387,20 @@
                         </div>
                     </div>
 
-                    <!-- Tapwave Table Segment Layout -->
-                    <div id="section-anchor-tapwave" class="flex flex-col space-y-3 w-full">
+                    <!-- Segmento Tapwave -->
+                    <div id="container-workspace-tapwave" class="hidden flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
                             <div class="h-12 max-w-[50%] sm:max-w-[340px] flex-grow sm:flex-initial flex items-center">
                                 <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full w-full sm:w-auto object-contain object-left scale-110 sm:scale-110 origin-left">
                             </div>
                             <div class="flex items-center gap-3 shrink-0">
                                 <div class="text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400 hidden sm:block"><span data-i18n="txtTotal">Total</span>: <span id="counter-tapwave">0</span> Skins</div>
-                                <button id="jump-to-beatstar" class="px-3 py-1.5 bg-zinc-900 border border-fuchsia-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
+                                <button id="btn-toggle-to-beatstar" class="px-3 py-1.5 bg-zinc-900 border border-fuchsia-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
                                     <span data-i18n="jumpToTxt">Ir a</span> <img src="BeatstarWhiteLogo.png" class="h-3 w-auto object-contain">
                                 </button>
                             </div>
                         </div>
-                        <div id="wrapper-tapwave" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
+                        <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                             <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
                                 <thead>
                                     <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
@@ -415,7 +438,6 @@
         </div>
     </footer>
 
-    <!-- ================= ASYNC SAFE CORE ENGINE & SDK JAVASCRIPT ================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -462,7 +484,12 @@
                 footerMenuTitle: "Links del Menú Inferior", bannerSongs: "Canciones", countCharts: "Charts",
                 roleVisitor: "Visita", roleCreator: "Creador", formArtUrl: "URL del Arte", formIconUrl: "URL del Icono", formVideoUrl: "URL del Video",
                 formBrandUrl: "URL de la marca", txtNoLinksAvailable: "Sin links disponibles", btnSaveChanges: "Guardar Cambios",
-                btnSaveFooterLinks: "Guardar Enlaces del Menú", jumpToTxt: "Ir a"
+                btnSaveFooterLinks: "Guardar Enlaces del Menú", jumpToTxt: "Ir a",
+                selectSubmenuSkin: "Selecciona una Plataforma", downloadDirectBtn: "Descarga Directa",
+                formUploadArt: "Subir Arte (GitHub)", formUploadAudio: "Subir Preview de Audio (Opcional)",
+                formUploadChartFile: "Subir Archivo de Chart (.zip / Opcional)", formUploadIcon: "Subir Icono (GitHub)",
+                formUploadBrand: "Subir Marca / Inspiración (GitHub)", formUploadSkinFile: "Subir Archivo de Skin (Opcional)",
+                beatcloneNotice: "¡Recordatorio! Asegúrate de tener descargado Beatclone antes de instalar este contenido."
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -484,7 +511,12 @@
                 footerMenuTitle: "Bottom Menu Links", bannerSongs: "Songs", countCharts: "Charts",
                 roleVisitor: "Guest", roleCreator: "Creator", formArtUrl: "Art URL", formIconUrl: "Icon URL", formVideoUrl: "Video URL",
                 formBrandUrl: "Brand URL", txtNoLinksAvailable: "No links available", btnSaveChanges: "Save Changes",
-                btnSaveFooterLinks: "Save Menu Links", jumpToTxt: "Go to"
+                btnSaveFooterLinks: "Save Menu Links", jumpToTxt: "Go to",
+                selectSubmenuSkin: "Select a Platform", downloadDirectBtn: "Direct Download",
+                formUploadArt: "Upload Art (GitHub)", formUploadAudio: "Upload Audio Preview (Optional)",
+                formUploadChartFile: "Upload Chart File (.zip / Optional)", formUploadIcon: "Upload Icon (GitHub)",
+                formUploadBrand: "Upload Brand / Inspiration (GitHub)", formUploadSkinFile: "Upload Skin File (Optional)",
+                beatcloneNotice: "Reminder! Make sure you have downloaded Beatclone before installing this content."
             }
         };
 
@@ -493,9 +525,18 @@
         let levels = [];
         let cosmetics = [];
         let globalFooterLinks = { beatclone: '', bscm: '', beatcharts: '' };
-        let currentInspUrlsArray = [""];
+        let currentSelectedSkinSubPlatform = 'Beatstar'; 
 
-        // HISTORIAL DE NAVEGACIÓN INTELIGENTE (Boton Atrás Nativo)
+        // AUTENTICACIÓN SECURE GITHUB API
+        let githubToken = "";
+        let githubUser = "";
+        let githubRepo = "lkbeats-handbook";
+
+        let activeAudioElement = null;
+        let activeAudioButton = null;
+        let activeAudioImg = null;
+        let activeAudioSvg = null;
+
         function navigateTo(view, pushState = true) {
             ['home', 'levels', 'cosmetics'].forEach(v => document.getElementById(`view-${v}`)?.classList.add('hidden'));
             document.getElementById(`view-${view}`)?.classList.remove('hidden');
@@ -511,43 +552,78 @@
                 sep?.classList.remove('hidden'); 
             }
             
-            if (pushState) {
-                history.pushState({ view: view }, '', ''); 
+            if(view === 'cosmetics') {
+                resetCosmeticsSubmenuWorkspace();
             }
             
+            if (pushState) history.pushState({ view: view }, '', '');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            stopGlobalAudioPreview();
+        }
+
+        function resetCosmeticsSubmenuWorkspace() {
+            document.getElementById('cosmetics-submenu').classList.remove('hidden');
+            document.getElementById('cosmetics-submenu').classList.add('flex');
+            document.getElementById('cosmetics-active-workspace').classList.remove('flex');
+            document.getElementById('cosmetics-active-workspace').classList.add('hidden');
+        }
+
+        function openCosmeticsSubmenuPlatform(platform) {
+            currentSelectedSkinSubPlatform = platform;
+            document.getElementById('cosmetics-submenu').classList.remove('flex');
+            document.getElementById('cosmetics-submenu').classList.add('hidden');
+            document.getElementById('cosmetics-active-workspace').classList.remove('hidden');
+            document.getElementById('cosmetics-active-workspace').classList.add('flex');
+
+            document.getElementById('container-workspace-beatstar').classList.toggle('hidden', platform !== 'Beatstar');
+            document.getElementById('container-workspace-beatstar').classList.toggle('flex', platform === 'Beatstar');
+            document.getElementById('container-workspace-tapwave').classList.toggle('hidden', platform !== 'TapWave');
+            document.getElementById('container-workspace-tapwave').classList.toggle('flex', platform === 'TapWave');
+            
+            applyRoleUIVisibility();
         }
 
         history.replaceState({ view: 'home' }, '', '');
-
         window.addEventListener('popstate', (event) => {
-            if (event.state && event.state.view) {
-                navigateTo(event.state.view, false);
-            } else {
-                navigateTo('home', false);
-            }
+            if (event.state && event.state.view) navigateTo(event.state.view, false);
+            else navigateTo('home', false);
         });
 
-        // DISPATCH QUICK SCROLL JUMP TARGET BUTTONS
-        document.getElementById('jump-to-tapwave').addEventListener('click', () => {
-            document.getElementById('section-anchor-tapwave')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-        document.getElementById('jump-to-beatstar').addEventListener('click', () => {
-            document.getElementById('section-anchor-beatstar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
+        // PLATFORMS INTERSECTIONS SUBMENUS JUMPS
+        document.getElementById('submenu-card-beatstar').addEventListener('click', () => openCosmeticsSubmenuPlatform('Beatstar'));
+        document.getElementById('submenu-card-tapwave').addEventListener('click', () => openCosmeticsSubmenuPlatform('TapWave'));
+        document.getElementById('btn-toggle-to-tapwave').addEventListener('click', () => openCosmeticsSubmenuPlatform('TapWave'));
+        document.getElementById('btn-toggle-to-beatstar').addEventListener('click', () => openCosmeticsSubmenuPlatform('Beatstar'));
 
-        // DEPLOY DIRECT BUTTON ROUTERS
         document.getElementById('nav-logo').addEventListener('click', () => navigateTo('home'));
         document.getElementById('btn-nav-levels').addEventListener('click', () => navigateTo('levels'));
         document.getElementById('btn-nav-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
         document.getElementById('card-to-levels').addEventListener('click', () => navigateTo('levels'));
         document.getElementById('card-to-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
+        
         document.getElementById('auth-indicator').addEventListener('click', () => {
-            if (isCreatorMode) { isCreatorMode = false; applyRoleUIVisibility(); return; }
-            const pass = prompt("Clave:");
-            if (pass === "BeatstarTest") isCreatorMode = true;
+            if (isCreatorMode) { 
+                isCreatorMode = false; 
+                githubToken = ""; 
+                githubUser = ""; 
+                applyRoleUIVisibility(); 
+                return; 
+            }
+            const pass = prompt("Clave Admin:");
+            if (pass === "BeatstarTest") {
+                const tokenInput = prompt("Introduce tu GitHub Personal Access Token (PAT):");
+                const userInput = prompt("Introduce tu Usuario de GitHub:");
+                if(tokenInput && userInput) {
+                    githubToken = tokenInput.trim();
+                    githubUser = userInput.trim();
+                    isCreatorMode = true;
+                } else {
+                    alert("Credenciales de GitHub incompletas.");
+                }
+            }
             applyRoleUIVisibility();
         });
+
         document.getElementById('btn-lang-toggle').addEventListener('click', () => {
             currentLanguage = currentLanguage === 'es' ? 'en' : 'es';
             localStorage.setItem('nexus_lang', currentLanguage);
@@ -555,7 +631,7 @@
         });
         document.querySelectorAll('.btn-back-to-home').forEach(btn => btn.addEventListener('click', () => navigateTo('home')));
 
-        // BACKEND CONNECTIONS MANAGEMENT REF
+        // BACKEND CONTROLLERS
         let db = null;
         try {
             const app = initializeApp(firebaseConfig);
@@ -580,30 +656,111 @@
             onValue(ref(db, 'last_update_date'), (snap) => { if (snap.val()) document.getElementById('dynamic-update-date').innerText = formatStringToDMY(snap.val()); });
         } catch (e) { console.error(e); }
 
-        function parseYoutubeEmbedUrl(url) {
-            if (!url) return '';
-            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
-            let match = url.match(regExp);
-            return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
+        // ENGINE SUBIDA DIRECTA API GITHUB VIA BASE64
+        async function uploadFileToGitHubContent(fileObject, targetFolder, customFileName) {
+            if(!githubToken || !githubUser) {
+                alert("Error: Token de GitHub no especificado.");
+                return "";
+            }
+            const cleanName = customFileName.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+            const targetPath = `${targetFolder}/${Date.now()}_${cleanName}`;
+            
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(fileObject);
+                reader.onload = async () => {
+                    const base64Data = reader.result.split(',')[1];
+                    try {
+                        const response = await fetch(`https://api.github.com/repos/${githubUser}/${githubRepo}/contents/${targetPath}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': `token ${githubToken}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                message: `Upload asset payload via Handbook CMS: ${cleanName}`,
+                                content: base64Data
+                            })
+                        });
+                        if(response.ok) {
+                            const resJson = await response.json();
+                            resolve(resJson.content.download_url);
+                        } else {
+                            const errText = await response.text();
+                            console.error(errText);
+                            reject("");
+                        }
+                    } catch(err) {
+                        console.error(err);
+                        reject("");
+                    }
+                };
+                reader.onerror = () => reject("");
+            });
+        }
+
+        function triggerDownloadAlert(url) {
+            alert(translations[currentLanguage].beatcloneNotice);
+            window.open(url, '_blank');
+        }
+
+        function stopGlobalAudioPreview() {
+            if(activeAudioElement) {
+                activeAudioElement.pause();
+                activeAudioElement = null;
+            }
+            if(activeAudioButton) {
+                activeAudioButton.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
+                activeAudioButton = null;
+            }
+            if(activeAudioImg) {
+                activeAudioImg.classList.remove('art-spinning-circle');
+                activeAudioImg = null;
+            }
+            if(activeAudioSvg) {
+                activeAudioSvg.classList.add('hidden');
+                activeAudioSvg.classList.remove('audio-wave-active');
+                activeAudioSvg = null;
+            }
+        }
+
+        function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, svgElement) {
+            if(activeAudioElement && activeAudioElement.src === audioUrl) {
+                stopGlobalAudioPreview();
+                return;
+            }
+            
+            stopGlobalAudioPreview();
+
+            const audio = new Audio(audioUrl);
+            activeAudioElement = audio;
+            activeAudioButton = btnElement;
+            activeAudioImg = imgElement;
+            activeAudioSvg = svgElement;
+
+            btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
+            imgElement.classList.add('art-spinning-circle');
+            svgElement.classList.remove('hidden');
+            svgElement.classList.add('audio-wave-active');
+
+            audio.play();
+            audio.onended = () => {
+                stopGlobalAudioPreview();
+            };
         }
 
         function formatStringToDMY(rawDate) {
             if (!rawDate) return '';
             if (rawDate.includes('/')) return rawDate; 
             const parts = rawDate.split('-');
-            if (parts.length === 3) {
-                return `${parts[2]}/${parts[1]}/${parts[0]}`;
-            }
+            if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
             return rawDate;
         }
 
         function applyRoleUIVisibility() {
             const label = document.getElementById('auth-label');
             const icon = document.getElementById('auth-lock-icon');
-            
-            if (label) {
-                label.innerText = isCreatorMode ? translations[currentLanguage].roleCreator : translations[currentLanguage].roleVisitor;
-            }
+            if (label) label.innerText = isCreatorMode ? translations[currentLanguage].roleCreator : translations[currentLanguage].roleVisitor;
             if (icon) icon.className = isCreatorMode ? "fa-solid fa-lock-open text-emerald-400" : "fa-solid fa-lock text-zinc-600";
             
             ['level-form-container', 'cosmetic-form-container', 'footer-links-management-box'].forEach(id => {
@@ -630,19 +787,6 @@
                 const key = el.getAttribute('data-i18n');
                 if (translations[currentLanguage][key]) el.innerText = translations[currentLanguage][key];
             });
-
-            const lvlId = document.getElementById('editingLvlId')?.value;
-            const lvlBtn = document.getElementById('lvlSubmitBtn');
-            if (lvlBtn) {
-                lvlBtn.innerText = lvlId ? translations[currentLanguage].btnSaveChanges : translations[currentLanguage].btnRegister;
-            }
-
-            const cosId = document.getElementById('editingCosId')?.value;
-            const cosBtn = document.getElementById('cosSubmitBtn');
-            if (cosBtn) {
-                cosBtn.innerText = cosId ? translations[currentLanguage].btnSaveChanges : translations[currentLanguage].btnRegister;
-            }
-
             applyRoleUIVisibility();
         }
 
@@ -659,47 +803,9 @@
                 `;
                 item.querySelector('input').addEventListener('change', (e) => {
                     const checked = document.querySelectorAll('.genre-checkbox:checked');
-                    if (checked.length > 2) { e.target.checked = false; }
+                    if (checked.length > 2) e.target.checked = false;
                 });
                 container.appendChild(item);
-            });
-        }
-
-        function renderDynamicInspInputs() {
-            const container = document.getElementById('dynamic-insp-inputs-container');
-            if(!container) return; container.innerHTML = '';
-            
-            currentInspUrlsArray.forEach((url, index) => {
-                const inputWrapper = document.createElement('div');
-                inputWrapper.className = "flex items-center gap-2";
-                inputWrapper.innerHTML = `
-                    <div class="bg-zinc-950 px-2 py-2 border border-fuchsia-950 rounded-lg text-zinc-500 font-mono font-bold text-xs">${index + 1}</div>
-                    <input type="url" value="${url}" placeholder="https://..." class="insp-url-field flex-grow bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100 text-xs">
-                    ${currentInspUrlsArray.length > 1 ? `<button type="button" class="btn-remove-insp-field p-2 bg-red-950/40 border border-red-900/30 text-red-400 hover:bg-red-900 hover:text-white rounded-lg transition"><i class="fa-solid fa-trash-can"></i></button>` : ''}
-                `;
-
-                const field = inputWrapper.querySelector('.insp-url-field');
-                field.addEventListener('input', (e) => {
-                    currentInspUrlsArray[index] = e.target.value.trim();
-                    if (index === currentInspUrlsArray.length - 1 && e.target.value.trim() !== "") {
-                        currentInspUrlsArray.push("");
-                        renderDynamicInspInputs();
-                        setTimeout(() => {
-                            const updatedFields = container.querySelectorAll('.insp-url-field');
-                            if(updatedFields[index]) updatedFields[index].focus();
-                        }, 10);
-                    }
-                });
-
-                inputWrapper.querySelector('.btn-remove-insp-field')?.addEventListener('click', () => {
-                    currentInspUrlsArray.splice(index, 1);
-                    if(currentInspUrlsArray.length === 0 || currentInspUrlsArray[currentInspUrlsArray.length - 1] !== "") {
-                        currentInspUrlsArray.push("");
-                    }
-                    renderDynamicInspInputs();
-                });
-
-                container.appendChild(inputWrapper);
             });
         }
 
@@ -709,15 +815,19 @@
                 const trimmed = g.trim();
                 const matched = genreList.find(item => item.label.toLowerCase() === trimmed.toLowerCase());
                 const color = matched ? matched.color : '#f97316';
-                const fClass = matched ? matched.filterClass : 'filter-genre-rock';
-                let cName = trimmed === "Hip-Hop" ? "HipHop" : (trimmed === "RnB" ? "RnB" : trimmed.replace('/', '').replace(/\s+/g, ''));
                 return `
                     <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-extrabold" style="color:${color}; border-color:${color}40; background:${color}10">
-                        <img src="${cName}.png" class="w-3 h-3 object-contain shrink-0 ${fClass}" alt="${trimmed}" onerror="this.style.display='none'">
                         <span class="inline">${trimmed}</span>
                     </div>
                 `;
             }).join(' ');
+        }
+
+        function parseYoutubeEmbedUrl(url) {
+            if (!url) return '';
+            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+            let match = url.match(regExp);
+            return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
         }
 
         function renderLevelsTable() {
@@ -729,33 +839,40 @@
                 
                 let diffText = lvl.diff; 
                 let bStyle = "bg-orange-500/10 border-orange-500/30 text-orange-400"; 
-                let icon = "DifficultyLevel.png"; 
-                let fClass = "filter-orange";
-                
-                if (lvl.diff === "Normal") { diffText = translations[currentLanguage].diffNormal; bStyle = "bg-zinc-500/10 border-zinc-500/30 text-zinc-400"; fClass = "filter-gray"; }
-                else if (lvl.diff === "Extreme") { diffText = translations[currentLanguage].diffExtreme; bStyle = "bg-red-500/10 border-red-500/30 text-red-500"; icon = "DifficultyExtreme.png"; fClass = "filter-red"; }
+                if (lvl.diff === "Normal") { diffText = translations[currentLanguage].diffNormal; bStyle = "bg-zinc-500/10 border-zinc-500/30 text-zinc-400"; }
+                else if (lvl.diff === "Extreme") { diffText = translations[currentLanguage].diffExtreme; bStyle = "bg-red-500/10 border-red-500/30 text-red-500"; }
 
-                let linksLayout = '';
-                if (!lvl.dl1 && !lvl.dl2 && !lvl.dl3) {
-                    linksLayout = `<div class="px-3 py-2 rounded-xl bg-zinc-950/40 border border-zinc-900/60 text-[11px] font-semibold text-zinc-500 italic uppercase tracking-wider text-center select-none">${translations[currentLanguage].txtNoLinksAvailable}</div>`;
-                } else {
-                    linksLayout = `
-                        <div class="flex flex-col gap-1 max-w-[160px] sm:max-w-[180px] mx-auto">
-                            ${lvl.dl1 ? `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 px-5 sm:px-2 py-1.5 text-center rounded-xl text-[11px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-3.5 h-3.5 sm:w-5 sm:h-5 force-white-icon">Discord</a>`:''} 
-                            ${lvl.dl2 ? `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 px-5 sm:px-2 py-1.5 text-center rounded-xl text-[11px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-3.5 h-3.5 sm:w-5 sm:h-5 force-white-icon">BSCM</a>`:''} 
-                            ${lvl.dl3 ? `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-5 sm:px-2 py-1.5 text-center rounded-xl text-[11px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-3.5 h-3.5 sm:w-5 sm:h-5 force-white-icon">beatcharts</a>`:''}
-                        </div>
-                    `;
+                const hasAudio = !!lvl.audioDirectUrl;
+
+                let linksLayout = `<div class="flex flex-col gap-1 max-w-[160px] sm:max-w-[180px] mx-auto">`;
+                if(lvl.chartDirectUrl) {
+                    linksLayout += `<button class="btn-direct-download-trigger bg-gradient-to-r from-emerald-500 to-teal-500 text-black px-2 py-1.5 rounded-xl text-[11px] font-black uppercase flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-circle-down"></i>${translations[currentLanguage].downloadDirectBtn}</button>`;
                 }
+                if (lvl.dl1) linksLayout += `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-3.5 h-3.5 force-white-icon">Discord</a>`;
+                if (lvl.dl2) linksLayout += `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-3.5 h-3.5 force-white-icon">BSCM</a>`;
+                if (lvl.dl3) linksLayout += `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-3.5 h-3.5 force-white-icon">beatcharts</a>`;
+                linksLayout += `</div>`;
 
                 tr.innerHTML = `
                     <td class="p-4 text-center font-mono font-bold text-zinc-500">${i+1}</td>
-                    <td class="p-2 sm:p-4"><div class="w-14 h-14 sm:w-24 sm:h-24 border border-fuchsia-950/40 rounded-xl overflow-hidden shadow-lg"><img src="${lvl.art}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='free_song_Image.png'"></div></td>
-                    <td class="p-4 min-w-[200px] sm:min-w-[320px] flex-1"><div class="font-bold text-white text-xs sm:text-sm tracking-wide mb-0.5 whitespace-normal break-words [word-break:normal]">${lvl.song}</div><div class="text-[10px] sm:text-xs text-zinc-500 font-normal whitespace-normal break-words">${lvl.artist}</div></td>
+                    <td class="p-4 text-center">
+                        <div class="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto">
+                            <!-- SVG ONDA DE AUDIO DE LA GRAN ACTUALIZACIÓN -->
+                            <svg class="absolute -inset-2 w-[calc(100%+16px)] h-[calc(100%+16px)] text-fuchsia-500 hidden z-0 pointer-events-none" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="6 4"/>
+                            </svg>
+                            <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover rounded-xl border border-fuchsia-950/40 shadow-lg relative z-10 bg-zinc-900" onerror="this.src='free_song_Image.png'">
+                            ${hasAudio ? `
+                                <button class="btn-play-audio-preview absolute bottom-0 right-0 w-6 h-6 bg-black/80 border border-fuchsia-500/60 rounded-full text-fuchsia-400 flex items-center justify-center shadow-lg transition hover:scale-110 z-20">
+                                    <i class="fa-solid fa-play text-[10px]"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                    <td class="p-4 min-w-[200px] sm:min-w-[320px] flex-1"><div class="font-bold text-white text-xs sm:text-sm tracking-wide mb-0.5 whitespace-normal break-words">${lvl.song}</div><div class="text-[10px] sm:text-xs text-zinc-500 font-normal whitespace-normal break-words">${lvl.artist}</div></td>
                     <td class="p-1 sm:p-4 w-24 sm:w-44"><div class="flex flex-col gap-1 max-w-[140px]">${renderGenresBadgesHtml(lvl.genre)}</div></td>
                     <td class="p-4 text-center">
                         <div class="inline-flex items-center justify-center gap-1.5 px-2 py-1 rounded-lg border w-24 sm:w-28 ${bStyle} mx-auto">
-                            <img src="${icon}" class="w-3.5 h-3.5 ${fClass}">
                             <span class="text-center font-bold tracking-wide">${diffText}</span>
                         </div>
                     </td>
@@ -770,11 +887,21 @@
                     </td>
                 `;
 
+                if(hasAudio) {
+                    const btn = tr.querySelector('.btn-play-audio-preview');
+                    const img = tr.querySelector('.target-lvl-art-img');
+                    const svg = tr.querySelector('svg');
+                    btn.addEventListener('click', () => toggleAudioPreviewEngine(lvl.audioDirectUrl, btn, img, svg));
+                }
+
+                if(lvl.chartDirectUrl) {
+                    tr.querySelector('.btn-direct-download-trigger').addEventListener('click', () => triggerDownloadAlert(lvl.chartDirectUrl));
+                }
+
                 tr.querySelector('.btn-edit-lvl')?.addEventListener('click', () => {
                     document.getElementById('editingLvlId').value = lvl.id;
                     document.getElementById('lvlSong').value = lvl.song;
                     document.getElementById('lvlArtist').value = lvl.artist;
-                    document.getElementById('lvlArt').value = lvl.art;
                     document.getElementById('lvlDiff').value = lvl.diff;
                     document.getElementById('lvlEdition').value = lvl.edition;
                     document.getElementById('lvlDate').value = lvl.date;
@@ -784,8 +911,7 @@
                     document.getElementById('lvlSubmitBtn').innerText = translations[currentLanguage].btnSaveChanges;
                     
                     const currentGenresArray = lvl.genre ? lvl.genre.split(' / ').map(g => g.trim().toLowerCase()) : [];
-                    const checkboxes = document.querySelectorAll('.genre-checkbox');
-                    checkboxes.forEach(cb => {
+                    document.querySelectorAll('.genre-checkbox').forEach(cb => {
                         cb.checked = currentGenresArray.includes(cb.value.toLowerCase());
                     });
                 });
@@ -812,50 +938,40 @@
                 
                 let inspMarkup = '';
                 if (cos.insp) {
-                    let links = cos.insp.split(',').map(l => l.trim()).filter(Boolean);
-                    const isMultiple = links.length >= 2;
-                    const directionClass = isMultiple ? "flex-col" : "flex-row";
-
                     inspMarkup = `
-                        <div class="inline-flex ${directionClass} gap-2 mt-1 bg-black/40 p-1.5 rounded-xl border border-fuchsia-950/30 w-max max-w-full shadow-lg">
-                            ${links.map(l => `
-                                <div class="h-20 w-32 sm:h-24 sm:w-36 xl:h-36 xl:w-56 p-1 flex items-center justify-center bg-[#05020a]/60 border border-zinc-800/40 rounded-lg shrink-0">
-                                    <img src="${l}" class="max-h-full max-w-full object-contain rounded">
-                                </div>
-                            `).join('')}
+                        <div class="inline-flex gap-2 mt-1 bg-black/40 p-1.5 rounded-xl border border-fuchsia-950/30 w-max max-w-full shadow-lg">
+                            <div class="h-20 w-32 sm:h-24 sm:w-36 p-1 flex items-center justify-center bg-[#05020a]/60 border border-zinc-800/40 rounded-lg shrink-0">
+                                <img src="${cos.insp}" class="max-h-full max-w-full object-contain rounded">
+                            </div>
                         </div>`;
                 }
 
-                let linksLayout = '';
-                if (!cos.dl1 && !cos.dl2) {
-                    linksLayout = `<div class="px-3 py-2 rounded-xl bg-zinc-950/40 border border-zinc-900/60 text-[11px] font-semibold text-zinc-500 italic uppercase tracking-wider text-center select-none">${translations[currentLanguage].txtNoLinksAvailable}</div>`;
-                } else {
-                    linksLayout = `
-                        <div class="flex flex-col gap-1.5 max-w-[190px] sm:max-w-[240px] mx-auto">
-                            ${cos.dl1 ? `<a href="${cos.dl1}" target="_blank" class="bg-zinc-900 px-4 py-2 sm:py-3 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-fuchsia-500/40 transition"><img src="Discord_Logo.png" class="w-3.5 h-3.5 sm:w-5 sm:h-5 force-white-icon">Discord</a>`:''} 
-                            ${cos.dl2 ? `<a href="${cos.dl2}" target="_blank" class="bg-zinc-900 px-4 py-3 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 shadow hover:border-fuchsia-500/40 transition"><img src="BSCM_Logo.png" class="w-3.5 h-3.5 sm:w-5 sm:h-5 force-white-icon">BSCM</a>`:''}
-                        </div>
-                    `;
+                let linksLayout = `<div class="flex flex-col gap-1.5 max-w-[190px] sm:max-w-[240px] mx-auto">`;
+                if(cos.skinDirectUrl) {
+                    linksLayout += `<button class="btn-direct-skin-download bg-gradient-to-r from-fuchsia-500 to-pink-500 text-black px-4 py-2 rounded-xl text-xs font-black uppercase flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-circle-down"></i>${translations[currentLanguage].downloadDirectBtn}</button>`;
                 }
+                if (cos.dl1) linksLayout += `<a href="${cos.dl1}" target="_blank" class="bg-zinc-900 px-4 py-2 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-fuchsia-500/40 transition"><img src="Discord_Logo.png" class="w-3.5 h-3.5 force-white-icon">Discord</a>`;
+                if (cos.dl2) linksLayout += `<a href="${cos.dl2}" target="_blank" class="bg-zinc-900 px-4 py-2 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-fuchsia-500/40 transition"><img src="BSCM_Logo.png" class="w-3.5 h-3.5 force-white-icon">BSCM</a>`;
+                linksLayout += `</div>`;
 
                 tr.innerHTML = `
                     <td class="p-4 text-center font-mono font-bold text-zinc-500">${cIndex}</td>
                     <td class="p-2 sm:p-4"><div class="w-16 h-16 sm:w-32 sm:h-32 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1 shrink-0"><img src="${cos.icon}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'"></div></td>
                     <td class="p-2 sm:p-4 min-w-[200px] sm:min-w-[320px] flex-1">
-                        <ul class="space-y-2 list-none text-zinc-300 whitespace-normal break-words [word-break:normal]">
-                            <li class="flex flex-col sm:flex-row sm:items-baseline whitespace-normal break-words [word-break:normal]">
-                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-24 shrink-0 mb-0.5 sm:mb-0 whitespace-nowrap">${translations[currentLanguage].listName}:</span> 
-                                <h4 class="text-white font-black tracking-wide text-base sm:text-xl inline-block whitespace-normal break-words [word-break:normal]">${cos.name}</h4>
-                            </li>
-                            <li class="flex flex-col sm:flex-row sm:items-baseline whitespace-normal break-words [word-break:normal]">
-                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-24 shrink-0 mb-0.5 sm:mb-0 whitespace-nowrap">${translations[currentLanguage].listArtist}:</span> 
-                                <span class="text-zinc-200 font-bold inline-block whitespace-normal break-words [word-break:normal]">${cos.artist}</span>
+                        <ul class="space-y-2 list-none text-zinc-300 whitespace-normal break-words">
+                            <li class="flex flex-col sm:flex-row sm:items-baseline">
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-24 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listName}:</span> 
+                                <h4 class="text-white font-black tracking-wide text-base sm:text-xl inline-block">${cos.name}</h4>
                             </li>
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
-                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-24 shrink-0 mb-0.5 sm:mb-0 whitespace-nowrap">${translations[currentLanguage].listRelease}:</span> 
-                                <span class="font-sans font-bold text-zinc-400 text-xs sm:text-sm whitespace-nowrap">${formatStringToDMY(cos.date)}</span>
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-24 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listArtist}:</span> 
+                                <span class="text-zinc-200 font-bold inline-block">${cos.artist}</span>
                             </li>
-                            <li class="flex flex-col gap-0.5 pt-0.5 whitespace-normal"><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs whitespace-nowrap">${translations[currentLanguage].listInsp}:</span> ${inspMarkup || 'N/A'}</li>
+                            <li class="flex flex-col sm:flex-row sm:items-baseline">
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-24 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listRelease}:</span> 
+                                <span class="font-sans font-bold text-zinc-400 text-xs sm:text-sm">${formatStringToDMY(cos.date)}</span>
+                            </li>
+                            <li class="flex flex-col gap-0.5 pt-0.5"><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs">${translations[currentLanguage].listInsp}:</span> ${inspMarkup || 'N/A'}</li>
                         </ul>
                     </td>
                     <td class="p-2 sm:p-4 text-center">${pMarkup}</td>
@@ -868,20 +984,16 @@
                     </td>
                 `;
                 
+                if(cos.skinDirectUrl) {
+                    tr.querySelector('.btn-direct-skin-download').addEventListener('click', () => triggerDownloadAlert(cos.skinDirectUrl));
+                }
+
                 tr.querySelector('.btn-edit-cos')?.addEventListener('click', () => {
                     document.getElementById('editingCosId').value = cos.id;
                     document.getElementById('cosName').value = cos.name;
                     document.getElementById('cosmetic-form').querySelector('#cosArtist').value = cos.artist;
-                    document.getElementById('cosIcon').value = cos.icon;
                     document.getElementById('cosVideo').value = cos.video;
                     document.getElementById('cosDate').value = cos.date;
-                    
-                    let cleanLinks = cos.insp ? cos.insp.split(',').map(l => l.trim()).filter(Boolean) : [];
-                    cleanLinks.push("");
-                    currentInspUrlsArray = cleanLinks;
-                    renderDynamicInspInputs();
-
-                    document.getElementById('cosTargetPlatform').value = cos.platform;
                     document.getElementById('cosDl1').value = cos.dl1 || '';
                     document.getElementById('cosDl2').value = cos.dl2 || '';
                     document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnSaveChanges;
@@ -895,32 +1007,72 @@
             document.getElementById('counter-tapwave').innerText = cT;
         }
 
-        // DISPATCH MECHANISMS FORMS
-        document.getElementById('level-form').addEventListener('submit', (e) => {
+        // CONTROL FORMULARIOS CON AUTOMATIZACIÓN DE GITHUB API
+        document.getElementById('level-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const checked = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
             let id = document.getElementById('editingLvlId').value || Date.now().toString();
+            
+            // Buscar si ya existían portadas previas en caso de edición
+            let finalArtUrl = levels.find(l => l.id === id)?.art || "free_song_Image.png";
+            let finalAudioUrl = levels.find(l => l.id === id)?.audioDirectUrl || "";
+            let finalChartDirectUrl = levels.find(l => l.id === id)?.chartDirectUrl || "";
+
+            const artFileInput = document.getElementById('lvlArtFile');
+            if(artFileInput.files && artFileInput.files[0]) {
+                finalArtUrl = await uploadFileToGitHubContent(artFileInput.files[0], 'assets/charts', artFileInput.files[0].name);
+            }
+            
+            const audioFileInput = document.getElementById('lvlAudioFile');
+            if(audioFileInput.files && audioFileInput.files[0]) {
+                finalAudioUrl = await uploadFileToGitHubContent(audioFileInput.files[0], 'assets/audio', audioFileInput.files[0].name);
+            }
+
+            const chartFileInput = document.getElementById('lvlChartZipFile');
+            if(chartFileInput.files && chartFileInput.files[0]) {
+                finalChartDirectUrl = await uploadFileToGitHubContent(chartFileInput.files[0], 'charts', chartFileInput.files[0].name);
+            }
+
             const data = {
                 id: id, song: document.getElementById('lvlSong').value.trim(), artist: document.getElementById('lvlArtist').value.trim(),
-                art: document.getElementById('lvlArt').value.trim(), genre: checked.join(' / ') || 'General', diff: document.getElementById('lvlDiff').value,
+                art: finalArtUrl, audioDirectUrl: finalAudioUrl, chartDirectUrl: finalChartDirectUrl,
+                genre: checked.join(' / ') || 'General', diff: document.getElementById('lvlDiff').value,
                 edition: document.getElementById('lvlEdition').value, date: document.getElementById('lvlDate').value,
                 dl1: document.getElementById('lvlDl1').value.trim(), dl2: document.getElementById('lvlDl2').value.trim(), dl3: document.getElementById('lvlDl3').value.trim()
             };
             if(db) set(ref(db, 'levels/' + id), data).then(() => { set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); document.getElementById('level-form').reset(); document.getElementById('editingLvlId').value = ''; document.getElementById('lvlSubmitBtn').innerText = translations[currentLanguage].btnRegister; buildGenresSelector(); });
         });
 
-        document.getElementById('cosmetic-form').addEventListener('submit', (e) => {
+        document.getElementById('cosmetic-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             let id = document.getElementById('editingCosId').value || Date.now().toString();
-            let nonEmptylinks = currentInspUrlsArray.map(l => l.trim()).filter(Boolean);
+            
+            let finalIconUrl = cosmetics.find(c => c.id === id)?.icon || "BoxSprite_MerchSkin2.png";
+            let finalInspUrl = cosmetics.find(c => c.id === id)?.insp || "";
+            let finalSkinDirectUrl = cosmetics.find(c => c.id === id)?.skinDirectUrl || "";
+
+            const iconFileInput = document.getElementById('cosIconFile');
+            if(iconFileInput.files && iconFileInput.files[0]) {
+                finalIconUrl = await uploadFileToGitHubContent(iconFileInput.files[0], 'assets/skins', iconFileInput.files[0].name);
+            }
+
+            const brandFileInput = document.getElementById('cosBrandFile');
+            if(brandFileInput.files && brandFileInput.files[0]) {
+                finalInspUrl = await uploadFileToGitHubContent(brandFileInput.files[0], 'assets/brands', brandFileInput.files[0].name);
+            }
+
+            const skinZipFileInput = document.getElementById('cosSkinZipFile');
+            if(skinZipFileInput.files && skinZipFileInput.files[0]) {
+                finalSkinDirectUrl = await uploadFileToGitHubContent(skinZipFileInput.files[0], 'skins', skinZipFileInput.files[0].name);
+            }
 
             const data = {
                 id: id, name: document.getElementById('cosName').value.trim(), artist: document.getElementById('cosmetic-form').querySelector('#cosArtist').value.trim(),
-                icon: document.getElementById('cosIcon').value.trim(), video: document.getElementById('cosVideo').value.trim(),
-                date: document.getElementById('cosDate').value, insp: nonEmptylinks.join(', '),
-                platform: document.getElementById('cosTargetPlatform').value, dl1: document.getElementById('cosDl1').value.trim(), dl2: document.getElementById('cosDl2').value.trim()
+                icon: finalIconUrl, video: document.getElementById('cosVideo').value.trim(),
+                date: document.getElementById('cosDate').value, insp: finalInspUrl, skinDirectUrl: finalSkinDirectUrl,
+                platform: currentSelectedSkinSubPlatform, dl1: document.getElementById('cosDl1').value.trim(), dl2: document.getElementById('cosDl2').value.trim()
             };
-            if(db) set(ref(db, 'cosmetics/' + id), data).then(() => { set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); document.getElementById('cosmetic-form').reset(); document.getElementById('editingCosId').value = ''; document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnRegister; currentInspUrlsArray = [""]; renderDynamicInspInputs(); });
+            if(db) set(ref(db, 'cosmetics/' + id), data).then(() => { set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); document.getElementById('cosmetic-form').reset(); document.getElementById('editingCosId').value = ''; document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnRegister; });
         });
 
         document.getElementById('btn-save-footer-links').addEventListener('click', () => {
@@ -929,14 +1081,7 @@
                 bscm: document.getElementById('setupUrlBscm').value.trim(),
                 beatcharts: document.getElementById('setupUrlBeatcharts').value.trim()
             };
-            if(db) {
-                set(ref(db, 'footer_links'), data).then(() => {
-                    alert("¡Enlaces del menú inferior guardados con éxito en la base de datos!");
-                }).catch(err => {
-                    console.error("Error saving footer links:", err);
-                    alert("Hubo un problema al guardar los enlaces.");
-                });
-            }
+            if(db) set(ref(db, 'footer_links'), data).then(() => alert("¡Enlaces guardados!"));
         });
 
         function syncFooterLinks() {
@@ -954,7 +1099,6 @@
         document.getElementById('btn-picker-cos').addEventListener('click', () => document.getElementById('cosDate').showPicker?.() || document.getElementById('cosDate').focus());
 
         buildGenresSelector();
-        renderDynamicInspInputs();
         applyLanguagePack();
     </script>
 </body>
