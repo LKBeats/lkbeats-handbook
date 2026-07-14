@@ -126,12 +126,6 @@
                 </div>
             </div>
 
-            <!-- BLOQUE DE DISCLAIMER RESTAURADO -->
-            <div class="bg-red-500/5 border border-red-500/20 rounded-2xl p-6 mb-10 text-center max-w-4xl mx-auto w-full">
-                <h2 class="text-red-500 font-display font-black text-3xl tracking-widest uppercase mb-4" data-i18n="disclaimerTitle">DISCLAIMER</h2>
-                <p class="text-zinc-300 text-sm leading-relaxed font-medium" data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes pertenecen a sus respectivos propietarios y desarrolladores originales.</p>
-            </div>
-
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
                 <div id="card-to-levels" class="group cursor-pointer rounded-2xl border border-fuchsia-950/60 bg-[#11091c]/40 p-6 transition transform hover:-translate-y-1 glow-orange flex flex-col justify-between">
                     <div>
@@ -162,6 +156,12 @@
                         <span class="bg-fuchsia-950/40 px-2 py-1 rounded border border-fuchsia-900/30 text-xs text-fuchsia-400 font-bold"><span id="home-cosmetics-count">0</span> Skins</span>
                     </div>
                 </div>
+            </div>
+
+            <!-- BLOQUE DE DISCLAIMER REUBICADO DEBAJO DE LAS TARJETAS -->
+            <div class="bg-red-500/5 border border-red-500/20 rounded-2xl p-6 mb-10 text-center max-w-4xl mx-auto w-full">
+                <h2 class="text-red-500 font-display font-black text-3xl tracking-widest uppercase mb-4" data-i18n="disclaimerTitle">DISCLAIMER</h2>
+                <p class="text-zinc-300 text-sm leading-relaxed font-medium" data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, canciones, logos, e imágenes pertenecen a sus respectivos propietarios y desarrolladores.</p>
             </div>
 
             <!-- PANEL EXTRA DE ASSETS VISUALES DINÁMICOS -->
@@ -530,7 +530,7 @@
                 cardLevelsTitle: "Charts", cardLevelsDesc: "Encuentra todos los charts que he realizado para Beaclone / BSCM / beatcharts",
                 cardCosmeticsTitle: "Skins", cardCosmeticsDesc: "Encuentra todas las skins que he realizado para Beaclone / TapWave",
                 disclaimerTitle: "DISCLAIMER", 
-                disclaimerContent: "Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes pertenecen a sus respectivos propietarios y desarrolladores originales.",
+                disclaimerContent: "Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, canciones, logos, e imágenes pertenecen a sus respectivos propietarios y desarrolladores.",
                 navLevels: "Charts", navCosmetics: "Skins", backHome: "Volver", levelsPageTitle: "Charts", cosmeticsPageTitle: "Skins",
                 addLevelTitle: "Nuevo Chart", addCosmeticTitle: "Nueva Skin", btnRegister: "Registrar", emptyDatabase: "No hay registros.",
                 formSong: "Canción", formArtist: "Artista", formGenre: "Género", formDifficulty: "Dificultad", formEdition: "Edición",
@@ -559,7 +559,7 @@
                 cardLevelsTitle: "Charts", cardLevelsDesc: "Find all the charts I've made for Beatclone / BSCM / beatcharts",
                 cardCosmeticsTitle: "Skins", cardCosmeticsDesc: "Find all the skins I've made for Beatclone / TapWave",
                 disclaimerTitle: "DISCLAIMER", 
-                disclaimerContent: "This content was created purely for recreational and entertainment purposes for the community. All registered trademarks, logos, visual assets, and images belong to their respective owners and original developers.",
+                disclaimerContent: "This content was created purely for recreational and entertainment purposes for the community. All registered trademarks, songs, logos, and images belong to their respective owners and developers.",
                 navLevels: "Charts", navCosmetics: "Skins", backHome: "Back", levelsPageTitle: "Charts", cosmeticsPageTitle: "Skins",
                 addLevelTitle: "New Chart", addCosmeticTitle: "New Skin", btnRegister: "Register", emptyDatabase: "No records.",
                 formSong: "Song", formArtist: "Artist", formGenre: "Genre", formDifficulty: "Difficulty", formEdition: "Edition",
@@ -706,7 +706,6 @@
             const app = initializeApp(firebaseConfig);
             db = getDatabase(app);
 
-            // Muestra a Boogie automáticamente mientras descarga los datos iniciales
             showLoadingOverlay();
 
             onValue(ref(db, 'levels'), (snap) => { 
@@ -1109,6 +1108,7 @@
             });
         }
 
+        // RESTAURADO MÚLTIPLES IMÁGENES EN INSPIRADO EN SKINS
         function renderCosmeticsTables() {
             const tbodyB = document.getElementById('tbody-beatstar');
             const tbodyT = document.getElementById('tbody-tapwave');
@@ -1127,11 +1127,17 @@
                 
                 let inspMarkup = '';
                 if (cos.insp) {
+                    // Soporte multi-imagen: divide por comas o espacios si hay más de una URL guardada
+                    const urls = cos.insp.split(/[\s,]+/).filter(url => url.trim() !== "");
+                    let imagesHtml = urls.map(url => `
+                        <div class="h-20 w-32 sm:h-24 sm:w-36 p-1 flex items-center justify-center bg-[#05020a]/60 border border-zinc-800/40 rounded-lg shrink-0">
+                            <img src="${url.trim()}" class="max-h-full max-w-full object-contain rounded">
+                        </div>
+                    `).join('');
+
                     inspMarkup = `
-                        <div class="inline-flex gap-2 mt-1 bg-black/40 p-1.5 rounded-xl border border-fuchsia-950/30 w-max max-w-full shadow-lg">
-                            <div class="h-20 w-32 sm:h-24 sm:w-36 p-1 flex items-center justify-center bg-[#05020a]/60 border border-zinc-800/40 rounded-lg shrink-0">
-                                <img src="${cos.insp}" class="max-h-full max-w-full object-contain rounded">
-                            </div>
+                        <div class="flex flex-wrap gap-2 mt-1 bg-black/40 p-1.5 rounded-xl border border-fuchsia-950/30 w-max max-w-full shadow-lg">
+                            ${imagesHtml}
                         </div>`;
                 }
 
@@ -1188,7 +1194,11 @@
                     document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnSaveChanges;
                     if(cos.insp) {
                         const imgPrev = document.getElementById('cosBrandPreview');
-                        if(imgPrev) { imgPrev.src = cos.insp; imgPrev.classList.remove('hidden'); }
+                        if(imgPrev) { 
+                            // Muestra la primera del set en el preview básico del formulario
+                            imgPrev.src = cos.insp.split(/[\s,]+/)[0]; 
+                            imgPrev.classList.remove('hidden'); 
+                        }
                     }
                 });
                 tr.querySelector('.btn-del-cos')?.addEventListener('click', () => { if(db && confirm("¿Eliminar?")) { showLoadingOverlay(); remove(ref(db, 'cosmetics/' + cos.id)).finally(() => hideLoadingOverlay()); } });
@@ -1295,7 +1305,9 @@
 
             const brandFileInput = document.getElementById('cosBrandFile');
             if(brandFileInput.files && brandFileInput.files[0]) {
-                finalInspUrl = await uploadFileToGitHubContent(brandFileInput.files[0], 'assets/brands', brandFileInput.files[0].name);
+                const uploadedUrl = await uploadFileToGitHubContent(brandFileInput.files[0], 'assets/brands', brandFileInput.files[0].name);
+                // Si ya había imágenes guardadas, concatena la nueva separada por una coma
+                finalInspUrl = finalInspUrl ? `${finalInspUrl}, ${uploadedUrl}` : uploadedUrl;
             }
 
             const skinZipFileInput = document.getElementById('cosSkinZipFile');
