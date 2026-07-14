@@ -397,7 +397,8 @@
                         </div>
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadBrand">Subir Marca / Inspiración</label>
-                            <img id="cosBrandPreview" class="hidden w-full h-20 object-contain mb-1 bg-black/40 p-1 rounded border border-zinc-800">
+                            <!-- CONTENEDOR NUEVO: Lista dinámica de imágenes con reordenamiento y borrado -->
+                            <div id="cosBrandManagementList" class="flex flex-col gap-1.5 my-2 max-h-40 overflow-y-auto bg-black/40 p-2 rounded border border-zinc-800 hidden"></div>
                             <input type="file" id="cosBrandFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div>
@@ -589,6 +590,9 @@
         let globalFooterLinks = { beatclone: '', bscm: '', beatcharts: '' };
         let currentSelectedSkinSubPlatform = 'Beatstar'; 
         let globalVisualAssets = {}; 
+
+        // ARRAY TEMPORAL DE TRABAJO PARA ORDENAR/BORRAR MARCAS EN EDICIÓN
+        let editingCosBrandUrlsList = [];
 
         let githubToken = "";
         let githubUser = "";
@@ -1108,7 +1112,6 @@
             });
         }
 
-        // RESTAURADO MÚLTIPLES IMÁGENES EN INSPIRADO EN SKINS
         function renderCosmeticsTables() {
             const tbodyB = document.getElementById('tbody-beatstar');
             const tbodyT = document.getElementById('tbody-tapwave');
@@ -1127,7 +1130,6 @@
                 
                 let inspMarkup = '';
                 if (cos.insp) {
-                    // Soporte multi-imagen: divide por comas o espacios si hay más de una URL guardada
                     const urls = cos.insp.split(/[\s,]+/).filter(url => url.trim() !== "");
                     let imagesHtml = urls.map(url => `
                         <div class="h-20 w-32 sm:h-24 sm:w-36 p-1 flex items-center justify-center bg-[#05020a]/60 border border-zinc-800/40 rounded-lg shrink-0">
@@ -1183,6 +1185,7 @@
                     tr.querySelector('.btn-direct-skin-download').addEventListener('click', () => triggerDownloadAlert(cos.skinDirectUrl));
                 }
 
+                // EDICIÓN EN LA QUE SE INICIALIZA EL ADMINISTRADOR DINÁMICO DE MARCAS
                 tr.querySelector('.btn-edit-cos')?.addEventListener('click', () => {
                     document.getElementById('editingCosId').value = cos.id;
                     document.getElementById('cosName').value = cos.name;
@@ -1192,14 +1195,10 @@
                     document.getElementById('cosDl1').value = cos.dl1 || '';
                     document.getElementById('cosDl2').value = cos.dl2 || '';
                     document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnSaveChanges;
-                    if(cos.insp) {
-                        const imgPrev = document.getElementById('cosBrandPreview');
-                        if(imgPrev) { 
-                            // Muestra la primera del set en el preview básico del formulario
-                            imgPrev.src = cos.insp.split(/[\s,]+/)[0]; 
-                            imgPrev.classList.remove('hidden'); 
-                        }
-                    }
+                    
+                    // Cargar el gestor de marcas ordenable/eliminable
+                    editingCosBrandUrlsList = cos.insp ? cos.insp.split(/[\s,]+/).filter(url => url.trim() !== "") : [];
+                    renderBrandManagementFormInterface();
                 });
                 tr.querySelector('.btn-del-cos')?.addEventListener('click', () => { if(db && confirm("¿Eliminar?")) { showLoadingOverlay(); remove(ref(db, 'cosmetics/' + cos.id)).finally(() => hideLoadingOverlay()); } });
                 
@@ -1208,6 +1207,63 @@
 
             document.getElementById('counter-beatstar').innerText = cB;
             document.getElementById('counter-tapwave').innerText = cT;
+        }
+
+        // NUEVA FUNCIÓN: RENDERIZA LA INTERFAZ DENTRO DEL FORMULARIO PARA REORDENAR Y ELIMINAR IMÁGENES
+        function renderBrandManagementFormInterface() {
+            const container = document.getElementById('cosBrandManagementList');
+            if(!container) return;
+            
+            if(editingCosBrandUrlsList.length === 0) {
+                container.innerHTML = '';
+                container.classList.add('hidden');
+                return;
+            }
+            
+            container.classList.remove('hidden');
+            container.innerHTML = '';
+            
+            editingCosBrandUrlsList.forEach((url, index) => {
+                const item = document.createElement('div');
+                item.className = "flex items-center justify-between gap-2 bg-[#05020a] p-1.5 rounded border border-zinc-800";
+                item.innerHTML = `
+                    <div class="flex items-center gap-2 truncate">
+                        <img src="${url}" class="w-10 h-8 object-contain bg-black/60 border border-zinc-900 rounded shrink-0">
+                        <span class="text-[10px] text-zinc-500 truncate font-mono">${url}</span>
+                    </div>
+                    <div class="flex items-center gap-1 shrink-0">
+                        <button type="button" class="btn-move-brand-up w-5 h-5 bg-zinc-900 hover:bg-zinc-800 rounded text-zinc-400 flex items-center justify-center text-[10px]"><i class="fa-solid fa-arrow-up"></i></button>
+                        <button type="button" class="btn-move-brand-down w-5 h-5 bg-zinc-900 hover:bg-zinc-800 rounded text-zinc-400 flex items-center justify-center text-[10px]"><i class="fa-solid fa-arrow-down"></i></button>
+                        <button type="button" class="btn-delete-brand-single w-5 h-5 bg-red-950 border border-red-900 text-red-400 hover:bg-red-900 hover:text-white rounded flex items-center justify-center text-[10px] font-bold">X</button>
+                    </div>
+                `;
+                
+                // Lógica de los controles individuales
+                item.querySelector('.btn-move-brand-up').addEventListener('click', () => {
+                    if(index > 0) {
+                        const temp = editingCosBrandUrlsList[index];
+                        editingCosBrandUrlsList[index] = editingCosBrandUrlsList[index - 1];
+                        editingCosBrandUrlsList[index - 1] = temp;
+                        renderBrandManagementFormInterface();
+                    }
+                });
+                
+                item.querySelector('.btn-move-brand-down').addEventListener('click', () => {
+                    if(index < editingCosBrandUrlsList.length - 1) {
+                        const temp = editingCosBrandUrlsList[index];
+                        editingCosBrandUrlsList[index] = editingCosBrandUrlsList[index + 1];
+                        editingCosBrandUrlsList[index + 1] = temp;
+                        renderBrandManagementFormInterface();
+                    }
+                });
+                
+                item.querySelector('.btn-delete-brand-single').addEventListener('click', () => {
+                    editingCosBrandUrlsList.splice(index, 1);
+                    renderBrandManagementFormInterface();
+                });
+                
+                container.appendChild(item);
+            });
         }
 
         function buildVisualAssetsPanelInterface() {
@@ -1295,7 +1351,6 @@
             let id = document.getElementById('editingCosId').value || Date.now().toString();
             
             let finalIconUrl = cosmetics.find(c => c.id === id)?.icon || "BoxSprite_MerchSkin2.png";
-            let finalInspUrl = cosmetics.find(c => c.id === id)?.insp || "";
             let finalSkinDirectUrl = cosmetics.find(c => c.id === id)?.skinDirectUrl || "";
 
             const iconFileInput = document.getElementById('cosIconFile');
@@ -1306,8 +1361,8 @@
             const brandFileInput = document.getElementById('cosBrandFile');
             if(brandFileInput.files && brandFileInput.files[0]) {
                 const uploadedUrl = await uploadFileToGitHubContent(brandFileInput.files[0], 'assets/brands', brandFileInput.files[0].name);
-                // Si ya había imágenes guardadas, concatena la nueva separada por una coma
-                finalInspUrl = finalInspUrl ? `${finalInspUrl}, ${uploadedUrl}` : uploadedUrl;
+                // Sumar al gestor dinámico de reordenamiento
+                editingCosBrandUrlsList.push(uploadedUrl);
             }
 
             const skinZipFileInput = document.getElementById('cosSkinZipFile');
@@ -1315,10 +1370,13 @@
                 finalSkinDirectUrl = await uploadFileToGitHubContent(skinZipFileInput.files[0], 'skins', skinZipFileInput.files[0].name);
             }
 
+            // Unificar las marcas procesadas y ordenadas mediante una cadena separada por comas
+            let finalInspString = editingCosBrandUrlsList.join(', ');
+
             const data = {
                 id: id, name: document.getElementById('cosName').value.trim(), artist: document.getElementById('cosArtist').value.trim(),
                 icon: finalIconUrl, video: document.getElementById('cosVideo').value.trim(),
-                date: document.getElementById('cosDate').value, insp: finalInspUrl, skinDirectUrl: finalSkinDirectUrl,
+                date: document.getElementById('cosDate').value, insp: finalInspString, skinDirectUrl: finalSkinDirectUrl,
                 platform: currentSelectedSkinSubPlatform, dl1: document.getElementById('cosDl1').value.trim(), dl2: document.getElementById('cosDl2').value.trim()
             };
             if(db) {
@@ -1327,7 +1385,8 @@
                     document.getElementById('cosmetic-form').reset(); 
                     document.getElementById('editingCosId').value = ''; 
                     document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnRegister; 
-                    document.getElementById('cosBrandPreview').classList.add('hidden'); 
+                    document.getElementById('cosBrandManagementList').classList.add('hidden');
+                    editingCosBrandUrlsList = [];
                 }).finally(() => hideLoadingOverlay());
             } else {
                 hideLoadingOverlay();
