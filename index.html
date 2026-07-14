@@ -44,7 +44,6 @@
         
         .force-white-icon { filter: brightness(0) invert(1); object-fit: contain; }
         
-        /* Contorno y arte circulares sincronizados perfectamente */
         .art-container-circular { border-radius: 50% !important; overflow: hidden; }
         .art-spinning-circle { border-radius: 50% !important; animation: spinForever 20s linear infinite; }
         
@@ -72,13 +71,11 @@
 </head>
 <body class="bg-[#05020a] text-zinc-100 min-h-screen font-sans flex flex-col relative overflow-x-hidden">
 
-    <!-- OVERLAY DE CARGA / LOADING SPINNER CON BOOGIE -->
     <div id="global-loading-overlay" class="hidden fixed inset-0 bg-black/85 z-[100] flex flex-col items-center justify-center gap-4">
         <img src="1455064703448645786.gif" alt="Boogie Loading..." class="w-[150px] h-auto mb-2">
         <p id="loading-overlay-text" class="text-base font-bold text-white text-center px-4 font-sans">Boogie está trabajando en ello, espera un momento</p>
     </div>
 
-    <!-- MODAL DE DESCARGA PERSONALIZADO CON ADVETENCIA Y VIDEO ALEATORIO -->
     <div id="download-custom-modal" class="hidden fixed inset-0 bg-black/90 z-[110] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-[#11091c] border border-fuchsia-500/30 rounded-2xl max-w-md w-full p-6 shadow-2xl relative text-center flex flex-col items-center">
             <div class="w-16 h-16 mb-4">
@@ -88,7 +85,6 @@
                 Es necesario tener instalado la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la pagina oficial de Beatclone
             </p>
             
-            <!-- Botones de Acción -->
             <div class="flex flex-col sm:flex-row gap-3 w-full mb-6">
                 <a id="download-modal-btn-beatclone" href="#" target="_blank" class="flex-1 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-300 hover:text-white transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-globe"></i>Beatclone
@@ -98,7 +94,6 @@
                 </button>
             </div>
 
-            <!-- Sección de Agradecimiento Oculta / Aparece tras confirmar descarga -->
             <div id="download-thanks-box" class="w-full border-t border-fuchsia-950/60 pt-4 hidden flex-col items-center">
                 <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-fuchsia-400 font-display font-black text-sm uppercase tracking-wider mb-3" data-i18n="thanksTitle">Gracias por jugar a Beatclone</h4>
                 <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-fuchsia-950">
@@ -112,7 +107,6 @@
         </div>
     </div>
 
-    <!-- TOP HEADER / NAV -->
     <header class="border-b border-fuchsia-950/40 bg-[#11091c]/80 backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
             <div class="max-w-[33%] w-1/3 md:max-w-none md:w-auto shrink-0 cursor-pointer" id="nav-logo">
@@ -147,7 +141,6 @@
 
     <main class="flex-grow flex flex-col relative">
         
-        <!-- ================= VIEW 1: HOME ================= -->
         <section id="view-home" class="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col justify-center flex-grow w-full relative z-10">
             <div class="text-center mb-12 flex flex-col items-center">
                 <span class="px-4 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-xs font-black tracking-widest uppercase mb-6 inline-block">
@@ -200,47 +193,42 @@
                 </div>
             </div>
 
-            <!-- BLOQUE DE DISCLAIMER REUBICADO DEBAJO DE LAS TARJETAS -->
             <div class="bg-red-500/5 border border-red-500/20 rounded-2xl p-6 mb-10 text-center max-w-4xl mx-auto w-full">
                 <h2 class="text-red-500 font-display font-black text-3xl tracking-widest uppercase mb-4" data-i18n="disclaimerTitle">DISCLAIMER</h2>
                 <p class="text-zinc-300 text-sm leading-relaxed font-medium" data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, canciones, logos, e imágenes pertenecen a sus respectivos propietarios y desarrolladores.</p>
             </div>
 
-            <!-- APARTADO DE VIDEOS DE AGRADECIMIENTO CMS (GESTIÓN) -->
             <div id="thanks-videos-panel-box" class="hidden bg-[#11091c] border border-orange-500/40 rounded-2xl p-6 shadow-2xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-fuchsia-500"></div>
-                <h2 class="font-display font-black text-base text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60">Videos de Agradecimiento</h2>
+                <h2 class="font-display font-black text-base text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60">Subir Videos de Agradecimiento</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
                     <div>
-                        <label class="block font-bold text-zinc-400 mb-1">Video 1 (URL Directa)</label>
-                        <input type="url" id="thanks-vid1" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                        <label class="block font-bold text-zinc-400 mb-1">Video 1 (Archivo MP4)</label>
+                        <input type="file" id="thanks-vid1-file" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                     </div>
                     <div>
-                        <label class="block font-bold text-zinc-400 mb-1">Video 2 (URL Directa)</label>
-                        <input type="url" id="thanks-vid2" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                        <label class="block font-bold text-zinc-400 mb-1">Video 2 (Archivo MP4)</label>
+                        <input type="file" id="thanks-vid2-file" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                     </div>
                     <div>
-                        <label class="block font-bold text-zinc-400 mb-1">Video 3 (URL Directa)</label>
-                        <input type="url" id="thanks-vid3" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                        <label class="block font-bold text-zinc-400 mb-1">Video 3 (Archivo MP4)</label>
+                        <input type="file" id="thanks-vid3-file" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                     </div>
                 </div>
                 <button type="button" id="btn-save-thanks-videos" class="w-full mt-4 py-2.5 bg-gradient-to-r from-orange-500 to-yellow-500 text-black font-black uppercase rounded-lg text-xs tracking-wider transition hover:opacity-90">
-                    <span>Guardar Videos de Agradecimiento</span>
+                    <span>Subir y Guardar Videos</span>
                 </button>
             </div>
 
-            <!-- PANEL EXTRA DE ASSETS VISUALES DINÁMICOS -->
             <div id="visual-assets-panel-box" class="hidden bg-[#11091c] border border-fuchsia-500/40 rounded-2xl p-6 shadow-2xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-fuchsia-500 to-orange-500"></div>
                 <h2 class="font-display font-black text-base text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="visualAssetsMenuTitle">Panel de Assets Visuales Dinámicos</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs mb-4">
-                    <!-- Géneros -->
                     <div class="space-y-2 bg-black/30 p-3 rounded-xl border border-fuchsia-950/40">
                         <div class="font-black text-fuchsia-400 uppercase tracking-wider mb-2 border-b border-fuchsia-950/30 pb-1" data-i18n="formGenre">Géneros</div>
                         <div id="asset-upload-genres-list" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
                     </div>
-                    <!-- Dificultades -->
                     <div class="space-y-2 bg-black/30 p-3 rounded-xl border border-fuchsia-950/40">
                         <div class="font-black text-orange-400 uppercase tracking-wider mb-2 border-b border-fuchsia-950/30 pb-1" data-i18n="formDifficulty">Dificultades</div>
                         <div class="space-y-3">
@@ -258,7 +246,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Ediciones -->
                     <div class="space-y-2 bg-black/30 p-3 rounded-xl border border-fuchsia-950/40">
                         <div class="font-black text-yellow-400 uppercase tracking-wider mb-2 border-b border-fuchsia-950/30 pb-1" data-i18n="formEdition">Edición</div>
                         <div class="space-y-3">
@@ -275,7 +262,6 @@
                 </div>
             </div>
 
-            <!-- Footer Links Manager Box -->
             <div id="footer-links-management-box" class="hidden bg-[#11091c] border border-orange-500/30 rounded-2xl p-6 shadow-xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-yellow-500"></div>
                 <h2 class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="footerMenuTitle">Links del Menú Inferior</h2>
@@ -299,7 +285,6 @@
             </div>
         </section>
 
-        <!-- ================= VIEW 2: CHARTS REGISTRY ================= -->
         <section id="view-levels" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
             <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-orange-500/30 rounded-2xl mb-6 w-max">
                 <i class="fa-solid fa-chevron-left text-orange-500"></i> <span data-i18n="backHome">Volver</span>
@@ -401,13 +386,11 @@
             </div>
         </section>
 
-        <!-- ================= VIEW 3: COSMETICS (SKINS SUBMENU) ================= -->
         <section id="view-cosmetics" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
             <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-fuchsia-500/30 rounded-2xl mb-6 w-max">
                 <i class="fa-solid fa-chevron-left text-fuchsia-500"></i> <span data-i18n="backHome">Volver</span>
             </button>
 
-            <!-- SUBMENÚ EXCLUSIVO DE SKINS CON TITULO CENTRAL -->
             <div id="cosmetics-submenu" class="w-full max-w-4xl mx-auto py-6 flex flex-col items-center">
                 <div class="text-center mb-8 flex flex-col items-center w-full">
                     <div class="mb-4 max-w-full w-[450px]">
@@ -480,7 +463,6 @@
                 </div>
 
                 <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-10 flex-grow">
-                    <!-- Segmento Beatstar -->
                     <div id="container-workspace-beatstar" class="hidden flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
                             <div class="h-10 max-w-[50%] sm:max-w-[240px] flex-grow sm:flex-initial">
@@ -510,7 +492,6 @@
                         </div>
                     </div>
 
-                    <!-- Segmento Tapwave -->
                     <div id="container-workspace-tapwave" class="hidden flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
                             <div class="h-12 max-w-[50%] sm:max-w-[340px] flex-grow sm:flex-initial flex items-center">
@@ -544,7 +525,6 @@
         </section>
     </main>
 
-    <!-- FOOTER -->
     <footer class="border-t border-fuchsia-950/20 bg-[#05020a] py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-end gap-4">
             <div class="flex items-center gap-3">
@@ -658,7 +638,6 @@
         let globalVisualAssets = {}; 
         let globalThanksVideos = [];
 
-        // ARRAY DINÁMICO COMPARTIDO PARA CREACIÓN/EDICIÓN SIMULTÁNEA DE MARCAS
         let editingCosBrandUrlsList = [];
         let currentActiveDownloadUrl = "";
 
@@ -800,9 +779,6 @@
             });
             onValue(ref(db, 'thanks_videos'), (snap) => { 
                 globalThanksVideos = snap.val() ? Object.values(snap.val()) : [];
-                if(globalThanksVideos[0]) document.getElementById('thanks-vid1').value = globalThanksVideos[0];
-                if(globalThanksVideos[1]) document.getElementById('thanks-vid2').value = globalThanksVideos[1];
-                if(globalThanksVideos[2]) document.getElementById('thanks-vid3').value = globalThanksVideos[2];
             });
             onValue(ref(db, 'footer_links'), (snap) => { 
                 if (snap.val()) { 
@@ -865,7 +841,6 @@
             });
         }
 
-        // TRIGGER POP-UP DE DESCARGA ACTUALIZADO CON VIDEO ALEATORIO
         function triggerDownloadAlert(url) {
             currentActiveDownloadUrl = url;
             document.getElementById('download-modal-msg').innerText = translations[currentLanguage].beatcloneNotice;
@@ -882,7 +857,6 @@
             if(currentActiveDownloadUrl) {
                 window.open(currentActiveDownloadUrl, '_blank');
                 
-                // Procesar video aleatorio si existen registrados
                 const validVideos = globalThanksVideos.filter(v => v && v.trim() !== "");
                 if(validVideos.length > 0) {
                     const randomVideoUrl = validVideos[Math.floor(Math.random() * validVideos.length)];
@@ -928,7 +902,6 @@
             currentRotationAngle = 0;
         }
 
-        // MEJORADO: DIBUJO RADIAL 100% SIMÉTRICO
         function startRadialCanvasVisualizer(canvas, analyser) {
             const ctx = canvas.getContext('2d');
             const bufferLength = analyser.frequencyBinCount;
@@ -952,7 +925,6 @@
                 for (let i = 0; i < barCount; i++) {
                     const angle = ((i / barCount) * Math.PI * 2) + currentRotationAngle;
                     
-                    // Mapeo simétrico reflejado
                     const targetIndex = i < barCount / 2 ? i : barCount - i;
                     const dataIndex = Math.floor((targetIndex / (barCount / 2)) * bufferLength * 0.6);
                     const rawValue = dataArray[dataIndex] || 0;
@@ -977,7 +949,6 @@
             draw();
         }
 
-        // AGREGADO: CÍRCULO DE CARGA (BUFFER PRELOAD) ANTES DE REPRODUCIR LA CANCIÓN
         function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement, containerElement) {
             if(activeAudioElement && activeAudioElement.src === audioUrl) {
                 stopGlobalAudioPreview();
@@ -985,8 +956,6 @@
             }
             
             stopGlobalAudioPreview();
-
-            // Poner círculo de carga en el botón
             btnElement.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-[10px]"></i>`;
 
             if(!audioCtx) {
@@ -998,7 +967,7 @@
             const audio = new Audio();
             audio.crossOrigin = "anonymous"; 
             audio.src = audioUrl;
-            audio.preload = "auto"; // Forzar la descarga completa preliminar
+            audio.preload = "auto";
 
             audio.addEventListener('canplaythrough', () => {
                 if (activeAudioElement !== audio) return;
@@ -1124,7 +1093,6 @@
             return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
         }
 
-        // OPTIMIZADO: TEXTOS Y IMÁGENES MÁS GRANDES EN MÓVILES (md:clases)
         function renderLevelsTable() {
             const tbody = document.getElementById('levels-tbody');
             if(!tbody) return; tbody.innerHTML = '';
@@ -1339,7 +1307,6 @@
             document.getElementById('counter-tapwave').innerText = cT;
         }
 
-        // CONTROL INTEGRADO DE EDICIÓN / REORDENAMIENTO DE MARCAS (CONSTRUIDO DINÁMICAMENTE)
         function renderBrandManagementFormInterface() {
             const container = document.getElementById('cosBrandManagementList');
             if(!container) return;
@@ -1427,7 +1394,6 @@
             });
         }
 
-        // AGREGADO: PERMITIR SUBIR MÚLTIPLES IMÁGENES AL CREAR NUEVAS SKINS
         document.getElementById('cosBrandFile').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if(file && githubToken && githubUser) {
@@ -1440,7 +1406,7 @@
                     }
                 } catch(err) { console.error(err); }
                 hideLoadingOverlay();
-                e.target.value = ""; // reset input file
+                e.target.value = "";
             }
         });
 
@@ -1530,14 +1496,34 @@
             }
         });
 
-        document.getElementById('btn-save-thanks-videos').addEventListener('click', () => {
-            const v1 = document.getElementById('thanks-vid1').value.trim();
-            const v2 = document.getElementById('thanks-vid2').value.trim();
-            const v3 = document.getElementById('thanks-vid3').value.trim();
-            if(db) {
-                showLoadingOverlay();
-                set(ref(db, 'thanks_videos'), { 0: v1, 1: v2, 2: v3 }).then(() => alert("¡Videos de agradecimiento guardados!")).finally(() => hideLoadingOverlay());
+        // MODIFICADO: SUBIDA FÍSICA Y DIRECTA DE VIDEOS A GITHUB
+        document.getElementById('btn-save-thanks-videos').addEventListener('click', async () => {
+            if(!githubToken || !githubUser) {
+                alert("Por favor inicia sesión en modo Creador primero.");
+                return;
             }
+
+            showLoadingOverlay();
+            let urlsDict = { ...globalThanksVideos };
+
+            const f1 = document.getElementById('thanks-vid1-file').files[0];
+            const f2 = document.getElementById('thanks-vid2-file').files[0];
+            const f3 = document.getElementById('thanks-vid3-file').files[0];
+
+            try {
+                if(f1) urlsDict[0] = await uploadFileToGitHubContent(f1, 'assets/videos', f1.name);
+                if(f2) urlsDict[1] = await uploadFileToGitHubContent(f2, 'assets/videos', f2.name);
+                if(f3) urlsDict[2] = await uploadFileToGitHubContent(f3, 'assets/videos', f3.name);
+
+                if(db) {
+                    await set(ref(db, 'thanks_videos'), urlsDict);
+                    alert("¡Videos subidos y guardados con éxito en GitHub!");
+                    document.getElementById('thanks-vid1-file').value = "";
+                    document.getElementById('thanks-vid2-file').value = "";
+                    document.getElementById('thanks-vid3-file').value = "";
+                }
+            } catch(e) { alert("Ocurrió un error al subir los archivos."); }
+            hideLoadingOverlay();
         });
 
         document.getElementById('btn-save-footer-links').addEventListener('click', () => {
