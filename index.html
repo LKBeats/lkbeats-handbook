@@ -43,7 +43,15 @@
         .glow-gold { box-shadow: 0 0 20px rgba(250, 204, 21, 0.4); border-color: #facc15 !important; }
         
         .force-white-icon { filter: brightness(0) invert(1); object-fit: contain; }
-        .art-spinning-circle { border-radius: 50% !important; transition: border-radius 0.25s cubic-bezier(0.1, 0.8, 0.2, 1); }
+        
+        /* Contorno y arte circulares sincronizados perfectamente */
+        .art-container-circular { border-radius: 50% !important; overflow: hidden; }
+        .art-spinning-circle { border-radius: 50% !important; animation: spinForever 20s linear infinite; }
+        
+        @keyframes spinForever {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
         
         #global-loading-overlay {
             backdrop-filter: blur(8px);
@@ -68,6 +76,40 @@
     <div id="global-loading-overlay" class="hidden fixed inset-0 bg-black/85 z-[100] flex flex-col items-center justify-center gap-4">
         <img src="1455064703448645786.gif" alt="Boogie Loading..." class="w-[150px] h-auto mb-2">
         <p id="loading-overlay-text" class="text-base font-bold text-white text-center px-4 font-sans">Boogie está trabajando en ello, espera un momento</p>
+    </div>
+
+    <!-- MODAL DE DESCARGA PERSONALIZADO CON ADVETENCIA Y VIDEO ALEATORIO -->
+    <div id="download-custom-modal" class="hidden fixed inset-0 bg-black/90 z-[110] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-[#11091c] border border-fuchsia-500/30 rounded-2xl max-w-md w-full p-6 shadow-2xl relative text-center flex flex-col items-center">
+            <div class="w-16 h-16 mb-4">
+                <img src="Beatstar1.png" alt="Beatstar Required" class="w-full h-full object-contain">
+            </div>
+            <p id="download-modal-msg" class="text-sm font-medium text-zinc-200 mb-6 leading-relaxed">
+                Es necesario tener instalado la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la pagina oficial de Beatclone
+            </p>
+            
+            <!-- Botones de Acción -->
+            <div class="flex flex-col sm:flex-row gap-3 w-full mb-6">
+                <a id="download-modal-btn-beatclone" href="#" target="_blank" class="flex-1 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-300 hover:text-white transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-globe"></i>Beatclone
+                </a>
+                <button id="download-modal-btn-confirm" class="flex-1 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-black rounded-xl text-xs font-black uppercase shadow hover:opacity-90 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-circle-down"></i><span data-i18n="downloadDirectBtn">Descargar</span>
+                </button>
+            </div>
+
+            <!-- Sección de Agradecimiento Oculta / Aparece tras confirmar descarga -->
+            <div id="download-thanks-box" class="w-full border-t border-fuchsia-950/60 pt-4 hidden flex-col items-center">
+                <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-fuchsia-400 font-display font-black text-sm uppercase tracking-wider mb-3" data-i18n="thanksTitle">Gracias por jugar a Beatclone</h4>
+                <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-fuchsia-950">
+                    <video id="download-thanks-video" class="w-full h-full object-cover" controls autoplay></video>
+                </div>
+            </div>
+
+            <button id="download-modal-btn-close" class="absolute top-3 right-3 text-zinc-500 hover:text-white text-sm p-1">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
     </div>
 
     <!-- TOP HEADER / NAV -->
@@ -162,6 +204,29 @@
             <div class="bg-red-500/5 border border-red-500/20 rounded-2xl p-6 mb-10 text-center max-w-4xl mx-auto w-full">
                 <h2 class="text-red-500 font-display font-black text-3xl tracking-widest uppercase mb-4" data-i18n="disclaimerTitle">DISCLAIMER</h2>
                 <p class="text-zinc-300 text-sm leading-relaxed font-medium" data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, canciones, logos, e imágenes pertenecen a sus respectivos propietarios y desarrolladores.</p>
+            </div>
+
+            <!-- APARTADO DE VIDEOS DE AGRADECIMIENTO CMS (GESTIÓN) -->
+            <div id="thanks-videos-panel-box" class="hidden bg-[#11091c] border border-orange-500/40 rounded-2xl p-6 shadow-2xl relative w-full mb-10">
+                <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-fuchsia-500"></div>
+                <h2 class="font-display font-black text-base text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60">Videos de Agradecimiento</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div>
+                        <label class="block font-bold text-zinc-400 mb-1">Video 1 (URL Directa)</label>
+                        <input type="url" id="thanks-vid1" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-zinc-400 mb-1">Video 2 (URL Directa)</label>
+                        <input type="url" id="thanks-vid2" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-zinc-400 mb-1">Video 3 (URL Directa)</label>
+                        <input type="url" id="thanks-vid3" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                    </div>
+                </div>
+                <button type="button" id="btn-save-thanks-videos" class="w-full mt-4 py-2.5 bg-gradient-to-r from-orange-500 to-yellow-500 text-black font-black uppercase rounded-lg text-xs tracking-wider transition hover:opacity-90">
+                    <span>Guardar Videos de Agradecimiento</span>
+                </button>
             </div>
 
             <!-- PANEL EXTRA DE ASSETS VISUALES DINÁMICOS -->
@@ -319,7 +384,7 @@
                             <thead>
                                 <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                     <th class="p-4 text-center w-12">#</th>
-                                    <th class="p-4 w-36 text-center" data-i18n="thArt">Arte</th>
+                                    <th class="p-4 w-44 text-center" data-i18n="thArt">Arte</th>
                                     <th class="p-4" data-i18n="thSongArtist">Canción / Artista</th>
                                     <th class="p-2 sm:p-4 w-36" data-i18n="formGenre">Género</th>
                                     <th class="p-4 text-center w-32" data-i18n="formDifficulty">Dificultad</th>
@@ -397,7 +462,6 @@
                         </div>
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadBrand">Subir Marca / Inspiración</label>
-                            <!-- CONTENEDOR NUEVO: Lista dinámica de imágenes con reordenamiento y borrado -->
                             <div id="cosBrandManagementList" class="flex flex-col gap-1.5 my-2 max-h-40 overflow-y-auto bg-black/40 p-2 rounded border border-zinc-800 hidden"></div>
                             <input type="file" id="cosBrandFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
@@ -548,9 +612,10 @@
                 formUploadArt: "Subir Arte", formUploadAudio: "Subir Preview de Audio (Opcional)",
                 formUploadChartFile: "Subir Archivo de Chart (.zip / Opcional)", formUploadIcon: "Subir Icono",
                 formUploadBrand: "Subir Marca / Inspiración", formUploadSkinFile: "Subir Archivo de Skin (.zip / Opcional)",
-                beatcloneNotice: "¡Recordatorio! Asegúrate de tener descargado Beatclone antes de instalar este contenido.",
+                beatcloneNotice: "Es necesario tener instalado la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la pagina oficial de Beatclone",
                 savingChanges: "Boogie está trabajando en ello, espera un momento",
-                visualAssetsMenuTitle: "Panel de Assets Visuales Dinámicos"
+                visualAssetsMenuTitle: "Panel de Assets Visuales Dinámicos",
+                thanksTitle: "Gracias por jugar a Beatclone"
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -577,9 +642,10 @@
                 formUploadArt: "Upload Art", formUploadAudio: "Upload Audio Preview (Optional)",
                 formUploadChartFile: "Upload Chart File (.zip / Optional)", formUploadIcon: "Upload Icon",
                 formUploadBrand: "Upload Brand / Inspiration", formUploadSkinFile: "Upload Skin File (.zip / Optional)",
-                beatcloneNotice: "Reminder! Make sure you have downloaded Beatclone before installing this content.",
+                beatcloneNotice: "It is necessary to have the Beatstar application installed to use this content. Download it from the official Beatclone page.",
                 savingChanges: "Boogie is working on it, please wait a moment",
-                visualAssetsMenuTitle: "Dynamic Visual Assets Panel"
+                visualAssetsMenuTitle: "Dynamic Visual Assets Panel",
+                thanksTitle: "Thanks for playing Beatclone"
             }
         };
 
@@ -590,9 +656,11 @@
         let globalFooterLinks = { beatclone: '', bscm: '', beatcharts: '' };
         let currentSelectedSkinSubPlatform = 'Beatstar'; 
         let globalVisualAssets = {}; 
+        let globalThanksVideos = [];
 
-        // ARRAY TEMPORAL DE TRABAJO PARA ORDENAR/BORRAR MARCAS EN EDICIÓN
+        // ARRAY DINÁMICO COMPARTIDO PARA CREACIÓN/EDICIÓN SIMULTÁNEA DE MARCAS
         let editingCosBrandUrlsList = [];
+        let currentActiveDownloadUrl = "";
 
         let githubToken = "";
         let githubUser = "";
@@ -608,6 +676,7 @@
         let activeAudioButton = null;
         let activeAudioImg = null;
         let activeCanvas = null;
+        let activeArtContainer = null;
 
         function navigateTo(view, pushState = true) {
             ['home', 'levels', 'cosmetics'].forEach(v => document.getElementById(`view-${v}`)?.classList.add('hidden'));
@@ -729,6 +798,12 @@
                 globalVisualAssets = snap.val() || {}; 
                 renderLevelsTable(); 
             });
+            onValue(ref(db, 'thanks_videos'), (snap) => { 
+                globalThanksVideos = snap.val() ? Object.values(snap.val()) : [];
+                if(globalThanksVideos[0]) document.getElementById('thanks-vid1').value = globalThanksVideos[0];
+                if(globalThanksVideos[1]) document.getElementById('thanks-vid2').value = globalThanksVideos[1];
+                if(globalThanksVideos[2]) document.getElementById('thanks-vid3').value = globalThanksVideos[2];
+            });
             onValue(ref(db, 'footer_links'), (snap) => { 
                 if (snap.val()) { 
                     globalFooterLinks = snap.val(); 
@@ -736,6 +811,7 @@
                     if(document.getElementById('setupUrlBeatclone')) document.getElementById('setupUrlBeatclone').value = globalFooterLinks.beatclone || '';
                     if(document.getElementById('setupUrlBscm')) document.getElementById('setupUrlBscm').value = globalFooterLinks.bscm || '';
                     if(document.getElementById('setupUrlBeatcharts')) document.getElementById('setupUrlBeatcharts').value = globalFooterLinks.beatcharts || '';
+                    if(document.getElementById('download-modal-btn-beatclone')) document.getElementById('download-modal-btn-beatclone').href = globalFooterLinks.beatclone || '#';
                 } 
             });
             onValue(ref(db, 'last_update_date'), (snap) => { if (snap.val()) document.getElementById('dynamic-update-date').innerText = formatStringToDMY(snap.val()); });
@@ -789,10 +865,39 @@
             });
         }
 
+        // TRIGGER POP-UP DE DESCARGA ACTUALIZADO CON VIDEO ALEATORIO
         function triggerDownloadAlert(url) {
-            alert(translations[currentLanguage].beatcloneNotice);
-            window.open(url, '_blank');
+            currentActiveDownloadUrl = url;
+            document.getElementById('download-modal-msg').innerText = translations[currentLanguage].beatcloneNotice;
+            document.getElementById('download-thanks-box').classList.add('hidden');
+            
+            const videoElement = document.getElementById('download-thanks-video');
+            videoElement.pause();
+            videoElement.src = "";
+
+            document.getElementById('download-custom-modal').classList.remove('hidden');
         }
+
+        document.getElementById('download-modal-btn-confirm').addEventListener('click', () => {
+            if(currentActiveDownloadUrl) {
+                window.open(currentActiveDownloadUrl, '_blank');
+                
+                // Procesar video aleatorio si existen registrados
+                const validVideos = globalThanksVideos.filter(v => v && v.trim() !== "");
+                if(validVideos.length > 0) {
+                    const randomVideoUrl = validVideos[Math.floor(Math.random() * validVideos.length)];
+                    const videoElement = document.getElementById('download-thanks-video');
+                    videoElement.src = randomVideoUrl;
+                    videoElement.load();
+                    document.getElementById('download-thanks-box').classList.remove('hidden');
+                }
+            }
+        });
+
+        document.getElementById('download-modal-btn-close').addEventListener('click', () => {
+            document.getElementById('download-thanks-video').pause();
+            document.getElementById('download-custom-modal').classList.add('hidden');
+        });
 
         function stopGlobalAudioPreview() {
             if(canvasAnimationId) {
@@ -811,6 +916,10 @@
                 activeAudioImg.classList.remove('art-spinning-circle');
                 activeAudioImg = null;
             }
+            if(activeArtContainer) {
+                activeArtContainer.classList.remove('art-container-circular');
+                activeArtContainer = null;
+            }
             if(activeCanvas) {
                 const ctx = activeCanvas.getContext('2d');
                 ctx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
@@ -819,16 +928,17 @@
             currentRotationAngle = 0;
         }
 
+        // MEJORADO: DIBUJO RADIAL 100% SIMÉTRICO
         function startRadialCanvasVisualizer(canvas, analyser) {
             const ctx = canvas.getContext('2d');
             const bufferLength = analyser.frequencyBinCount;
             const dataArray = new Uint8Array(bufferLength);
             
-            canvas.width = 200; 
-            canvas.height = 200;
+            canvas.width = 240; 
+            canvas.height = 240;
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            const radius = 48; 
+            const radius = 58; 
 
             function draw() {
                 if(!activeCanvas || activeCanvas !== canvas) return;
@@ -836,15 +946,18 @@
                 analyser.getByteFrequencyData(dataArray);
                 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                currentRotationAngle += 0.008; 
+                currentRotationAngle += 0.006; 
 
                 const barCount = 120; 
                 for (let i = 0; i < barCount; i++) {
                     const angle = ((i / barCount) * Math.PI * 2) + currentRotationAngle;
-                    const dataIndex = Math.floor((i / barCount) * bufferLength * 0.7);
+                    
+                    // Mapeo simétrico reflejado
+                    const targetIndex = i < barCount / 2 ? i : barCount - i;
+                    const dataIndex = Math.floor((targetIndex / (barCount / 2)) * bufferLength * 0.6);
                     const rawValue = dataArray[dataIndex] || 0;
                     
-                    const barHeight = (rawValue / 255) * 42; 
+                    const barHeight = (rawValue / 255) * 45; 
                     
                     const startX = centerX + Math.cos(angle) * radius;
                     const startY = centerY + Math.sin(angle) * radius;
@@ -864,7 +977,8 @@
             draw();
         }
 
-        function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement) {
+        // AGREGADO: CÍRCULO DE CARGA (BUFFER PRELOAD) ANTES DE REPRODUCIR LA CANCIÓN
+        function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement, containerElement) {
             if(activeAudioElement && activeAudioElement.src === audioUrl) {
                 stopGlobalAudioPreview();
                 return;
@@ -872,20 +986,38 @@
             
             stopGlobalAudioPreview();
 
+            // Poner círculo de carga en el botón
+            btnElement.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-[10px]"></i>`;
+
             if(!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 audioAnalyser = audioCtx.createAnalyser();
                 audioAnalyser.fftSize = 256;
             }
 
-            const audio = new Audio(audioUrl);
+            const audio = new Audio();
             audio.crossOrigin = "anonymous"; 
+            audio.src = audioUrl;
+            audio.preload = "auto"; // Forzar la descarga completa preliminar
+
+            audio.addEventListener('canplaythrough', () => {
+                if (activeAudioElement !== audio) return;
+                
+                btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
+                imgElement.classList.add('art-spinning-circle');
+                containerElement.classList.add('art-container-circular');
+
+                if(audioCtx.state === 'suspended') audioCtx.resume();
+
+                audio.play().then(() => {
+                    startRadialCanvasVisualizer(canvasElement, audioAnalyser);
+                }).catch(err => console.error("Audio playback error:", err));
+            });
+
             activeAudioElement = audio;
             activeAudioButton = btnElement;
             activeAudioImg = imgElement;
-
-            btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
-            imgElement.classList.add('art-spinning-circle');
+            activeArtContainer = containerElement;
 
             try {
                 if(!audioSource || audioSource.mediaElement !== audio) {
@@ -895,12 +1027,7 @@
                 }
             } catch(e) {}
 
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-
-            audio.play().then(() => {
-                startRadialCanvasVisualizer(canvasElement, audioAnalyser);
-            }).catch(err => console.error("Audio playback error:", err));
-
+            audio.load();
             audio.onended = () => { stopGlobalAudioPreview(); };
         }
 
@@ -918,7 +1045,7 @@
             if (label) label.innerText = isCreatorMode ? translations[currentLanguage].roleCreator : translations[currentLanguage].roleVisitor;
             if (icon) icon.className = isCreatorMode ? "fa-solid fa-lock-open text-emerald-400" : "fa-solid fa-lock text-zinc-600";
             
-            ['level-form-container', 'cosmetic-form-container', 'footer-links-management-box', 'visual-assets-panel-box'].forEach(id => {
+            ['level-form-container', 'cosmetic-form-container', 'footer-links-management-box', 'visual-assets-panel-box', 'thanks-videos-panel-box'].forEach(id => {
                 document.getElementById(id)?.classList.toggle('hidden', !isCreatorMode);
             });
             document.querySelectorAll('.creator-action-header').forEach(el => el.classList.toggle('hidden', !isCreatorMode));
@@ -997,6 +1124,7 @@
             return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
         }
 
+        // OPTIMIZADO: TEXTOS Y IMÁGENES MÁS GRANDES EN MÓVILES (md:clases)
         function renderLevelsTable() {
             const tbody = document.getElementById('levels-tbody');
             if(!tbody) return; tbody.innerHTML = '';
@@ -1049,19 +1177,22 @@
                 tr.innerHTML = `
                     <td class="p-4 text-center font-mono font-bold text-zinc-500">${i+1}</td>
                     <td class="p-4 text-center">
-                        <div class="relative w-[130px] h-[130px] mx-auto flex items-center justify-center shrink-0 overflow-visible">
+                        <div class="relative w-[150px] h-[150px] mx-auto flex items-center justify-center shrink-0 overflow-visible">
                             <canvas class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
-                            <div class="w-16 h-16 sm:w-20 sm:h-20 relative z-10 overflow-hidden rounded-xl border border-fuchsia-950/40 shadow-lg shrink-0">
+                            <div class="target-art-outer-container w-24 h-24 sm:w-20 sm:h-20 relative z-10 overflow-hidden rounded-xl border border-fuchsia-500/30 shadow-lg shrink-0 transition-all duration-300">
                                 <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover rounded-xl bg-zinc-900" onerror="this.src='free_song_Image.png'">
                                 ${hasAudio ? `
-                                    <button class="btn-play-audio-preview absolute bottom-0 right-0 w-6 h-6 bg-black/80 border border-fuchsia-500/60 rounded-full text-fuchsia-400 flex items-center justify-center shadow-lg transition hover:scale-110 z-20">
+                                    <button class="btn-play-audio-preview absolute bottom-0 right-0 w-7 h-7 bg-black/80 border border-fuchsia-500/60 rounded-full text-fuchsia-400 flex items-center justify-center shadow-lg transition hover:scale-110 z-20">
                                         <i class="fa-solid fa-play text-[10px]"></i>
                                     </button>
                                 ` : ''}
                             </div>
                         </div>
                     </td>
-                    <td class="p-4 min-w-[180px] sm:min-w-[280px] flex-1"><div class="font-bold text-white text-xs sm:text-sm tracking-wide mb-0.5 whitespace-normal break-words">${lvl.song}</div><div class="text-[10px] sm:text-xs text-zinc-500 font-normal whitespace-normal break-words">${lvl.artist}</div></td>
+                    <td class="p-4 min-w-[200px] sm:min-w-[280px] flex-1">
+                        <div class="font-black text-white text-base sm:text-sm tracking-wide mb-1 whitespace-normal break-words">${lvl.song}</div>
+                        <div class="text-xs sm:text-xs text-zinc-400 font-medium whitespace-normal break-words">${lvl.artist}</div>
+                    </td>
                     <td class="p-1 sm:p-4 w-36"><div class="flex flex-col gap-1 max-w-[140px]">${renderGenresBadgesHtml(lvl.genre)}</div></td>
                     <td class="p-4 text-center">
                         <div class="inline-flex items-center justify-center gap-1.5 px-2 py-1 rounded-lg border w-24 sm:w-28 ${bStyle} mx-auto font-black tracking-wide uppercase text-[10px] sm:text-xs">
@@ -1083,7 +1214,8 @@
                     const btn = tr.querySelector('.btn-play-audio-preview');
                     const img = tr.querySelector('.target-lvl-art-img');
                     const canvas = tr.querySelector('canvas');
-                    btn.addEventListener('click', () => toggleAudioPreviewEngine(lvl.audioDirectUrl, btn, img, canvas));
+                    const containerBox = tr.querySelector('.target-art-outer-container');
+                    btn.addEventListener('click', () => toggleAudioPreviewEngine(lvl.audioDirectUrl, btn, img, canvas, containerBox));
                 }
 
                 if(lvl.chartDirectUrl) {
@@ -1185,7 +1317,6 @@
                     tr.querySelector('.btn-direct-skin-download').addEventListener('click', () => triggerDownloadAlert(cos.skinDirectUrl));
                 }
 
-                // EDICIÓN EN LA QUE SE INICIALIZA EL ADMINISTRADOR DINÁMICO DE MARCAS
                 tr.querySelector('.btn-edit-cos')?.addEventListener('click', () => {
                     document.getElementById('editingCosId').value = cos.id;
                     document.getElementById('cosName').value = cos.name;
@@ -1196,7 +1327,6 @@
                     document.getElementById('cosDl2').value = cos.dl2 || '';
                     document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnSaveChanges;
                     
-                    // Cargar el gestor de marcas ordenable/eliminable
                     editingCosBrandUrlsList = cos.insp ? cos.insp.split(/[\s,]+/).filter(url => url.trim() !== "") : [];
                     renderBrandManagementFormInterface();
                 });
@@ -1209,7 +1339,7 @@
             document.getElementById('counter-tapwave').innerText = cT;
         }
 
-        // NUEVA FUNCIÓN: RENDERIZA LA INTERFAZ DENTRO DEL FORMULARIO PARA REORDENAR Y ELIMINAR IMÁGENES
+        // CONTROL INTEGRADO DE EDICIÓN / REORDENAMIENTO DE MARCAS (CONSTRUIDO DINÁMICAMENTE)
         function renderBrandManagementFormInterface() {
             const container = document.getElementById('cosBrandManagementList');
             if(!container) return;
@@ -1238,7 +1368,6 @@
                     </div>
                 `;
                 
-                // Lógica de los controles individuales
                 item.querySelector('.btn-move-brand-up').addEventListener('click', () => {
                     if(index > 0) {
                         const temp = editingCosBrandUrlsList[index];
@@ -1298,6 +1427,23 @@
             });
         }
 
+        // AGREGADO: PERMITIR SUBIR MÚLTIPLES IMÁGENES AL CREAR NUEVAS SKINS
+        document.getElementById('cosBrandFile').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if(file && githubToken && githubUser) {
+                showLoadingOverlay();
+                try {
+                    const uploadedUrl = await uploadFileToGitHubContent(file, 'assets/brands', file.name);
+                    if(uploadedUrl) {
+                        editingCosBrandUrlsList.push(uploadedUrl);
+                        renderBrandManagementFormInterface();
+                    }
+                } catch(err) { console.error(err); }
+                hideLoadingOverlay();
+                e.target.value = ""; // reset input file
+            }
+        });
+
         document.getElementById('level-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             showLoadingOverlay();
@@ -1349,7 +1495,6 @@
             showLoadingOverlay();
 
             let id = document.getElementById('editingCosId').value || Date.now().toString();
-            
             let finalIconUrl = cosmetics.find(c => c.id === id)?.icon || "BoxSprite_MerchSkin2.png";
             let finalSkinDirectUrl = cosmetics.find(c => c.id === id)?.skinDirectUrl || "";
 
@@ -1358,19 +1503,11 @@
                 finalIconUrl = await uploadFileToGitHubContent(iconFileInput.files[0], 'assets/skins', iconFileInput.files[0].name);
             }
 
-            const brandFileInput = document.getElementById('cosBrandFile');
-            if(brandFileInput.files && brandFileInput.files[0]) {
-                const uploadedUrl = await uploadFileToGitHubContent(brandFileInput.files[0], 'assets/brands', brandFileInput.files[0].name);
-                // Sumar al gestor dinámico de reordenamiento
-                editingCosBrandUrlsList.push(uploadedUrl);
-            }
-
             const skinZipFileInput = document.getElementById('cosSkinZipFile');
             if(skinZipFileInput.files && skinZipFileInput.files[0]) {
                 finalSkinDirectUrl = await uploadFileToGitHubContent(skinZipFileInput.files[0], 'skins', skinZipFileInput.files[0].name);
             }
 
-            // Unificar las marcas procesadas y ordenadas mediante una cadena separada por comas
             let finalInspString = editingCosBrandUrlsList.join(', ');
 
             const data = {
@@ -1390,6 +1527,16 @@
                 }).finally(() => hideLoadingOverlay());
             } else {
                 hideLoadingOverlay();
+            }
+        });
+
+        document.getElementById('btn-save-thanks-videos').addEventListener('click', () => {
+            const v1 = document.getElementById('thanks-vid1').value.trim();
+            const v2 = document.getElementById('thanks-vid2').value.trim();
+            const v3 = document.getElementById('thanks-vid3').value.trim();
+            if(db) {
+                showLoadingOverlay();
+                set(ref(db, 'thanks_videos'), { 0: v1, 1: v2, 2: v3 }).then(() => alert("¡Videos de agradecimiento guardados!")).finally(() => hideLoadingOverlay());
             }
         });
 
