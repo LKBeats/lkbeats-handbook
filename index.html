@@ -71,42 +71,60 @@
 </head>
 <body class="bg-[#05020a] text-zinc-100 min-h-screen font-sans flex flex-col relative overflow-x-hidden">
 
+    <!-- OVERLAY DE CARGA / LOADING SPINNER CON BOOGIE -->
     <div id="global-loading-overlay" class="hidden fixed inset-0 bg-black/85 z-[100] flex flex-col items-center justify-center gap-4">
         <img src="1455064703448645786.gif" alt="Boogie Loading..." class="w-[150px] h-auto mb-2">
         <p id="loading-overlay-text" class="text-base font-bold text-white text-center px-4 font-sans">Boogie está trabajando en ello, espera un momento</p>
     </div>
 
+    <!-- MODAL 1: ADVERTENCIA DE DESCARGA (AGRANDADO A max-w-3xl) -->
     <div id="download-custom-modal" class="hidden fixed inset-0 bg-black/90 z-[110] flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-[#11091c] border border-fuchsia-500/30 rounded-2xl max-w-md w-full p-6 shadow-2xl relative text-center flex flex-col items-center">
-            <div class="w-16 h-16 mb-4">
-                <img src="Beatstar1.png" alt="Beatstar Required" class="w-full h-full object-contain">
-            </div>
-            <p id="download-modal-msg" class="text-sm font-medium text-zinc-200 mb-6 leading-relaxed">
+        <div class="bg-[#11091c] border border-fuchsia-500/30 rounded-2xl max-w-3xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center">
+            
+            <!-- 1. Aviso de Texto -->
+            <p id="download-modal-msg" class="text-base sm:text-lg font-bold text-zinc-200 mb-6 leading-relaxed">
                 Es necesario tener instalado la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la pagina oficial de Beatclone
             </p>
+
+            <!-- 2. Imagen "AD" -->
+            <div class="w-full max-h-80 overflow-hidden rounded-xl mb-6 flex justify-center bg-zinc-950/50 p-2 border border-zinc-800/40">
+                <img src="AD.png" alt="AD" class="max-h-72 object-contain rounded-lg" onerror="this.src='Beatstar1.png'">
+            </div>
             
-            <div class="flex flex-col sm:flex-row gap-3 w-full mb-6">
-                <a id="download-modal-btn-beatclone" href="#" target="_blank" class="flex-1 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-300 hover:text-white transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-globe"></i>Beatclone
+            <!-- 3. Botones de Acción (Beatclone incluye el logo 'B' Beatstar1.png) -->
+            <div class="flex flex-col sm:flex-row gap-4 w-full">
+                <a id="download-modal-btn-beatclone" href="#" target="_blank" class="flex-1 py-3.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-300 hover:text-white hover:bg-zinc-900 transition flex items-center justify-center gap-2.5">
+                    <img src="Beatstar1.png" alt="B" class="w-5 h-5 object-contain">Beatclone
                 </a>
-                <button id="download-modal-btn-confirm" class="flex-1 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-black rounded-xl text-xs font-black uppercase shadow hover:opacity-90 transition flex items-center justify-center gap-2">
+                <button id="download-modal-btn-confirm" class="flex-1 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-black rounded-xl text-xs font-black uppercase shadow hover:opacity-90 transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-circle-down"></i><span data-i18n="downloadDirectBtn">Descargar</span>
                 </button>
             </div>
 
-            <div id="download-thanks-box" class="w-full border-t border-fuchsia-950/60 pt-4 hidden flex-col items-center">
-                <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-fuchsia-400 font-display font-black text-sm uppercase tracking-wider mb-3" data-i18n="thanksTitle">Gracias por jugar a Beatclone</h4>
-                <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-fuchsia-950">
-                    <video id="download-thanks-video" class="w-full h-full object-cover" controls autoplay></video>
-                </div>
-            </div>
-
-            <button id="download-modal-btn-close" class="absolute top-3 right-3 text-zinc-500 hover:text-white text-sm p-1">
+            <button id="download-modal-btn-close" class="absolute top-4 right-4 text-zinc-500 hover:text-white text-lg p-1">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
     </div>
 
+    <!-- MODAL 2: POP-UP GRANDE DE AGRADECIMIENTO (max-w-4xl, VIDEO EN BUCLE SIN CONTROLES) -->
+    <div id="thanks-custom-modal" class="hidden fixed inset-0 bg-black/95 z-[120] flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-[#11091c] border border-orange-500/30 rounded-2xl max-w-4xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center">
+            
+            <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-fuchsia-400 font-display font-black text-xl sm:text-2xl uppercase tracking-wider mb-6" data-i18n="thanksTitle">Gracias por jugar a Beatclone</h4>
+            
+            <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-fuchsia-950/60 relative">
+                <!-- Video auto-reproducible en bucle e inmune a interacciones del reproductor original -->
+                <video id="download-thanks-video" class="w-full h-full object-cover pointer-events-none" autoplay loop playsinline disablePictureInPicture></video>
+            </div>
+
+            <button id="thanks-modal-btn-close" class="absolute top-4 right-4 text-zinc-500 hover:text-white text-xl p-2">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- TOP HEADER / NAV -->
     <header class="border-b border-fuchsia-950/40 bg-[#11091c]/80 backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
             <div class="max-w-[33%] w-1/3 md:max-w-none md:w-auto shrink-0 cursor-pointer" id="nav-logo">
@@ -141,6 +159,7 @@
 
     <main class="flex-grow flex flex-col relative">
         
+        <!-- ================= VIEW 1: HOME ================= -->
         <section id="view-home" class="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col justify-center flex-grow w-full relative z-10">
             <div class="text-center mb-12 flex flex-col items-center">
                 <span class="px-4 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-xs font-black tracking-widest uppercase mb-6 inline-block">
@@ -193,11 +212,13 @@
                 </div>
             </div>
 
+            <!-- BLOQUE DE DISCLAIMER REUBICADO DEBAJO DE LAS TARJETAS -->
             <div class="bg-red-500/5 border border-red-500/20 rounded-2xl p-6 mb-10 text-center max-w-4xl mx-auto w-full">
                 <h2 class="text-red-500 font-display font-black text-3xl tracking-widest uppercase mb-4" data-i18n="disclaimerTitle">DISCLAIMER</h2>
                 <p class="text-zinc-300 text-sm leading-relaxed font-medium" data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, canciones, logos, e imágenes pertenecen a sus respectivos propietarios y desarrolladores.</p>
             </div>
 
+            <!-- APARTADO DE VIDEOS DE AGRADECIMIENTO CMS (GESTIÓN) -->
             <div id="thanks-videos-panel-box" class="hidden bg-[#11091c] border border-orange-500/40 rounded-2xl p-6 shadow-2xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-fuchsia-500"></div>
                 <h2 class="font-display font-black text-base text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60">Subir Videos de Agradecimiento</h2>
@@ -220,15 +241,18 @@
                 </button>
             </div>
 
+            <!-- PANEL EXTRA DE ASSETS VISUALES DINÁMICOS -->
             <div id="visual-assets-panel-box" class="hidden bg-[#11091c] border border-fuchsia-500/40 rounded-2xl p-6 shadow-2xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-fuchsia-500 to-orange-500"></div>
                 <h2 class="font-display font-black text-base text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="visualAssetsMenuTitle">Panel de Assets Visuales Dinámicos</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs mb-4">
+                    <!-- Géneros -->
                     <div class="space-y-2 bg-black/30 p-3 rounded-xl border border-fuchsia-950/40">
                         <div class="font-black text-fuchsia-400 uppercase tracking-wider mb-2 border-b border-fuchsia-950/30 pb-1" data-i18n="formGenre">Géneros</div>
                         <div id="asset-upload-genres-list" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
                     </div>
+                    <!-- Dificultades -->
                     <div class="space-y-2 bg-black/30 p-3 rounded-xl border border-fuchsia-950/40">
                         <div class="font-black text-orange-400 uppercase tracking-wider mb-2 border-b border-fuchsia-950/30 pb-1" data-i18n="formDifficulty">Dificultades</div>
                         <div class="space-y-3">
@@ -246,6 +270,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Ediciones -->
                     <div class="space-y-2 bg-black/30 p-3 rounded-xl border border-fuchsia-950/40">
                         <div class="font-black text-yellow-400 uppercase tracking-wider mb-2 border-b border-fuchsia-950/30 pb-1" data-i18n="formEdition">Edición</div>
                         <div class="space-y-3">
@@ -262,6 +287,7 @@
                 </div>
             </div>
 
+            <!-- Footer Links Manager Box -->
             <div id="footer-links-management-box" class="hidden bg-[#11091c] border border-orange-500/30 rounded-2xl p-6 shadow-xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-yellow-500"></div>
                 <h2 class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="footerMenuTitle">Links del Menú Inferior</h2>
@@ -285,6 +311,7 @@
             </div>
         </section>
 
+        <!-- ================= VIEW 2: CHARTS REGISTRY ================= -->
         <section id="view-levels" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
             <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-orange-500/30 rounded-2xl mb-6 w-max">
                 <i class="fa-solid fa-chevron-left text-orange-500"></i> <span data-i18n="backHome">Volver</span>
@@ -386,11 +413,13 @@
             </div>
         </section>
 
+        <!-- ================= VIEW 3: COSMETICS (SKINS SUBMENU) ================= -->
         <section id="view-cosmetics" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
             <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-fuchsia-500/30 rounded-2xl mb-6 w-max">
                 <i class="fa-solid fa-chevron-left text-fuchsia-500"></i> <span data-i18n="backHome">Volver</span>
             </button>
 
+            <!-- SUBMENÚ EXCLUSIVO DE SKINS CON TITULO CENTRAL -->
             <div id="cosmetics-submenu" class="w-full max-w-4xl mx-auto py-6 flex flex-col items-center">
                 <div class="text-center mb-8 flex flex-col items-center w-full">
                     <div class="mb-4 max-w-full w-[450px]">
@@ -463,6 +492,7 @@
                 </div>
 
                 <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-10 flex-grow">
+                    <!-- Segmento Beatstar -->
                     <div id="container-workspace-beatstar" class="hidden flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
                             <div class="h-10 max-w-[50%] sm:max-w-[240px] flex-grow sm:flex-initial">
@@ -492,6 +522,7 @@
                         </div>
                     </div>
 
+                    <!-- Segmento Tapwave -->
                     <div id="container-workspace-tapwave" class="hidden flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
                             <div class="h-12 max-w-[50%] sm:max-w-[340px] flex-grow sm:flex-initial flex items-center">
@@ -525,6 +556,7 @@
         </section>
     </main>
 
+    <!-- FOOTER -->
     <footer class="border-t border-fuchsia-950/20 bg-[#05020a] py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-end gap-4">
             <div class="flex items-center gap-3">
@@ -844,33 +876,51 @@
         function triggerDownloadAlert(url) {
             currentActiveDownloadUrl = url;
             document.getElementById('download-modal-msg').innerText = translations[currentLanguage].beatcloneNotice;
-            document.getElementById('download-thanks-box').classList.add('hidden');
-            
-            const videoElement = document.getElementById('download-thanks-video');
-            videoElement.pause();
-            videoElement.src = "";
+
+            // Limpiar reproductor del Modal de gracias y ocultar Modal de gracias por si estaba abierto
+            const thanksVideo = document.getElementById('download-thanks-video');
+            thanksVideo.pause();
+            thanksVideo.src = "";
+            document.getElementById('thanks-custom-modal').classList.add('hidden');
 
             document.getElementById('download-custom-modal').classList.remove('hidden');
         }
 
+        // CONTROL FLUIDO DE TRASPASO ENTRE POP-UPS (Aviso -> Gracias / Cierre Modal 1)
         document.getElementById('download-modal-btn-confirm').addEventListener('click', () => {
             if(currentActiveDownloadUrl) {
+                // Abrir descarga física
                 window.open(currentActiveDownloadUrl, '_blank');
                 
+                // Cerrar Modal 1
+                document.getElementById('download-custom-modal').classList.add('hidden');
+                
+                // Cargar y lanzar de manera aleatoria el video de agradecimiento en el Modal 2
                 const validVideos = globalThanksVideos.filter(v => v && v.trim() !== "");
                 if(validVideos.length > 0) {
                     const randomVideoUrl = validVideos[Math.floor(Math.random() * validVideos.length)];
                     const videoElement = document.getElementById('download-thanks-video');
                     videoElement.src = randomVideoUrl;
                     videoElement.load();
-                    document.getElementById('download-thanks-box').classList.remove('hidden');
+                    
+                    // Asegurar loop sin controles tradicionales y forzar reproducción limpia
+                    videoElement.play().catch(err => console.log("Video auto-play blocked: ", err));
+                    
+                    // Mostrar modal imponente
+                    document.getElementById('thanks-custom-modal').classList.remove('hidden');
                 }
             }
         });
 
         document.getElementById('download-modal-btn-close').addEventListener('click', () => {
-            document.getElementById('download-thanks-video').pause();
             document.getElementById('download-custom-modal').classList.add('hidden');
+        });
+
+        document.getElementById('thanks-modal-btn-close').addEventListener('click', () => {
+            const videoElement = document.getElementById('download-thanks-video');
+            videoElement.pause();
+            videoElement.src = "";
+            document.getElementById('thanks-custom-modal').classList.add('hidden');
         });
 
         function stopGlobalAudioPreview() {
@@ -1142,19 +1192,24 @@
                 if (lvl.dl3) linksLayout += `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-3.5 h-3.5 force-white-icon">beatcharts</a>`;
                 linksLayout += `</div>`;
 
+                // ESTRUCTURA CORREGIDA: El botón de Play queda fuera del contenedor de la carátula para evitar cortes y bugs visuales.
                 tr.innerHTML = `
                     <td class="p-4 text-center font-mono font-bold text-zinc-500">${i+1}</td>
                     <td class="p-4 text-center">
                         <div class="relative w-[150px] h-[150px] mx-auto flex items-center justify-center shrink-0 overflow-visible">
                             <canvas class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+                            
+                            <!-- Contenedor de la Imagen del Arte (Se volverá redondo y rotará) -->
                             <div class="target-art-outer-container w-24 h-24 sm:w-20 sm:h-20 relative z-10 overflow-hidden rounded-xl border border-fuchsia-500/30 shadow-lg shrink-0 transition-all duration-300">
-                                <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover rounded-xl bg-zinc-900" onerror="this.src='free_song_Image.png'">
-                                ${hasAudio ? `
-                                    <button class="btn-play-audio-preview absolute bottom-0 right-0 w-7 h-7 bg-black/80 border border-fuchsia-500/60 rounded-full text-fuchsia-400 flex items-center justify-center shadow-lg transition hover:scale-110 z-20">
-                                        <i class="fa-solid fa-play text-[10px]"></i>
-                                    </button>
-                                ` : ''}
+                                <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900" onerror="this.src='free_song_Image.png'">
                             </div>
+
+                            <!-- Botón de Reproducción (Queda afuera con un z-index alto e inmune a los cortes) -->
+                            ${hasAudio ? `
+                                <button class="btn-play-audio-preview absolute bottom-3 right-3 w-8 h-8 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
+                                    <i class="fa-solid fa-play text-[10px]"></i>
+                                </button>
+                            ` : ''}
                         </div>
                     </td>
                     <td class="p-4 min-w-[200px] sm:min-w-[280px] flex-1">
@@ -1496,7 +1551,6 @@
             }
         });
 
-        // MODIFICADO: SUBIDA FÍSICA Y DIRECTA DE VIDEOS A GITHUB
         document.getElementById('btn-save-thanks-videos').addEventListener('click', async () => {
             if(!githubToken || !githubUser) {
                 alert("Por favor inicia sesión en modo Creador primero.");
