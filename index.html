@@ -44,13 +44,8 @@
         
         .force-white-icon { filter: brightness(0) invert(1); object-fit: contain; }
         
+        /* El contenedor de arte ahora puede volverse circular pero NO rotará */
         .art-container-circular { border-radius: 50% !important; overflow: hidden; }
-        .art-spinning-circle { border-radius: 50% !important; animation: spinForever 20s linear infinite; }
-        
-        @keyframes spinForever {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
         
         #global-loading-overlay {
             backdrop-filter: blur(8px);
@@ -91,7 +86,7 @@
                 <img src="AD.png" alt="AD" class="max-h-72 object-contain rounded-lg" onerror="this.src='Beatstar1.png'">
             </div>
             
-            <!-- 3. Botones de Acción (Beatclone incluye el logo 'B' Beatstar1.png) -->
+            <!-- 3. Botones de Acción -->
             <div class="flex flex-col sm:flex-row gap-4 w-full">
                 <a id="download-modal-btn-beatclone" href="#" target="_blank" class="flex-1 py-3.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-300 hover:text-white hover:bg-zinc-900 transition flex items-center justify-center gap-2.5">
                     <img src="Beatstar1.png" alt="B" class="w-5 h-5 object-contain">Beatclone
@@ -114,7 +109,6 @@
             <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-fuchsia-400 font-display font-black text-xl sm:text-2xl uppercase tracking-wider mb-6" data-i18n="thanksTitle">Gracias por jugar a Beatclone</h4>
             
             <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-fuchsia-950/60 relative">
-                <!-- Video auto-reproducible en bucle e inmune a interacciones del reproductor original -->
                 <video id="download-thanks-video" class="w-full h-full object-cover pointer-events-none" autoplay loop playsinline disablePictureInPicture></video>
             </div>
 
@@ -877,7 +871,6 @@
             currentActiveDownloadUrl = url;
             document.getElementById('download-modal-msg').innerText = translations[currentLanguage].beatcloneNotice;
 
-            // Limpiar reproductor del Modal de gracias y ocultar Modal de gracias por si estaba abierto
             const thanksVideo = document.getElementById('download-thanks-video');
             thanksVideo.pause();
             thanksVideo.src = "";
@@ -886,16 +879,11 @@
             document.getElementById('download-custom-modal').classList.remove('hidden');
         }
 
-        // CONTROL FLUIDO DE TRASPASO ENTRE POP-UPS (Aviso -> Gracias / Cierre Modal 1)
         document.getElementById('download-modal-btn-confirm').addEventListener('click', () => {
             if(currentActiveDownloadUrl) {
-                // Abrir descarga física
                 window.open(currentActiveDownloadUrl, '_blank');
-                
-                // Cerrar Modal 1
                 document.getElementById('download-custom-modal').classList.add('hidden');
                 
-                // Cargar y lanzar de manera aleatoria el video de agradecimiento en el Modal 2
                 const validVideos = globalThanksVideos.filter(v => v && v.trim() !== "");
                 if(validVideos.length > 0) {
                     const randomVideoUrl = validVideos[Math.floor(Math.random() * validVideos.length)];
@@ -903,10 +891,7 @@
                     videoElement.src = randomVideoUrl;
                     videoElement.load();
                     
-                    // Asegurar loop sin controles tradicionales y forzar reproducción limpia
                     videoElement.play().catch(err => console.log("Video auto-play blocked: ", err));
-                    
-                    // Mostrar modal imponente
                     document.getElementById('thanks-custom-modal').classList.remove('hidden');
                 }
             }
@@ -937,7 +922,7 @@
                 activeAudioButton = null;
             }
             if(activeAudioImg) {
-                activeAudioImg.classList.remove('art-spinning-circle');
+                // MODIFICADO: No remover animación porque la rotación se quitó de las clases CSS
                 activeAudioImg = null;
             }
             if(activeArtContainer) {
@@ -969,6 +954,8 @@
                 analyser.getByteFrequencyData(dataArray);
                 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // El visualizador es el único que rota en este loop de renderizado
                 currentRotationAngle += 0.006; 
 
                 const barCount = 120; 
@@ -1023,7 +1010,8 @@
                 if (activeAudioElement !== audio) return;
                 
                 btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
-                imgElement.classList.add('art-spinning-circle');
+                
+                // MODIFICADO: El contenedor adquiere forma circular para acoplarse al diseño, pero ya no rota.
                 containerElement.classList.add('art-container-circular');
 
                 if(audioCtx.state === 'suspended') audioCtx.resume();
@@ -1192,19 +1180,18 @@
                 if (lvl.dl3) linksLayout += `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-3.5 h-3.5 force-white-icon">beatcharts</a>`;
                 linksLayout += `</div>`;
 
-                // ESTRUCTURA CORREGIDA: El botón de Play queda fuera del contenedor de la carátula para evitar cortes y bugs visuales.
                 tr.innerHTML = `
                     <td class="p-4 text-center font-mono font-bold text-zinc-500">${i+1}</td>
                     <td class="p-4 text-center">
                         <div class="relative w-[150px] h-[150px] mx-auto flex items-center justify-center shrink-0 overflow-visible">
                             <canvas class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
                             
-                            <!-- Contenedor de la Imagen del Arte (Se volverá redondo y rotará) -->
+                            <!-- Contenedor estático del Arte (Adquiere forma redondeada pero no gira) -->
                             <div class="target-art-outer-container w-24 h-24 sm:w-20 sm:h-20 relative z-10 overflow-hidden rounded-xl border border-fuchsia-500/30 shadow-lg shrink-0 transition-all duration-300">
-                                <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900" onerror="this.src='free_song_Image.png'">
+                                <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 animate-none" onerror="this.src='free_song_Image.png'">
                             </div>
 
-                            <!-- Botón de Reproducción (Queda afuera con un z-index alto e inmune a los cortes) -->
+                            <!-- Botón de Reproducción -->
                             ${hasAudio ? `
                                 <button class="btn-play-audio-preview absolute bottom-3 right-3 w-8 h-8 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
                                     <i class="fa-solid fa-play text-[10px]"></i>
