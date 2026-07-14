@@ -64,10 +64,10 @@
 </head>
 <body class="bg-[#05020a] text-zinc-100 min-h-screen font-sans flex flex-col relative overflow-x-hidden">
 
-    <!-- OVERLAY DE CARGA / LOADING SPINNER -->
-    <div id="global-loading-overlay" class="hidden fixed inset-0 bg-black/80 z-[100] flex-col items-center justify-center gap-4">
-        <div class="w-12 h-12 border-4 border-fuchsia-500 border-t-transparent rounded-full animate-spin"></div>
-        <p id="loading-overlay-text" class="text-sm font-black tracking-widest uppercase text-fuchsia-400">Guardando cambios...</p>
+    <!-- OVERLAY DE CARGA / LOADING SPINNER CON BOOGIE -->
+    <div id="global-loading-overlay" class="hidden fixed inset-0 bg-black/85 z-[100] flex flex-col items-center justify-center gap-4">
+        <img src="1455064703448645786.gif" alt="Boogie Loading..." class="w-[150px] h-auto mb-2">
+        <p id="loading-overlay-text" class="text-base font-bold text-white text-center px-4 font-sans">Boogie está trabajando en ello, espera un momento</p>
     </div>
 
     <!-- TOP HEADER / NAV -->
@@ -124,6 +124,12 @@
                     <p data-i18n="storyMission" class="text-orange-400 font-semibold">Mi misión: To create quality content that is accesible to everyone.</p>
                     <p data-i18n="storyParagraph2" class="text-fuchsia-400 font-semibold">My vision: To ensure that as many people as posible enjoy Beatstar.</p>
                 </div>
+            </div>
+
+            <!-- BLOQUE DE DISCLAIMER RESTAURADO -->
+            <div class="bg-red-500/5 border border-red-500/20 rounded-2xl p-6 mb-10 text-center max-w-4xl mx-auto w-full">
+                <h2 class="text-red-500 font-display font-black text-3xl tracking-widest uppercase mb-4" data-i18n="disclaimerTitle">DISCLAIMER</h2>
+                <p class="text-zinc-300 text-sm leading-relaxed font-medium" data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes pertenecen a sus respectivos propietarios y desarrolladores originales.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
@@ -523,7 +529,7 @@
                 storyParagraph2: "Mi visión: Lograr que la mayor cantidad de gente posible disfrute de Beatstar.",
                 cardLevelsTitle: "Charts", cardLevelsDesc: "Encuentra todos los charts que he realizado para Beaclone / BSCM / beatcharts",
                 cardCosmeticsTitle: "Skins", cardCosmeticsDesc: "Encuentra todas las skins que he realizado para Beaclone / TapWave",
-                disclaimerTitle: "Deslinde de Responsabilidad", 
+                disclaimerTitle: "DISCLAIMER", 
                 disclaimerContent: "Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, logos, recursos visuales e imágenes pertenecen a sus respectivos propietarios y desarrolladores originales.",
                 navLevels: "Charts", navCosmetics: "Skins", backHome: "Volver", levelsPageTitle: "Charts", cosmeticsPageTitle: "Skins",
                 addLevelTitle: "Nuevo Chart", addCosmeticTitle: "Nueva Skin", btnRegister: "Registrar", emptyDatabase: "No hay registros.",
@@ -542,7 +548,7 @@
                 formUploadChartFile: "Subir Archivo de Chart (.zip / Opcional)", formUploadIcon: "Subir Icono",
                 formUploadBrand: "Subir Marca / Inspiración", formUploadSkinFile: "Subir Archivo de Skin (.zip / Opcional)",
                 beatcloneNotice: "¡Recordatorio! Asegúrate de tener descargado Beatclone antes de instalar este contenido.",
-                savingChanges: "Guardando cambios...",
+                savingChanges: "Boogie está trabajando en ello, espera un momento",
                 visualAssetsMenuTitle: "Panel de Assets Visuales Dinámicos"
             },
             en: {
@@ -552,7 +558,7 @@
                 storyParagraph2: "My vision: To ensure that as many people as posible enjoy Beatstar.",
                 cardLevelsTitle: "Charts", cardLevelsDesc: "Find all the charts I've made for Beatclone / BSCM / beatcharts",
                 cardCosmeticsTitle: "Skins", cardCosmeticsDesc: "Find all the skins I've made for Beatclone / TapWave",
-                disclaimerTitle: "Disclaimer", 
+                disclaimerTitle: "DISCLAIMER", 
                 disclaimerContent: "This content was created purely for recreational and entertainment purposes for the community. All registered trademarks, logos, visual assets, and images belong to their respective owners and original developers.",
                 navLevels: "Charts", navCosmetics: "Skins", backHome: "Back", levelsPageTitle: "Charts", cosmeticsPageTitle: "Skins",
                 addLevelTitle: "New Chart", addCosmeticTitle: "New Skin", btnRegister: "Register", emptyDatabase: "No records.",
@@ -571,7 +577,7 @@
                 formUploadChartFile: "Upload Chart File (.zip / Optional)", formUploadIcon: "Upload Icon",
                 formUploadBrand: "Upload Brand / Inspiration", formUploadSkinFile: "Upload Skin File (.zip / Optional)",
                 beatcloneNotice: "Reminder! Make sure you have downloaded Beatclone before installing this content.",
-                savingChanges: "Saving changes...",
+                savingChanges: "Boogie is working on it, please wait a moment",
                 visualAssetsMenuTitle: "Dynamic Visual Assets Panel"
             }
         };
@@ -700,16 +706,21 @@
             const app = initializeApp(firebaseConfig);
             db = getDatabase(app);
 
+            // Muestra a Boogie automáticamente mientras descarga los datos iniciales
+            showLoadingOverlay();
+
             onValue(ref(db, 'levels'), (snap) => { 
                 levels = snap.val() ? Object.values(snap.val()) : []; 
                 renderLevelsTable(); 
                 updateDashboardCounts(); 
                 if(document.getElementById('counter-charts-header')) document.getElementById('counter-charts-header').innerText = levels.length;
+                hideLoadingOverlay();
             });
             onValue(ref(db, 'cosmetics'), (snap) => { 
                 cosmetics = snap.val() ? Object.values(snap.val()) : []; 
                 renderCosmeticsTables(); 
                 updateDashboardCounts(); 
+                hideLoadingOverlay();
             });
             onValue(ref(db, 'visual_assets'), (snap) => { 
                 globalVisualAssets = snap.val() || {}; 
@@ -725,12 +736,12 @@
                 } 
             });
             onValue(ref(db, 'last_update_date'), (snap) => { if (snap.val()) document.getElementById('dynamic-update-date').innerText = formatStringToDMY(snap.val()); });
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error(e); hideLoadingOverlay(); }
 
         function showLoadingOverlay() {
             const overlay = document.getElementById('global-loading-overlay');
             const text = document.getElementById('loading-overlay-text');
-            if(text) text.innerText = translations[currentLanguage].savingChanges || "Guardando...";
+            if(text && translations[currentLanguage]) text.innerText = translations[currentLanguage].savingChanges || "Boogie está trabajando en ello, espera un momento";
             if(overlay) overlay.classList.remove('hidden');
         }
 
@@ -953,7 +964,6 @@
             });
         }
 
-        // ARREGLADO: MASCARAS DE GÉNEROS CON SANITIZACIÓN PARA DANCE/EDM
         function renderGenresBadgesHtml(raw) {
             if(!raw) return '';
             return raw.split(' / ').map(g => {
@@ -961,7 +971,6 @@
                 const matched = genreList.find(item => item.label.toLowerCase() === trimmed.toLowerCase());
                 const color = matched ? matched.color : '#f97316';
                 
-                // Sanitizar la diagonal del nombre clave para Firebase
                 const safeKey = trimmed.replace('/', '');
                 const dynamicAssetSrc = globalVisualAssets[`genre_${safeKey}`];
                 
@@ -996,7 +1005,6 @@
                 let hexColor = "#f97316"; 
                 let bStyle = "bg-orange-500/10 border-orange-500/30 text-orange-400"; 
                 
-                // CORREGIDO: Traducción dinámica del término "Hard" -> "Difícil" según idioma
                 if (lvl.diff === "Hard") {
                     diffText = translations[currentLanguage].diffHard;
                 } else if (lvl.diff === "Normal") { 
@@ -1096,12 +1104,11 @@
                         cb.checked = currentGenresArray.includes(cb.value.toLowerCase());
                     });
                 });
-                tr.querySelector('.btn-del-lvl')?.addEventListener('click', () => { if(db && confirm("¿Eliminar?")) remove(ref(db, 'levels/' + lvl.id)); });
+                tr.querySelector('.btn-del-lvl')?.addEventListener('click', () => { if(db && confirm("¿Eliminar?")) { showLoadingOverlay(); remove(ref(db, 'levels/' + lvl.id)).finally(() => hideLoadingOverlay()); } });
                 tbody.appendChild(tr);
             });
         }
 
-        // CORREGIDO CRÍTICAMENTE: SE RESTAURÓ LA VISIBILIDAD DE LAS SKINS
         function renderCosmeticsTables() {
             const tbodyB = document.getElementById('tbody-beatstar');
             const tbodyT = document.getElementById('tbody-tapwave');
@@ -1184,7 +1191,7 @@
                         if(imgPrev) { imgPrev.src = cos.insp; imgPrev.classList.remove('hidden'); }
                     }
                 });
-                tr.querySelector('.btn-del-cos')?.addEventListener('click', () => { if(db && confirm("¿Eliminar?")) remove(ref(db, 'cosmetics/' + cos.id)); });
+                tr.querySelector('.btn-del-cos')?.addEventListener('click', () => { if(db && confirm("¿Eliminar?")) { showLoadingOverlay(); remove(ref(db, 'cosmetics/' + cos.id)).finally(() => hideLoadingOverlay()); } });
                 
                 if (isT) tbodyT.appendChild(tr); else tbodyB.appendChild(tr);
             });
@@ -1193,7 +1200,6 @@
             document.getElementById('counter-tapwave').innerText = cT;
         }
 
-        // ARREGLADO: SANITIZACIÓN DE LA CLAVE DANCE/EDM PARA PREVENIR ERRORES DE RUTA
         function buildVisualAssetsPanelInterface() {
             const container = document.getElementById('asset-upload-genres-list');
             if(!container) return; container.innerHTML = '';
@@ -1213,12 +1219,13 @@
                     const file = e.target.files[0];
                     const key = e.target.getAttribute('data-asset-key');
                     if(file && key && db) {
+                        showLoadingOverlay();
                         const reader = new FileReader();
                         reader.readAsDataURL(file);
                         reader.onload = () => {
                             set(ref(db, `visual_assets/${key}`), reader.result).then(() => {
                                 alert("¡Asset gráfico guardado y sincronizado!");
-                            });
+                            }).finally(() => hideLoadingOverlay());
                         };
                     }
                 });
@@ -1265,8 +1272,7 @@
                     document.getElementById('editingLvlId').value = ''; 
                     document.getElementById('lvlSubmitBtn').innerText = translations[currentLanguage].btnRegister; 
                     buildGenresSelector();
-                    hideLoadingOverlay();
-                }).catch(() => hideLoadingOverlay());
+                }).finally(() => hideLoadingOverlay());
             } else {
                 hideLoadingOverlay();
             }
@@ -1310,8 +1316,7 @@
                     document.getElementById('editingCosId').value = ''; 
                     document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnRegister; 
                     document.getElementById('cosBrandPreview').classList.add('hidden'); 
-                    hideLoadingOverlay();
-                }).catch(() => hideLoadingOverlay());
+                }).finally(() => hideLoadingOverlay());
             } else {
                 hideLoadingOverlay();
             }
@@ -1323,7 +1328,10 @@
                 bscm: document.getElementById('setupUrlBscm').value.trim(),
                 beatcharts: document.getElementById('setupUrlBeatcharts').value.trim()
             };
-            if(db) set(ref(db, 'footer_links'), data).then(() => alert("¡Enlaces guardados!"));
+            if(db) {
+                showLoadingOverlay();
+                set(ref(db, 'footer_links'), data).then(() => alert("¡Enlaces guardados!")).finally(() => hideLoadingOverlay());
+            }
         });
 
         function syncFooterLinks() {
