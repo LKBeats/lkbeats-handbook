@@ -72,13 +72,13 @@
         <p id="loading-overlay-text" class="text-base font-bold text-white text-center px-4 font-sans">Boogie está trabajando en ello, espera un momento</p>
     </div>
 
-    <!-- MODAL 1: ADVERTENCIA DE DESCARGA (AGRANDADO A max-w-3xl) -->
+    <!-- MODAL 1: ADVERTENCIA DE DESCARGA -->
     <div id="download-custom-modal" class="hidden fixed inset-0 bg-black/90 z-[110] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-[#11091c] border border-fuchsia-500/30 rounded-2xl max-w-3xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center">
             
-            <!-- 1. Aviso de Texto -->
+            <!-- 1. Aviso de Texto Corregido -->
             <p id="download-modal-msg" class="text-base sm:text-lg font-bold text-zinc-200 mb-6 leading-relaxed">
-                Es necesario tener instalado la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la pagina oficial de Beatclone
+                Es necesario tener instalada la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la página oficial de Beatclone
             </p>
 
             <!-- 2. Imagen "AD" -->
@@ -102,7 +102,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: POP-UP GRANDE DE AGRADECIMIENTO (max-w-4xl, VIDEO EN BUCLE SIN CONTROLES) -->
+    <!-- MODAL 2: POP-UP GRANDE DE AGRADECIMIENTO -->
     <div id="thanks-custom-modal" class="hidden fixed inset-0 bg-black/95 z-[120] flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#11091c] border border-orange-500/30 rounded-2xl max-w-4xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center">
             
@@ -361,7 +361,15 @@
                             <input type="date" id="lvlDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
                         <div>
-                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadChartFile">Subir Archivo de Chart (.zip / Opcional)</label>
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="block font-bold text-zinc-400" data-i18n="formUploadChartFile">Subir Archivo de Chart (.zip / Opcional)</label>
+                                <button type="button" id="btn-remove-chart-zip" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                    <i class="fa-solid fa-trash"></i> Eliminar ZIP
+                                </button>
+                            </div>
+                            <div id="current-chart-zip-badge" class="hidden mb-1 px-2 py-1 bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 rounded text-[10px] font-mono truncate">
+                                ZIP adjunto actualmente
+                            </div>
                             <input type="file" id="lvlChartZipFile" accept=".zip" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div class="space-y-2 border-t border-fuchsia-950/40 pt-2">
@@ -472,7 +480,15 @@
                             <input type="file" id="cosBrandFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div>
-                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadSkinFile">Subir Archivo de Skin (.zip / Opcional)</label>
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadSkinFile">Subir Archivo de Skin (.zip / Opcional)</label>
+                                <button type="button" id="btn-remove-skin-zip" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                    <i class="fa-solid fa-trash"></i> Eliminar ZIP
+                                </button>
+                            </div>
+                            <div id="current-skin-zip-badge" class="hidden mb-1 px-2 py-1 bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 rounded text-[10px] font-mono truncate">
+                                ZIP adjunto actualmente
+                            </div>
                             <input type="file" id="cosSkinZipFile" accept=".zip" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div class="space-y-2 border-t border-fuchsia-950/40 pt-2">
@@ -618,7 +634,7 @@
                 formUploadArt: "Subir Arte", formUploadAudio: "Subir Preview de Audio (Opcional)",
                 formUploadChartFile: "Subir Archivo de Chart (.zip / Opcional)", formUploadIcon: "Subir Icono",
                 formUploadBrand: "Subir Marca / Inspiración", formUploadSkinFile: "Subir Archivo de Skin (.zip / Opcional)",
-                beatcloneNotice: "Es necesario tener instalado la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la pagina oficial de Beatclone",
+                beatcloneNotice: "Es necesario tener instalada la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la página oficial de Beatclone",
                 savingChanges: "Boogie está trabajando en ello, espera un momento",
                 visualAssetsMenuTitle: "Panel de Assets Visuales Dinámicos",
                 thanksTitle: "Gracias por jugar a Beatclone"
@@ -682,6 +698,11 @@
         let activeAudioImg = null;
         let activeCanvas = null;
         let activeArtContainer = null;
+
+        let levelZipToRemove = false;
+        let cosmeticZipToRemove = false;
+
+        const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
         function navigateTo(view, pushState = true) {
             ['home', 'levels', 'cosmetics'].forEach(v => document.getElementById(`view-${v}`)?.classList.add('hidden'));
@@ -836,7 +857,7 @@
             const cleanName = customFileName.replace(/[^a-zA-Z0-9.\-_]/g, '_');
             const targetPath = `${targetFolder}/${Date.now()}_${cleanName}`;
             
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(fileObject);
                 reader.onload = async () => {
@@ -857,13 +878,13 @@
                             const resJson = await response.json();
                             resolve(resJson.content.download_url);
                         } else {
-                            reject("");
+                            resolve("");
                         }
                     } catch(err) {
-                        reject("");
+                        resolve("");
                     }
                 };
-                reader.onerror = () => reject("");
+                reader.onerror = () => resolve("");
             });
         }
 
@@ -922,7 +943,6 @@
                 activeAudioButton = null;
             }
             if(activeAudioImg) {
-                // MODIFICADO: No remover animación porque la rotación se quitó de las clases CSS
                 activeAudioImg = null;
             }
             if(activeArtContainer) {
@@ -942,11 +962,13 @@
             const bufferLength = analyser.frequencyBinCount;
             const dataArray = new Uint8Array(bufferLength);
             
-            canvas.width = 240; 
-            canvas.height = 240;
+            canvas.width = 180; 
+            canvas.height = 180;
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            const radius = 58; 
+            
+            // Radio ajustado para PC y optimizado para móvil
+            const radius = isMobileDevice ? 44 : 46; 
 
             function draw() {
                 if(!activeCanvas || activeCanvas !== canvas) return;
@@ -955,10 +977,10 @@
                 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                // El visualizador es el único que rota en este loop de renderizado
-                currentRotationAngle += 0.006; 
+                currentRotationAngle += isMobileDevice ? 0.008 : 0.006; 
 
-                const barCount = 120; 
+                // Menos barras en móvil para reducir trabajo gráfico
+                const barCount = isMobileDevice ? 60 : 100; 
                 for (let i = 0; i < barCount; i++) {
                     const angle = ((i / barCount) * Math.PI * 2) + currentRotationAngle;
                     
@@ -966,7 +988,8 @@
                     const dataIndex = Math.floor((targetIndex / (barCount / 2)) * bufferLength * 0.6);
                     const rawValue = dataArray[dataIndex] || 0;
                     
-                    const barHeight = (rawValue / 255) * 45; 
+                    // Altura del espectro ajustada en PC
+                    const barHeight = (rawValue / 255) * (isMobileDevice ? 30 : 32); 
                     
                     const startX = centerX + Math.cos(angle) * radius;
                     const startY = centerY + Math.sin(angle) * radius;
@@ -974,7 +997,7 @@
                     const endY = centerY + Math.sin(angle) * (radius + barHeight);
                     
                     ctx.strokeStyle = '#d946ef';
-                    ctx.lineWidth = 2.5;
+                    ctx.lineWidth = isMobileDevice ? 2.0 : 2.2;
                     ctx.lineCap = 'round';
                     ctx.beginPath();
                     ctx.moveTo(startX, startY);
@@ -998,7 +1021,7 @@
             if(!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 audioAnalyser = audioCtx.createAnalyser();
-                audioAnalyser.fftSize = 256;
+                audioAnalyser.fftSize = isMobileDevice ? 128 : 256;
             }
 
             const audio = new Audio();
@@ -1010,8 +1033,6 @@
                 if (activeAudioElement !== audio) return;
                 
                 btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
-                
-                // MODIFICADO: El contenedor adquiere forma circular para acoplarse al diseño, pero ya no rota.
                 containerElement.classList.add('art-container-circular');
 
                 if(audioCtx.state === 'suspended') audioCtx.resume();
@@ -1183,17 +1204,17 @@
                 tr.innerHTML = `
                     <td class="p-4 text-center font-mono font-bold text-zinc-500">${i+1}</td>
                     <td class="p-4 text-center">
-                        <div class="relative w-[150px] h-[150px] mx-auto flex items-center justify-center shrink-0 overflow-visible">
+                        <div class="relative w-[130px] h-[130px] mx-auto flex items-center justify-center shrink-0 overflow-visible">
                             <canvas class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
                             
-                            <!-- Contenedor estático del Arte (Adquiere forma redondeada pero no gira) -->
-                            <div class="target-art-outer-container w-24 h-24 sm:w-20 sm:h-20 relative z-10 overflow-hidden rounded-xl border border-fuchsia-500/30 shadow-lg shrink-0 transition-all duration-300">
+                            <!-- Contenedor estático del Arte -->
+                            <div class="target-art-outer-container w-20 h-20 sm:w-16 sm:h-16 relative z-10 overflow-hidden rounded-xl border border-fuchsia-500/30 shadow-lg shrink-0 transition-all duration-300">
                                 <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 animate-none" onerror="this.src='free_song_Image.png'">
                             </div>
 
                             <!-- Botón de Reproducción -->
                             ${hasAudio ? `
-                                <button class="btn-play-audio-preview absolute bottom-3 right-3 w-8 h-8 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
+                                <button class="btn-play-audio-preview absolute bottom-2 right-2 w-7 h-7 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
                                     <i class="fa-solid fa-play text-[10px]"></i>
                                 </button>
                             ` : ''}
@@ -1244,6 +1265,17 @@
                     document.getElementById('lvlDl3').value = lvl.dl3 || '';
                     document.getElementById('lvlSubmitBtn').innerText = translations[currentLanguage].btnSaveChanges;
                     
+                    const badge = document.getElementById('current-chart-zip-badge');
+                    const removeBtn = document.getElementById('btn-remove-chart-zip');
+                    if(lvl.chartDirectUrl) {
+                        badge.classList.remove('hidden');
+                        removeBtn.classList.remove('hidden');
+                    } else {
+                        badge.classList.add('hidden');
+                        removeBtn.classList.add('hidden');
+                    }
+                    levelZipToRemove = false;
+
                     const currentGenresArray = lvl.genre ? lvl.genre.split(' / ').map(g => g.trim().toLowerCase()) : [];
                     document.querySelectorAll('.genre-checkbox').forEach(cb => {
                         cb.checked = currentGenresArray.includes(cb.value.toLowerCase());
@@ -1337,6 +1369,17 @@
                     document.getElementById('cosDl2').value = cos.dl2 || '';
                     document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnSaveChanges;
                     
+                    const badge = document.getElementById('current-skin-zip-badge');
+                    const removeBtn = document.getElementById('btn-remove-skin-zip');
+                    if(cos.skinDirectUrl) {
+                        badge.classList.remove('hidden');
+                        removeBtn.classList.remove('hidden');
+                    } else {
+                        badge.classList.add('hidden');
+                        removeBtn.classList.add('hidden');
+                    }
+                    cosmeticZipToRemove = false;
+
                     editingCosBrandUrlsList = cos.insp ? cos.insp.split(/[\s,]+/).filter(url => url.trim() !== "") : [];
                     renderBrandManagementFormInterface();
                 });
@@ -1436,9 +1479,29 @@
             });
         }
 
+        // CONTROL DE BOTONES PARA ELIMINAR ARCHIVOS ZIP EN EDITAR/REGISTRAR
+        document.getElementById('btn-remove-chart-zip').addEventListener('click', () => {
+            levelZipToRemove = true;
+            document.getElementById('current-chart-zip-badge').classList.add('hidden');
+            document.getElementById('btn-remove-chart-zip').classList.add('hidden');
+            document.getElementById('lvlChartZipFile').value = "";
+        });
+
+        document.getElementById('btn-remove-skin-zip').addEventListener('click', () => {
+            cosmeticZipToRemove = true;
+            document.getElementById('current-skin-zip-badge').classList.add('hidden');
+            document.getElementById('btn-remove-skin-zip').classList.add('hidden');
+            document.getElementById('cosSkinZipFile').value = "";
+        });
+
         document.getElementById('cosBrandFile').addEventListener('change', async (e) => {
             const file = e.target.files[0];
-            if(file && githubToken && githubUser) {
+            if(file) {
+                if(!githubToken || !githubUser) {
+                    alert("Para subir imágenes debes haber iniciado sesión como Creador con tu Token de GitHub.");
+                    e.target.value = "";
+                    return;
+                }
                 showLoadingOverlay();
                 try {
                     const uploadedUrl = await uploadFileToGitHubContent(file, 'assets/brands', file.name);
@@ -1456,44 +1519,52 @@
             e.preventDefault();
             showLoadingOverlay();
 
-            const checked = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
-            let id = document.getElementById('editingLvlId').value || Date.now().toString();
-            
-            let finalArtUrl = levels.find(l => l.id === id)?.art || "free_song_Image.png";
-            let finalAudioUrl = levels.find(l => l.id === id)?.audioDirectUrl || "";
-            let finalChartDirectUrl = levels.find(l => l.id === id)?.chartDirectUrl || "";
+            try {
+                const checked = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
+                let id = document.getElementById('editingLvlId').value || Date.now().toString();
+                
+                let existingLvl = levels.find(l => l.id === id);
+                let finalArtUrl = existingLvl?.art || "free_song_Image.png";
+                let finalAudioUrl = existingLvl?.audioDirectUrl || "";
+                let finalChartDirectUrl = levelZipToRemove ? "" : (existingLvl?.chartDirectUrl || "");
 
-            const artFileInput = document.getElementById('lvlArtFile');
-            if(artFileInput.files && artFileInput.files[0]) {
-                finalArtUrl = await uploadFileToGitHubContent(artFileInput.files[0], 'assets/charts', artFileInput.files[0].name);
-            }
-            
-            const audioFileInput = document.getElementById('lvlAudioFile');
-            if(audioFileInput.files && audioFileInput.files[0]) {
-                finalAudioUrl = await uploadFileToGitHubContent(audioFileInput.files[0], 'assets/audio', audioFileInput.files[0].name);
-            }
+                const artFileInput = document.getElementById('lvlArtFile');
+                if(artFileInput.files && artFileInput.files[0] && githubToken && githubUser) {
+                    finalArtUrl = await uploadFileToGitHubContent(artFileInput.files[0], 'assets/charts', artFileInput.files[0].name);
+                }
+                
+                const audioFileInput = document.getElementById('lvlAudioFile');
+                if(audioFileInput.files && audioFileInput.files[0] && githubToken && githubUser) {
+                    finalAudioUrl = await uploadFileToGitHubContent(audioFileInput.files[0], 'assets/audio', audioFileInput.files[0].name);
+                }
 
-            const chartFileInput = document.getElementById('lvlChartZipFile');
-            if(chartFileInput.files && chartFileInput.files[0]) {
-                finalChartDirectUrl = await uploadFileToGitHubContent(chartFileInput.files[0], 'charts', chartFileInput.files[0].name);
-            }
+                const chartFileInput = document.getElementById('lvlChartZipFile');
+                if(chartFileInput.files && chartFileInput.files[0] && githubToken && githubUser) {
+                    finalChartDirectUrl = await uploadFileToGitHubContent(chartFileInput.files[0], 'charts', chartFileInput.files[0].name);
+                }
 
-            const data = {
-                id: id, song: document.getElementById('lvlSong').value.trim(), artist: document.getElementById('lvlArtist').value.trim(),
-                art: finalArtUrl, audioDirectUrl: finalAudioUrl, chartDirectUrl: finalChartDirectUrl,
-                genre: checked.join(' / ') || 'General', diff: document.getElementById('lvlDiff').value,
-                edition: document.getElementById('lvlEdition').value, date: document.getElementById('lvlDate').value,
-                dl1: document.getElementById('lvlDl1').value.trim(), dl2: document.getElementById('lvlDl2').value.trim(), dl3: document.getElementById('lvlDl3').value.trim()
-            };
-            if(db) {
-                set(ref(db, 'levels/' + id), data).then(() => { 
-                    set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
+                const data = {
+                    id: id, song: document.getElementById('lvlSong').value.trim(), artist: document.getElementById('lvlArtist').value.trim(),
+                    art: finalArtUrl, audioDirectUrl: finalAudioUrl, chartDirectUrl: finalChartDirectUrl,
+                    genre: checked.join(' / ') || 'General', diff: document.getElementById('lvlDiff').value,
+                    edition: document.getElementById('lvlEdition').value, date: document.getElementById('lvlDate').value,
+                    dl1: document.getElementById('lvlDl1').value.trim(), dl2: document.getElementById('lvlDl2').value.trim(), dl3: document.getElementById('lvlDl3').value.trim()
+                };
+
+                if(db) {
+                    await set(ref(db, 'levels/' + id), data);
+                    await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
                     document.getElementById('level-form').reset(); 
                     document.getElementById('editingLvlId').value = ''; 
                     document.getElementById('lvlSubmitBtn').innerText = translations[currentLanguage].btnRegister; 
+                    document.getElementById('current-chart-zip-badge').classList.add('hidden');
+                    document.getElementById('btn-remove-chart-zip').classList.add('hidden');
+                    levelZipToRemove = false;
                     buildGenresSelector();
-                }).finally(() => hideLoadingOverlay());
-            } else {
+                }
+            } catch(err) {
+                console.error("Error al guardar chart: ", err);
+            } finally {
                 hideLoadingOverlay();
             }
         });
@@ -1502,38 +1573,46 @@
             e.preventDefault();
             showLoadingOverlay();
 
-            let id = document.getElementById('editingCosId').value || Date.now().toString();
-            let finalIconUrl = cosmetics.find(c => c.id === id)?.icon || "BoxSprite_MerchSkin2.png";
-            let finalSkinDirectUrl = cosmetics.find(c => c.id === id)?.skinDirectUrl || "";
+            try {
+                let id = document.getElementById('editingCosId').value || Date.now().toString();
+                let existingCos = cosmetics.find(c => c.id === id);
+                let finalIconUrl = existingCos?.icon || "BoxSprite_MerchSkin2.png";
+                let finalSkinDirectUrl = cosmeticZipToRemove ? "" : (existingCos?.skinDirectUrl || "");
 
-            const iconFileInput = document.getElementById('cosIconFile');
-            if(iconFileInput.files && iconFileInput.files[0]) {
-                finalIconUrl = await uploadFileToGitHubContent(iconFileInput.files[0], 'assets/skins', iconFileInput.files[0].name);
-            }
+                const iconFileInput = document.getElementById('cosIconFile');
+                if(iconFileInput.files && iconFileInput.files[0] && githubToken && githubUser) {
+                    finalIconUrl = await uploadFileToGitHubContent(iconFileInput.files[0], 'assets/skins', iconFileInput.files[0].name);
+                }
 
-            const skinZipFileInput = document.getElementById('cosSkinZipFile');
-            if(skinZipFileInput.files && skinZipFileInput.files[0]) {
-                finalSkinDirectUrl = await uploadFileToGitHubContent(skinZipFileInput.files[0], 'skins', skinZipFileInput.files[0].name);
-            }
+                const skinZipFileInput = document.getElementById('cosSkinZipFile');
+                if(skinZipFileInput.files && skinZipFileInput.files[0] && githubToken && githubUser) {
+                    finalSkinDirectUrl = await uploadFileToGitHubContent(skinZipFileInput.files[0], 'skins', skinZipFileInput.files[0].name);
+                }
 
-            let finalInspString = editingCosBrandUrlsList.join(', ');
+                let finalInspString = editingCosBrandUrlsList.join(', ');
 
-            const data = {
-                id: id, name: document.getElementById('cosName').value.trim(), artist: document.getElementById('cosArtist').value.trim(),
-                icon: finalIconUrl, video: document.getElementById('cosVideo').value.trim(),
-                date: document.getElementById('cosDate').value, insp: finalInspString, skinDirectUrl: finalSkinDirectUrl,
-                platform: currentSelectedSkinSubPlatform, dl1: document.getElementById('cosDl1').value.trim(), dl2: document.getElementById('cosDl2').value.trim()
-            };
-            if(db) {
-                set(ref(db, 'cosmetics/' + id), data).then(() => { 
-                    set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
+                const data = {
+                    id: id, name: document.getElementById('cosName').value.trim(), artist: document.getElementById('cosArtist').value.trim(),
+                    icon: finalIconUrl, video: document.getElementById('cosVideo').value.trim(),
+                    date: document.getElementById('cosDate').value, insp: finalInspString, skinDirectUrl: finalSkinDirectUrl,
+                    platform: currentSelectedSkinSubPlatform, dl1: document.getElementById('cosDl1').value.trim(), dl2: document.getElementById('cosDl2').value.trim()
+                };
+
+                if(db) {
+                    await set(ref(db, 'cosmetics/' + id), data);
+                    await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
                     document.getElementById('cosmetic-form').reset(); 
                     document.getElementById('editingCosId').value = ''; 
                     document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnRegister; 
                     document.getElementById('cosBrandManagementList').classList.add('hidden');
+                    document.getElementById('current-skin-zip-badge').classList.add('hidden');
+                    document.getElementById('btn-remove-skin-zip').classList.add('hidden');
+                    cosmeticZipToRemove = false;
                     editingCosBrandUrlsList = [];
-                }).finally(() => hideLoadingOverlay());
-            } else {
+                }
+            } catch(err) {
+                console.error("Error al guardar skin: ", err);
+            } finally {
                 hideLoadingOverlay();
             }
         });
@@ -1545,13 +1624,13 @@
             }
 
             showLoadingOverlay();
-            let urlsDict = { ...globalThanksVideos };
-
-            const f1 = document.getElementById('thanks-vid1-file').files[0];
-            const f2 = document.getElementById('thanks-vid2-file').files[0];
-            const f3 = document.getElementById('thanks-vid3-file').files[0];
-
             try {
+                let urlsDict = { ...globalThanksVideos };
+
+                const f1 = document.getElementById('thanks-vid1-file').files[0];
+                const f2 = document.getElementById('thanks-vid2-file').files[0];
+                const f3 = document.getElementById('thanks-vid3-file').files[0];
+
                 if(f1) urlsDict[0] = await uploadFileToGitHubContent(f1, 'assets/videos', f1.name);
                 if(f2) urlsDict[1] = await uploadFileToGitHubContent(f2, 'assets/videos', f2.name);
                 if(f3) urlsDict[2] = await uploadFileToGitHubContent(f3, 'assets/videos', f3.name);
@@ -1563,8 +1642,11 @@
                     document.getElementById('thanks-vid2-file').value = "";
                     document.getElementById('thanks-vid3-file').value = "";
                 }
-            } catch(e) { alert("Ocurrió un error al subir los archivos."); }
-            hideLoadingOverlay();
+            } catch(e) { 
+                alert("Ocurrió un error al subir los archivos."); 
+            } finally {
+                hideLoadingOverlay();
+            }
         });
 
         document.getElementById('btn-save-footer-links').addEventListener('click', () => {
