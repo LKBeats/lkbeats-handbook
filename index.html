@@ -41,10 +41,10 @@
         .glow-orange { box-shadow: 0 0 20px rgba(249, 115, 22, 0.2); }
         .glow-fuchsia { box-shadow: 0 0 20px rgba(217, 70, 239, 0.2); }
         .glow-gold { box-shadow: 0 0 20px rgba(250, 204, 21, 0.4); border-color: #facc15 !important; }
+        .glow-green { box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); border-color: #10b981 !important; color: #10b981 !important; }
         
         .force-white-icon { filter: brightness(0) invert(1); object-fit: contain; }
         
-        /* El contenedor de arte ahora puede volverse circular pero NO rotará */
         .art-container-circular { border-radius: 50% !important; overflow: hidden; }
         
         #global-loading-overlay {
@@ -66,27 +66,63 @@
 </head>
 <body class="bg-[#05020a] text-zinc-100 min-h-screen font-sans flex flex-col relative overflow-x-hidden">
 
-    <!-- OVERLAY DE CARGA / LOADING SPINNER CON BOOGIE -->
+    <!-- OVERLAY DE CARGA CON BOOGIE -->
     <div id="global-loading-overlay" class="hidden fixed inset-0 bg-black/85 z-[100] flex flex-col items-center justify-center gap-4">
         <img src="1455064703448645786.gif" alt="Boogie Loading..." class="w-[150px] h-auto mb-2">
         <p id="loading-overlay-text" class="text-base font-bold text-white text-center px-4 font-sans">Boogie está trabajando en ello, espera un momento</p>
     </div>
 
+    <!-- BOTÓN HERRAMIENTA CREADOR (ESQUINA INFERIOR IZQUIERDA PC) -->
+    <button id="btn-boogie-admin-trigger" class="hidden md:flex fixed bottom-4 left-4 z-50 p-3 bg-zinc-950/40 hover:bg-zinc-900/80 border border-zinc-800/60 rounded-full text-zinc-400 hover:text-white transition shadow-2xl items-center justify-center group" title="Acceso Creador">
+        <i class="fa-solid fa-wrench text-base transition-transform group-hover:rotate-45"></i>
+    </button>
+
+    <!-- MODAL BOOGIE ADM / CREDENCIALES -->
+    <div id="boogie-auth-modal" class="hidden fixed inset-0 bg-black/90 z-[130] flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-[#11091c] border border-fuchsia-500/40 rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative text-center flex flex-col items-center">
+            
+            <img src="1455064703448645786.gif" alt="Boogie" class="w-24 h-auto mb-3">
+            <p id="boogie-auth-msg" class="text-sm sm:text-base font-bold text-zinc-200 mb-6 leading-relaxed" data-i18n="boogieAuthMsg">
+                Este espacio es solo para Boogie. Por favor introduce los códigos especiales
+            </p>
+
+            <form id="boogie-auth-form" class="w-full space-y-3 text-left">
+                <div>
+                    <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred1">Credencial 1 (Clave Admin)</label>
+                    <input type="password" id="boogieCred1" required placeholder="••••••••" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred2">Credencial 2 (Usuario GitHub)</label>
+                    <input type="text" id="boogieCred2" required placeholder="Usuario..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred3">Credencial 3 (GitHub PAT Token)</label>
+                    <input type="password" id="boogieCred3" required placeholder="ghp_••••••••••••••••" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
+                </div>
+
+                <div class="pt-2 flex gap-3">
+                    <button type="button" id="btn-close-boogie-modal" class="flex-1 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-400 hover:text-white transition" data-i18n="btnClose">Cerrar</button>
+                    <button type="submit" class="flex-1 py-3 bg-gradient-to-r from-fuchsia-500 to-pink-500 text-black rounded-xl text-xs font-black uppercase shadow hover:opacity-90 transition" data-i18n="btnSend">Enviar</button>
+                </div>
+            </form>
+
+            <button id="btn-close-boogie-modal-x" class="absolute top-4 right-4 text-zinc-500 hover:text-white text-lg p-1">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- MODAL 1: ADVERTENCIA DE DESCARGA -->
     <div id="download-custom-modal" class="hidden fixed inset-0 bg-black/90 z-[110] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-[#11091c] border border-fuchsia-500/30 rounded-2xl max-w-3xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center">
-            
-            <!-- 1. Aviso de Texto Corregido -->
             <p id="download-modal-msg" class="text-base sm:text-lg font-bold text-zinc-200 mb-6 leading-relaxed">
                 Es necesario tener instalada la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la página oficial de Beatclone
             </p>
 
-            <!-- 2. Imagen "AD" -->
             <div class="w-full max-h-80 overflow-hidden rounded-xl mb-6 flex justify-center bg-zinc-950/50 p-2 border border-zinc-800/40">
                 <img src="AD.png" alt="AD" class="max-h-72 object-contain rounded-lg" onerror="this.src='Beatstar1.png'">
             </div>
             
-            <!-- 3. Botones de Acción -->
             <div class="flex flex-col sm:flex-row gap-4 w-full">
                 <a id="download-modal-btn-beatclone" href="#" target="_blank" class="flex-1 py-3.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-300 hover:text-white hover:bg-zinc-900 transition flex items-center justify-center gap-2.5">
                     <img src="Beatstar1.png" alt="B" class="w-5 h-5 object-contain">Beatclone
@@ -102,16 +138,13 @@
         </div>
     </div>
 
-    <!-- MODAL 2: POP-UP GRANDE DE AGRADECIMIENTO -->
+    <!-- MODAL 2: POP-UP AGRADECIMIENTO -->
     <div id="thanks-custom-modal" class="hidden fixed inset-0 bg-black/95 z-[120] flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#11091c] border border-orange-500/30 rounded-2xl max-w-4xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center">
-            
             <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-fuchsia-400 font-display font-black text-xl sm:text-2xl uppercase tracking-wider mb-6" data-i18n="thanksTitle">Gracias por jugar a Beatclone</h4>
-            
             <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-fuchsia-950/60 relative">
                 <video id="download-thanks-video" class="w-full h-full object-cover pointer-events-none" autoplay loop playsinline disablePictureInPicture></video>
             </div>
-
             <button id="thanks-modal-btn-close" class="absolute top-4 right-4 text-zinc-500 hover:text-white text-xl p-2">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -138,11 +171,6 @@
                 </div>
                 <div class="h-6 w-px bg-fuchsia-950/60 hidden" id="nav-separator"></div>
                 
-                <button id="auth-indicator" class="hidden md:flex p-2 md:px-3 md:py-1.5 rounded-xl border border-zinc-800 bg-zinc-950/50 text-zinc-500 hover:text-white text-xs font-bold transition items-center gap-1.5">
-                    <i id="auth-lock-icon" class="fa-solid fa-lock"></i>
-                    <span id="auth-label">Visita</span>
-                </button>
-
                 <button id="btn-lang-toggle" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl border border-fuchsia-500/30 bg-[#11091c] text-xs font-black tracking-wider text-fuchsia-400">
                     <i class="fa-solid fa-globe"></i>
                     <span id="lang-label" class="uppercase">ES</span>
@@ -206,13 +234,13 @@
                 </div>
             </div>
 
-            <!-- BLOQUE DE DISCLAIMER REUBICADO DEBAJO DE LAS TARJETAS -->
+            <!-- DISCLAIMER -->
             <div class="bg-red-500/5 border border-red-500/20 rounded-2xl p-6 mb-10 text-center max-w-4xl mx-auto w-full">
                 <h2 class="text-red-500 font-display font-black text-3xl tracking-widest uppercase mb-4" data-i18n="disclaimerTitle">DISCLAIMER</h2>
                 <p class="text-zinc-300 text-sm leading-relaxed font-medium" data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, canciones, logos, e imágenes pertenecen a sus respectivos propietarios y desarrolladores.</p>
             </div>
 
-            <!-- APARTADO DE VIDEOS DE AGRADECIMIENTO CMS (GESTIÓN) -->
+            <!-- VIDEOS DE AGRADECIMIENTO CMS -->
             <div id="thanks-videos-panel-box" class="hidden bg-[#11091c] border border-orange-500/40 rounded-2xl p-6 shadow-2xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-fuchsia-500"></div>
                 <h2 class="font-display font-black text-base text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60">Subir Videos de Agradecimiento</h2>
@@ -235,18 +263,16 @@
                 </button>
             </div>
 
-            <!-- PANEL EXTRA DE ASSETS VISUALES DINÁMICOS -->
+            <!-- ASSETS VISUALES DINÁMICOS -->
             <div id="visual-assets-panel-box" class="hidden bg-[#11091c] border border-fuchsia-500/40 rounded-2xl p-6 shadow-2xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-fuchsia-500 to-orange-500"></div>
                 <h2 class="font-display font-black text-base text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="visualAssetsMenuTitle">Panel de Assets Visuales Dinámicos</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs mb-4">
-                    <!-- Géneros -->
                     <div class="space-y-2 bg-black/30 p-3 rounded-xl border border-fuchsia-950/40">
                         <div class="font-black text-fuchsia-400 uppercase tracking-wider mb-2 border-b border-fuchsia-950/30 pb-1" data-i18n="formGenre">Géneros</div>
                         <div id="asset-upload-genres-list" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
                     </div>
-                    <!-- Dificultades -->
                     <div class="space-y-2 bg-black/30 p-3 rounded-xl border border-fuchsia-950/40">
                         <div class="font-black text-orange-400 uppercase tracking-wider mb-2 border-b border-fuchsia-950/30 pb-1" data-i18n="formDifficulty">Dificultades</div>
                         <div class="space-y-3">
@@ -264,7 +290,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Ediciones -->
                     <div class="space-y-2 bg-black/30 p-3 rounded-xl border border-fuchsia-950/40">
                         <div class="font-black text-yellow-400 uppercase tracking-wider mb-2 border-b border-fuchsia-950/30 pb-1" data-i18n="formEdition">Edición</div>
                         <div class="space-y-3">
@@ -281,7 +306,7 @@
                 </div>
             </div>
 
-            <!-- Footer Links Manager Box -->
+            <!-- FOOTER LINKS MANAGER -->
             <div id="footer-links-management-box" class="hidden bg-[#11091c] border border-orange-500/30 rounded-2xl p-6 shadow-xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-yellow-500"></div>
                 <h2 class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="footerMenuTitle">Links del Menú Inferior</h2>
@@ -312,6 +337,7 @@
             </button>
             
             <div id="levels-layout-grid" class="flex flex-col gap-6 items-start w-full relative">
+                <!-- FORMULARIO CREAR/EDITAR CHART -->
                 <div id="level-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto z-30">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addLevelTitle">Nuevo Chart</h2>
                     <form id="level-form" autocomplete="off" class="space-y-3 text-xs">
@@ -331,6 +357,10 @@
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadAudio">Subir Preview de Audio (Opcional)</label>
                             <input type="file" id="lvlAudioFile" accept="audio/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formVideoUrl">URL del Video (YouTube)</label>
+                            <input type="url" id="lvlVideo" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formGenre">Género</label>
@@ -353,6 +383,16 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-bold text-zinc-400 mb-1" data-i18n="formNotes">Notas</label>
+                                <input type="number" id="lvlNotes" placeholder="ej. 450" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                            </div>
+                            <div>
+                                <label class="block font-bold text-zinc-400 mb-1" data-i18n="formDuration">Duración</label>
+                                <input type="text" id="lvlDuration" placeholder="ej. 2:15" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                            </div>
+                        </div>
                         <div>
                             <div class="flex items-center justify-between mb-1">
                                 <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="formRelease">Lanzamiento</label>
@@ -362,14 +402,12 @@
                         </div>
                         <div>
                             <div class="flex items-center justify-between mb-1">
-                                <label class="block font-bold text-zinc-400" data-i18n="formUploadChartFile">Subir Archivo de Chart (.zip / Opcional)</label>
+                                <label class="block font-bold text-zinc-400" data-i18n="formUploadChartFile">Subir Archivo (.zip)</label>
                                 <button type="button" id="btn-remove-chart-zip" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                     <i class="fa-solid fa-trash"></i> Eliminar ZIP
                                 </button>
                             </div>
-                            <div id="current-chart-zip-badge" class="hidden mb-1 px-2 py-1 bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 rounded text-[10px] font-mono truncate">
-                                ZIP adjunto actualmente
-                            </div>
+                            <div id="current-chart-zip-badge" class="hidden mb-1 px-2 py-1 bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 rounded text-[10px] font-mono truncate">ZIP Adjunto</div>
                             <input type="file" id="lvlChartZipFile" accept=".zip" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div class="space-y-2 border-t border-fuchsia-950/40 pt-2">
@@ -383,27 +421,48 @@
                     </form>
                 </div>
 
-                <div id="levels-table-container" class="w-full overflow-hidden flex flex-col space-y-3 flex-grow">
-                    <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between whitespace-nowrap overflow-hidden">
-                        <div class="text-sm sm:text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400 truncate mr-2">
+                <!-- REGISTRO Y FILTROS CHARTS -->
+                <div id="levels-table-container" class="w-full overflow-hidden flex flex-col space-y-4 flex-grow">
+                    <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="text-sm sm:text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400 shrink-0">
                             Charts / <span data-i18n="bannerSongs">Canciones</span>
                         </div>
+
+                        <!-- BARRA DE FILTROS CHARTS -->
+                        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto text-xs">
+                            <select id="filterLvlGenre" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-bold">
+                                <option value="" data-i18n="filterAllGenres">Todos los Géneros</option>
+                            </select>
+                            <select id="filterLvlDiff" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-bold">
+                                <option value="" data-i18n="filterAllDiffs">Todas las Dificultades</option>
+                                <option value="Normal">Normal</option>
+                                <option value="Hard">Hard</option>
+                                <option value="Extreme">Extreme</option>
+                            </select>
+                            <select id="filterLvlEdition" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-bold">
+                                <option value="" data-i18n="filterAllEditions">Todas las Ediciones</option>
+                                <option value="Standard">Standard</option>
+                                <option value="Deluxe">Deluxe</option>
+                            </select>
+                            <input type="date" id="filterLvlDate" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2 py-1 text-zinc-300 font-bold">
+                            <button id="btn-clear-lvl-filters" class="px-3 py-1.5 bg-red-950/50 border border-red-800/40 text-red-400 rounded-xl font-bold hover:bg-red-900/60 transition flex items-center gap-1">
+                                <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btnClearFilters">Limpiar</span>
+                            </button>
+                        </div>
+
                         <div class="text-[10px] sm:text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-2.5 py-1.5 rounded-xl text-orange-400 shrink-0">
                             <span data-i18n="txtTotal">Total</span>: <span id="counter-charts-header">0</span> Charts
                         </div>
                     </div>
 
+                    <!-- TABLA CHARTS CON DISEÑO ESTILO SKINS -->
                     <div id="levels-table-wrapper" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                         <table class="w-full text-left border-collapse min-w-[700px] sm:min-w-[900px]">
                             <thead>
                                 <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                    <th class="p-4 text-center w-12">#</th>
-                                    <th class="p-4 w-44 text-center" data-i18n="thArt">Arte</th>
-                                    <th class="p-4" data-i18n="thSongArtist">Canción / Artista</th>
-                                    <th class="p-2 sm:p-4 w-36" data-i18n="formGenre">Género</th>
-                                    <th class="p-4 text-center w-32" data-i18n="formDifficulty">Dificultad</th>
-                                    <th class="p-4 text-center w-36" data-i18n="formEdition">Edición</th>
-                                    <th class="p-4 text-center w-24 whitespace-nowrap" data-i18n="formRelease">Lanzamiento</th>
+                                    <th class="p-4 w-40 sm:w-48 text-center" data-i18n="thArt">Arte</th>
+                                    <th class="p-4" data-i18n="thSongInfo">Información</th>
+                                    <th class="p-4 text-center w-48 sm:w-64" data-i18n="thPreview">Preview</th>
                                     <th class="p-4 text-center w-60 sm:w-64 min-w-[170px]" data-i18n="thPlatformDl">Descarga</th>
                                     <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                 </tr>
@@ -421,7 +480,7 @@
                 <i class="fa-solid fa-chevron-left text-fuchsia-500"></i> <span data-i18n="backHome">Volver</span>
             </button>
 
-            <!-- SUBMENÚ EXCLUSIVO DE SKINS CON TITULO CENTRAL -->
+            <!-- SUBMENÚ EXCLUSIVO DE SKINS -->
             <div id="cosmetics-submenu" class="w-full max-w-4xl mx-auto py-6 flex flex-col items-center">
                 <div class="text-center mb-8 flex flex-col items-center w-full">
                     <div class="mb-4 max-w-full w-[450px]">
@@ -446,7 +505,9 @@
                 </div>
             </div>
 
+            <!-- REGISTRO Y FORMULARIO SKINS -->
             <div id="cosmetics-active-workspace" class="hidden flex-col gap-6 items-start w-full relative">
+                <!-- FORMULARIO NUEVA SKIN -->
                 <div id="cosmetic-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto z-30">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addCosmeticTitle">Nueva Skin</h2>
                     <form id="cosmetic-form" autocomplete="off" class="space-y-3 text-xs">
@@ -474,6 +535,17 @@
                             </div>
                             <input type="date" id="cosDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
+
+                        <!-- GÉNERO EXCLUSIVO SKINS (1 SOLO O UNIVERSAL, SIN CLASSICAL) -->
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="formGenre">Género</label>
+                                <button type="button" id="btn-skin-universal-genre" class="px-2 py-0.5 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-extrabold rounded text-[10px] transition uppercase" data-i18n="btnUniversal">Universal</button>
+                            </div>
+                            <div id="skin-genres-container" class="grid grid-cols-1 gap-1 max-h-36 overflow-y-auto border border-fuchsia-950 p-2 rounded-lg bg-[#05020a]"></div>
+                            <input type="hidden" id="cosSelectedGenreMode" value="single">
+                        </div>
+
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadBrand">Subir Marca / Inspiración</label>
                             <div id="cosBrandManagementList" class="flex flex-col gap-1.5 my-2 max-h-40 overflow-y-auto bg-black/40 p-2 rounded border border-zinc-800 hidden"></div>
@@ -481,14 +553,12 @@
                         </div>
                         <div>
                             <div class="flex items-center justify-between mb-1">
-                                <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadSkinFile">Subir Archivo de Skin (.zip / Opcional)</label>
+                                <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadSkinFile">Subir Archivo (.zip)</label>
                                 <button type="button" id="btn-remove-skin-zip" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                     <i class="fa-solid fa-trash"></i> Eliminar ZIP
                                 </button>
                             </div>
-                            <div id="current-skin-zip-badge" class="hidden mb-1 px-2 py-1 bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 rounded text-[10px] font-mono truncate">
-                                ZIP adjunto actualmente
-                            </div>
+                            <div id="current-skin-zip-badge" class="hidden mb-1 px-2 py-1 bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 rounded text-[10px] font-mono truncate">ZIP Adjunto</div>
                             <input type="file" id="cosSkinZipFile" accept=".zip" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div class="space-y-2 border-t border-fuchsia-950/40 pt-2">
@@ -501,7 +571,22 @@
                     </form>
                 </div>
 
-                <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-10 flex-grow">
+                <!-- CONTENEDORES SKINS Y BARRA FILTROS -->
+                <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-6 flex-grow">
+                    <!-- BARRA DE FILTROS SKINS -->
+                    <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="text-sm sm:text-base font-black tracking-wide uppercase text-fuchsia-400 shrink-0" data-i18n="navCosmetics">Skins</div>
+                        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto text-xs">
+                            <select id="filterSkinGenre" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-bold">
+                                <option value="" data-i18n="filterAllGenres">Todos los Géneros</option>
+                            </select>
+                            <input type="date" id="filterSkinDate" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2 py-1 text-zinc-300 font-bold">
+                            <button id="btn-clear-skin-filters" class="px-3 py-1.5 bg-red-950/50 border border-red-800/40 text-red-400 rounded-xl font-bold hover:bg-red-900/60 transition flex items-center gap-1">
+                                <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btnClearFilters">Limpiar</span>
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Segmento Beatstar -->
                     <div id="container-workspace-beatstar" class="hidden flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
@@ -519,8 +604,7 @@
                             <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
                                 <thead>
                                     <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                        <th class="p-4 text-center w-12">#</th>
-                                        <th class="p-2 sm:p-4 w-16 sm:w-36" data-i18n="thIcon">Icono</th>
+                                        <th class="p-2 sm:p-4 w-20 sm:w-44" data-i18n="thIcon">Icono</th>
                                         <th class="p-2 sm:p-4" data-i18n="thSkinInfo">Información</th>
                                         <th class="p-4 text-center w-48 sm:w-64" data-i18n="thPreview">Preview</th>
                                         <th class="p-4 text-center w-60 sm:w-64 min-w-[170px]" data-i18n="thDlLinks">Descarga</th>
@@ -549,8 +633,7 @@
                             <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
                                 <thead>
                                     <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                        <th class="p-4 text-center w-12">#</th>
-                                        <th class="p-2 sm:p-4 w-16 sm:w-36" data-i18n="thIcon">Icono</th>
+                                        <th class="p-2 sm:p-4 w-20 sm:w-44" data-i18n="thIcon">Icono</th>
                                         <th class="p-2 sm:p-4" data-i18n="thSkinInfo">Información</th>
                                         <th class="p-4 text-center w-48 sm:w-64" data-i18n="thPreview">Preview</th>
                                         <th class="p-4 text-center w-60 sm:w-64 min-w-[170px]" data-i18n="thDlLinks">Descarga</th>
@@ -608,6 +691,17 @@
             { color: "#019ac4", label: "RnB" }
         ];
 
+        // ORDEN STRICTO UNIVERSAL SKINS (SIN CLASSICAL)
+        const skinUniversalGenreList = [
+            { color: "#c43d73", label: "Pop" },
+            { color: "#da6128", label: "Alternative" },
+            { color: "#8836c7", label: "Dance/EDM" },
+            { color: "#bf2726", label: "Rock" },
+            { color: "#2660d2", label: "Hip-Hop" },
+            { color: "#84532f", label: "Country" },
+            { color: "#019ac4", label: "RnB" }
+        ];
+
         const translations = {
             es: {
                 tagUpdate: "ÚLTIMA ACTUALIZACIÓN", storyTitle: "Bienvenido al LKBeats Handbook",
@@ -622,7 +716,7 @@
                 addLevelTitle: "Nuevo Chart", addCosmeticTitle: "Nueva Skin", btnRegister: "Registrar", emptyDatabase: "No hay registros.",
                 formSong: "Canción", formArtist: "Artista", formGenre: "Género", formDifficulty: "Dificultad", formEdition: "Edición",
                 formRelease: "Lanzamiento", formUrlsTitle: "Enlaces de Descarga", listName: "Nombre", listArtist: "Artista",
-                listRelease: "Lanzamiento", listInsp: "Inspirado en", thArt: "Arte", thSongArtist: "Canción / Artista", thPlatformDl: "Descarga",
+                listRelease: "Lanzamiento", listInsp: "Inspirado en", thArt: "Arte", thSongInfo: "Información", thPlatformDl: "Descarga",
                 thIcon: "Icono", thSkinInfo: "Información", thPreview: "Preview", thDlLinks: "Descarga", btnChangeDate: "Cambiar Fecha",
                 thActions: "Acciones", btnEdit: "Editar", btnDelete: "Eliminar", diffNormal: "Normal", diffHard: "Difícil", diffExtreme: "Extremo",
                 noLinks: "No hay enlaces", formSkinFor: "Skin para...", btnUploadLogo: "Subir Imagen", txtImageLoaded: "Cargado", txtTotal: "Total",
@@ -632,12 +726,27 @@
                 btnSaveFooterLinks: "Guardar Enlaces del Menú", jumpToTxt: "Ir a",
                 selectSubmenuSkin: "Selecciona una Plataforma", downloadDirectBtn: "Descargar",
                 formUploadArt: "Subir Arte", formUploadAudio: "Subir Preview de Audio (Opcional)",
-                formUploadChartFile: "Subir Archivo de Chart (.zip / Opcional)", formUploadIcon: "Subir Icono",
-                formUploadBrand: "Subir Marca / Inspiración", formUploadSkinFile: "Subir Archivo de Skin (.zip / Opcional)",
+                formUploadChartFile: "Subir Archivo (.zip)", formUploadIcon: "Subir Icono",
+                formUploadBrand: "Subir Marca / Inspiración", formUploadSkinFile: "Subir Archivo (.zip)",
                 beatcloneNotice: "Es necesario tener instalada la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la página oficial de Beatclone",
                 savingChanges: "Boogie está trabajando en ello, espera un momento",
                 visualAssetsMenuTitle: "Panel de Assets Visuales Dinámicos",
-                thanksTitle: "Gracias por jugar a Beatclone"
+                thanksTitle: "Gracias por jugar a Beatclone",
+                boogieAuthMsg: "Este espacio es solo para Boogie. Por favor introduce los códigos especiales",
+                labelCred1: "Credencial 1 (Clave Admin)",
+                labelCred2: "Credencial 2 (Usuario GitHub)",
+                labelCred3: "Credencial 3 (GitHub PAT Token)",
+                btnClose: "Cerrar",
+                btnSend: "Enviar",
+                listNotes: "Notas",
+                listDuration: "Duración",
+                formNotes: "Notas",
+                formDuration: "Duración",
+                btnUniversal: "Universal",
+                filterAllGenres: "Todos los Géneros",
+                filterAllDiffs: "Todas las Dificultades",
+                filterAllEditions: "Todas las Ediciones",
+                btnClearFilters: "Limpiar"
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -652,7 +761,7 @@
                 addLevelTitle: "New Chart", addCosmeticTitle: "New Skin", btnRegister: "Register", emptyDatabase: "No records.",
                 formSong: "Song", formArtist: "Artist", formGenre: "Genre", formDifficulty: "Difficulty", formEdition: "Edition",
                 formRelease: "Release Date", formUrlsTitle: "Download Links", listName: "Name", listArtist: "Artist",
-                listRelease: "Release Date", listInsp: "Inspired by", thArt: "Art", thSongArtist: "Song / Artist", thPlatformDl: "Download",
+                listRelease: "Release Date", listInsp: "Inspired by", thArt: "Art", thSongInfo: "Information", thPlatformDl: "Download",
                 thIcon: "Icon", thSkinInfo: "Information", thPreview: "Preview", thDlLinks: "Download", btnChangeDate: "Change Date",
                 thActions: "Actions", btnEdit: "Edit", btnDelete: "Delete", diffNormal: "Normal", diffHard: "Hard", diffExtreme: "Extreme",
                 noLinks: "No links", formSkinFor: "Skin for...", btnUploadLogo: "Upload Image", txtImageLoaded: "Loaded", txtTotal: "Total",
@@ -662,12 +771,27 @@
                 btnSaveFooterLinks: "Save Menu Links", jumpToTxt: "Go to",
                 selectSubmenuSkin: "Select a Platform", downloadDirectBtn: "Download",
                 formUploadArt: "Upload Art", formUploadAudio: "Upload Audio Preview (Optional)",
-                formUploadChartFile: "Upload Chart File (.zip / Optional)", formUploadIcon: "Upload Icon",
-                formUploadBrand: "Upload Brand / Inspiration", formUploadSkinFile: "Upload Skin File (.zip / Optional)",
+                formUploadChartFile: "Upload File (.zip)", formUploadIcon: "Upload Icon",
+                formUploadBrand: "Upload Brand / Inspiration", formUploadSkinFile: "Upload File (.zip)",
                 beatcloneNotice: "It is necessary to have the Beatstar application installed to use this content. Download it from the official Beatclone page.",
                 savingChanges: "Boogie is working on it, please wait a moment",
                 visualAssetsMenuTitle: "Dynamic Visual Assets Panel",
-                thanksTitle: "Thanks for playing Beatclone"
+                thanksTitle: "Thanks for playing Beatclone",
+                boogieAuthMsg: "This space is only for Boogie. Please enter the special codes",
+                labelCred1: "Credential 1 (Admin Pass)",
+                labelCred2: "Credential 2 (GitHub User)",
+                labelCred3: "Credential 3 (GitHub PAT Token)",
+                btnClose: "Close",
+                btnSend: "Submit",
+                listNotes: "Notes",
+                listDuration: "Duration",
+                formNotes: "Notes",
+                formDuration: "Duration",
+                btnUniversal: "Universal",
+                filterAllGenres: "All Genres",
+                filterAllDiffs: "All Difficulties",
+                filterAllEditions: "All Editions",
+                btnClearFilters: "Clear"
             }
         };
 
@@ -764,31 +888,44 @@
         document.getElementById('card-to-levels').addEventListener('click', () => navigateTo('levels'));
         document.getElementById('card-to-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
         
-        document.getElementById('auth-indicator').addEventListener('click', async () => {
-            if (isCreatorMode) { 
-                isCreatorMode = false; 
-                githubToken = ""; 
-                githubUser = ""; 
-                applyRoleUIVisibility(); 
-                return; 
-            }
-            
-            const pass = prompt("Clave Admin:");
-            if (pass === "BeatstarTest") {
-                const userInput = prompt("Introduce tu Usuario de GitHub:");
-                if (userInput && userInput.trim() !== "") {
-                    const tokenInput = prompt("Introduce tu GitHub Personal Access Token (PAT):");
-                    if(tokenInput && tokenInput.trim() !== "") {
-                        githubToken = tokenInput.trim();
-                        githubUser = userInput.trim();
-                        isCreatorMode = true;
-                        applyRoleUIVisibility();
-                        return;
-                    }
+        // MODAL ADM Y TRIGGER BOOGIE
+        const btnBoogieTrigger = document.getElementById('btn-boogie-admin-trigger');
+        const modalBoogie = document.getElementById('boogie-auth-modal');
+        
+        btnBoogieTrigger.addEventListener('click', () => {
+            if(isCreatorMode) {
+                if(confirm("¿Deseas salir del modo Creador?")) {
+                    isCreatorMode = false;
+                    githubToken = "";
+                    githubUser = "";
+                    btnBoogieTrigger.classList.remove('glow-green');
+                    applyRoleUIVisibility();
                 }
-                alert("Credenciales de autenticación incompletas.");
-            } else if (pass !== null) {
-                alert("Clave de administrador incorrecta.");
+            } else {
+                modalBoogie.classList.remove('hidden');
+            }
+        });
+
+        const closeModalBoogie = () => modalBoogie.classList.add('hidden');
+        document.getElementById('btn-close-boogie-modal').addEventListener('click', closeModalBoogie);
+        document.getElementById('btn-close-boogie-modal-x').addEventListener('click', closeModalBoogie);
+
+        document.getElementById('boogie-auth-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pass = document.getElementById('boogieCred1').value;
+            const user = document.getElementById('boogieCred2').value.trim();
+            const token = document.getElementById('boogieCred3').value.trim();
+
+            if(pass === "BeatstarTest" && user !== "" && token !== "") {
+                isCreatorMode = true;
+                githubUser = user;
+                githubToken = token;
+                btnBoogieTrigger.classList.add('glow-green');
+                applyRoleUIVisibility();
+                closeModalBoogie();
+                document.getElementById('boogie-auth-form').reset();
+            } else {
+                alert("Credenciales incorrectas o incompletas.");
             }
         });
 
@@ -967,7 +1104,6 @@
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
             
-            // Radio ajustado para PC y optimizado para móvil
             const radius = isMobileDevice ? 44 : 46; 
 
             function draw() {
@@ -979,7 +1115,6 @@
                 
                 currentRotationAngle += isMobileDevice ? 0.008 : 0.006; 
 
-                // Menos barras en móvil para reducir trabajo gráfico
                 const barCount = isMobileDevice ? 60 : 100; 
                 for (let i = 0; i < barCount; i++) {
                     const angle = ((i / barCount) * Math.PI * 2) + currentRotationAngle;
@@ -988,7 +1123,6 @@
                     const dataIndex = Math.floor((targetIndex / (barCount / 2)) * bufferLength * 0.6);
                     const rawValue = dataArray[dataIndex] || 0;
                     
-                    // Altura del espectro ajustada en PC
                     const barHeight = (rawValue / 255) * (isMobileDevice ? 30 : 32); 
                     
                     const startX = centerX + Math.cos(angle) * radius;
@@ -1068,11 +1202,6 @@
         }
 
         function applyRoleUIVisibility() {
-            const label = document.getElementById('auth-label');
-            const icon = document.getElementById('auth-lock-icon');
-            if (label) label.innerText = isCreatorMode ? translations[currentLanguage].roleCreator : translations[currentLanguage].roleVisitor;
-            if (icon) icon.className = isCreatorMode ? "fa-solid fa-lock-open text-emerald-400" : "fa-solid fa-lock text-zinc-600";
-            
             ['level-form-container', 'cosmetic-form-container', 'footer-links-management-box', 'visual-assets-panel-box', 'thanks-videos-panel-box'].forEach(id => {
                 document.getElementById(id)?.classList.toggle('hidden', !isCreatorMode);
             });
@@ -1101,6 +1230,7 @@
                 if (translations[currentLanguage][key]) el.innerText = translations[currentLanguage][key];
             });
             applyRoleUIVisibility();
+            populateFilterOptions();
         }
 
         function buildGenresSelector() {
@@ -1122,6 +1252,66 @@
             });
         }
 
+        function buildSkinGenresSelector() {
+            const container = document.getElementById('skin-genres-container');
+            if(!container) return; container.innerHTML = '';
+            skinUniversalGenreList.forEach(g => {
+                const item = document.createElement('label');
+                item.className = "flex items-center gap-3 p-1.5 hover:bg-zinc-900 rounded cursor-pointer text-zinc-300";
+                item.innerHTML = `
+                    <input type="checkbox" name="skinGenres" value="${g.label}" class="skin-genre-checkbox accent-fuchsia-500">
+                    <span class="w-3.5 h-3.5 rounded-full inline-block shrink-0 shadow" style="background-color: ${g.color}"></span>
+                    <span class="font-extrabold text-sm text-zinc-200">${g.label}</span>
+                `;
+                item.querySelector('input').addEventListener('change', (e) => {
+                    if(document.getElementById('cosSelectedGenreMode').value === 'universal') return;
+                    if(e.target.checked) {
+                        document.querySelectorAll('.skin-genre-checkbox').forEach(cb => { if(cb !== e.target) cb.checked = false; });
+                    }
+                });
+                container.appendChild(item);
+            });
+        }
+
+        document.getElementById('btn-skin-universal-genre').addEventListener('click', () => {
+            const modeInput = document.getElementById('cosSelectedGenreMode');
+            const checkboxes = document.querySelectorAll('.skin-genre-checkbox');
+            const btn = document.getElementById('btn-skin-universal-genre');
+
+            if(modeInput.value === 'single') {
+                modeInput.value = 'universal';
+                checkboxes.forEach(cb => { cb.checked = true; cb.disabled = true; });
+                btn.classList.replace('bg-fuchsia-600', 'bg-emerald-600');
+            } else {
+                modeInput.value = 'single';
+                checkboxes.forEach(cb => { cb.checked = false; cb.disabled = false; });
+                btn.classList.replace('bg-emerald-600', 'bg-fuchsia-600');
+            }
+        });
+
+        function populateFilterOptions() {
+            const lvlSelect = document.getElementById('filterLvlGenre');
+            const skinSelect = document.getElementById('filterSkinGenre');
+            
+            if(lvlSelect) {
+                const current = lvlSelect.value;
+                lvlSelect.innerHTML = `<option value="">${translations[currentLanguage].filterAllGenres}</option>`;
+                genreList.forEach(g => {
+                    lvlSelect.innerHTML += `<option value="${g.label}">${g.label}</option>`;
+                });
+                lvlSelect.value = current;
+            }
+
+            if(skinSelect) {
+                const current = skinSelect.value;
+                skinSelect.innerHTML = `<option value="">${translations[currentLanguage].filterAllGenres}</option>`;
+                skinUniversalGenreList.forEach(g => {
+                    skinSelect.innerHTML += `<option value="${g.label}">${g.label}</option>`;
+                });
+                skinSelect.value = current;
+            }
+        }
+
         function renderGenresBadgesHtml(raw) {
             if(!raw) return '';
             return raw.split(' / ').map(g => {
@@ -1133,7 +1323,7 @@
                 const dynamicAssetSrc = globalVisualAssets[`genre_${safeKey}`];
                 
                 const graphicElement = dynamicAssetSrc 
-                    ? `<span class="dynamic-color-mask w-4 h-4 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
+                    ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
                     : `<span class="w-2 h-2 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
 
                 return `
@@ -1152,10 +1342,32 @@
             return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
         }
 
+        // ORDEN ASCENDENTE POR FECHA (DESDE MÁS ANTIGUO)
+        function sortAscendingByDate(arr) {
+            return [...arr].sort((a, b) => {
+                const dA = new Date(a.date || 0);
+                const dB = new Date(b.date || 0);
+                return dA - dB;
+            });
+        }
+
         function renderLevelsTable() {
             const tbody = document.getElementById('levels-tbody');
             if(!tbody) return; tbody.innerHTML = '';
-            levels.forEach((lvl, i) => {
+
+            let filtered = sortAscendingByDate(levels);
+
+            const fGenre = document.getElementById('filterLvlGenre').value;
+            const fDiff = document.getElementById('filterLvlDiff').value;
+            const fEdition = document.getElementById('filterLvlEdition').value;
+            const fDate = document.getElementById('filterLvlDate').value;
+
+            if(fGenre) filtered = filtered.filter(l => l.genre && l.genre.toLowerCase().includes(fGenre.toLowerCase()));
+            if(fDiff) filtered = filtered.filter(l => l.diff === fDiff);
+            if(fEdition) filtered = filtered.filter(l => l.edition === fEdition);
+            if(fDate) filtered = filtered.filter(l => l.date === fDate);
+
+            filtered.forEach((lvl) => {
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-fuchsia-950/10 transition border-b border-fuchsia-950/20";
                 
@@ -1177,42 +1389,38 @@
 
                 const dynamicDiffAsset = globalVisualAssets[`diff_${lvl.diff}`];
                 const diffGraphic = dynamicDiffAsset 
-                    ? `<span class="dynamic-color-mask w-4 h-4" style="color: ${hexColor}; -webkit-mask-image: url('${dynamicDiffAsset}'); mask-image: url('${dynamicDiffAsset}');"></span>`
+                    ? `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${hexColor}; -webkit-mask-image: url('${dynamicDiffAsset}'); mask-image: url('${dynamicDiffAsset}');"></span>`
                     : `<i class="fa-solid fa-layer-group"></i>`;
 
                 const isDeluxe = (lvl.edition === "Deluxe");
                 const dynamicEditionAsset = globalVisualAssets[isDeluxe ? `edit_Deluxe` : `edit_Standard`];
-                
                 const targetEditionHex = isDeluxe ? "#facc15" : "#71717a";
                 const editionContainerClass = isDeluxe ? "glow-gold bg-yellow-500/10 text-yellow-400 border border-yellow-500/40" : "bg-zinc-900 border border-zinc-800 text-zinc-400";
 
                 const editionGraphicMarkup = dynamicEditionAsset
-                    ? `<div class="flex items-center gap-1.5 justify-center px-2 py-1 rounded-lg ${editionContainerClass} font-black text-[10px] uppercase truncate"><span class="dynamic-color-mask w-4 h-4" style="color: ${targetEditionHex}; -webkit-mask-image: url('${dynamicEditionAsset}'); mask-image: url('${dynamicEditionAsset}');"></span><span>${lvl.edition}</span></div>`
-                    : `<div class="flex items-center gap-1.5 justify-center px-2 py-1 rounded-lg ${editionContainerClass} font-black text-[10px] uppercase truncate"><span>${lvl.edition}</span></div>`;
+                    ? `<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${editionContainerClass} font-black text-[10px] uppercase truncate"><span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${targetEditionHex}; -webkit-mask-image: url('${dynamicEditionAsset}'); mask-image: url('${dynamicEditionAsset}');"></span><span>${lvl.edition}</span></div>`
+                    : `<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${editionContainerClass} font-black text-[10px] uppercase truncate"><span>${lvl.edition}</span></div>`;
 
                 const hasAudio = !!lvl.audioDirectUrl;
 
-                let linksLayout = `<div class="flex flex-col gap-1 max-w-[160px] sm:max-w-[180px] mx-auto">`;
+                let linksLayout = `<div class="flex flex-col gap-1.5 max-w-[190px] sm:max-w-[240px] mx-auto">`;
                 if(lvl.chartDirectUrl) {
-                    linksLayout += `<button class="btn-direct-download-trigger bg-gradient-to-r from-emerald-500 to-teal-500 text-black px-2 py-1.5 rounded-xl text-[11px] font-black uppercase flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-circle-down"></i>${translations[currentLanguage].downloadDirectBtn}</button>`;
+                    linksLayout += `<button class="btn-direct-download-trigger bg-gradient-to-r from-emerald-500 to-teal-500 text-black px-4 py-2 rounded-xl text-xs font-black uppercase flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-circle-down"></i>${translations[currentLanguage].downloadDirectBtn}</button>`;
                 }
-                if (lvl.dl1) linksLayout += `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-3.5 h-3.5 force-white-icon">Discord</a>`;
-                if (lvl.dl2) linksLayout += `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-3.5 h-3.5 force-white-icon">BSCM</a>`;
-                if (lvl.dl3) linksLayout += `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-2 py-1.5 text-center rounded-xl text-[11px] font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-3.5 h-3.5 force-white-icon">beatcharts</a>`;
+                if (lvl.dl1) linksLayout += `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 px-4 py-2 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-3.5 h-3.5 force-white-icon">Discord</a>`;
+                if (lvl.dl2) linksLayout += `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 px-4 py-2 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-3.5 h-3.5 force-white-icon">BSCM</a>`;
+                if (lvl.dl3) linksLayout += `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-4 py-2 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-3.5 h-3.5 force-white-icon">beatcharts</a>`;
                 linksLayout += `</div>`;
 
-                tr.innerHTML = `
-                    <td class="p-4 text-center font-mono font-bold text-zinc-500">${i+1}</td>
-                    <td class="p-4 text-center">
-                        <div class="relative w-[130px] h-[130px] mx-auto flex items-center justify-center shrink-0 overflow-visible">
-                            <canvas class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
-                            
-                            <!-- Contenedor estático del Arte -->
-                            <div class="target-art-outer-container w-20 h-20 sm:w-16 sm:h-16 relative z-10 overflow-hidden rounded-xl border border-fuchsia-500/30 shadow-lg shrink-0 transition-all duration-300">
-                                <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 animate-none" onerror="this.src='free_song_Image.png'">
-                            </div>
+                let pMarkup = lvl.video ? `<div class="w-28 h-48 sm:w-36 sm:h-64 mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl shrink-0"><iframe src="${parseYoutubeEmbedUrl(lvl.video)}" class="w-full h-full border-0"></iframe></div>` : '[No Preview]';
 
-                            <!-- Botón de Reproducción -->
+                tr.innerHTML = `
+                    <td class="p-2 sm:p-4 text-center">
+                        <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0 overflow-visible">
+                            <canvas class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+                            <div class="target-art-outer-container w-full h-full relative z-10 overflow-hidden rounded-xl border border-fuchsia-500/30 shadow-lg shrink-0 transition-all duration-300">
+                                <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900" onerror="this.src='free_song_Image.png'">
+                            </div>
                             ${hasAudio ? `
                                 <button class="btn-play-audio-preview absolute bottom-2 right-2 w-7 h-7 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
                                     <i class="fa-solid fa-play text-[10px]"></i>
@@ -1220,20 +1428,41 @@
                             ` : ''}
                         </div>
                     </td>
-                    <td class="p-4 min-w-[200px] sm:min-w-[280px] flex-1">
-                        <div class="font-black text-white text-base sm:text-sm tracking-wide mb-1 whitespace-normal break-words">${lvl.song}</div>
-                        <div class="text-xs sm:text-xs text-zinc-400 font-medium whitespace-normal break-words">${lvl.artist}</div>
+                    <td class="p-2 sm:p-4 min-w-[220px] sm:min-w-[320px] flex-1">
+                        <ul class="space-y-2 list-none text-zinc-300 whitespace-normal break-words">
+                            <li class="flex flex-col sm:flex-row sm:items-baseline">
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formSong} / ${translations[currentLanguage].formArtist}:</span> 
+                                <div class="inline-block"><span class="text-white font-black tracking-wide text-base sm:text-lg">${lvl.song}</span> <span class="text-zinc-400 text-xs sm:text-sm font-medium"> - ${lvl.artist}</span></div>
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:items-baseline">
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formGenre}:</span> 
+                                <div class="inline-flex flex-wrap gap-1">${renderGenresBadgesHtml(lvl.genre)}</div>
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:items-baseline">
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formDifficulty}:</span> 
+                                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border ${bStyle} font-black uppercase text-[10px]">${diffGraphic} <span>${diffText}</span></div>
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:items-baseline">
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formEdition}:</span> 
+                                ${editionGraphicMarkup}
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:items-baseline">
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listNotes}:</span> 
+                                <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${lvl.notes || 'N/A'}</span>
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:items-baseline">
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listDuration}:</span> 
+                                <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${lvl.duration || 'N/A'}</span>
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:items-baseline">
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formRelease}:</span> 
+                                <span class="font-sans font-bold text-zinc-400 text-xs sm:text-sm">${formatStringToDMY(lvl.date)}</span>
+                            </li>
+                        </ul>
                     </td>
-                    <td class="p-1 sm:p-4 w-36"><div class="flex flex-col gap-1 max-w-[140px]">${renderGenresBadgesHtml(lvl.genre)}</div></td>
-                    <td class="p-4 text-center">
-                        <div class="inline-flex items-center justify-center gap-1.5 px-2 py-1 rounded-lg border w-24 sm:w-28 ${bStyle} mx-auto font-black tracking-wide uppercase text-[10px] sm:text-xs">
-                            ${diffGraphic} <span class="ml-1">${diffText}</span>
-                        </div>
-                    </td>
-                    <td class="p-4 text-center">${editionGraphicMarkup}</td>
-                    <td class="p-4 text-center font-bold text-zinc-400 tracking-wide">${formatStringToDMY(lvl.date)}</td>
-                    <td class="p-4 text-center">${linksLayout}</td>
-                    <td class="p-4 text-center ${isCreatorMode ? '':'hidden'}">
+                    <td class="p-2 sm:p-4 text-center">${pMarkup}</td>
+                    <td class="p-2 sm:p-4">${linksLayout}</td>
+                    <td class="p-2 sm:p-4 text-center ${isCreatorMode ? '':'hidden'}">
                         <div class="flex flex-col gap-1">
                             <button class="btn-edit-lvl bg-white text-black px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">${translations[currentLanguage].btnEdit}</button>
                             <button class="btn-del-lvl bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">${translations[currentLanguage].btnDelete}</button>
@@ -1257,8 +1486,11 @@
                     document.getElementById('editingLvlId').value = lvl.id;
                     document.getElementById('lvlSong').value = lvl.song;
                     document.getElementById('lvlArtist').value = lvl.artist;
+                    document.getElementById('lvlVideo').value = lvl.video || '';
                     document.getElementById('lvlDiff').value = lvl.diff;
                     document.getElementById('lvlEdition').value = lvl.edition;
+                    document.getElementById('lvlNotes').value = lvl.notes || '';
+                    document.getElementById('lvlDuration').value = lvl.duration || '';
                     document.getElementById('lvlDate').value = lvl.date;
                     document.getElementById('lvlDl1').value = lvl.dl1 || '';
                     document.getElementById('lvlDl2').value = lvl.dl2 || '';
@@ -1291,11 +1523,18 @@
             const tbodyT = document.getElementById('tbody-tapwave');
             if(!tbodyB || !tbodyT) return; tbodyB.innerHTML = ''; tbodyT.innerHTML = '';
 
+            let filtered = sortAscendingByDate(cosmetics);
+
+            const fGenre = document.getElementById('filterSkinGenre').value;
+            const fDate = document.getElementById('filterSkinDate').value;
+
+            if(fGenre) filtered = filtered.filter(c => c.genre && c.genre.toLowerCase().includes(fGenre.toLowerCase()));
+            if(fDate) filtered = filtered.filter(c => c.date === fDate);
+
             let cB = 0; let cT = 0;
-            cosmetics.forEach((cos) => {
+            filtered.forEach((cos) => {
                 const isT = (cos.platform === 'TapWave');
                 if (isT) cT++; else cB++;
-                const cIndex = isT ? cT : cB;
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-fuchsia-950/10 transition border-b border-fuchsia-950/20";
@@ -1311,8 +1550,9 @@
                         </div>
                     `).join('');
 
+                    // MÓVIL: COLUMNA VERTICAL CUANDO HAY 2+ IMÁGENES
                     inspMarkup = `
-                        <div class="flex flex-wrap gap-2 mt-1 bg-black/40 p-1.5 rounded-xl border border-fuchsia-950/30 w-max max-w-full shadow-lg">
+                        <div class="flex flex-col md:flex-row flex-wrap gap-2 mt-1 bg-black/40 p-1.5 rounded-xl border border-fuchsia-950/30 w-max max-w-full shadow-lg">
                             ${imagesHtml}
                         </div>`;
                 }
@@ -1326,21 +1566,24 @@
                 linksLayout += `</div>`;
 
                 tr.innerHTML = `
-                    <td class="p-4 text-center font-mono font-bold text-zinc-500">${cIndex}</td>
-                    <td class="p-2 sm:p-4"><div class="w-16 h-16 sm:w-32 sm:h-32 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1 shrink-0"><img src="${cos.icon}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'"></div></td>
+                    <td class="p-2 sm:p-4"><div class="w-20 h-20 sm:w-36 sm:h-36 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1 shrink-0"><img src="${cos.icon}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'"></div></td>
                     <td class="p-2 sm:p-4 min-w-[200px] sm:min-w-[320px] flex-1">
                         <ul class="space-y-2 list-none text-zinc-300 whitespace-normal break-words">
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
-                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-24 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listName}:</span> 
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listName}:</span> 
                                 <h4 class="text-white font-black tracking-wide text-base sm:text-xl inline-block">${cos.name}</h4>
                             </li>
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
-                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-24 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listArtist}:</span> 
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listArtist}:</span> 
                                 <span class="text-zinc-200 font-bold inline-block">${cos.artist}</span>
                             </li>
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
-                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-24 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listRelease}:</span> 
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listRelease}:</span> 
                                 <span class="font-sans font-bold text-zinc-400 text-xs sm:text-sm">${formatStringToDMY(cos.date)}</span>
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:items-baseline">
+                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formGenre}:</span> 
+                                <div class="inline-flex flex-wrap gap-1">${renderGenresBadgesHtml(cos.genre)}</div>
                             </li>
                             <li class="flex flex-col gap-0.5 pt-0.5"><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs">${translations[currentLanguage].listInsp}:</span> ${inspMarkup || 'N/A'}</li>
                         </ul>
@@ -1380,6 +1623,25 @@
                     }
                     cosmeticZipToRemove = false;
 
+                    const currentGenresArray = cos.genre ? cos.genre.split(' / ').map(g => g.trim().toLowerCase()) : [];
+                    const isUniversal = currentGenresArray.length >= 7;
+                    
+                    const modeInput = document.getElementById('cosSelectedGenreMode');
+                    const btn = document.getElementById('btn-skin-universal-genre');
+                    
+                    if(isUniversal) {
+                        modeInput.value = 'universal';
+                        btn.classList.replace('bg-fuchsia-600', 'bg-emerald-600');
+                        document.querySelectorAll('.skin-genre-checkbox').forEach(cb => { cb.checked = true; cb.disabled = true; });
+                    } else {
+                        modeInput.value = 'single';
+                        btn.classList.replace('bg-emerald-600', 'bg-fuchsia-600');
+                        document.querySelectorAll('.skin-genre-checkbox').forEach(cb => {
+                            cb.disabled = false;
+                            cb.checked = currentGenresArray.includes(cb.value.toLowerCase());
+                        });
+                    }
+
                     editingCosBrandUrlsList = cos.insp ? cos.insp.split(/[\s,]+/).filter(url => url.trim() !== "") : [];
                     renderBrandManagementFormInterface();
                 });
@@ -1391,6 +1653,29 @@
             document.getElementById('counter-beatstar').innerText = cB;
             document.getElementById('counter-tapwave').innerText = cT;
         }
+
+        // EVENTOS DE FILTROS DERECHA E IZQUIERDA
+        ['filterLvlGenre', 'filterLvlDiff', 'filterLvlEdition', 'filterLvlDate'].forEach(id => {
+            document.getElementById(id)?.addEventListener('change', renderLevelsTable);
+        });
+
+        document.getElementById('btn-clear-lvl-filters')?.addEventListener('click', () => {
+            document.getElementById('filterLvlGenre').value = "";
+            document.getElementById('filterLvlDiff').value = "";
+            document.getElementById('filterLvlEdition').value = "";
+            document.getElementById('filterLvlDate').value = "";
+            renderLevelsTable();
+        });
+
+        ['filterSkinGenre', 'filterSkinDate'].forEach(id => {
+            document.getElementById(id)?.addEventListener('change', renderCosmeticsTables);
+        });
+
+        document.getElementById('btn-clear-skin-filters')?.addEventListener('click', () => {
+            document.getElementById('filterSkinGenre').value = "";
+            document.getElementById('filterSkinDate').value = "";
+            renderCosmeticsTables();
+        });
 
         function renderBrandManagementFormInterface() {
             const container = document.getElementById('cosBrandManagementList');
@@ -1479,7 +1764,6 @@
             });
         }
 
-        // CONTROL DE BOTONES PARA ELIMINAR ARCHIVOS ZIP EN EDITAR/REGISTRAR
         document.getElementById('btn-remove-chart-zip').addEventListener('click', () => {
             levelZipToRemove = true;
             document.getElementById('current-chart-zip-badge').classList.add('hidden');
@@ -1544,11 +1828,22 @@
                 }
 
                 const data = {
-                    id: id, song: document.getElementById('lvlSong').value.trim(), artist: document.getElementById('lvlArtist').value.trim(),
-                    art: finalArtUrl, audioDirectUrl: finalAudioUrl, chartDirectUrl: finalChartDirectUrl,
-                    genre: checked.join(' / ') || 'General', diff: document.getElementById('lvlDiff').value,
-                    edition: document.getElementById('lvlEdition').value, date: document.getElementById('lvlDate').value,
-                    dl1: document.getElementById('lvlDl1').value.trim(), dl2: document.getElementById('lvlDl2').value.trim(), dl3: document.getElementById('lvlDl3').value.trim()
+                    id: id, 
+                    song: document.getElementById('lvlSong').value.trim(), 
+                    artist: document.getElementById('lvlArtist').value.trim(),
+                    art: finalArtUrl, 
+                    audioDirectUrl: finalAudioUrl, 
+                    chartDirectUrl: finalChartDirectUrl,
+                    video: document.getElementById('lvlVideo').value.trim(),
+                    genre: checked.join(' / ') || 'General', 
+                    diff: document.getElementById('lvlDiff').value,
+                    edition: document.getElementById('lvlEdition').value, 
+                    notes: document.getElementById('lvlNotes').value.trim(),
+                    duration: document.getElementById('lvlDuration').value.trim(),
+                    date: document.getElementById('lvlDate').value,
+                    dl1: document.getElementById('lvlDl1').value.trim(), 
+                    dl2: document.getElementById('lvlDl2').value.trim(), 
+                    dl3: document.getElementById('lvlDl3').value.trim()
                 };
 
                 if(db) {
@@ -1591,11 +1886,30 @@
 
                 let finalInspString = editingCosBrandUrlsList.join(', ');
 
+                // CÁLCULO GÉNERO SKINS (1 O UNIVERSAL)
+                let finalSkinGenre = "General";
+                const isUniversal = document.getElementById('cosSelectedGenreMode').value === 'universal';
+                
+                if(isUniversal) {
+                    finalSkinGenre = skinUniversalGenreList.map(g => g.label).join(' / ');
+                } else {
+                    const checkedCb = document.querySelector('.skin-genre-checkbox:checked');
+                    if(checkedCb) finalSkinGenre = checkedCb.value;
+                }
+
                 const data = {
-                    id: id, name: document.getElementById('cosName').value.trim(), artist: document.getElementById('cosArtist').value.trim(),
-                    icon: finalIconUrl, video: document.getElementById('cosVideo').value.trim(),
-                    date: document.getElementById('cosDate').value, insp: finalInspString, skinDirectUrl: finalSkinDirectUrl,
-                    platform: currentSelectedSkinSubPlatform, dl1: document.getElementById('cosDl1').value.trim(), dl2: document.getElementById('cosDl2').value.trim()
+                    id: id, 
+                    name: document.getElementById('cosName').value.trim(), 
+                    artist: document.getElementById('cosArtist').value.trim(),
+                    icon: finalIconUrl, 
+                    video: document.getElementById('cosVideo').value.trim(),
+                    date: document.getElementById('cosDate').value, 
+                    genre: finalSkinGenre,
+                    insp: finalInspString, 
+                    skinDirectUrl: finalSkinDirectUrl,
+                    platform: currentSelectedSkinSubPlatform, 
+                    dl1: document.getElementById('cosDl1').value.trim(), 
+                    dl2: document.getElementById('cosDl2').value.trim()
                 };
 
                 if(db) {
@@ -1607,6 +1921,12 @@
                     document.getElementById('cosBrandManagementList').classList.add('hidden');
                     document.getElementById('current-skin-zip-badge').classList.add('hidden');
                     document.getElementById('btn-remove-skin-zip').classList.add('hidden');
+                    
+                    document.getElementById('cosSelectedGenreMode').value = 'single';
+                    const btnU = document.getElementById('btn-skin-universal-genre');
+                    btnU.classList.replace('bg-emerald-600', 'bg-fuchsia-600');
+                    buildSkinGenresSelector();
+
                     cosmeticZipToRemove = false;
                     editingCosBrandUrlsList = [];
                 }
@@ -1676,6 +1996,7 @@
         document.getElementById('btn-picker-cos').addEventListener('click', () => document.getElementById('cosDate').showPicker?.() || document.getElementById('cosDate').focus());
 
         buildGenresSelector();
+        buildSkinGenresSelector();
         buildVisualAssetsPanelInterface();
         applyLanguagePack();
     </script>
