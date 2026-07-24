@@ -72,11 +72,6 @@
         <p id="loading-overlay-text" class="text-base font-bold text-white text-center px-4 font-sans">Boogie está trabajando en ello, espera un momento</p>
     </div>
 
-    <!-- BOTÓN HERRAMIENTA CREADOR (ESQUINA INFERIOR IZQUIERDA PC) -->
-    <button id="btn-boogie-admin-trigger" class="hidden md:flex fixed bottom-4 left-4 z-50 p-3 bg-zinc-950/40 hover:bg-zinc-900/80 border border-zinc-800/60 rounded-full text-zinc-400 hover:text-white transition shadow-2xl items-center justify-center group" title="Acceso Creador">
-        <i class="fa-solid fa-wrench text-base transition-transform group-hover:rotate-45"></i>
-    </button>
-
     <!-- MODAL BOOGIE ADM / CREDENCIALES -->
     <div id="boogie-auth-modal" class="hidden fixed inset-0 bg-black/90 z-[130] flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#11091c] border border-fuchsia-500/40 rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative text-center flex flex-col items-center">
@@ -86,18 +81,36 @@
                 Este espacio es solo para Boogie. Por favor introduce los códigos especiales
             </p>
 
-            <form id="boogie-auth-form" class="w-full space-y-3 text-left">
+            <form id="boogie-auth-form" class="w-full space-y-4 text-left" autocomplete="off">
+                <!-- Credencial 1 -->
                 <div>
-                    <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred1">Credencial 1 (Clave Admin)</label>
-                    <input type="password" id="boogieCred1" required placeholder="••••••••" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
+                    <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred1">Credencial 1</label>
+                    <div class="relative flex items-center">
+                        <input type="password" id="boogieCred1" required autocomplete="off" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 pr-10 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
+                        <button type="button" class="toggle-password-btn absolute right-3 text-zinc-500 hover:text-white" data-target="boogieCred1">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
+                <!-- Credencial 2 -->
                 <div>
-                    <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred2">Credencial 2 (Usuario GitHub)</label>
-                    <input type="text" id="boogieCred2" required placeholder="Usuario..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
+                    <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred2">Credencial 2</label>
+                    <div class="relative flex items-center">
+                        <input type="password" id="boogieCred2" required autocomplete="off" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 pr-10 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
+                        <button type="button" class="toggle-password-btn absolute right-3 text-zinc-500 hover:text-white" data-target="boogieCred2">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
+                <!-- Credencial 3 -->
                 <div>
-                    <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred3">Credencial 3 (GitHub PAT Token)</label>
-                    <input type="password" id="boogieCred3" required placeholder="ghp_••••••••••••••••" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
+                    <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred3">Credencial 3</label>
+                    <div class="relative flex items-center">
+                        <input type="password" id="boogieCred3" required autocomplete="off" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 pr-10 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
+                        <button type="button" class="toggle-password-btn absolute right-3 text-zinc-500 hover:text-white" data-target="boogieCred3">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="pt-2 flex gap-3">
@@ -109,6 +122,18 @@
             <button id="btn-close-boogie-modal-x" class="absolute top-4 right-4 text-zinc-500 hover:text-white text-lg p-1">
                 <i class="fa-solid fa-xmark"></i>
             </button>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIRMACIÓN SALIR MODO CREADOR -->
+    <div id="boogie-exit-modal" class="hidden fixed inset-0 bg-black/90 z-[135] flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-[#11091c] border border-red-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center">
+            <i class="fa-solid fa-right-from-bracket text-red-400 text-3xl mb-3"></i>
+            <h3 class="text-lg font-black text-white uppercase tracking-wide mb-6" data-i18n="exitPromptTitle">¿Deseas salir?</h3>
+            <div class="flex gap-3 w-full">
+                <button id="btn-cancel-exit-creator" class="flex-1 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-300 hover:text-white transition" data-i18n="btnContinue">Continuar</button>
+                <button id="btn-confirm-exit-creator" class="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-black uppercase shadow transition" data-i18n="btnExit">Salir</button>
+            </div>
         </div>
     </div>
 
@@ -429,25 +454,35 @@
                         </div>
 
                         <!-- BARRA DE FILTROS CHARTS -->
-                        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto text-xs">
-                            <select id="filterLvlGenre" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-bold">
-                                <option value="" data-i18n="filterAllGenres">Todos los Géneros</option>
-                            </select>
-                            <select id="filterLvlDiff" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-bold">
-                                <option value="" data-i18n="filterAllDiffs">Todas las Dificultades</option>
-                                <option value="Normal">Normal</option>
-                                <option value="Hard">Hard</option>
-                                <option value="Extreme">Extreme</option>
-                            </select>
-                            <select id="filterLvlEdition" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-bold">
-                                <option value="" data-i18n="filterAllEditions">Todas las Ediciones</option>
-                                <option value="Standard">Standard</option>
-                                <option value="Deluxe">Deluxe</option>
-                            </select>
-                            <input type="date" id="filterLvlDate" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2 py-1 text-zinc-300 font-bold">
-                            <button id="btn-clear-lvl-filters" class="px-3 py-1.5 bg-red-950/50 border border-red-800/40 text-red-400 rounded-xl font-bold hover:bg-red-900/60 transition flex items-center gap-1">
-                                <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btnClearFilters">Limpiar</span>
-                            </button>
+                        <div class="flex flex-wrap items-center gap-3 ml-auto text-xs">
+                            <div class="flex flex-col">
+                                <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterGenre">Género</label>
+                                <select id="filterLvlGenre" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-bold focus:outline-none">
+                                    <option value="" data-i18n="filterAll">Todos</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterDiff">Dificultad</label>
+                                <select id="filterLvlDiff" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-bold focus:outline-none">
+                                    <option value="" data-i18n="filterAll">Todos</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Hard">Hard</option>
+                                    <option value="Extreme">Extreme</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterEdit">Edición</label>
+                                <select id="filterLvlEdition" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-bold focus:outline-none">
+                                    <option value="" data-i18n="filterAll">Todos</option>
+                                    <option value="Standard">Standard</option>
+                                    <option value="Deluxe">Deluxe</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col justify-end">
+                                <button id="btn-clear-lvl-filters" class="h-[34px] mt-auto px-3 py-1.5 bg-red-950/50 border border-red-800/40 text-red-400 rounded-xl font-bold hover:bg-red-900/60 transition flex items-center gap-1">
+                                    <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btnClearFilters">Limpiar</span>
+                                </button>
+                            </div>
                         </div>
 
                         <div class="text-[10px] sm:text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-2.5 py-1.5 rounded-xl text-orange-400 shrink-0">
@@ -455,15 +490,15 @@
                         </div>
                     </div>
 
-                    <!-- TABLA CHARTS CON DISEÑO ESTILO SKINS -->
+                    <!-- TABLA CHARTS CON PREVIEW 16:9 -->
                     <div id="levels-table-wrapper" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                         <table class="w-full text-left border-collapse min-w-[700px] sm:min-w-[900px]">
                             <thead>
                                 <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                    <th class="p-4 w-40 sm:w-48 text-center" data-i18n="thArt">Arte</th>
+                                    <th class="p-4 w-32 sm:w-44 text-center" data-i18n="thArt">Arte</th>
                                     <th class="p-4" data-i18n="thSongInfo">Información</th>
-                                    <th class="p-4 text-center w-48 sm:w-64" data-i18n="thPreview">Preview</th>
-                                    <th class="p-4 text-center w-60 sm:w-64 min-w-[170px]" data-i18n="thPlatformDl">Descarga</th>
+                                    <th class="p-4 text-center w-52 sm:w-72" data-i18n="thPreview">Preview</th>
+                                    <th class="p-4 text-center w-48 sm:w-52 min-w-[150px]" data-i18n="thPlatformDl">Descarga</th>
                                     <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
                                 </tr>
                             </thead>
@@ -536,7 +571,7 @@
                             <input type="date" id="cosDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                         </div>
 
-                        <!-- GÉNERO EXCLUSIVO SKINS (1 SOLO O UNIVERSAL, SIN CLASSICAL) -->
+                        <!-- GÉNERO SKINS -->
                         <div>
                             <div class="flex items-center justify-between mb-1">
                                 <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="formGenre">Género</label>
@@ -575,15 +610,20 @@
                 <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-6 flex-grow">
                     <!-- BARRA DE FILTROS SKINS -->
                     <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-                        <div class="text-sm sm:text-base font-black tracking-wide uppercase text-fuchsia-400 shrink-0" data-i18n="navCosmetics">Skins</div>
-                        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto text-xs">
-                            <select id="filterSkinGenre" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-bold">
-                                <option value="" data-i18n="filterAllGenres">Todos los Géneros</option>
-                            </select>
-                            <input type="date" id="filterSkinDate" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2 py-1 text-zinc-300 font-bold">
-                            <button id="btn-clear-skin-filters" class="px-3 py-1.5 bg-red-950/50 border border-red-800/40 text-red-400 rounded-xl font-bold hover:bg-red-900/60 transition flex items-center gap-1">
-                                <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btnClearFilters">Limpiar</span>
-                            </button>
+                        <div class="text-sm sm:text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500 shrink-0" data-i18n="navCosmetics">Skins</div>
+                        
+                        <div class="flex flex-wrap items-center gap-3 ml-auto text-xs">
+                            <div class="flex flex-col">
+                                <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterGenre">Género</label>
+                                <select id="filterSkinGenre" class="bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-bold focus:outline-none">
+                                    <option value="" data-i18n="filterAll">Todos</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col justify-end">
+                                <button id="btn-clear-skin-filters" class="h-[34px] mt-auto px-3 py-1.5 bg-red-950/50 border border-red-800/40 text-red-400 rounded-xl font-bold hover:bg-red-900/60 transition flex items-center gap-1">
+                                    <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btnClearFilters">Limpiar</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -650,9 +690,17 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="border-t border-fuchsia-950/20 bg-[#05020a] py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-end gap-4">
-            <div class="flex items-center gap-3">
+    <footer class="border-t border-fuchsia-950/20 bg-[#05020a] py-6 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            
+            <!-- BOTÓN HERRAMIENTA EN FOOTER SOLO PC -->
+            <div id="footer-boogie-admin-box" class="hidden md:flex items-center">
+                <button id="btn-boogie-admin-trigger" class="p-2.5 bg-zinc-950/40 hover:bg-zinc-900/80 border border-zinc-800/60 rounded-full text-zinc-400 hover:text-white transition shadow-xl flex items-center justify-center opacity-70 hover:opacity-100" title="Acceso Creador">
+                    <i class="fa-solid fa-wrench text-sm"></i>
+                </button>
+            </div>
+
+            <div class="flex items-center gap-3 ml-auto">
                 <a id="footer-link-beatclone" href="#" target="_blank" class="px-3 py-1.5 rounded-xl border border-zinc-800/80 bg-zinc-950/40 text-xs font-bold text-zinc-400 flex items-center gap-2">
                     <img src="Beatstar1.png" alt="Beatclone" class="w-4 h-4 force-white-icon"><span>Beatclone</span>
                 </a>
@@ -691,7 +739,6 @@
             { color: "#019ac4", label: "RnB" }
         ];
 
-        // ORDEN STRICTO UNIVERSAL SKINS (SIN CLASSICAL)
         const skinUniversalGenreList = [
             { color: "#c43d73", label: "Pop" },
             { color: "#da6128", label: "Alternative" },
@@ -733,9 +780,9 @@
                 visualAssetsMenuTitle: "Panel de Assets Visuales Dinámicos",
                 thanksTitle: "Gracias por jugar a Beatclone",
                 boogieAuthMsg: "Este espacio es solo para Boogie. Por favor introduce los códigos especiales",
-                labelCred1: "Credencial 1 (Clave Admin)",
-                labelCred2: "Credencial 2 (Usuario GitHub)",
-                labelCred3: "Credencial 3 (GitHub PAT Token)",
+                labelCred1: "Credencial 1",
+                labelCred2: "Credencial 2",
+                labelCred3: "Credencial 3",
                 btnClose: "Cerrar",
                 btnSend: "Enviar",
                 listNotes: "Notas",
@@ -743,10 +790,14 @@
                 formNotes: "Notas",
                 formDuration: "Duración",
                 btnUniversal: "Universal",
-                filterAllGenres: "Todos los Géneros",
-                filterAllDiffs: "Todas las Dificultades",
-                filterAllEditions: "Todas las Ediciones",
-                btnClearFilters: "Limpiar"
+                filterAll: "Todos",
+                btnClearFilters: "Limpiar",
+                lblFilterGenre: "Género",
+                lblFilterDiff: "Dificultad",
+                lblFilterEdit: "Edición",
+                exitPromptTitle: "¿Deseas salir?",
+                btnContinue: "Continuar",
+                btnExit: "Salir"
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -778,9 +829,9 @@
                 visualAssetsMenuTitle: "Dynamic Visual Assets Panel",
                 thanksTitle: "Thanks for playing Beatclone",
                 boogieAuthMsg: "This space is only for Boogie. Please enter the special codes",
-                labelCred1: "Credential 1 (Admin Pass)",
-                labelCred2: "Credential 2 (GitHub User)",
-                labelCred3: "Credential 3 (GitHub PAT Token)",
+                labelCred1: "Credential 1",
+                labelCred2: "Credential 2",
+                labelCred3: "Credential 3",
                 btnClose: "Close",
                 btnSend: "Submit",
                 listNotes: "Notes",
@@ -788,15 +839,20 @@
                 formNotes: "Notes",
                 formDuration: "Duration",
                 btnUniversal: "Universal",
-                filterAllGenres: "All Genres",
-                filterAllDiffs: "All Difficulties",
-                filterAllEditions: "All Editions",
-                btnClearFilters: "Clear"
+                filterAll: "All",
+                btnClearFilters: "Clear",
+                lblFilterGenre: "Genre",
+                lblFilterDiff: "Difficulty",
+                lblFilterEdit: "Edition",
+                exitPromptTitle: "Do you want to exit?",
+                btnContinue: "Continue",
+                btnExit: "Exit"
             }
         };
 
         let isCreatorMode = false;
         let currentLanguage = localStorage.getItem('nexus_lang') || 'es';
+        let currentViewName = 'home';
         let levels = [];
         let cosmetics = [];
         let globalFooterLinks = { beatclone: '', bscm: '', beatcharts: '' };
@@ -829,18 +885,23 @@
         const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
         function navigateTo(view, pushState = true) {
+            currentViewName = view;
             ['home', 'levels', 'cosmetics'].forEach(v => document.getElementById(`view-${v}`)?.classList.add('hidden'));
             document.getElementById(`view-${view}`)?.classList.remove('hidden');
             
             const shortcuts = document.getElementById('nav-shortcuts');
             const sep = document.getElementById('nav-separator');
+            const footerBoogieBox = document.getElementById('footer-boogie-admin-box');
+
             if (view === 'home') { 
                 shortcuts?.classList.add('hidden'); 
                 sep?.classList.add('hidden'); 
+                footerBoogieBox?.classList.remove('hidden');
             } else { 
                 shortcuts?.classList.remove('hidden'); 
                 shortcuts?.classList.add('flex'); 
                 sep?.classList.remove('hidden'); 
+                footerBoogieBox?.classList.add('hidden');
             }
             
             if(view === 'cosmetics') resetCosmeticsSubmenuWorkspace();
@@ -888,27 +949,48 @@
         document.getElementById('card-to-levels').addEventListener('click', () => navigateTo('levels'));
         document.getElementById('card-to-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
         
-        // MODAL ADM Y TRIGGER BOOGIE
+        // CREADOR / MODAL BOOGIE & SALIR
         const btnBoogieTrigger = document.getElementById('btn-boogie-admin-trigger');
         const modalBoogie = document.getElementById('boogie-auth-modal');
+        const modalBoogieExit = document.getElementById('boogie-exit-modal');
         
         btnBoogieTrigger.addEventListener('click', () => {
             if(isCreatorMode) {
-                if(confirm("¿Deseas salir del modo Creador?")) {
-                    isCreatorMode = false;
-                    githubToken = "";
-                    githubUser = "";
-                    btnBoogieTrigger.classList.remove('glow-green');
-                    applyRoleUIVisibility();
-                }
+                modalBoogieExit.classList.remove('hidden');
             } else {
                 modalBoogie.classList.remove('hidden');
             }
         });
 
+        document.getElementById('btn-cancel-exit-creator').addEventListener('click', () => modalBoogieExit.classList.add('hidden'));
+        document.getElementById('btn-confirm-exit-creator').addEventListener('click', () => {
+            isCreatorMode = false;
+            githubToken = "";
+            githubUser = "";
+            btnBoogieTrigger.classList.remove('glow-green');
+            modalBoogieExit.classList.add('hidden');
+            applyRoleUIVisibility();
+        });
+
         const closeModalBoogie = () => modalBoogie.classList.add('hidden');
         document.getElementById('btn-close-boogie-modal').addEventListener('click', closeModalBoogie);
         document.getElementById('btn-close-boogie-modal-x').addEventListener('click', closeModalBoogie);
+
+        // VISIBILIDAD DE CONTRASEÑA EN CREDENCIALES
+        document.querySelectorAll('.toggle-password-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                const icon = btn.querySelector('i');
+                if(input.type === 'password') {
+                    input.type = 'text';
+                    icon.className = 'fa-solid fa-eye-slash';
+                } else {
+                    input.type = 'password';
+                    icon.className = 'fa-solid fa-eye';
+                }
+            });
+        });
 
         document.getElementById('boogie-auth-form').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -1080,6 +1162,7 @@
                 activeAudioButton = null;
             }
             if(activeAudioImg) {
+                activeAudioImg.classList.add('bg-zinc-900');
                 activeAudioImg = null;
             }
             if(activeArtContainer) {
@@ -1094,17 +1177,22 @@
             currentRotationAngle = 0;
         }
 
-        function startRadialCanvasVisualizer(canvas, analyser) {
+        // MOTOR DE VISUALIZACIÓN RADIAL CORREGIDO
+        function startRadialCanvasVisualizer(canvas, analyser, containerElement) {
             const ctx = canvas.getContext('2d');
             const bufferLength = analyser.frequencyBinCount;
             const dataArray = new Uint8Array(bufferLength);
             
-            canvas.width = 180; 
-            canvas.height = 180;
+            const rect = containerElement.getBoundingClientRect();
+            const displaySize = Math.max(rect.width, rect.height) || 144;
+            
+            canvas.width = displaySize + 40; 
+            canvas.height = displaySize + 40;
+            
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
             
-            const radius = isMobileDevice ? 44 : 46; 
+            const radius = (displaySize / 2) - 2; 
 
             function draw() {
                 if(!activeCanvas || activeCanvas !== canvas) return;
@@ -1113,9 +1201,9 @@
                 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                currentRotationAngle += isMobileDevice ? 0.008 : 0.006; 
+                currentRotationAngle += 0.008; 
 
-                const barCount = isMobileDevice ? 60 : 100; 
+                const barCount = 72; 
                 for (let i = 0; i < barCount; i++) {
                     const angle = ((i / barCount) * Math.PI * 2) + currentRotationAngle;
                     
@@ -1123,7 +1211,7 @@
                     const dataIndex = Math.floor((targetIndex / (barCount / 2)) * bufferLength * 0.6);
                     const rawValue = dataArray[dataIndex] || 0;
                     
-                    const barHeight = (rawValue / 255) * (isMobileDevice ? 30 : 32); 
+                    const barHeight = (rawValue / 255) * 22; 
                     
                     const startX = centerX + Math.cos(angle) * radius;
                     const startY = centerY + Math.sin(angle) * radius;
@@ -1131,7 +1219,7 @@
                     const endY = centerY + Math.sin(angle) * (radius + barHeight);
                     
                     ctx.strokeStyle = '#d946ef';
-                    ctx.lineWidth = isMobileDevice ? 2.0 : 2.2;
+                    ctx.lineWidth = 2.5;
                     ctx.lineCap = 'round';
                     ctx.beginPath();
                     ctx.moveTo(startX, startY);
@@ -1155,7 +1243,7 @@
             if(!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 audioAnalyser = audioCtx.createAnalyser();
-                audioAnalyser.fftSize = isMobileDevice ? 128 : 256;
+                audioAnalyser.fftSize = 128;
             }
 
             const audio = new Audio();
@@ -1168,11 +1256,12 @@
                 
                 btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
                 containerElement.classList.add('art-container-circular');
+                imgElement.classList.remove('bg-zinc-900');
 
                 if(audioCtx.state === 'suspended') audioCtx.resume();
 
                 audio.play().then(() => {
-                    startRadialCanvasVisualizer(canvasElement, audioAnalyser);
+                    startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement);
                 }).catch(err => console.error("Audio playback error:", err));
             });
 
@@ -1295,7 +1384,7 @@
             
             if(lvlSelect) {
                 const current = lvlSelect.value;
-                lvlSelect.innerHTML = `<option value="">${translations[currentLanguage].filterAllGenres}</option>`;
+                lvlSelect.innerHTML = `<option value="">${translations[currentLanguage].filterAll}</option>`;
                 genreList.forEach(g => {
                     lvlSelect.innerHTML += `<option value="${g.label}">${g.label}</option>`;
                 });
@@ -1304,7 +1393,7 @@
 
             if(skinSelect) {
                 const current = skinSelect.value;
-                skinSelect.innerHTML = `<option value="">${translations[currentLanguage].filterAllGenres}</option>`;
+                skinSelect.innerHTML = `<option value="">${translations[currentLanguage].filterAll}</option>`;
                 skinUniversalGenreList.forEach(g => {
                     skinSelect.innerHTML += `<option value="${g.label}">${g.label}</option>`;
                 });
@@ -1342,7 +1431,6 @@
             return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
         }
 
-        // ORDEN ASCENDENTE POR FECHA (DESDE MÁS ANTIGUO)
         function sortAscendingByDate(arr) {
             return [...arr].sort((a, b) => {
                 const dA = new Date(a.date || 0);
@@ -1360,12 +1448,10 @@
             const fGenre = document.getElementById('filterLvlGenre').value;
             const fDiff = document.getElementById('filterLvlDiff').value;
             const fEdition = document.getElementById('filterLvlEdition').value;
-            const fDate = document.getElementById('filterLvlDate').value;
 
             if(fGenre) filtered = filtered.filter(l => l.genre && l.genre.toLowerCase().includes(fGenre.toLowerCase()));
             if(fDiff) filtered = filtered.filter(l => l.diff === fDiff);
             if(fEdition) filtered = filtered.filter(l => l.edition === fEdition);
-            if(fDate) filtered = filtered.filter(l => l.date === fDate);
 
             filtered.forEach((lvl) => {
                 const tr = document.createElement('tr');
@@ -1398,31 +1484,32 @@
                 const editionContainerClass = isDeluxe ? "glow-gold bg-yellow-500/10 text-yellow-400 border border-yellow-500/40" : "bg-zinc-900 border border-zinc-800 text-zinc-400";
 
                 const editionGraphicMarkup = dynamicEditionAsset
-                    ? `<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${editionContainerClass} font-black text-[10px] uppercase truncate"><span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${targetEditionHex}; -webkit-mask-image: url('${dynamicEditionAsset}'); mask-image: url('${dynamicEditionAsset}');"></span><span>${lvl.edition}</span></div>`
-                    : `<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${editionContainerClass} font-black text-[10px] uppercase truncate"><span>${lvl.edition}</span></div>`;
+                    ? `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${editionContainerClass} font-black text-[10px] uppercase truncate"><span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${targetEditionHex}; -webkit-mask-image: url('${dynamicEditionAsset}'); mask-image: url('${dynamicEditionAsset}');"></span><span>${lvl.edition}</span></div>`
+                    : `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${editionContainerClass} font-black text-[10px] uppercase truncate"><span>${lvl.edition}</span></div>`;
 
                 const hasAudio = !!lvl.audioDirectUrl;
 
-                let linksLayout = `<div class="flex flex-col gap-1.5 max-w-[190px] sm:max-w-[240px] mx-auto">`;
+                let linksLayout = `<div class="flex flex-col gap-1 max-w-[140px] sm:max-w-[160px] mx-auto">`;
                 if(lvl.chartDirectUrl) {
-                    linksLayout += `<button class="btn-direct-download-trigger bg-gradient-to-r from-emerald-500 to-teal-500 text-black px-4 py-2 rounded-xl text-xs font-black uppercase flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-circle-down"></i>${translations[currentLanguage].downloadDirectBtn}</button>`;
+                    linksLayout += `<button class="btn-direct-download-trigger bg-gradient-to-r from-emerald-500 to-teal-500 text-black px-2.5 py-1.5 rounded-lg text-[11px] font-black uppercase flex items-center justify-center gap-1 shadow"><i class="fa-solid fa-circle-down"></i>${translations[currentLanguage].downloadDirectBtn}</button>`;
                 }
-                if (lvl.dl1) linksLayout += `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 px-4 py-2 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-3.5 h-3.5 force-white-icon">Discord</a>`;
-                if (lvl.dl2) linksLayout += `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 px-4 py-2 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-3.5 h-3.5 force-white-icon">BSCM</a>`;
-                if (lvl.dl3) linksLayout += `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-4 py-2 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-3.5 h-3.5 force-white-icon">beatcharts</a>`;
+                if (lvl.dl1) linksLayout += `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 px-2 py-1 text-center rounded-lg text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-3 h-3 force-white-icon">Discord</a>`;
+                if (lvl.dl2) linksLayout += `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 px-2 py-1 text-center rounded-lg text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-3 h-3 force-white-icon">BSCM</a>`;
+                if (lvl.dl3) linksLayout += `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-2 py-1 text-center rounded-lg text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-3 h-3 force-white-icon">beatcharts</a>`;
                 linksLayout += `</div>`;
 
-                let pMarkup = lvl.video ? `<div class="w-28 h-48 sm:w-36 sm:h-64 mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl shrink-0"><iframe src="${parseYoutubeEmbedUrl(lvl.video)}" class="w-full h-full border-0"></iframe></div>` : '[No Preview]';
+                let pMarkup = lvl.video ? `<div class="w-full aspect-video max-w-[240px] sm:max-w-[280px] mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl shrink-0"><iframe src="${parseYoutubeEmbedUrl(lvl.video)}" class="w-full h-full border-0"></iframe></div>` : '[No Preview]';
 
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center">
-                        <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0 overflow-visible">
-                            <canvas class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+                        <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
+                            <!-- CANVAS REPOSICIONADO PARA SOBRESALIR -->
+                            <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
                             <div class="target-art-outer-container w-full h-full relative z-10 overflow-hidden rounded-xl border border-fuchsia-500/30 shadow-lg shrink-0 transition-all duration-300">
-                                <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900" onerror="this.src='free_song_Image.png'">
+                                <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
                             </div>
                             ${hasAudio ? `
-                                <button class="btn-play-audio-preview absolute bottom-2 right-2 w-7 h-7 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
+                                <button class="btn-play-audio-preview absolute bottom-1 right-1 w-7 h-7 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
                                     <i class="fa-solid fa-play text-[10px]"></i>
                                 </button>
                             ` : ''}
@@ -1440,7 +1527,7 @@
                             </li>
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formDifficulty}:</span> 
-                                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border ${bStyle} font-black uppercase text-[10px]">${diffGraphic} <span>${diffText}</span></div>
+                                <div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded border ${bStyle} font-black uppercase text-[10px]">${diffGraphic} <span>${diffText}</span></div>
                             </li>
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formEdition}:</span> 
@@ -1524,12 +1611,9 @@
             if(!tbodyB || !tbodyT) return; tbodyB.innerHTML = ''; tbodyT.innerHTML = '';
 
             let filtered = sortAscendingByDate(cosmetics);
-
             const fGenre = document.getElementById('filterSkinGenre').value;
-            const fDate = document.getElementById('filterSkinDate').value;
 
             if(fGenre) filtered = filtered.filter(c => c.genre && c.genre.toLowerCase().includes(fGenre.toLowerCase()));
-            if(fDate) filtered = filtered.filter(c => c.date === fDate);
 
             let cB = 0; let cT = 0;
             filtered.forEach((cos) => {
@@ -1550,7 +1634,6 @@
                         </div>
                     `).join('');
 
-                    // MÓVIL: COLUMNA VERTICAL CUANDO HAY 2+ IMÁGENES
                     inspMarkup = `
                         <div class="flex flex-col md:flex-row flex-wrap gap-2 mt-1 bg-black/40 p-1.5 rounded-xl border border-fuchsia-950/30 w-max max-w-full shadow-lg">
                             ${imagesHtml}
@@ -1654,8 +1737,7 @@
             document.getElementById('counter-tapwave').innerText = cT;
         }
 
-        // EVENTOS DE FILTROS DERECHA E IZQUIERDA
-        ['filterLvlGenre', 'filterLvlDiff', 'filterLvlEdition', 'filterLvlDate'].forEach(id => {
+        ['filterLvlGenre', 'filterLvlDiff', 'filterLvlEdition'].forEach(id => {
             document.getElementById(id)?.addEventListener('change', renderLevelsTable);
         });
 
@@ -1663,17 +1745,13 @@
             document.getElementById('filterLvlGenre').value = "";
             document.getElementById('filterLvlDiff').value = "";
             document.getElementById('filterLvlEdition').value = "";
-            document.getElementById('filterLvlDate').value = "";
             renderLevelsTable();
         });
 
-        ['filterSkinGenre', 'filterSkinDate'].forEach(id => {
-            document.getElementById(id)?.addEventListener('change', renderCosmeticsTables);
-        });
+        document.getElementById('filterSkinGenre')?.addEventListener('change', renderCosmeticsTables);
 
         document.getElementById('btn-clear-skin-filters')?.addEventListener('click', () => {
             document.getElementById('filterSkinGenre').value = "";
-            document.getElementById('filterSkinDate').value = "";
             renderCosmeticsTables();
         });
 
@@ -1886,7 +1964,6 @@
 
                 let finalInspString = editingCosBrandUrlsList.join(', ');
 
-                // CÁLCULO GÉNERO SKINS (1 O UNIVERSAL)
                 let finalSkinGenre = "General";
                 const isUniversal = document.getElementById('cosSelectedGenreMode').value === 'universal';
                 
