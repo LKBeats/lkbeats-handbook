@@ -500,9 +500,14 @@
                             <input type="url" id="lvlDl2" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="BSCM URL">
                             <input type="url" id="lvlDl3" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="beatcharts URL">
                         </div>
-                        <button type="submit" id="lvlSubmitBtn" class="w-full py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-black font-black uppercase rounded-lg">
-                            <span data-i18n="btnRegister">Registrar</span>
-                        </button>
+                        <div class="flex gap-2 pt-2">
+                            <button type="button" id="btn-cancel-lvl-form" class="flex-1 py-2 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white font-black uppercase rounded-lg transition">
+                                <span data-i18n="btnCancel">Cancelar</span>
+                            </button>
+                            <button type="submit" id="lvlSubmitBtn" class="flex-1 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-black font-black uppercase rounded-lg shadow transition hover:opacity-90">
+                                <span data-i18n="btnRegister">Registrar</span>
+                            </button>
+                        </div>
                     </form>
                 </div>
 
@@ -683,9 +688,14 @@
                             <input type="url" id="cosDl1" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="Discord Link">
                             <input type="url" id="cosDl2" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="BSCM Link">
                         </div>
-                        <button type="submit" id="cosSubmitBtn" class="w-full py-2 bg-gradient-to-r from-fuchsia-500 to-pink-500 text-black font-black uppercase rounded-lg">
-                            <span data-i18n="btnRegister">Registrar</span>
-                        </button>
+                        <div class="flex gap-2 pt-2">
+                            <button type="button" id="btn-cancel-cos-form" class="flex-1 py-2 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white font-black uppercase rounded-lg transition">
+                                <span data-i18n="btnCancel">Cancelar</span>
+                            </button>
+                            <button type="submit" id="cosSubmitBtn" class="flex-1 py-2 bg-gradient-to-r from-fuchsia-500 to-pink-500 text-black font-black uppercase rounded-lg shadow transition hover:opacity-90">
+                                <span data-i18n="btnRegister">Registrar</span>
+                            </button>
+                        </div>
                     </form>
                 </div>
 
@@ -1004,6 +1014,7 @@
             document.getElementById('cosmetics-submenu').classList.remove('hidden');
             document.getElementById('cosmetics-submenu').classList.add('flex');
             document.getElementById('cosmetics-active-workspace').classList.remove('flex');
+            document.getElementById('cosmetics-active-[#cosmetics-active-workspace]').classList?.add('hidden');
             document.getElementById('cosmetics-active-workspace').classList.add('hidden');
         }
 
@@ -1150,6 +1161,69 @@
             if(document.getElementById('cosDate').value) document.getElementById('cosIsComingSoon').value = "false";
         });
 
+        // FUNCIONES AUXILIARES PARA LIMPIAR Y CANCELAR FORMULARIOS
+        function resetLevelFormState() {
+            document.getElementById('level-form').reset();
+            document.getElementById('editingLvlId').value = '';
+            
+            const submitBtn = document.getElementById('lvlSubmitBtn');
+            if (submitBtn) {
+                const textSpan = submitBtn.querySelector('span');
+                if (textSpan) textSpan.innerText = translations[currentLanguage].btnRegister;
+                else submitBtn.innerText = translations[currentLanguage].btnRegister;
+            }
+
+            document.getElementById('current-chart-zip-badge').classList.add('hidden');
+            document.getElementById('btn-remove-chart-zip').classList.add('hidden');
+            document.getElementById('current-lvl-video-badge').classList.add('hidden');
+            document.getElementById('btn-remove-lvl-video').classList.add('hidden');
+            document.getElementById('current-lvl-audio-badge').classList.add('hidden');
+            document.getElementById('btn-remove-lvl-audio').classList.add('hidden');
+            document.getElementById('lvlArtPreviewBox').classList.add('hidden');
+            document.getElementById('lvlIsComingSoon').value = "false";
+            
+            levelZipToRemove = false;
+            levelArtToRemove = false;
+            levelVideoToRemove = false;
+            levelAudioToRemove = false;
+            
+            buildGenresSelector();
+        }
+
+        function resetCosmeticFormState() {
+            document.getElementById('cosmetic-form').reset();
+            document.getElementById('editingCosId').value = '';
+            
+            const submitBtn = document.getElementById('cosSubmitBtn');
+            if (submitBtn) {
+                const textSpan = submitBtn.querySelector('span');
+                if (textSpan) textSpan.innerText = translations[currentLanguage].btnRegister;
+                else submitBtn.innerText = translations[currentLanguage].btnRegister;
+            }
+
+            document.getElementById('cosBrandManagementList').classList.add('hidden');
+            document.getElementById('current-skin-zip-badge').classList.add('hidden');
+            document.getElementById('btn-remove-skin-zip').classList.add('hidden');
+            document.getElementById('current-cos-video-badge').classList.add('hidden');
+            document.getElementById('btn-remove-cos-video').classList.add('hidden');
+            document.getElementById('cosIconPreviewBox').classList.add('hidden');
+            document.getElementById('cosIsComingSoon').value = "false";
+            
+            document.getElementById('cosSelectedGenreMode').value = 'single';
+            const btnU = document.getElementById('btn-skin-universal-genre');
+            if (btnU) btnU.classList.replace('bg-emerald-600', 'bg-fuchsia-600');
+            
+            buildSkinGenresSelector();
+
+            cosmeticZipToRemove = false;
+            cosmeticIconToRemove = false;
+            cosmeticVideoToRemove = false;
+            editingCosBrandUrlsList = [];
+        }
+
+        document.getElementById('btn-cancel-lvl-form')?.addEventListener('click', resetLevelFormState);
+        document.getElementById('btn-cancel-cos-form')?.addEventListener('click', resetCosmeticFormState);
+
         // BACKEND CONTROLLERS
         let db = null;
         try {
@@ -1203,6 +1277,7 @@
             if(overlay) overlay.classList.add('hidden');
         }
 
+        // SUBIDA A GITHUB CORREGIDA CON URL RAW DIRECTA
         async function uploadFileToGitHubContent(fileObject, targetFolder, customFileName) {
             if(!githubToken || !githubUser) return "";
             const cleanName = customFileName.replace(/[^a-zA-Z0-9.\-_]/g, '_');
@@ -1226,13 +1301,17 @@
                                 content: base64Data
                             })
                         });
+                        
                         if(response.ok) {
-                            const resJson = await response.json();
-                            resolve(resJson.content.download_url);
+                            // RETORNO DE URL PÚBLICA RAW DIRECTA PARA EVITAR ERROR 401 DE API
+                            const rawUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/main/${targetPath}`;
+                            resolve(rawUrl);
                         } else {
+                            console.error("Error al subir a GitHub API:", await response.text());
                             resolve("");
                         }
                     } catch(err) {
+                        console.error("Excepción en subida:", err);
                         resolve("");
                     }
                 };
@@ -1378,7 +1457,7 @@
             if(!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
                 audioAnalyser = audioCtx.createAnalyser();
-                audioAnalyser.fftSize = 64; // REDUCIDO PARA MAYOR VELOCIDAD EN MÓVIL
+                audioAnalyser.fftSize = 64; 
             }
 
             const audio = new Audio();
@@ -1455,6 +1534,23 @@
                 const key = el.getAttribute('data-i18n');
                 if (translations[currentLanguage][key]) el.innerText = translations[currentLanguage][key];
             });
+
+            // MANTENER TRADUCCIÓN DINÁMICA DE BOTONES EDITAR/REGISTRAR AL CAMBIAR IDIOMA
+            const lvlIsEditing = !!document.getElementById('editingLvlId').value;
+            const lvlSubmitBtn = document.getElementById('lvlSubmitBtn');
+            if (lvlSubmitBtn) {
+                const span = lvlSubmitBtn.querySelector('span');
+                const targetText = lvlIsEditing ? translations[currentLanguage].btnSaveChanges : translations[currentLanguage].btnRegister;
+                if (span) span.innerText = targetText; else lvlSubmitBtn.innerText = targetText;
+            }
+
+            const cosIsEditing = !!document.getElementById('editingCosId').value;
+            const cosSubmitBtn = document.getElementById('cosSubmitBtn');
+            if (cosSubmitBtn) {
+                const span = cosSubmitBtn.querySelector('span');
+                const targetText = cosIsEditing ? translations[currentLanguage].btnSaveChanges : translations[currentLanguage].btnRegister;
+                if (span) span.innerText = targetText; else cosSubmitBtn.innerText = targetText;
+            }
 
             // ACTUALIZAR LENGUAJE DE LOS BOTONES DE FILTROS PERSONALIZADOS AUTOMÁTICAMENTE
             updateCustomDropdownButtonUI('btn-custom-lvl-genre', 'label-custom-lvl-genre', activeLvlGenreFilter, 'genre');
@@ -1676,7 +1772,7 @@
 
                 const imgAsset = globalVisualAssets[`diff_${val}`];
                 const graphicEl = imgAsset 
-                    ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
+                    ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${color}'); mask-image: url('${imgAsset}');"></span>`
                     : `<i class="fa-solid fa-layer-group text-[10px]"></i>`;
 
                 label.innerHTML = `${graphicEl} <span class="truncate">${displayLabel}</span>`;
@@ -1760,7 +1856,7 @@
             return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
         }
 
-        // MARCADOR DE REPRODUCTOR DE VIDEO REPARADO
+        // MARCADOR DE REPRODUCTOR DE VIDEO CON ATRIBUTOS NATIVOS COMPATIBLES
         function renderVideoPlayerMarkup(videoUrl, isSkin = false) {
             if (!videoUrl || videoUrl.trim() === "") return '[No Preview]';
             const containerClass = isSkin 
@@ -1773,7 +1869,9 @@
 
             return `
                 <div class="${containerClass} custom-native-video-wrapper">
-                    <video src="${videoUrl}" class="w-full h-full object-cover pointer-events-none" loop playsinline disablePictureInPicture></video>
+                    <video class="w-full h-full object-cover pointer-events-none" loop playsinline preload="metadata" disablePictureInPicture>
+                        <source src="${videoUrl}" type="video/mp4">
+                    </video>
                     <div class="absolute inset-0 bg-black/30 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100">
                         <i class="fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon"></i>
                     </div>
@@ -1970,7 +2068,13 @@
                     document.getElementById('lvlDl1').value = lvl.dl1 || '';
                     document.getElementById('lvlDl2').value = lvl.dl2 || '';
                     document.getElementById('lvlDl3').value = lvl.dl3 || '';
-                    document.getElementById('lvlSubmitBtn').innerText = translations[currentLanguage].btnSaveChanges;
+                    
+                    const submitBtn = document.getElementById('lvlSubmitBtn');
+                    if (submitBtn) {
+                        const span = submitBtn.querySelector('span');
+                        if (span) span.innerText = translations[currentLanguage].btnSaveChanges;
+                        else submitBtn.innerText = translations[currentLanguage].btnSaveChanges;
+                    }
                     
                     const pBox = document.getElementById('lvlArtPreviewBox');
                     const pImg = document.getElementById('lvlArtPreviewImg');
@@ -2170,7 +2274,13 @@
                     document.getElementById('cosDate').value = cos.date || '';
                     document.getElementById('cosDl1').value = cos.dl1 || '';
                     document.getElementById('cosDl2').value = cos.dl2 || '';
-                    document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnSaveChanges;
+                    
+                    const submitBtn = document.getElementById('cosSubmitBtn');
+                    if (submitBtn) {
+                        const span = submitBtn.querySelector('span');
+                        if (span) span.innerText = translations[currentLanguage].btnSaveChanges;
+                        else submitBtn.innerText = translations[currentLanguage].btnSaveChanges;
+                    }
                     
                     const pBox = document.getElementById('cosIconPreviewBox');
                     const pImg = document.getElementById('cosIconPreviewImg');
@@ -2477,6 +2587,7 @@
             }
         });
 
+        // REGISTRO DE CHARTS (GUARDA VIDEOS EN assets/prevchart/)
         document.getElementById('level-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             showLoadingOverlay();
@@ -2501,9 +2612,10 @@
                     finalAudioUrl = await uploadFileToGitHubContent(audioFileInput.files[0], 'assets/audio', audioFileInput.files[0].name);
                 }
 
+                // SUBIDA DE VIDEO A assets/prevchart/
                 const videoFileInput = document.getElementById('lvlVideoFile');
                 if(videoFileInput.files && videoFileInput.files[0] && githubToken && githubUser) {
-                    finalVideoUrl = await uploadFileToGitHubContent(videoFileInput.files[0], 'assets/videos', videoFileInput.files[0].name);
+                    finalVideoUrl = await uploadFileToGitHubContent(videoFileInput.files[0], 'assets/prevchart', videoFileInput.files[0].name);
                 }
 
                 const chartFileInput = document.getElementById('lvlChartZipFile');
@@ -2536,22 +2648,7 @@
                 if(db) {
                     await set(ref(db, 'levels/' + id), data);
                     await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
-                    document.getElementById('level-form').reset(); 
-                    document.getElementById('editingLvlId').value = ''; 
-                    document.getElementById('lvlSubmitBtn').innerText = translations[currentLanguage].btnRegister; 
-                    document.getElementById('current-chart-zip-badge').classList.add('hidden');
-                    document.getElementById('btn-remove-chart-zip').classList.add('hidden');
-                    document.getElementById('current-lvl-video-badge').classList.add('hidden');
-                    document.getElementById('btn-remove-lvl-video').classList.add('hidden');
-                    document.getElementById('current-lvl-audio-badge').classList.add('hidden');
-                    document.getElementById('btn-remove-lvl-audio').classList.add('hidden');
-                    document.getElementById('lvlArtPreviewBox').classList.add('hidden');
-                    document.getElementById('lvlIsComingSoon').value = "false";
-                    levelZipToRemove = false;
-                    levelArtToRemove = false;
-                    levelVideoToRemove = false;
-                    levelAudioToRemove = false;
-                    buildGenresSelector();
+                    resetLevelFormState();
                 }
             } catch(err) {
                 console.error("Error al guardar chart: ", err);
@@ -2560,10 +2657,10 @@
             }
         });
 
+        // REGISTRO DE SKINS (GUARDA VIDEOS EN assets/prevskins/)
         document.getElementById('cosmetic-form').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // VALIDACIÓN OBLIGATORIA DE GÉNERO PARA SKINS
             const isUniversal = document.getElementById('cosSelectedGenreMode').value === 'universal';
             const checkedGenres = document.querySelectorAll('.skin-genre-checkbox:checked');
             if (!isUniversal && checkedGenres.length === 0) {
@@ -2585,9 +2682,10 @@
                     finalIconUrl = await uploadFileToGitHubContent(iconFileInput.files[0], 'assets/skins', iconFileInput.files[0].name);
                 }
 
+                // SUBIDA DE VIDEO A assets/prevskins/
                 const videoFileInput = document.getElementById('cosVideoFile');
                 if(videoFileInput.files && videoFileInput.files[0] && githubToken && githubUser) {
-                    finalVideoUrl = await uploadFileToGitHubContent(videoFileInput.files[0], 'assets/videos', videoFileInput.files[0].name);
+                    finalVideoUrl = await uploadFileToGitHubContent(videoFileInput.files[0], 'assets/prevskins', videoFileInput.files[0].name);
                 }
 
                 const skinZipFileInput = document.getElementById('cosSkinZipFile');
@@ -2626,26 +2724,7 @@
                 if(db) {
                     await set(ref(db, 'cosmetics/' + id), data);
                     await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
-                    document.getElementById('cosmetic-form').reset(); 
-                    document.getElementById('editingCosId').value = ''; 
-                    document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnRegister; 
-                    document.getElementById('cosBrandManagementList').classList.add('hidden');
-                    document.getElementById('current-skin-zip-badge').classList.add('hidden');
-                    document.getElementById('btn-remove-skin-zip').classList.add('hidden');
-                    document.getElementById('current-cos-video-badge').classList.add('hidden');
-                    document.getElementById('btn-remove-cos-video').classList.add('hidden');
-                    document.getElementById('cosIconPreviewBox').classList.add('hidden');
-                    document.getElementById('cosIsComingSoon').value = "false";
-                    
-                    document.getElementById('cosSelectedGenreMode').value = 'single';
-                    const btnU = document.getElementById('btn-skin-universal-genre');
-                    btnU.classList.replace('bg-emerald-600', 'bg-fuchsia-600');
-                    buildSkinGenresSelector();
-
-                    cosmeticZipToRemove = false;
-                    cosmeticIconToRemove = false;
-                    cosmeticVideoToRemove = false;
-                    editingCosBrandUrlsList = [];
+                    resetCosmeticFormState();
                 }
             } catch(err) {
                 console.error("Error al guardar skin: ", err);
@@ -2654,6 +2733,7 @@
             }
         });
 
+        // SUBIDA DE VIDEOS DE AGRADECIMIENTO EN assets/videos/
         document.getElementById('btn-save-thanks-videos').addEventListener('click', async () => {
             if(!githubToken || !githubUser) {
                 alert("Por favor inicia sesión en modo Creador primero.");
