@@ -813,6 +813,12 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+        // ==========================================
+        // CONFIGURACIÓN DE CLOUDINARY
+        // ==========================================
+        const CLOUDINARY_CLOUD_NAME = "hdmx7anb";
+        const CLOUDINARY_UPLOAD_PRESET = "lkbeats_preset"; 
+
         const firebaseConfig = {
           apiKey: "AIzaSyBmYQjQiHBH6pLqKNpjc3gNUsrF0fdYJsU",
           authDomain: "lkbeats-handbook.firebaseapp.com",
@@ -1277,7 +1283,43 @@
             if(overlay) overlay.classList.add('hidden');
         }
 
-        // SUBIDA A GITHUB CORREGIDA CON URL RAW DIRECTA
+        // ==========================================
+        // SUBIDA DE VIDEOS MEDIANTE CLOUDINARY API
+        // ==========================================
+        async function uploadVideoToCloudinary(fileObject, subfolderName) {
+            if(!fileObject) return "";
+            if(!CLOUDINARY_CLOUD_NAME) {
+                alert("Por favor configura tu CLOUDINARY_CLOUD_NAME en el código JavaScript.");
+                return "";
+            }
+
+            const formData = new FormData();
+            formData.append("file", fileObject);
+            formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+            formData.append("folder", `lkbeats/${subfolderName}`);
+
+            try {
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`, {
+                    method: "POST",
+                    body: formData
+                });
+
+                if(response.ok) {
+                    const data = await response.json();
+                    return data.secure_url; // Devuelve la URL HTTPS optimizada para streaming
+                } else {
+                    const errData = await response.json();
+                    console.error("Error en subida a Cloudinary:", errData);
+                    alert("Error al subir video a Cloudinary: " + (errData.error?.message || "Revisa la consola"));
+                    return "";
+                }
+            } catch(e) {
+                console.error("Excepción en Cloudinary upload:", e);
+                return "";
+            }
+        }
+
+        // SUBIDA A GITHUB (ARCHIVOS Y ZIPs)
         async function uploadFileToGitHubContent(fileObject, targetFolder, customFileName) {
             if(!githubToken || !githubUser) return "";
             const cleanName = customFileName.replace(/[^a-zA-Z0-9.\-_]/g, '_');
@@ -1303,7 +1345,6 @@
                         });
                         
                         if(response.ok) {
-                            // RETORNO DE URL PÚBLICA RAW DIRECTA PARA EVITAR ERROR 401 DE API
                             const rawUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/main/${targetPath}`;
                             resolve(rawUrl);
                         } else {
@@ -1444,7 +1485,6 @@
             draw();
         }
 
-        // OPTIMIZACIÓN DE REPRODUCCIÓN AUDIO EN MÓVILES
         function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement, containerElement) {
             if(activeAudioElement && activeAudioElement.src === audioUrl) {
                 stopGlobalAudioPreview();
@@ -1535,7 +1575,6 @@
                 if (translations[currentLanguage][key]) el.innerText = translations[currentLanguage][key];
             });
 
-            // MANTENER TRADUCCIÓN DINÁMICA DE BOTONES EDITAR/REGISTRAR AL CAMBIAR IDIOMA
             const lvlIsEditing = !!document.getElementById('editingLvlId').value;
             const lvlSubmitBtn = document.getElementById('lvlSubmitBtn');
             if (lvlSubmitBtn) {
@@ -1552,7 +1591,6 @@
                 if (span) span.innerText = targetText; else cosSubmitBtn.innerText = targetText;
             }
 
-            // ACTUALIZAR LENGUAJE DE LOS BOTONES DE FILTROS PERSONALIZADOS AUTOMÁTICAMENTE
             updateCustomDropdownButtonUI('btn-custom-lvl-genre', 'label-custom-lvl-genre', activeLvlGenreFilter, 'genre');
             updateCustomDropdownButtonUI('btn-custom-lvl-diff', 'label-custom-lvl-diff', activeLvlDiffFilter, 'diff');
             updateCustomDropdownButtonUI('btn-custom-lvl-edition', 'label-custom-lvl-edition', activeLvlEditionFilter, 'edition');
@@ -1618,11 +1656,9 @@
             }
         });
 
-        // CONSTRUCCIÓN DE CUSTOM DROPDOWNS MULTILINGÜES
         function buildCustomDropdownMenus() {
             const allTxt = translations[currentLanguage].filterAll;
 
-            // 1. Género Charts
             const dLvlGenre = document.getElementById('dropdown-custom-lvl-genre');
             if(dLvlGenre) {
                 dLvlGenre.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlGenre" data-value=""><span>${allTxt}</span></div>`;
@@ -1641,7 +1677,6 @@
                 });
             }
 
-            // 2. Dificultad Charts
             const dLvlDiff = document.getElementById('dropdown-custom-lvl-diff');
             if(dLvlDiff) {
                 dLvlDiff.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value=""><span>${allTxt}</span></div>`;
@@ -1664,7 +1699,6 @@
                 });
             }
 
-            // 3. Edición Charts
             const dLvlEdit = document.getElementById('dropdown-custom-lvl-edition');
             if(dLvlEdit) {
                 dLvlEdit.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlEdition" data-value=""><span>${allTxt}</span></div>`;
@@ -1686,7 +1720,6 @@
                 });
             }
 
-            // 4. Género Skins
             const dSkinGenre = document.getElementById('dropdown-custom-skin-genre');
             if(dSkinGenre) {
                 dSkinGenre.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="skinGenre" data-value=""><span>${allTxt}</span></div>`;
@@ -1705,7 +1738,6 @@
                 });
             }
 
-            // APLICAR EVENTOS DE SELECCIÓN A LAS OPCIONES
             document.querySelectorAll('.custom-opt-item').forEach(item => {
                 item.addEventListener('click', (e) => {
                     const type = item.getAttribute('data-type');
@@ -1736,7 +1768,6 @@
             });
         }
 
-        // ACTUALIZA LA APARIENCIA DEL BOTÓN PRINCIPAL AL ELEGIR UN FILTRO
         function updateCustomDropdownButtonUI(btnId, labelId, val, categoryType) {
             const btn = document.getElementById(btnId);
             const label = document.getElementById(labelId);
@@ -1793,7 +1824,6 @@
             }
         }
 
-        // EVENTOS PARA ABRIR / CERRAR DESPLEGABLES
         document.getElementById('btn-custom-lvl-genre')?.addEventListener('click', (e) => {
             e.stopPropagation();
             closeAllCustomDropdowns();
@@ -1856,7 +1886,6 @@
             return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
         }
 
-        // MARCADOR DE REPRODUCTOR DE VIDEO CON ATRIBUTOS NATIVOS COMPATIBLES
         function renderVideoPlayerMarkup(videoUrl, isSkin = false) {
             if (!videoUrl || videoUrl.trim() === "") return '[No Preview]';
             const containerClass = isSkin 
@@ -1898,14 +1927,12 @@
             if(activeLvlDiffFilter) filtered = filtered.filter(l => l.diff === activeLvlDiffFilter);
             if(activeLvlEditionFilter) filtered = filtered.filter(l => l.edition === activeLvlEditionFilter);
 
-            // CONTADOR DINÁMICO
             const hasActiveFilters = activeLvlGenreFilter || activeLvlDiffFilter || activeLvlEditionFilter;
             const counterLbl = document.getElementById('lbl-counter-charts');
             if(counterLbl) {
                 counterLbl.innerText = hasActiveFilters ? `Charts: ${filtered.length}` : `Total: ${levels.length} Charts`;
             }
 
-            // ESTADO VACÍO SI FILTROS NO COINCIDEN
             if(filtered.length === 0) {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -2028,7 +2055,6 @@
                     </td>
                 `;
 
-                // NATIVE VIDEO CLICK PLAYER CONTROL
                 const vidWrapper = tr.querySelector('.custom-native-video-wrapper');
                 if(vidWrapper) {
                     const videoEl = vidWrapper.querySelector('video');
@@ -2247,7 +2273,6 @@
                     </td>
                 `;
 
-                // NATIVE VIDEO CLICK PLAYER CONTROL
                 const vidWrapper = tr.querySelector('.custom-native-video-wrapper');
                 if(vidWrapper) {
                     const videoEl = vidWrapper.querySelector('video');
@@ -2349,7 +2374,6 @@
             });
         }
 
-        // LIMPIAR FILTROS CHARTS
         document.getElementById('btn-clear-lvl-filters')?.addEventListener('click', () => {
             activeLvlGenreFilter = "";
             activeLvlDiffFilter = "";
@@ -2362,14 +2386,12 @@
             renderLevelsTable();
         });
 
-        // LIMPIAR FILTROS SKINS
         document.getElementById('btn-clear-skin-filters')?.addEventListener('click', () => {
             activeSkinGenreFilter = "";
             updateCustomDropdownButtonUI('btn-custom-skin-genre', 'label-custom-skin-genre', '', 'genre');
             renderCosmeticsTables();
         });
 
-        // ADMINISTRADOR DE MARCAS / INSPIRACIONES CON VISTA PREVIA Y BOTÓN ELIMINAR
         function renderBrandManagementFormInterface() {
             const container = document.getElementById('cosBrandManagementList');
             if(!container) return;
@@ -2427,7 +2449,6 @@
             });
         }
 
-        // PANEL DE ASSETS VISUALES CON ELIMINACIÓN DE IMÁGENES
         function buildVisualAssetsPanelInterface() {
             const container = document.getElementById('asset-upload-genres-list');
             if(!container) return; container.innerHTML = '';
@@ -2479,7 +2500,6 @@
             });
         }
 
-        // ELIMINACIÓN EN VIDEOS CMS DE AGRADECIMIENTO Y FOOTER LINKS
         document.querySelectorAll('.btn-clear-thanks-vid').forEach(btn => {
             btn.addEventListener('click', () => {
                 const index = parseInt(btn.getAttribute('data-vid-index'));
@@ -2504,7 +2524,6 @@
             });
         });
 
-        // ELIMINACIÓN DE IMÁGENES, PREVIEW DE AUDIO, VIDEOS Y ARCHIVOS DE REGISTRO
         document.getElementById('btn-delete-lvl-art-preview')?.addEventListener('click', () => {
             requestUserDeleteConfirmation(() => {
                 levelArtToRemove = true;
@@ -2587,7 +2606,7 @@
             }
         });
 
-        // REGISTRO DE CHARTS (GUARDA VIDEOS EN assets/prevchart/)
+        // REGISTRO DE CHARTS (VIDEOS A CLOUDINARY - CARPETA prevchart)
         document.getElementById('level-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             showLoadingOverlay();
@@ -2612,10 +2631,10 @@
                     finalAudioUrl = await uploadFileToGitHubContent(audioFileInput.files[0], 'assets/audio', audioFileInput.files[0].name);
                 }
 
-                // SUBIDA DE VIDEO A assets/prevchart/
+                // SUBIDA DE VIDEO A CLOUDINARY (CARPETA lkbeats/prevchart)
                 const videoFileInput = document.getElementById('lvlVideoFile');
-                if(videoFileInput.files && videoFileInput.files[0] && githubToken && githubUser) {
-                    finalVideoUrl = await uploadFileToGitHubContent(videoFileInput.files[0], 'assets/prevchart', videoFileInput.files[0].name);
+                if(videoFileInput.files && videoFileInput.files[0]) {
+                    finalVideoUrl = await uploadVideoToCloudinary(videoFileInput.files[0], 'prevchart');
                 }
 
                 const chartFileInput = document.getElementById('lvlChartZipFile');
@@ -2657,7 +2676,7 @@
             }
         });
 
-        // REGISTRO DE SKINS (GUARDA VIDEOS EN assets/prevskins/)
+        // REGISTRO DE SKINS (VIDEOS A CLOUDINARY - CARPETA prevskins)
         document.getElementById('cosmetic-form').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -2682,10 +2701,10 @@
                     finalIconUrl = await uploadFileToGitHubContent(iconFileInput.files[0], 'assets/skins', iconFileInput.files[0].name);
                 }
 
-                // SUBIDA DE VIDEO A assets/prevskins/
+                // SUBIDA DE VIDEO A CLOUDINARY (CARPETA lkbeats/prevskins)
                 const videoFileInput = document.getElementById('cosVideoFile');
-                if(videoFileInput.files && videoFileInput.files[0] && githubToken && githubUser) {
-                    finalVideoUrl = await uploadFileToGitHubContent(videoFileInput.files[0], 'assets/prevskins', videoFileInput.files[0].name);
+                if(videoFileInput.files && videoFileInput.files[0]) {
+                    finalVideoUrl = await uploadVideoToCloudinary(videoFileInput.files[0], 'prevskins');
                 }
 
                 const skinZipFileInput = document.getElementById('cosSkinZipFile');
@@ -2733,13 +2752,8 @@
             }
         });
 
-        // SUBIDA DE VIDEOS DE AGRADECIMIENTO EN assets/videos/
+        // SUBIDA DE VIDEOS DE AGRADECIMIENTO EN CLOUDINARY (CARPETA videos)
         document.getElementById('btn-save-thanks-videos').addEventListener('click', async () => {
-            if(!githubToken || !githubUser) {
-                alert("Por favor inicia sesión en modo Creador primero.");
-                return;
-            }
-
             showLoadingOverlay();
             try {
                 let urlsDict = { ...globalThanksVideos };
@@ -2748,13 +2762,13 @@
                 const f2 = document.getElementById('thanks-vid2-file').files[0];
                 const f3 = document.getElementById('thanks-vid3-file').files[0];
 
-                if(f1) urlsDict[0] = await uploadFileToGitHubContent(f1, 'assets/videos', f1.name);
-                if(f2) urlsDict[1] = await uploadFileToGitHubContent(f2, 'assets/videos', f2.name);
-                if(f3) urlsDict[2] = await uploadFileToGitHubContent(f3, 'assets/videos', f3.name);
+                if(f1) urlsDict[0] = await uploadVideoToCloudinary(f1, 'videos');
+                if(f2) urlsDict[1] = await uploadVideoToCloudinary(f2, 'videos');
+                if(f3) urlsDict[2] = await uploadVideoToCloudinary(f3, 'videos');
 
                 if(db) {
                     await set(ref(db, 'thanks_videos'), urlsDict);
-                    alert("¡Videos subidos y guardados con éxito en GitHub!");
+                    alert("¡Videos subidos y guardados con éxito en Cloudinary!");
                     document.getElementById('thanks-vid1-file').value = "";
                     document.getElementById('thanks-vid2-file').value = "";
                     document.getElementById('thanks-vid3-file').value = "";
