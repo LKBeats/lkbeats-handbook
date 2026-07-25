@@ -86,7 +86,6 @@
     <!-- MODAL BOOGIE ADM / CREDENCIALES -->
     <div id="boogie-auth-modal" class="hidden fixed inset-0 bg-black/90 z-[130] flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#11091c] border border-fuchsia-500/40 rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative text-center flex flex-col items-center">
-            
             <img src="1455064703448645786.gif" alt="Boogie" class="w-24 h-auto mb-3">
             <p id="boogie-auth-msg" class="text-sm sm:text-base font-bold text-zinc-200 mb-6 leading-relaxed" data-i18n="boogieAuthMsg">
                 Este espacio es solo para Boogie. Por favor introduce los códigos especiales
@@ -175,8 +174,8 @@
     <div id="thanks-custom-modal" class="hidden fixed inset-0 bg-black/95 z-[120] flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#11091c] border border-orange-500/30 rounded-2xl max-w-4xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center">
             <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-fuchsia-400 font-display font-black text-xl sm:text-2xl uppercase tracking-wider mb-6" data-i18n="thanksTitle">Gracias por jugar a Beatclone</h4>
-            <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-fuchsia-950/60 relative">
-                <video id="download-thanks-video" class="w-full h-full object-cover pointer-events-none" autoplay loop playsinline disablePictureInPicture></video>
+            <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-fuchsia-950/60 relative cursor-pointer">
+                <video id="download-thanks-video" class="w-full h-full object-cover" autoplay loop playsinline disablePictureInPicture></video>
             </div>
             <button id="thanks-modal-btn-close" class="absolute top-4 right-4 text-zinc-500 hover:text-white text-xl p-2">
                 <i class="fa-solid fa-xmark"></i>
@@ -278,16 +277,25 @@
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-fuchsia-500"></div>
                 <h2 class="font-display font-black text-base text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="thanksUploadMenuTitle">Subir Videos de Agradecimiento</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                    <div>
-                        <label class="block font-bold text-zinc-400 mb-1" data-i18n="labelVid1">Video 1 (Archivo MP4)</label>
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center">
+                            <label class="font-bold text-zinc-400" data-i18n="labelVid1">Video 1 (Archivo MP4)</label>
+                            <button type="button" class="btn-clear-thanks-vid text-red-400 hover:text-red-300 font-bold text-[10px]" data-vid-index="0" data-i18n="btnDelete">Eliminar</button>
+                        </div>
                         <input type="file" id="thanks-vid1-file" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                     </div>
-                    <div>
-                        <label class="block font-bold text-zinc-400 mb-1" data-i18n="labelVid2">Video 2 (Archivo MP4)</label>
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center">
+                            <label class="font-bold text-zinc-400" data-i18n="labelVid2">Video 2 (Archivo MP4)</label>
+                            <button type="button" class="btn-clear-thanks-vid text-red-400 hover:text-red-300 font-bold text-[10px]" data-vid-index="1" data-i18n="btnDelete">Eliminar</button>
+                        </div>
                         <input type="file" id="thanks-vid2-file" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                     </div>
-                    <div>
-                        <label class="block font-bold text-zinc-400 mb-1" data-i18n="labelVid3">Video 3 (Archivo MP4)</label>
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center">
+                            <label class="font-bold text-zinc-400" data-i18n="labelVid3">Video 3 (Archivo MP4)</label>
+                            <button type="button" class="btn-clear-thanks-vid text-red-400 hover:text-red-300 font-bold text-[10px]" data-vid-index="2" data-i18n="btnDelete">Eliminar</button>
+                        </div>
                         <input type="file" id="thanks-vid3-file" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                     </div>
                 </div>
@@ -344,16 +352,25 @@
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-yellow-500"></div>
                 <h2 class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="footerMenuTitle">Links del Menú Inferior</h2>
                 <form id="footer-links-form" autocomplete="off" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs mb-4">
-                    <div>
-                        <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1">Beatclone URL</label>
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center">
+                            <label class="font-bold text-zinc-400 uppercase tracking-wider">Beatclone URL</label>
+                            <button type="button" class="btn-clear-footer-link text-red-400 hover:text-red-300 font-bold text-[10px]" data-link-target="Beatclone" data-i18n="btnDelete">Eliminar</button>
+                        </div>
                         <input type="url" id="setupUrlBeatclone" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-lg text-zinc-100">
                     </div>
-                    <div>
-                        <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1">BSCM URL</label>
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center">
+                            <label class="font-bold text-zinc-400 uppercase tracking-wider">BSCM URL</label>
+                            <button type="button" class="btn-clear-footer-link text-red-400 hover:text-red-300 font-bold text-[10px]" data-link-target="Bscm" data-i18n="btnDelete">Eliminar</button>
+                        </div>
                         <input type="url" id="setupUrlBscm" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-lg text-zinc-100">
                     </div>
-                    <div>
-                        <label class="block font-bold text-zinc-400 uppercase tracking-wider mb-1">beatcharts URL</label>
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center">
+                            <label class="font-bold text-zinc-400 uppercase tracking-wider">beatcharts URL</label>
+                            <button type="button" class="btn-clear-footer-link text-red-400 hover:text-red-300 font-bold text-[10px]" data-link-target="Beatcharts" data-i18n="btnDelete">Eliminar</button>
+                        </div>
                         <input type="url" id="setupUrlBeatcharts" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-lg text-zinc-100">
                     </div>
                 </form>
@@ -396,8 +413,14 @@
                             <input type="file" id="lvlAudioFile" accept="audio/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div>
-                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formVideoUrl">URL del Video (YouTube)</label>
-                            <input type="url" id="lvlVideo" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="font-bold text-zinc-400" data-i18n="formUploadVideo">Subir Video (MP4)</label>
+                                <button type="button" id="btn-remove-lvl-video" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                    <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
+                                </button>
+                            </div>
+                            <div id="current-lvl-video-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate">Video Adjunto</div>
+                            <input type="file" id="lvlVideoFile" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formGenre">Género</label>
@@ -422,20 +445,24 @@
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="block font-bold text-zinc-400 mb-1" data-i18n="formNotes">Notas</label>
+                                <label class="block font-bold text-zinc-400 mb-1"><span data-i18n="formNotes">Notas</span> (<span data-i18n="labelOptional">Opcional</span>)</label>
                                 <input type="number" id="lvlNotes" placeholder="ej. 450" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                             </div>
                             <div>
-                                <label class="block font-bold text-zinc-400 mb-1" data-i18n="formDuration">Duración</label>
+                                <label class="block font-bold text-zinc-400 mb-1"><span data-i18n="formDuration">Duración</span> (<span data-i18n="labelOptional">Opcional</span>)</label>
                                 <input type="text" id="lvlDuration" placeholder="ej. 2:15" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                             </div>
                         </div>
                         <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="formRelease">Lanzamiento</label>
-                                <button type="button" id="btn-picker-lvl" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar Fecha</button>
+                            <div class="flex items-center justify-between mb-1 gap-1">
+                                <label class="font-bold text-zinc-400 uppercase tracking-wider"><span data-i18n="formRelease">Lanzamiento</span> (<span data-i18n="labelOptional">Opcional</span>)</label>
+                                <div class="flex items-center gap-1">
+                                    <button type="button" id="btn-picker-lvl" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar Fecha</button>
+                                    <button type="button" id="btn-lvl-coming-soon" class="px-2 py-0.5 bg-fuchsia-950 border border-fuchsia-700 text-fuchsia-300 font-extrabold rounded text-[10px] hover:bg-fuchsia-900 transition" data-i18n="btnComingSoon">Próximamente</button>
+                                </div>
                             </div>
-                            <input type="date" id="lvlDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                            <input type="date" id="lvlDate" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                            <input type="hidden" id="lvlIsComingSoon" value="false">
                         </div>
                         <div>
                             <div class="flex items-center justify-between mb-1">
@@ -466,7 +493,6 @@
                             <div class="text-base sm:text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">
                                 Charts / <span data-i18n="bannerSongs">Canciones</span>
                             </div>
-                            <!-- CONTADOR: SOLO EN HORIZONTAL / LANDSCAPE DE MÓVIL Y PC -->
                             <div class="hidden landscape:block sm:block mt-0.5 text-[10px] sm:text-xs font-bold text-orange-400">
                                 <span id="lbl-counter-charts">Total: 0 Charts</span>
                             </div>
@@ -474,7 +500,6 @@
 
                         <!-- BARRA DE FILTROS ALINEADA Y CENTRADA EN VERTICAL -->
                         <div class="flex flex-wrap items-center justify-center sm:justify-end gap-2.5 w-full sm:w-auto ml-auto text-xs">
-                            
                             <!-- CUSTOM DROPDOWN: GÉNERO CHARTS -->
                             <div class="flex flex-col relative">
                                 <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterGenre">Género</label>
@@ -513,16 +538,16 @@
                         </div>
                     </div>
 
-                    <!-- TABLA CHARTS CON ENCABEZADOS CENTRADOS -->
+                    <!-- TABLA CHARTS CON ENCABEZADOS Y TEXTO CENTRADO EN ARTE -->
                     <div id="levels-table-wrapper" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                         <table class="w-full text-left border-collapse min-w-[700px] sm:min-w-[900px]">
                             <thead>
                                 <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                    <th class="p-4 w-32 sm:w-44 text-center" data-i18n="thArt">Arte</th>
-                                    <th class="p-4 text-center" data-i18n="thSongInfo">Información</th>
-                                    <th class="p-4 text-center w-52 sm:w-72" data-i18n="thPreview">Preview</th>
-                                    <th class="p-4 text-center w-48 sm:w-52 min-w-[150px]" data-i18n="thPlatformDl">Descarga</th>
-                                    <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
+                                    <th class="p-4 w-32 sm:w-44 text-center align-middle" data-i18n="thArt">Arte</th>
+                                    <th class="p-4 text-center align-middle" data-i18n="thSongInfo">Información</th>
+                                    <th class="p-4 text-center w-52 sm:w-72 align-middle" data-i18n="thPreview">Preview</th>
+                                    <th class="p-4 text-center w-48 sm:w-52 min-w-[150px] align-middle" data-i18n="thPlatformDl">Descarga</th>
+                                    <th class="p-4 text-center w-24 creator-action-header hidden align-middle" data-i18n="thActions">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="levels-tbody" class="divide-y divide-fuchsia-950/20 text-xs"></tbody>
@@ -587,21 +612,31 @@
                             <input type="file" id="cosIconFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div>
-                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formVideoUrl">URL del Video</label>
-                            <input type="url" id="cosVideo" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="font-bold text-zinc-400" data-i18n="formUploadVideo">Subir Video (MP4)</label>
+                                <button type="button" id="btn-remove-cos-video" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                    <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
+                                </button>
+                            </div>
+                            <div id="current-cos-video-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate">Video Adjunto</div>
+                            <input type="file" id="cosVideoFile" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="formRelease">Lanzamiento</label>
-                                <button type="button" id="btn-picker-cos" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar Fecha</button>
+                            <div class="flex items-center justify-between mb-1 gap-1">
+                                <label class="font-bold text-zinc-400 uppercase tracking-wider"><span data-i18n="formRelease">Lanzamiento</span> (<span data-i18n="labelOptional">Opcional</span>)</label>
+                                <div class="flex items-center gap-1">
+                                    <button type="button" id="btn-picker-cos" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar Fecha</button>
+                                    <button type="button" id="btn-cos-coming-soon" class="px-2 py-0.5 bg-fuchsia-950 border border-fuchsia-700 text-fuchsia-300 font-extrabold rounded text-[10px] hover:bg-fuchsia-900 transition" data-i18n="btnComingSoon">Próximamente</button>
+                                </div>
                             </div>
-                            <input type="date" id="cosDate" required class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                            <input type="date" id="cosDate" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                            <input type="hidden" id="cosIsComingSoon" value="false">
                         </div>
 
-                        <!-- GÉNERO SKINS -->
+                        <!-- GÉNERO SKINS OBLIGATORIO -->
                         <div>
                             <div class="flex items-center justify-between mb-1">
-                                <label class="font-bold text-zinc-400 uppercase tracking-wider" data-i18n="formGenre">Género</label>
+                                <label class="font-bold text-zinc-400 uppercase tracking-wider"><span data-i18n="formGenre">Género</span> <span class="text-red-500">*</span></label>
                                 <button type="button" id="btn-skin-universal-genre" class="px-2 py-0.5 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-extrabold rounded text-[10px] transition uppercase" data-i18n="btnUniversal">Universal</button>
                             </div>
                             <div id="skin-genres-container" class="grid grid-cols-1 gap-1 max-h-36 overflow-y-auto border border-fuchsia-950 p-2 rounded-lg bg-[#05020a]"></div>
@@ -675,11 +710,11 @@
                             <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
                                 <thead>
                                     <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                        <th class="p-2 sm:p-4 w-20 sm:w-44 text-center" data-i18n="thIcon">Icono</th>
-                                        <th class="p-2 sm:p-4 text-center" data-i18n="thSkinInfo">Información</th>
-                                        <th class="p-4 text-center w-48 sm:w-64" data-i18n="thPreview">Preview</th>
-                                        <th class="p-4 text-center w-60 sm:w-64 min-w-[170px]" data-i18n="thDlLinks">Descarga</th>
-                                        <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
+                                        <th class="p-2 sm:p-4 w-20 sm:w-44 text-center align-middle" data-i18n="thIcon">Icono</th>
+                                        <th class="p-2 sm:p-4 text-center align-middle" data-i18n="thSkinInfo">Información</th>
+                                        <th class="p-4 text-center w-48 sm:w-64 align-middle" data-i18n="thPreview">Preview</th>
+                                        <th class="p-4 text-center w-60 sm:w-64 min-w-[170px] align-middle" data-i18n="thDlLinks">Descarga</th>
+                                        <th class="p-4 text-center w-24 creator-action-header hidden align-middle" data-i18n="thActions">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbody-beatstar" class="divide-y divide-fuchsia-950/20 text-xs"></tbody>
@@ -704,11 +739,11 @@
                             <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
                                 <thead>
                                     <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                        <th class="p-2 sm:p-4 w-20 sm:w-44 text-center" data-i18n="thIcon">Icono</th>
-                                        <th class="p-2 sm:p-4 text-center" data-i18n="thSkinInfo">Información</th>
-                                        <th class="p-4 text-center w-48 sm:w-64" data-i18n="thPreview">Preview</th>
-                                        <th class="p-4 text-center w-60 sm:w-64 min-w-[170px]" data-i18n="thDlLinks">Descarga</th>
-                                        <th class="p-4 text-center w-24 creator-action-header hidden" data-i18n="thActions">Acciones</th>
+                                        <th class="p-2 sm:p-4 w-20 sm:w-44 text-center align-middle" data-i18n="thIcon">Icono</th>
+                                        <th class="p-2 sm:p-4 text-center align-middle" data-i18n="thSkinInfo">Información</th>
+                                        <th class="p-4 text-center w-48 sm:w-64 align-middle" data-i18n="thPreview">Preview</th>
+                                        <th class="p-4 text-center w-60 sm:w-64 min-w-[170px] align-middle" data-i18n="thDlLinks">Descarga</th>
+                                        <th class="p-4 text-center w-24 creator-action-header hidden align-middle" data-i18n="thActions">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbody-tapwave" class="divide-y divide-fuchsia-950/20 text-xs"></tbody>
@@ -820,7 +855,10 @@
                 confirmDeleteTitle: "¿Seguro que quieres eliminarlo?",
                 thanksUploadMenuTitle: "Subir Videos de Agradecimiento",
                 labelVid1: "Video 1 (Archivo MP4)", labelVid2: "Video 2 (Archivo MP4)", labelVid3: "Video 3 (Archivo MP4)",
-                btnSaveThanksVideos: "Subir y Guardar Videos"
+                btnSaveThanksVideos: "Subir y Guardar Videos",
+                formUploadVideo: "Subir Video (MP4)", labelOptional: "Opcional",
+                btnComingSoon: "Próximamente", textComingSoon: "Próximamente",
+                selectGenreError: "Por favor selecciona al menos un género para la Skin."
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -863,7 +901,10 @@
                 confirmDeleteTitle: "Are you sure you want to delete it?",
                 thanksUploadMenuTitle: "Upload Thank You Videos",
                 labelVid1: "Video 1 (MP4 File)", labelVid2: "Video 2 (MP4 File)", labelVid3: "Video 3 (MP4 File)",
-                btnSaveThanksVideos: "Upload and Save Videos"
+                btnSaveThanksVideos: "Upload and Save Videos",
+                formUploadVideo: "Upload Video (MP4)", labelOptional: "Optional",
+                btnComingSoon: "Coming Soon", textComingSoon: "Coming Soon...",
+                selectGenreError: "Please select at least one genre for the Skin."
             }
         };
 
@@ -906,6 +947,8 @@
         let cosmeticZipToRemove = false;
         let levelArtToRemove = false;
         let cosmeticIconToRemove = false;
+        let levelVideoToRemove = false;
+        let cosmeticVideoToRemove = false;
 
         let pendingDeleteActionCallback = null;
 
@@ -1061,6 +1104,30 @@
         });
         document.querySelectorAll('.btn-back-to-home').forEach(btn => btn.addEventListener('click', () => navigateTo('home')));
 
+        // BOTONES "PRÓXIMAMENTE" PARA FECHA
+        document.getElementById('btn-lvl-coming-soon').addEventListener('click', () => {
+            const dateInput = document.getElementById('lvlDate');
+            const hiddenFlag = document.getElementById('lvlIsComingSoon');
+            dateInput.value = "";
+            hiddenFlag.value = "true";
+            alert(currentLanguage === 'es' ? 'Fecha establecida como "Próximamente".' : 'Release date set to "Coming Soon".');
+        });
+
+        document.getElementById('btn-cos-coming-soon').addEventListener('click', () => {
+            const dateInput = document.getElementById('cosDate');
+            const hiddenFlag = document.getElementById('cosIsComingSoon');
+            dateInput.value = "";
+            hiddenFlag.value = "true";
+            alert(currentLanguage === 'es' ? 'Fecha establecida como "Próximamente".' : 'Release date set to "Coming Soon".');
+        });
+
+        document.getElementById('lvlDate').addEventListener('change', () => {
+            if(document.getElementById('lvlDate').value) document.getElementById('lvlIsComingSoon').value = "false";
+        });
+        document.getElementById('cosDate').addEventListener('change', () => {
+            if(document.getElementById('cosDate').value) document.getElementById('cosIsComingSoon').value = "false";
+        });
+
         // BACKEND CONTROLLERS
         let db = null;
         try {
@@ -1178,6 +1245,12 @@
                     document.getElementById('thanks-custom-modal').classList.remove('hidden');
                 }
             }
+        });
+
+        document.getElementById('thanks-custom-modal').querySelector('div.aspect-video').addEventListener('click', () => {
+            const videoElement = document.getElementById('download-thanks-video');
+            if(videoElement.paused) videoElement.play();
+            else videoElement.pause();
         });
 
         document.getElementById('download-modal-btn-close').addEventListener('click', () => {
@@ -1321,7 +1394,7 @@
         }
 
         function formatStringToDMY(rawDate) {
-            if (!rawDate) return '';
+            if (!rawDate) return translations[currentLanguage].textComingSoon;
             if (rawDate.includes('/')) return rawDate; 
             const parts = rawDate.split('-');
             if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
@@ -1356,6 +1429,13 @@
                 const key = el.getAttribute('data-i18n');
                 if (translations[currentLanguage][key]) el.innerText = translations[currentLanguage][key];
             });
+
+            // ACTUALIZAR LENGUAJE DE LOS BOTONES DE FILTROS PERSONALIZADOS AUTOMÁTICAMENTE
+            updateCustomDropdownButtonUI('btn-custom-lvl-genre', 'label-custom-lvl-genre', activeLvlGenreFilter, 'genre');
+            updateCustomDropdownButtonUI('btn-custom-lvl-diff', 'label-custom-lvl-diff', activeLvlDiffFilter, 'diff');
+            updateCustomDropdownButtonUI('btn-custom-lvl-edition', 'label-custom-lvl-edition', activeLvlEditionFilter, 'edition');
+            updateCustomDropdownButtonUI('btn-custom-skin-genre', 'label-custom-skin-genre', activeSkinGenreFilter, 'genre');
+
             applyRoleUIVisibility();
             buildCustomDropdownMenus();
         }
@@ -1416,12 +1496,14 @@
             }
         });
 
-        // CONSTRUCCIÓN DE CUSTOM DROPDOWNS (CON COLORES E ÍCONOS GRAFICOS DENTRO)
+        // CONSTRUCCIÓN DE CUSTOM DROPDOWNS MULTILINGÜES
         function buildCustomDropdownMenus() {
+            const allTxt = translations[currentLanguage].filterAll;
+
             // 1. Género Charts
             const dLvlGenre = document.getElementById('dropdown-custom-lvl-genre');
             if(dLvlGenre) {
-                dLvlGenre.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlGenre" data-value=""><span>${translations[currentLanguage].filterAll}</span></div>`;
+                dLvlGenre.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlGenre" data-value=""><span>${allTxt}</span></div>`;
                 genreList.forEach(g => {
                     const safeKey = g.label.replace('/', '');
                     const imgAsset = globalVisualAssets[`genre_${safeKey}`];
@@ -1440,7 +1522,7 @@
             // 2. Dificultad Charts
             const dLvlDiff = document.getElementById('dropdown-custom-lvl-diff');
             if(dLvlDiff) {
-                dLvlDiff.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value=""><span>${translations[currentLanguage].filterAll}</span></div>`;
+                dLvlDiff.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value=""><span>${allTxt}</span></div>`;
                 const diffs = [
                     { key: 'Normal', color: '#71717a', label: translations[currentLanguage].diffNormal },
                     { key: 'Hard', color: '#f97316', label: translations[currentLanguage].diffHard },
@@ -1463,7 +1545,7 @@
             // 3. Edición Charts
             const dLvlEdit = document.getElementById('dropdown-custom-lvl-edition');
             if(dLvlEdit) {
-                dLvlEdit.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlEdition" data-value=""><span>${translations[currentLanguage].filterAll}</span></div>`;
+                dLvlEdit.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlEdition" data-value=""><span>${allTxt}</span></div>`;
                 const edits = [
                     { key: 'Standard', color: '#71717a', label: 'Standard' },
                     { key: 'Deluxe', color: '#facc15', label: 'Deluxe' }
@@ -1485,7 +1567,7 @@
             // 4. Género Skins
             const dSkinGenre = document.getElementById('dropdown-custom-skin-genre');
             if(dSkinGenre) {
-                dSkinGenre.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="skinGenre" data-value=""><span>${translations[currentLanguage].filterAll}</span></div>`;
+                dSkinGenre.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="skinGenre" data-value=""><span>${allTxt}</span></div>`;
                 skinUniversalGenreList.forEach(g => {
                     const safeKey = g.label.replace('/', '');
                     const imgAsset = globalVisualAssets[`genre_${safeKey}`];
@@ -1562,15 +1644,16 @@
                 btn.style.color = color;
             } else if(categoryType === 'diff') {
                 let color = '#71717a';
-                if(val === 'Hard') color = '#f97316';
-                if(val === 'Extreme') color = '#ef4444';
+                let displayLabel = translations[currentLanguage].diffNormal;
+                if(val === 'Hard') { color = '#f97316'; displayLabel = translations[currentLanguage].diffHard; }
+                if(val === 'Extreme') { color = '#ef4444'; displayLabel = translations[currentLanguage].diffExtreme; }
 
                 const imgAsset = globalVisualAssets[`diff_${val}`];
                 const graphicEl = imgAsset 
                     ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
                     : `<i class="fa-solid fa-layer-group text-[10px]"></i>`;
 
-                label.innerHTML = `${graphicEl} <span class="truncate">${val}</span>`;
+                label.innerHTML = `${graphicEl} <span class="truncate">${displayLabel}</span>`;
                 btn.style.backgroundColor = `${color}20`;
                 btn.style.borderColor = color;
                 btn.style.color = color;
@@ -1651,11 +1734,32 @@
             return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
         }
 
+        function renderVideoPlayerMarkup(videoUrl, isSkin = false) {
+            if (!videoUrl) return '[No Preview]';
+            const containerClass = isSkin 
+                ? "w-28 h-48 sm:w-36 sm:h-64 mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl shrink-0 relative cursor-pointer group"
+                : "w-full aspect-video max-w-[240px] sm:max-w-[280px] mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl shrink-0 relative cursor-pointer group";
+
+            if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                return `<div class="${containerClass}"><iframe src="${parseYoutubeEmbedUrl(videoUrl)}" class="w-full h-full border-0"></iframe></div>`;
+            }
+
+            return `
+                <div class="${containerClass} custom-native-video-wrapper">
+                    <video src="${videoUrl}" class="w-full h-full object-cover pointer-events-none" loop playsinline disablePictureInPicture></video>
+                    <div class="absolute inset-0 bg-black/30 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100">
+                        <i class="fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon"></i>
+                    </div>
+                </div>
+            `;
+        }
+
         function sortAscendingByDate(arr) {
             return [...arr].sort((a, b) => {
-                const dA = new Date(a.date || 0);
-                const dB = new Date(b.date || 0);
-                return dA - dB;
+                if (!a.date && !b.date) return 0;
+                if (!a.date) return 1;  
+                if (!b.date) return -1; 
+                return new Date(a.date) - new Date(b.date);
             });
         }
 
@@ -1741,11 +1845,11 @@
                 }
                 linksLayout += `</div>`;
 
-                let pMarkup = lvl.video ? `<div class="w-full aspect-video max-w-[240px] sm:max-w-[280px] mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl shrink-0"><iframe src="${parseYoutubeEmbedUrl(lvl.video)}" class="w-full h-full border-0"></iframe></div>` : '[No Preview]';
+                let pMarkup = renderVideoPlayerMarkup(lvl.video, false);
 
                 tr.innerHTML = `
-                    <td class="p-2 sm:p-4 text-center">
-                        <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto ml-2 sm:ml-4 flex items-center justify-center shrink-0">
+                    <td class="p-2 sm:p-4 text-center align-middle">
+                        <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
                             <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
                             <div class="target-art-outer-container w-full h-full relative z-10 overflow-hidden rounded-xl border border-fuchsia-500/30 shadow-lg shrink-0 transition-all duration-300">
                                 <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
@@ -1757,7 +1861,7 @@
                             ` : ''}
                         </div>
                     </td>
-                    <td class="p-2 sm:p-4 min-w-[220px] sm:min-w-[320px] flex-1">
+                    <td class="p-2 sm:p-4 min-w-[220px] sm:min-w-[320px] flex-1 align-middle">
                         <ul class="space-y-2 list-none text-zinc-300 whitespace-normal break-words">
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formSong} / ${translations[currentLanguage].formArtist}:</span> 
@@ -1777,11 +1881,11 @@
                             </li>
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listNotes}:</span> 
-                                <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${lvl.notes || 'N/A'}</span>
+                                <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${lvl.notes || translations[currentLanguage].textComingSoon}</span>
                             </li>
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listDuration}:</span> 
-                                <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${lvl.duration || 'N/A'}</span>
+                                <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${lvl.duration || translations[currentLanguage].textComingSoon}</span>
                             </li>
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formRelease}:</span> 
@@ -1789,15 +1893,31 @@
                             </li>
                         </ul>
                     </td>
-                    <td class="p-2 sm:p-4 text-center">${pMarkup}</td>
-                    <td class="p-2 sm:p-4">${linksLayout}</td>
-                    <td class="p-2 sm:p-4 text-center ${isCreatorMode ? '':'hidden'}">
+                    <td class="p-2 sm:p-4 text-center align-middle">${pMarkup}</td>
+                    <td class="p-2 sm:p-4 align-middle">${linksLayout}</td>
+                    <td class="p-2 sm:p-4 text-center align-middle ${isCreatorMode ? '':'hidden'}">
                         <div class="flex flex-col gap-1">
                             <button class="btn-edit-lvl bg-white text-black px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">${translations[currentLanguage].btnEdit}</button>
                             <button class="btn-del-lvl bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">${translations[currentLanguage].btnDelete}</button>
                         </div>
                     </td>
                 `;
+
+                // NATIVE VIDEO CLICK PLAYER CONTROL
+                const vidWrapper = tr.querySelector('.custom-native-video-wrapper');
+                if(vidWrapper) {
+                    const videoEl = vidWrapper.querySelector('video');
+                    const iconEl = vidWrapper.querySelector('.video-play-icon');
+                    vidWrapper.addEventListener('click', () => {
+                        if(videoEl.paused) {
+                            videoEl.play();
+                            if(iconEl) iconEl.className = 'fa-solid fa-pause text-white text-xl drop-shadow-lg video-play-icon';
+                        } else {
+                            videoEl.pause();
+                            if(iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
+                        }
+                    });
+                }
 
                 if(hasAudio) {
                     const btn = tr.querySelector('.btn-play-audio-preview');
@@ -1815,12 +1935,11 @@
                     document.getElementById('editingLvlId').value = lvl.id;
                     document.getElementById('lvlSong').value = lvl.song;
                     document.getElementById('lvlArtist').value = lvl.artist;
-                    document.getElementById('lvlVideo').value = lvl.video || '';
                     document.getElementById('lvlDiff').value = lvl.diff;
                     document.getElementById('lvlEdition').value = lvl.edition;
                     document.getElementById('lvlNotes').value = lvl.notes || '';
                     document.getElementById('lvlDuration').value = lvl.duration || '';
-                    document.getElementById('lvlDate').value = lvl.date;
+                    document.getElementById('lvlDate').value = lvl.date || '';
                     document.getElementById('lvlDl1').value = lvl.dl1 || '';
                     document.getElementById('lvlDl2').value = lvl.dl2 || '';
                     document.getElementById('lvlDl3').value = lvl.dl3 || '';
@@ -1842,8 +1961,20 @@
                         badge.classList.add('hidden');
                         removeBtn.classList.add('hidden');
                     }
+
+                    const vBadge = document.getElementById('current-lvl-video-badge');
+                    const vRemoveBtn = document.getElementById('btn-remove-lvl-video');
+                    if(lvl.video) {
+                        vBadge.classList.remove('hidden');
+                        vRemoveBtn.classList.remove('hidden');
+                    } else {
+                        vBadge.classList.add('hidden');
+                        vRemoveBtn.classList.add('hidden');
+                    }
+
                     levelZipToRemove = false;
                     levelArtToRemove = false;
+                    levelVideoToRemove = false;
 
                     const currentGenresArray = lvl.genre ? lvl.genre.split(' / ').map(g => g.trim().toLowerCase()) : [];
                     document.querySelectorAll('.genre-checkbox').forEach(cb => {
@@ -1907,7 +2038,7 @@
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-fuchsia-950/10 transition border-b border-fuchsia-950/20";
                 
-                let pMarkup = cos.video ? `<div class="w-28 h-48 sm:w-36 sm:h-64 mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl shrink-0"><iframe src="${parseYoutubeEmbedUrl(cos.video)}" class="w-full h-full border-0"></iframe></div>` : '[No Preview]';
+                let pMarkup = renderVideoPlayerMarkup(cos.video, true);
                 
                 let inspMarkup = '';
                 if (cos.insp) {
@@ -1938,12 +2069,12 @@
                 linksLayout += `</div>`;
 
                 tr.innerHTML = `
-                    <td class="p-2 sm:p-4 text-center">
-                        <div class="w-20 h-20 sm:w-36 sm:h-36 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1 shrink-0 mx-auto ml-2 sm:ml-4">
+                    <td class="p-2 sm:p-4 text-center align-middle">
+                        <div class="w-20 h-20 sm:w-36 sm:h-36 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1 shrink-0 mx-auto">
                             <img src="${cos.icon}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'">
                         </div>
                     </td>
-                    <td class="p-2 sm:p-4 min-w-[200px] sm:min-w-[320px] flex-1">
+                    <td class="p-2 sm:p-4 min-w-[200px] sm:min-w-[320px] flex-1 align-middle">
                         <ul class="space-y-2 list-none text-zinc-300 whitespace-normal break-words">
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listName}:</span> 
@@ -1964,15 +2095,31 @@
                             <li class="flex flex-col gap-0.5 pt-0.5"><span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs">${translations[currentLanguage].listInsp}:</span> ${inspMarkup || 'N/A'}</li>
                         </ul>
                     </td>
-                    <td class="p-2 sm:p-4 text-center">${pMarkup}</td>
-                    <td class="p-2 sm:p-4">${linksLayout}</td>
-                    <td class="p-2 sm:p-4 text-center ${isCreatorMode ? '':'hidden'}">
+                    <td class="p-2 sm:p-4 text-center align-middle">${pMarkup}</td>
+                    <td class="p-2 sm:p-4 align-middle">${linksLayout}</td>
+                    <td class="p-2 sm:p-4 text-center align-middle ${isCreatorMode ? '':'hidden'}">
                         <div class="flex flex-col gap-1">
                             <button class="btn-edit-cos bg-white text-black px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">${translations[currentLanguage].btnEdit}</button>
                             <button class="btn-del-cos bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow">${translations[currentLanguage].btnDelete}</button>
                         </div>
                     </td>
                 `;
+
+                // NATIVE VIDEO CLICK PLAYER CONTROL
+                const vidWrapper = tr.querySelector('.custom-native-video-wrapper');
+                if(vidWrapper) {
+                    const videoEl = vidWrapper.querySelector('video');
+                    const iconEl = vidWrapper.querySelector('.video-play-icon');
+                    vidWrapper.addEventListener('click', () => {
+                        if(videoEl.paused) {
+                            videoEl.play();
+                            if(iconEl) iconEl.className = 'fa-solid fa-pause text-white text-xl drop-shadow-lg video-play-icon';
+                        } else {
+                            videoEl.pause();
+                            if(iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
+                        }
+                    });
+                }
                 
                 if(cos.skinDirectUrl) {
                     tr.querySelector('.btn-direct-skin-download')?.addEventListener('click', () => triggerDownloadAlert(cos.skinDirectUrl));
@@ -1982,8 +2129,7 @@
                     document.getElementById('editingCosId').value = cos.id;
                     document.getElementById('cosName').value = cos.name;
                     document.getElementById('cosArtist').value = cos.artist; 
-                    document.getElementById('cosVideo').value = cos.video;
-                    document.getElementById('cosDate').value = cos.date;
+                    document.getElementById('cosDate').value = cos.date || '';
                     document.getElementById('cosDl1').value = cos.dl1 || '';
                     document.getElementById('cosDl2').value = cos.dl2 || '';
                     document.getElementById('cosSubmitBtn').innerText = translations[currentLanguage].btnSaveChanges;
@@ -2004,8 +2150,20 @@
                         badge.classList.add('hidden');
                         removeBtn.classList.add('hidden');
                     }
+
+                    const vBadge = document.getElementById('current-cos-video-badge');
+                    const vRemoveBtn = document.getElementById('btn-remove-cos-video');
+                    if(cos.video) {
+                        vBadge.classList.remove('hidden');
+                        vRemoveBtn.classList.remove('hidden');
+                    } else {
+                        vBadge.classList.add('hidden');
+                        vRemoveBtn.classList.add('hidden');
+                    }
+
                     cosmeticZipToRemove = false;
                     cosmeticIconToRemove = false;
+                    cosmeticVideoToRemove = false;
 
                     const currentGenresArray = cos.genre ? cos.genre.split(' / ').map(g => g.trim().toLowerCase()) : [];
                     const isUniversal = currentGenresArray.length >= 7;
@@ -2153,7 +2311,32 @@
             });
         }
 
-        // ELIMINACIÓN DE IMÁGENES Y ARCHIVOS DE REGISTRO CON MODAL DE CONFIRMACIÓN
+        // ELIMINACIÓN EN VIDEOS CMS DE AGRADECIMIENTO Y FOOTER LINKS
+        document.querySelectorAll('.btn-clear-thanks-vid').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const index = parseInt(btn.getAttribute('data-vid-index'));
+                requestUserDeleteConfirmation(() => {
+                    if(globalThanksVideos[index]) {
+                        globalThanksVideos[index] = "";
+                        if(db) set(ref(db, 'thanks_videos'), globalThanksVideos);
+                    }
+                });
+            });
+        });
+
+        document.querySelectorAll('.btn-clear-footer-link').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetKey = btn.getAttribute('data-link-target').toLowerCase();
+                requestUserDeleteConfirmation(() => {
+                    globalFooterLinks[targetKey] = "";
+                    const inputEl = document.getElementById(`setupUrl${btn.getAttribute('data-link-target')}`);
+                    if(inputEl) inputEl.value = "";
+                    if(db) set(ref(db, 'footer_links'), globalFooterLinks);
+                });
+            });
+        });
+
+        // ELIMINACIÓN DE IMÁGENES, VIDEOS Y ARCHIVOS DE REGISTRO CON MODAL DE CONFIRMACIÓN
         document.getElementById('btn-delete-lvl-art-preview')?.addEventListener('click', () => {
             requestUserDeleteConfirmation(() => {
                 levelArtToRemove = true;
@@ -2185,6 +2368,24 @@
                 document.getElementById('current-skin-zip-badge').classList.add('hidden');
                 document.getElementById('btn-remove-skin-zip').classList.add('hidden');
                 document.getElementById('cosSkinZipFile').value = "";
+            });
+        });
+
+        document.getElementById('btn-remove-lvl-video')?.addEventListener('click', () => {
+            requestUserDeleteConfirmation(() => {
+                levelVideoToRemove = true;
+                document.getElementById('current-lvl-video-badge').classList.add('hidden');
+                document.getElementById('btn-remove-lvl-video').classList.add('hidden');
+                document.getElementById('lvlVideoFile').value = "";
+            });
+        });
+
+        document.getElementById('btn-remove-cos-video')?.addEventListener('click', () => {
+            requestUserDeleteConfirmation(() => {
+                cosmeticVideoToRemove = true;
+                document.getElementById('current-cos-video-badge').classList.add('hidden');
+                document.getElementById('btn-remove-cos-video').classList.add('hidden');
+                document.getElementById('cosVideoFile').value = "";
             });
         });
 
@@ -2220,6 +2421,7 @@
                 let existingLvl = levels.find(l => l.id === id);
                 let finalArtUrl = levelArtToRemove ? "free_song_Image.png" : (existingLvl?.art || "free_song_Image.png");
                 let finalAudioUrl = existingLvl?.audioDirectUrl || "";
+                let finalVideoUrl = levelVideoToRemove ? "" : (existingLvl?.video || "");
                 let finalChartDirectUrl = levelZipToRemove ? "" : (existingLvl?.chartDirectUrl || "");
 
                 const artFileInput = document.getElementById('lvlArtFile');
@@ -2232,10 +2434,18 @@
                     finalAudioUrl = await uploadFileToGitHubContent(audioFileInput.files[0], 'assets/audio', audioFileInput.files[0].name);
                 }
 
+                const videoFileInput = document.getElementById('lvlVideoFile');
+                if(videoFileInput.files && videoFileInput.files[0] && githubToken && githubUser) {
+                    finalVideoUrl = await uploadFileToGitHubContent(videoFileInput.files[0], 'assets/videos', videoFileInput.files[0].name);
+                }
+
                 const chartFileInput = document.getElementById('lvlChartZipFile');
                 if(chartFileInput.files && chartFileInput.files[0] && githubToken && githubUser) {
                     finalChartDirectUrl = await uploadFileToGitHubContent(chartFileInput.files[0], 'charts', chartFileInput.files[0].name);
                 }
+
+                const isComingSoonFlag = document.getElementById('lvlIsComingSoon').value === "true";
+                const dateVal = isComingSoonFlag ? "" : document.getElementById('lvlDate').value;
 
                 const data = {
                     id: id, 
@@ -2244,13 +2454,13 @@
                     art: finalArtUrl, 
                     audioDirectUrl: finalAudioUrl, 
                     chartDirectUrl: finalChartDirectUrl,
-                    video: document.getElementById('lvlVideo').value.trim(),
+                    video: finalVideoUrl,
                     genre: checked.join(' / ') || 'General', 
                     diff: document.getElementById('lvlDiff').value,
                     edition: document.getElementById('lvlEdition').value, 
                     notes: document.getElementById('lvlNotes').value.trim(),
                     duration: document.getElementById('lvlDuration').value.trim(),
-                    date: document.getElementById('lvlDate').value,
+                    date: dateVal,
                     dl1: document.getElementById('lvlDl1').value.trim(), 
                     dl2: document.getElementById('lvlDl2').value.trim(), 
                     dl3: document.getElementById('lvlDl3').value.trim()
@@ -2264,9 +2474,13 @@
                     document.getElementById('lvlSubmitBtn').innerText = translations[currentLanguage].btnRegister; 
                     document.getElementById('current-chart-zip-badge').classList.add('hidden');
                     document.getElementById('btn-remove-chart-zip').classList.add('hidden');
+                    document.getElementById('current-lvl-video-badge').classList.add('hidden');
+                    document.getElementById('btn-remove-lvl-video').classList.add('hidden');
                     document.getElementById('lvlArtPreviewBox').classList.add('hidden');
+                    document.getElementById('lvlIsComingSoon').value = "false";
                     levelZipToRemove = false;
                     levelArtToRemove = false;
+                    levelVideoToRemove = false;
                     buildGenresSelector();
                 }
             } catch(err) {
@@ -2278,17 +2492,32 @@
 
         document.getElementById('cosmetic-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            // VALIDACIÓN OBLIGATORIA DE GÉNERO PARA SKINS
+            const isUniversal = document.getElementById('cosSelectedGenreMode').value === 'universal';
+            const checkedGenres = document.querySelectorAll('.skin-genre-checkbox:checked');
+            if (!isUniversal && checkedGenres.length === 0) {
+                alert(translations[currentLanguage].selectGenreError);
+                return;
+            }
+
             showLoadingOverlay();
 
             try {
                 let id = document.getElementById('editingCosId').value || Date.now().toString();
                 let existingCos = cosmetics.find(c => c.id === id);
                 let finalIconUrl = cosmeticIconToRemove ? "BoxSprite_MerchSkin2.png" : (existingCos?.icon || "BoxSprite_MerchSkin2.png");
+                let finalVideoUrl = cosmeticVideoToRemove ? "" : (existingCos?.video || "");
                 let finalSkinDirectUrl = cosmeticZipToRemove ? "" : (existingCos?.skinDirectUrl || "");
 
                 const iconFileInput = document.getElementById('cosIconFile');
                 if(iconFileInput.files && iconFileInput.files[0] && githubToken && githubUser) {
                     finalIconUrl = await uploadFileToGitHubContent(iconFileInput.files[0], 'assets/skins', iconFileInput.files[0].name);
+                }
+
+                const videoFileInput = document.getElementById('cosVideoFile');
+                if(videoFileInput.files && videoFileInput.files[0] && githubToken && githubUser) {
+                    finalVideoUrl = await uploadFileToGitHubContent(videoFileInput.files[0], 'assets/videos', videoFileInput.files[0].name);
                 }
 
                 const skinZipFileInput = document.getElementById('cosSkinZipFile');
@@ -2299,8 +2528,6 @@
                 let finalInspString = editingCosBrandUrlsList.join(', ');
 
                 let finalSkinGenre = "General";
-                const isUniversal = document.getElementById('cosSelectedGenreMode').value === 'universal';
-                
                 if(isUniversal) {
                     finalSkinGenre = skinUniversalGenreList.map(g => g.label).join(' / ');
                 } else {
@@ -2308,13 +2535,16 @@
                     if(checkedCb) finalSkinGenre = checkedCb.value;
                 }
 
+                const isComingSoonFlag = document.getElementById('cosIsComingSoon').value === "true";
+                const dateVal = isComingSoonFlag ? "" : document.getElementById('cosDate').value;
+
                 const data = {
                     id: id, 
                     name: document.getElementById('cosName').value.trim(), 
                     artist: document.getElementById('cosArtist').value.trim(),
                     icon: finalIconUrl, 
-                    video: document.getElementById('cosVideo').value.trim(),
-                    date: document.getElementById('cosDate').value, 
+                    video: finalVideoUrl,
+                    date: dateVal, 
                     genre: finalSkinGenre,
                     insp: finalInspString, 
                     skinDirectUrl: finalSkinDirectUrl,
@@ -2332,7 +2562,10 @@
                     document.getElementById('cosBrandManagementList').classList.add('hidden');
                     document.getElementById('current-skin-zip-badge').classList.add('hidden');
                     document.getElementById('btn-remove-skin-zip').classList.add('hidden');
+                    document.getElementById('current-cos-video-badge').classList.add('hidden');
+                    document.getElementById('btn-remove-cos-video').classList.add('hidden');
                     document.getElementById('cosIconPreviewBox').classList.add('hidden');
+                    document.getElementById('cosIsComingSoon').value = "false";
                     
                     document.getElementById('cosSelectedGenreMode').value = 'single';
                     const btnU = document.getElementById('btn-skin-universal-genre');
@@ -2341,6 +2574,7 @@
 
                     cosmeticZipToRemove = false;
                     cosmeticIconToRemove = false;
+                    cosmeticVideoToRemove = false;
                     editingCosBrandUrlsList = [];
                 }
             } catch(err) {
