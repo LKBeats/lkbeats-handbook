@@ -61,14 +61,6 @@
             -webkit-mask-position: center;
             mask-position: center;
         }
-
-        .custom-filter-select {
-            appearance: none;
-            -webkit-appearance: none;
-            background-repeat: no-repeat;
-            background-position: right 0.6rem center;
-            background-size: 0.65rem;
-        }
     </style>
 </head>
 <body class="bg-[#05020a] text-zinc-100 min-h-screen font-sans flex flex-col relative overflow-x-hidden">
@@ -476,44 +468,43 @@
                             </div>
                             <!-- CONTADOR: SOLO EN HORIZONTAL / LANDSCAPE DE MÓVIL Y PC -->
                             <div class="hidden landscape:block sm:block mt-0.5 text-[10px] sm:text-xs font-bold text-orange-400">
-                                <span data-i18n="txtTotal">Total</span>: <span id="counter-charts-header">0</span> Charts
+                                <span id="lbl-counter-charts">Total: 0 Charts</span>
                             </div>
                         </div>
 
-                        <!-- BARRA DE FILTROS ALINEADA A LA DERECHA -->
-                        <div class="flex flex-wrap items-center gap-2.5 ml-auto text-xs justify-end w-full sm:w-auto">
-                            <div class="flex flex-col">
+                        <!-- BARRA DE FILTROS ALINEADA Y CENTRADA EN VERTICAL -->
+                        <div class="flex flex-wrap items-center justify-center sm:justify-end gap-2.5 w-full sm:w-auto ml-auto text-xs">
+                            
+                            <!-- CUSTOM DROPDOWN: GÉNERO CHARTS -->
+                            <div class="flex flex-col relative">
                                 <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterGenre">Género</label>
-                                <div class="relative flex items-center">
-                                    <select id="filterLvlGenre" class="custom-filter-select w-full bg-[#05020a] border border-fuchsia-950 rounded-xl pl-3 pr-8 py-1.5 text-zinc-300 font-extrabold focus:outline-none transition-colors">
-                                        <option value="" data-i18n="filterAll">Todos</option>
-                                    </select>
-                                    <i class="fa-solid fa-chevron-down absolute right-2.5 text-[9px] pointer-events-none text-zinc-400"></i>
-                                </div>
+                                <button id="btn-custom-lvl-genre" type="button" class="w-32 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
+                                    <span id="label-custom-lvl-genre" class="truncate flex items-center gap-1.5">Todos</span>
+                                    <i class="fa-solid fa-chevron-down text-[9px] text-zinc-400 ml-1"></i>
+                                </button>
+                                <div id="dropdown-custom-lvl-genre" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#11091c] border border-fuchsia-500/40 rounded-xl shadow-2xl overflow-hidden z-50 max-h-52 overflow-y-auto divide-y divide-fuchsia-950/40"></div>
                             </div>
-                            <div class="flex flex-col">
+
+                            <!-- CUSTOM DROPDOWN: DIFICULTAD CHARTS -->
+                            <div class="flex flex-col relative">
                                 <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterDiff">Dificultad</label>
-                                <div class="relative flex items-center">
-                                    <select id="filterLvlDiff" class="custom-filter-select w-full bg-[#05020a] border border-fuchsia-950 rounded-xl pl-3 pr-8 py-1.5 text-zinc-300 font-extrabold focus:outline-none transition-colors">
-                                        <option value="" data-i18n="filterAll">Todos</option>
-                                        <option value="Normal">Normal</option>
-                                        <option value="Hard">Hard</option>
-                                        <option value="Extreme">Extreme</option>
-                                    </select>
-                                    <i class="fa-solid fa-chevron-down absolute right-2.5 text-[9px] pointer-events-none text-zinc-400"></i>
-                                </div>
+                                <button id="btn-custom-lvl-diff" type="button" class="w-32 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
+                                    <span id="label-custom-lvl-diff" class="truncate flex items-center gap-1.5">Todos</span>
+                                    <i class="fa-solid fa-chevron-down text-[9px] text-zinc-400 ml-1"></i>
+                                </button>
+                                <div id="dropdown-custom-lvl-diff" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#11091c] border border-fuchsia-500/40 rounded-xl shadow-2xl overflow-hidden z-50 divide-y divide-fuchsia-950/40"></div>
                             </div>
-                            <div class="flex flex-col">
+
+                            <!-- CUSTOM DROPDOWN: EDICIÓN CHARTS -->
+                            <div class="flex flex-col relative">
                                 <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterEdit">Edición</label>
-                                <div class="relative flex items-center">
-                                    <select id="filterLvlEdition" class="custom-filter-select w-full bg-[#05020a] border border-fuchsia-950 rounded-xl pl-3 pr-8 py-1.5 text-zinc-300 font-extrabold focus:outline-none transition-colors">
-                                        <option value="" data-i18n="filterAll">Todos</option>
-                                        <option value="Standard">Standard</option>
-                                        <option value="Deluxe">Deluxe</option>
-                                    </select>
-                                    <i class="fa-solid fa-chevron-down absolute right-2.5 text-[9px] pointer-events-none text-zinc-400"></i>
-                                </div>
+                                <button id="btn-custom-lvl-edition" type="button" class="w-32 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
+                                    <span id="label-custom-lvl-edition" class="truncate flex items-center gap-1.5">Todos</span>
+                                    <i class="fa-solid fa-chevron-down text-[9px] text-zinc-400 ml-1"></i>
+                                </button>
+                                <div id="dropdown-custom-lvl-edition" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#11091c] border border-fuchsia-500/40 rounded-xl shadow-2xl overflow-hidden z-50 divide-y divide-fuchsia-950/40"></div>
                             </div>
+
                             <div class="flex flex-col justify-end">
                                 <button id="btn-clear-lvl-filters" class="h-[34px] mt-auto px-3 py-1.5 bg-red-950/50 border border-red-800/40 text-red-400 rounded-xl font-bold hover:bg-red-900/60 transition flex items-center gap-1">
                                     <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btnClearFilters">Limpiar</span>
@@ -648,16 +639,17 @@
                     <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div class="text-base sm:text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500 shrink-0" data-i18n="navCosmetics">Skins</div>
                         
-                        <div class="flex flex-wrap items-center gap-2.5 ml-auto text-xs justify-end w-full sm:w-auto">
-                            <div class="flex flex-col">
+                        <div class="flex flex-wrap items-center justify-center sm:justify-end gap-2.5 w-full sm:w-auto ml-auto text-xs">
+                            <!-- CUSTOM DROPDOWN: GÉNERO SKINS -->
+                            <div class="flex flex-col relative">
                                 <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterGenre">Género</label>
-                                <div class="relative flex items-center">
-                                    <select id="filterSkinGenre" class="custom-filter-select w-full bg-[#05020a] border border-fuchsia-950 rounded-xl pl-3 pr-8 py-1.5 text-zinc-300 font-extrabold focus:outline-none transition-colors">
-                                        <option value="" data-i18n="filterAll">Todos</option>
-                                    </select>
-                                    <i class="fa-solid fa-chevron-down absolute right-2.5 text-[9px] pointer-events-none text-zinc-400"></i>
-                                </div>
+                                <button id="btn-custom-skin-genre" type="button" class="w-36 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
+                                    <span id="label-custom-skin-genre" class="truncate flex items-center gap-1.5">Todos</span>
+                                    <i class="fa-solid fa-chevron-down text-[9px] text-zinc-400 ml-1"></i>
+                                </button>
+                                <div id="dropdown-custom-skin-genre" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#11091c] border border-fuchsia-500/40 rounded-xl shadow-2xl overflow-hidden z-50 max-h-52 overflow-y-auto divide-y divide-fuchsia-950/40"></div>
                             </div>
+
                             <div class="flex flex-col justify-end">
                                 <button id="btn-clear-skin-filters" class="h-[34px] mt-auto px-3 py-1.5 bg-red-950/50 border border-red-800/40 text-red-400 rounded-xl font-bold hover:bg-red-900/60 transition flex items-center gap-1">
                                     <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btnClearFilters">Limpiar</span>
@@ -673,7 +665,7 @@
                                 <img src="BeatstarWhiteLogo.png" alt="Beatstar" class="h-full w-full sm:w-auto object-contain object-left">
                             </div>
                             <div class="flex items-center gap-3 shrink-0">
-                                <div class="text-xs font-bold bg-fuchsia-950/50 border border-fuchsia-800/40 px-3 py-1.5 rounded-xl text-fuchsia-400 hidden sm:block"><span data-i18n="txtTotal">Total</span>: <span id="counter-beatstar">0</span> Skins</div>
+                                <div class="text-xs font-bold bg-fuchsia-950/50 border border-fuchsia-800/40 px-3 py-1.5 rounded-xl text-fuchsia-400 hidden sm:block"><span id="counter-beatstar">Total: 0 Skins</span></div>
                                 <button id="btn-toggle-to-tapwave" class="px-3 py-1.5 bg-zinc-900 border border-orange-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
                                     <span data-i18n="jumpToTxt">Ir a</span> <img src="TapWaveWhiteLogo.png" class="h-3.5 w-auto object-contain">
                                 </button>
@@ -702,7 +694,7 @@
                                 <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full w-full sm:w-auto object-contain object-left scale-110 sm:scale-110 origin-left">
                             </div>
                             <div class="flex items-center gap-3 shrink-0">
-                                <div class="text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400 hidden sm:block"><span data-i18n="txtTotal">Total</span>: <span id="counter-tapwave">0</span> Skins</div>
+                                <div class="text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400 hidden sm:block"><span id="counter-tapwave">Total: 0 Skins</span></div>
                                 <button id="btn-toggle-to-beatstar" class="px-3 py-1.5 bg-zinc-900 border border-fuchsia-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
                                     <span data-i18n="jumpToTxt">Ir a</span> <img src="BeatstarWhiteLogo.png" class="h-3 w-auto object-contain">
                                 </button>
@@ -884,6 +876,12 @@
         let currentSelectedSkinSubPlatform = 'Beatstar'; 
         let globalVisualAssets = {}; 
         let globalThanksVideos = [];
+
+        // VALORES DE FILTROS SELECCIONADOS
+        let activeLvlGenreFilter = "";
+        let activeLvlDiffFilter = "";
+        let activeLvlEditionFilter = "";
+        let activeSkinGenreFilter = "";
 
         let editingCosBrandUrlsList = [];
         let currentActiveDownloadUrl = "";
@@ -1075,7 +1073,6 @@
                 levels = snap.val() ? Object.values(snap.val()) : []; 
                 renderLevelsTable(); 
                 updateDashboardCounts(); 
-                if(document.getElementById('counter-charts-header')) document.getElementById('counter-charts-header').innerText = levels.length;
                 hideLoadingOverlay();
             });
             onValue(ref(db, 'cosmetics'), (snap) => { 
@@ -1086,6 +1083,7 @@
             });
             onValue(ref(db, 'visual_assets'), (snap) => { 
                 globalVisualAssets = snap.val() || {}; 
+                buildCustomDropdownMenus();
                 renderLevelsTable(); 
             });
             onValue(ref(db, 'thanks_videos'), (snap) => { 
@@ -1359,8 +1357,7 @@
                 if (translations[currentLanguage][key]) el.innerText = translations[currentLanguage][key];
             });
             applyRoleUIVisibility();
-            populateFilterOptions();
-            updateFilterDropdownStyles();
+            buildCustomDropdownMenus();
         }
 
         function buildGenresSelector() {
@@ -1419,105 +1416,210 @@
             }
         });
 
-        function populateFilterOptions() {
-            const lvlSelect = document.getElementById('filterLvlGenre');
-            const skinSelect = document.getElementById('filterSkinGenre');
-            
-            if(lvlSelect) {
-                const current = lvlSelect.value;
-                lvlSelect.innerHTML = `<option value="" class="bg-[#05020a] text-zinc-300 font-bold">${translations[currentLanguage].filterAll}</option>`;
+        // CONSTRUCCIÓN DE CUSTOM DROPDOWNS (CON COLORES E ÍCONOS GRAFICOS DENTRO)
+        function buildCustomDropdownMenus() {
+            // 1. Género Charts
+            const dLvlGenre = document.getElementById('dropdown-custom-lvl-genre');
+            if(dLvlGenre) {
+                dLvlGenre.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlGenre" data-value=""><span>${translations[currentLanguage].filterAll}</span></div>`;
                 genreList.forEach(g => {
-                    lvlSelect.innerHTML += `<option value="${g.label}" class="bg-[#05020a] text-zinc-300 font-bold">${g.label}</option>`;
+                    const safeKey = g.label.replace('/', '');
+                    const imgAsset = globalVisualAssets[`genre_${safeKey}`];
+                    const graphicEl = imgAsset 
+                        ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${g.color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
+                        : `<span class="w-2.5 h-2.5 rounded-full inline-block shrink-0" style="background-color:${g.color}"></span>`;
+                    
+                    dLvlGenre.innerHTML += `
+                        <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer font-extrabold flex items-center gap-2" style="color:${g.color}" data-type="lvlGenre" data-value="${g.label}">
+                            ${graphicEl} <span>${g.label}</span>
+                        </div>
+                    `;
                 });
-                lvlSelect.value = current;
             }
 
-            if(skinSelect) {
-                const current = skinSelect.value;
-                skinSelect.innerHTML = `<option value="" class="bg-[#05020a] text-zinc-300 font-bold">${translations[currentLanguage].filterAll}</option>`;
+            // 2. Dificultad Charts
+            const dLvlDiff = document.getElementById('dropdown-custom-lvl-diff');
+            if(dLvlDiff) {
+                dLvlDiff.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value=""><span>${translations[currentLanguage].filterAll}</span></div>`;
+                const diffs = [
+                    { key: 'Normal', color: '#71717a', label: translations[currentLanguage].diffNormal },
+                    { key: 'Hard', color: '#f97316', label: translations[currentLanguage].diffHard },
+                    { key: 'Extreme', color: '#ef4444', label: translations[currentLanguage].diffExtreme }
+                ];
+                diffs.forEach(d => {
+                    const imgAsset = globalVisualAssets[`diff_${d.key}`];
+                    const graphicEl = imgAsset 
+                        ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${d.color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
+                        : `<i class="fa-solid fa-layer-group text-[10px]"></i>`;
+                    
+                    dLvlDiff.innerHTML += `
+                        <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer font-extrabold flex items-center gap-2" style="color:${d.color}" data-type="lvlDiff" data-value="${d.key}">
+                            ${graphicEl} <span>${d.label}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            // 3. Edición Charts
+            const dLvlEdit = document.getElementById('dropdown-custom-lvl-edition');
+            if(dLvlEdit) {
+                dLvlEdit.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlEdition" data-value=""><span>${translations[currentLanguage].filterAll}</span></div>`;
+                const edits = [
+                    { key: 'Standard', color: '#71717a', label: 'Standard' },
+                    { key: 'Deluxe', color: '#facc15', label: 'Deluxe' }
+                ];
+                edits.forEach(e => {
+                    const imgAsset = globalVisualAssets[`edit_${e.key}`];
+                    const graphicEl = imgAsset 
+                        ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${e.color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
+                        : `<i class="fa-solid fa-star text-[10px]"></i>`;
+                    
+                    dLvlEdit.innerHTML += `
+                        <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer font-extrabold flex items-center gap-2" style="color:${e.color}" data-type="lvlEdition" data-value="${e.key}">
+                            ${graphicEl} <span>${e.label}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            // 4. Género Skins
+            const dSkinGenre = document.getElementById('dropdown-custom-skin-genre');
+            if(dSkinGenre) {
+                dSkinGenre.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="skinGenre" data-value=""><span>${translations[currentLanguage].filterAll}</span></div>`;
                 skinUniversalGenreList.forEach(g => {
-                    skinSelect.innerHTML += `<option value="${g.label}" class="bg-[#05020a] text-zinc-300 font-bold">${g.label}</option>`;
+                    const safeKey = g.label.replace('/', '');
+                    const imgAsset = globalVisualAssets[`genre_${safeKey}`];
+                    const graphicEl = imgAsset 
+                        ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${g.color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
+                        : `<span class="w-2.5 h-2.5 rounded-full inline-block shrink-0" style="background-color:${g.color}"></span>`;
+                    
+                    dSkinGenre.innerHTML += `
+                        <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer font-extrabold flex items-center gap-2" style="color:${g.color}" data-type="skinGenre" data-value="${g.label}">
+                            ${graphicEl} <span>${g.label}</span>
+                        </div>
+                    `;
                 });
-                skinSelect.value = current;
             }
+
+            // APLICAR EVENTOS DE SELECCIÓN A LAS OPCIONES
+            document.querySelectorAll('.custom-opt-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    const type = item.getAttribute('data-type');
+                    const val = item.getAttribute('data-value');
+
+                    if(type === 'lvlGenre') {
+                        activeLvlGenreFilter = val;
+                        updateCustomDropdownButtonUI('btn-custom-lvl-genre', 'label-custom-lvl-genre', val, 'genre');
+                        document.getElementById('dropdown-custom-lvl-genre').classList.add('hidden');
+                        renderLevelsTable();
+                    } else if(type === 'lvlDiff') {
+                        activeLvlDiffFilter = val;
+                        updateCustomDropdownButtonUI('btn-custom-lvl-diff', 'label-custom-lvl-diff', val, 'diff');
+                        document.getElementById('dropdown-custom-lvl-diff').classList.add('hidden');
+                        renderLevelsTable();
+                    } else if(type === 'lvlEdition') {
+                        activeLvlEditionFilter = val;
+                        updateCustomDropdownButtonUI('btn-custom-lvl-edition', 'label-custom-lvl-edition', val, 'edition');
+                        document.getElementById('dropdown-custom-lvl-edition').classList.add('hidden');
+                        renderLevelsTable();
+                    } else if(type === 'skinGenre') {
+                        activeSkinGenreFilter = val;
+                        updateCustomDropdownButtonUI('btn-custom-skin-genre', 'label-custom-skin-genre', val, 'genre');
+                        document.getElementById('dropdown-custom-skin-genre').classList.add('hidden');
+                        renderCosmeticsTables();
+                    }
+                });
+            });
         }
 
-        // APLICA EL COLOR CORRESPONDIENTE AL SELECCIONAR UN FILTRO
-        function updateFilterDropdownStyles() {
-            // Genre Filter
-            const fG = document.getElementById('filterLvlGenre');
-            if(fG) {
-                const val = fG.value;
+        // ACTUALIZA LA APARIENCIA DEL BOTÓN PRINCIPAL AL ELEGIR UN FILTRO
+        function updateCustomDropdownButtonUI(btnId, labelId, val, categoryType) {
+            const btn = document.getElementById(btnId);
+            const label = document.getElementById(labelId);
+            if(!btn || !label) return;
+
+            if(!val) {
+                label.innerHTML = `<span>${translations[currentLanguage].filterAll}</span>`;
+                btn.style.backgroundColor = '#05020a';
+                btn.style.borderColor = '#4c1d95';
+                btn.style.color = '#d4d4d8';
+                return;
+            }
+
+            if(categoryType === 'genre') {
                 const matched = genreList.find(g => g.label.toLowerCase() === val.toLowerCase());
-                if(matched) {
-                    fG.style.backgroundColor = `${matched.color}20`;
-                    fG.style.borderColor = matched.color;
-                    fG.style.color = matched.color;
-                } else {
-                    fG.style.backgroundColor = '#05020a';
-                    fG.style.borderColor = '#4c1d95';
-                    fG.style.color = '#d4d4d8';
-                }
-            }
+                const color = matched ? matched.color : '#f97316';
+                const safeKey = val.replace('/', '');
+                const imgAsset = globalVisualAssets[`genre_${safeKey}`];
+                
+                const graphicEl = imgAsset 
+                    ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
+                    : `<span class="w-2.5 h-2.5 rounded-full inline-block shrink-0" style="background-color:${color}"></span>`;
 
-            // Skin Genre Filter
-            const fSG = document.getElementById('filterSkinGenre');
-            if(fSG) {
-                const val = fSG.value;
-                const matched = skinUniversalGenreList.find(g => g.label.toLowerCase() === val.toLowerCase());
-                if(matched) {
-                    fSG.style.backgroundColor = `${matched.color}20`;
-                    fSG.style.borderColor = matched.color;
-                    fSG.style.color = matched.color;
-                } else {
-                    fSG.style.backgroundColor = '#05020a';
-                    fSG.style.borderColor = '#4c1d95';
-                    fSG.style.color = '#d4d4d8';
-                }
-            }
+                label.innerHTML = `${graphicEl} <span class="truncate">${val}</span>`;
+                btn.style.backgroundColor = `${color}20`;
+                btn.style.borderColor = color;
+                btn.style.color = color;
+            } else if(categoryType === 'diff') {
+                let color = '#71717a';
+                if(val === 'Hard') color = '#f97316';
+                if(val === 'Extreme') color = '#ef4444';
 
-            // Diff Filter
-            const fD = document.getElementById('filterLvlDiff');
-            if(fD) {
-                const val = fD.value;
-                if(val === "Hard") {
-                    fD.style.backgroundColor = "rgba(249, 115, 22, 0.15)";
-                    fD.style.borderColor = "rgba(249, 115, 22, 0.5)";
-                    fD.style.color = "#f97316";
-                } else if(val === "Extreme") {
-                    fD.style.backgroundColor = "rgba(239, 68, 68, 0.15)";
-                    fD.style.borderColor = "rgba(239, 68, 68, 0.5)";
-                    fD.style.color = "#ef4444";
-                } else if(val === "Normal") {
-                    fD.style.backgroundColor = "rgba(113, 113, 122, 0.15)";
-                    fD.style.borderColor = "rgba(113, 113, 122, 0.5)";
-                    fD.style.color = "#a1a1aa";
-                } else {
-                    fD.style.backgroundColor = '#05020a';
-                    fD.style.borderColor = '#4c1d95';
-                    fD.style.color = '#d4d4d8';
-                }
-            }
+                const imgAsset = globalVisualAssets[`diff_${val}`];
+                const graphicEl = imgAsset 
+                    ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
+                    : `<i class="fa-solid fa-layer-group text-[10px]"></i>`;
 
-            // Edition Filter
-            const fE = document.getElementById('filterLvlEdition');
-            if(fE) {
-                const val = fE.value;
-                if(val === "Deluxe") {
-                    fE.style.backgroundColor = "rgba(250, 204, 21, 0.15)";
-                    fE.style.borderColor = "rgba(250, 204, 21, 0.5)";
-                    fE.style.color = "#facc15";
-                } else if(val === "Standard") {
-                    fE.style.backgroundColor = "rgba(113, 113, 122, 0.15)";
-                    fE.style.borderColor = "rgba(113, 113, 122, 0.5)";
-                    fE.style.color = "#a1a1aa";
-                } else {
-                    fE.style.backgroundColor = '#05020a';
-                    fE.style.borderColor = '#4c1d95';
-                    fE.style.color = '#d4d4d8';
-                }
+                label.innerHTML = `${graphicEl} <span class="truncate">${val}</span>`;
+                btn.style.backgroundColor = `${color}20`;
+                btn.style.borderColor = color;
+                btn.style.color = color;
+            } else if(categoryType === 'edition') {
+                let color = (val === 'Deluxe') ? '#facc15' : '#71717a';
+                const imgAsset = globalVisualAssets[`edit_${val}`];
+                const graphicEl = imgAsset 
+                    ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
+                    : `<i class="fa-solid fa-star text-[10px]"></i>`;
+
+                label.innerHTML = `${graphicEl} <span class="truncate">${val}</span>`;
+                btn.style.backgroundColor = `${color}20`;
+                btn.style.borderColor = color;
+                btn.style.color = color;
             }
         }
+
+        // EVENTOS PARA ABRIR / CERRAR DESPLEGABLES
+        document.getElementById('btn-custom-lvl-genre')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeAllCustomDropdowns();
+            document.getElementById('dropdown-custom-lvl-genre').classList.toggle('hidden');
+        });
+
+        document.getElementById('btn-custom-lvl-diff')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeAllCustomDropdowns();
+            document.getElementById('dropdown-custom-lvl-diff').classList.toggle('hidden');
+        });
+
+        document.getElementById('btn-custom-lvl-edition')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeAllCustomDropdowns();
+            document.getElementById('dropdown-custom-lvl-edition').classList.toggle('hidden');
+        });
+
+        document.getElementById('btn-custom-skin-genre')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeAllCustomDropdowns();
+            document.getElementById('dropdown-custom-skin-genre').classList.toggle('hidden');
+        });
+
+        function closeAllCustomDropdowns() {
+            ['dropdown-custom-lvl-genre', 'dropdown-custom-lvl-diff', 'dropdown-custom-lvl-edition', 'dropdown-custom-skin-genre'].forEach(id => {
+                document.getElementById(id)?.classList.add('hidden');
+            });
+        }
+
+        document.addEventListener('click', closeAllCustomDropdowns);
 
         function renderGenresBadgesHtml(raw) {
             if(!raw) return '';
@@ -1563,15 +1665,16 @@
 
             let filtered = sortAscendingByDate(levels);
 
-            const fGenre = document.getElementById('filterLvlGenre').value;
-            const fDiff = document.getElementById('filterLvlDiff').value;
-            const fEdition = document.getElementById('filterLvlEdition').value;
+            if(activeLvlGenreFilter) filtered = filtered.filter(l => l.genre && l.genre.toLowerCase().includes(activeLvlGenreFilter.toLowerCase()));
+            if(activeLvlDiffFilter) filtered = filtered.filter(l => l.diff === activeLvlDiffFilter);
+            if(activeLvlEditionFilter) filtered = filtered.filter(l => l.edition === activeLvlEditionFilter);
 
-            if(fGenre) filtered = filtered.filter(l => l.genre && l.genre.toLowerCase().includes(fGenre.toLowerCase()));
-            if(fDiff) filtered = filtered.filter(l => l.diff === fDiff);
-            if(fEdition) filtered = filtered.filter(l => l.edition === fEdition);
-
-            updateFilterDropdownStyles();
+            // CONTADOR DINÁMICO
+            const hasActiveFilters = activeLvlGenreFilter || activeLvlDiffFilter || activeLvlEditionFilter;
+            const counterLbl = document.getElementById('lbl-counter-charts');
+            if(counterLbl) {
+                counterLbl.innerText = hasActiveFilters ? `Charts: ${filtered.length}` : `Total: ${levels.length} Charts`;
+            }
 
             // ESTADO VACÍO SI FILTROS NO COINCIDEN
             if(filtered.length === 0) {
@@ -1624,7 +1727,6 @@
 
                 const hasAudio = !!lvl.audioDirectUrl;
 
-                // LINKS DE DESCARGA O MENSAJE [SIN LINKS DISPONIBLES]
                 const hasAnyLinks = lvl.chartDirectUrl || lvl.dl1 || lvl.dl2 || lvl.dl3;
                 let linksLayout = `<div class="flex flex-col gap-1 max-w-[140px] sm:max-w-[160px] mx-auto">`;
                 if(hasAnyLinks) {
@@ -1643,7 +1745,6 @@
 
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center">
-                        <!-- ARTE DESPLAZADO UN POCO A LA DERECHA (pl-2 sm:pl-4) -->
                         <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto ml-2 sm:ml-4 flex items-center justify-center shrink-0">
                             <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
                             <div class="target-art-outer-container w-full h-full relative z-10 overflow-hidden rounded-xl border border-fuchsia-500/30 shadow-lg shrink-0 transition-all duration-300">
@@ -1750,7 +1851,6 @@
                     });
                 });
 
-                // BOTÓN DE ELIMINAR REGISTRO CON MODAL DE CONFIRMACIÓN
                 tr.querySelector('.btn-del-lvl')?.addEventListener('click', () => {
                     requestUserDeleteConfirmation(() => {
                         if(db) {
@@ -1769,20 +1869,22 @@
             if(!tbodyB || !tbodyT) return; tbodyB.innerHTML = ''; tbodyT.innerHTML = '';
 
             let filtered = sortAscendingByDate(cosmetics);
-            const fGenre = document.getElementById('filterSkinGenre').value;
+            if(activeSkinGenreFilter) filtered = filtered.filter(c => c.genre && c.genre.toLowerCase().includes(activeSkinGenreFilter.toLowerCase()));
 
-            if(fGenre) filtered = filtered.filter(c => c.genre && c.genre.toLowerCase().includes(fGenre.toLowerCase()));
-
-            updateFilterDropdownStyles();
-
-            let cB = 0; let cT = 0;
             const beatstarList = filtered.filter(c => c.platform !== 'TapWave');
             const tapwaveList = filtered.filter(c => c.platform === 'TapWave');
 
-            cB = beatstarList.length;
-            cT = tapwaveList.length;
+            const hasActiveFilter = !!activeSkinGenreFilter;
 
-            // ESTADO VACÍO SKINS CON BOOGIE Y MENSAJE
+            const cB = document.getElementById('counter-beatstar');
+            const cT = document.getElementById('counter-tapwave');
+
+            const totalBeatstarAll = cosmetics.filter(c => c.platform !== 'TapWave').length;
+            const totalTapwaveAll = cosmetics.filter(c => c.platform === 'TapWave').length;
+
+            if(cB) cB.innerText = hasActiveFilter ? `Skins: ${beatstarList.length}` : `Total: ${totalBeatstarAll} Skins`;
+            if(cT) cT.innerText = hasActiveFilter ? `Skins: ${tapwaveList.length}` : `Total: ${totalTapwaveAll} Skins`;
+
             const currentSubPlatformList = (currentSelectedSkinSubPlatform === 'TapWave') ? tapwaveList : beatstarList;
             if(currentSubPlatformList.length === 0) {
                 const targetTbody = (currentSelectedSkinSubPlatform === 'TapWave') ? tbodyT : tbodyB;
@@ -1796,8 +1898,6 @@
                     </td>
                 `;
                 targetTbody.appendChild(tr);
-                document.getElementById('counter-beatstar').innerText = cB;
-                document.getElementById('counter-tapwave').innerText = cT;
                 return;
             }
 
@@ -1812,7 +1912,7 @@
                 let inspMarkup = '';
                 if (cos.insp) {
                     const urls = cos.insp.split(/[\s,]+/).filter(url => url.trim() !== "");
-                    let imagesHtml = urls.map((url, i) => `
+                    let imagesHtml = urls.map((url) => `
                         <div class="relative group h-20 w-32 sm:h-24 sm:w-36 p-1 flex items-center justify-center bg-[#05020a]/60 border border-zinc-800/40 rounded-lg shrink-0">
                             <img src="${url.trim()}" class="max-h-full max-w-full object-contain rounded">
                         </div>
@@ -1839,7 +1939,6 @@
 
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center">
-                        <!-- ICONO DESPLAZADO UN POCO A LA DERECHA (ml-2 sm:ml-4) -->
                         <div class="w-20 h-20 sm:w-36 sm:h-36 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1 shrink-0 mx-auto ml-2 sm:ml-4">
                             <img src="${cos.icon}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'">
                         </div>
@@ -1931,7 +2030,6 @@
                     renderBrandManagementFormInterface();
                 });
 
-                // BOTÓN ELIMINAR CON CONFIRMACIÓN
                 tr.querySelector('.btn-del-cos')?.addEventListener('click', () => {
                     requestUserDeleteConfirmation(() => {
                         if(db) {
@@ -1943,26 +2041,25 @@
                 
                 if (isT) tbodyT.appendChild(tr); else tbodyB.appendChild(tr);
             });
-
-            document.getElementById('counter-beatstar').innerText = cB;
-            document.getElementById('counter-tapwave').innerText = cT;
         }
 
-        ['filterLvlGenre', 'filterLvlDiff', 'filterLvlEdition'].forEach(id => {
-            document.getElementById(id)?.addEventListener('change', renderLevelsTable);
-        });
-
+        // LIMPIAR FILTROS CHARTS
         document.getElementById('btn-clear-lvl-filters')?.addEventListener('click', () => {
-            document.getElementById('filterLvlGenre').value = "";
-            document.getElementById('filterLvlDiff').value = "";
-            document.getElementById('filterLvlEdition').value = "";
+            activeLvlGenreFilter = "";
+            activeLvlDiffFilter = "";
+            activeLvlEditionFilter = "";
+
+            updateCustomDropdownButtonUI('btn-custom-lvl-genre', 'label-custom-lvl-genre', '', 'genre');
+            updateCustomDropdownButtonUI('btn-custom-lvl-diff', 'label-custom-lvl-diff', '', 'diff');
+            updateCustomDropdownButtonUI('btn-custom-lvl-edition', 'label-custom-lvl-edition', '', 'edition');
+
             renderLevelsTable();
         });
 
-        document.getElementById('filterSkinGenre')?.addEventListener('change', renderCosmeticsTables);
-
+        // LIMPIAR FILTROS SKINS
         document.getElementById('btn-clear-skin-filters')?.addEventListener('click', () => {
-            document.getElementById('filterSkinGenre').value = "";
+            activeSkinGenreFilter = "";
+            updateCustomDropdownButtonUI('btn-custom-skin-genre', 'label-custom-skin-genre', '', 'genre');
             renderCosmeticsTables();
         });
 
@@ -2314,6 +2411,7 @@
         buildGenresSelector();
         buildSkinGenresSelector();
         buildVisualAssetsPanelInterface();
+        buildCustomDropdownMenus();
         applyLanguagePack();
     </script>
 </body>
