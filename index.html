@@ -170,12 +170,12 @@
         </div>
     </div>
 
-    <!-- MODAL 2: POP-UP AGRADECIMIENTO -->
+    <!-- MODAL 2: POP-UP AGRADECIMIENTO EN BUCLE -->
     <div id="thanks-custom-modal" class="hidden fixed inset-0 bg-black/95 z-[120] flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#11091c] border border-orange-500/30 rounded-2xl max-w-4xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center">
             <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-fuchsia-400 font-display font-black text-xl sm:text-2xl uppercase tracking-wider mb-6" data-i18n="thanksTitle">Gracias por jugar a Beatclone</h4>
-            <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-fuchsia-950/60 relative cursor-pointer">
-                <video id="download-thanks-video" class="w-full h-full object-cover" autoplay playsinline disablePictureInPicture></video>
+            <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-fuchsia-950/60 relative">
+                <video id="download-thanks-video" class="w-full h-full object-cover pointer-events-none" autoplay loop playsinline disablePictureInPicture></video>
             </div>
             <button id="thanks-modal-btn-close" class="absolute top-4 right-4 text-zinc-500 hover:text-white text-xl p-2">
                 <i class="fa-solid fa-xmark"></i>
@@ -1306,7 +1306,7 @@
 
                 if(response.ok) {
                     const data = await response.json();
-                    return data.secure_url; // Devuelve la URL HTTPS optimizada para streaming
+                    return data.secure_url; 
                 } else {
                     const errData = await response.json();
                     console.error("Error en subida a Cloudinary:", errData);
@@ -1379,21 +1379,23 @@
                 
                 const validVideos = globalThanksVideos.filter(v => v && v.trim() !== "");
                 if(validVideos.length > 0) {
+                    showLoadingOverlay();
                     const randomVideoUrl = validVideos[Math.floor(Math.random() * validVideos.length)];
                     const videoElement = document.getElementById('download-thanks-video');
+                    
+                    const handleCanPlay = () => {
+                        hideLoadingOverlay();
+                        document.getElementById('thanks-custom-modal').classList.remove('hidden');
+                        videoElement.play().catch(err => console.log("Video auto-play blocked: ", err));
+                        videoElement.removeEventListener('canplaythrough', handleCanPlay);
+                    };
+
+                    videoElement.addEventListener('canplaythrough', handleCanPlay);
+                    
                     videoElement.src = randomVideoUrl;
                     videoElement.load();
-                    
-                    videoElement.play().catch(err => console.log("Video auto-play blocked: ", err));
-                    document.getElementById('thanks-custom-modal').classList.remove('hidden');
                 }
             }
-        });
-
-        document.getElementById('thanks-custom-modal').querySelector('div.aspect-video').addEventListener('click', () => {
-            const videoElement = document.getElementById('download-thanks-video');
-            if(videoElement.paused) videoElement.play();
-            else videoElement.pause();
         });
 
         document.getElementById('download-modal-btn-close').addEventListener('click', () => {
@@ -1902,12 +1904,10 @@
                         <source src="${videoUrl}" type="video/mp4">
                     </video>
                     
-                    <!-- SPINNER DE CARGA DEL VIDEO -->
                     <div class="video-loading-overlay hidden absolute inset-0 bg-black/70 flex flex-col items-center justify-center gap-2 z-10">
                         <i class="fa-solid fa-circle-notch animate-spin text-fuchsia-400 text-2xl"></i>
                     </div>
 
-                    <!-- OVERLAY / CONTROLES DE REPRODUCCIÓN -->
                     <div class="video-controls-overlay absolute inset-0 bg-black/30 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100 z-20">
                         <i class="fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon"></i>
                     </div>
@@ -1933,7 +1933,6 @@
 
             if (!videoEl) return;
 
-            // Mostrar spinner mientras el vídeo se almacena en búfer o carga
             videoEl.addEventListener('waiting', () => {
                 if (loaderEl) loaderEl.classList.remove('hidden');
             });
@@ -1946,7 +1945,6 @@
                 if (loaderEl) loaderEl.classList.add('hidden');
             });
 
-            // Al finalizar el video: se detiene, regresa al inicio y muestra botón de Play
             videoEl.addEventListener('ended', () => {
                 videoEl.currentTime = 0;
                 videoEl.pause();
@@ -2634,7 +2632,7 @@
             }
         });
 
-        // REGISTRO DE CHARTS (VIDEOS A CLOUDINARY - CARPETA prevchart)
+        // REGISTRO DE CHARTS
         document.getElementById('level-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             showLoadingOverlay();
@@ -2659,7 +2657,6 @@
                     finalAudioUrl = await uploadFileToGitHubContent(audioFileInput.files[0], 'assets/audio', audioFileInput.files[0].name);
                 }
 
-                // SUBIDA DE VIDEO A CLOUDINARY (CARPETA lkbeats/prevchart)
                 const videoFileInput = document.getElementById('lvlVideoFile');
                 if(videoFileInput.files && videoFileInput.files[0]) {
                     finalVideoUrl = await uploadVideoToCloudinary(videoFileInput.files[0], 'prevchart');
@@ -2704,7 +2701,7 @@
             }
         });
 
-        // REGISTRO DE SKINS (VIDEOS A CLOUDINARY - CARPETA prevskins)
+        // REGISTRO DE SKINS
         document.getElementById('cosmetic-form').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -2729,7 +2726,6 @@
                     finalIconUrl = await uploadFileToGitHubContent(iconFileInput.files[0], 'assets/skins', iconFileInput.files[0].name);
                 }
 
-                // SUBIDA DE VIDEO A CLOUDINARY (CARPETA lkbeats/prevskins)
                 const videoFileInput = document.getElementById('cosVideoFile');
                 if(videoFileInput.files && videoFileInput.files[0]) {
                     finalVideoUrl = await uploadVideoToCloudinary(videoFileInput.files[0], 'prevskins');
@@ -2780,7 +2776,7 @@
             }
         });
 
-        // SUBIDA DE VIDEOS DE AGRADECIMIENTO EN CLOUDINARY (CARPETA videos)
+        // SUBIDA DE VIDEOS DE AGRADECIMIENTO EN CLOUDINARY
         document.getElementById('btn-save-thanks-videos').addEventListener('click', async () => {
             showLoadingOverlay();
             try {
