@@ -979,6 +979,7 @@
         let activeAudioImg = null;
         let activeCanvas = null;
         let activeArtContainer = null;
+        let activeVideoElement = null;
 
         let levelZipToRemove = false;
         let cosmeticZipToRemove = false;
@@ -990,7 +991,30 @@
 
         let pendingDeleteActionCallback = null;
 
+        // SISTEMA GLOBAL DE DETENCIÓN MULTIMEDIA
+        function stopAllMedia() {
+            stopGlobalAudioPreview();
+
+            document.querySelectorAll('video').forEach(video => {
+                video.pause();
+                video.currentTime = 0;
+            });
+
+            document.querySelectorAll('.custom-native-video-wrapper').forEach(wrapper => {
+                const iconEl = wrapper.querySelector('.video-play-icon');
+                const controlsOverlay = wrapper.querySelector('.video-controls-overlay');
+                const loaderEl = wrapper.querySelector('.video-loading-overlay');
+
+                if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
+                if (controlsOverlay) controlsOverlay.classList.remove('opacity-0');
+                if (loaderEl) loaderEl.classList.add('hidden');
+            });
+
+            activeVideoElement = null;
+        }
+
         function navigateTo(view, pushState = true) {
+            stopAllMedia();
             currentViewName = view;
             ['home', 'levels', 'cosmetics'].forEach(v => document.getElementById(`view-${v}`)?.classList.add('hidden'));
             document.getElementById(`view-${view}`)?.classList.remove('hidden');
@@ -1013,18 +1037,18 @@
             if(view === 'cosmetics') resetCosmeticsSubmenuWorkspace();
             if (pushState) history.pushState({ view: view }, '', '');
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            stopGlobalAudioPreview();
         }
 
         function resetCosmeticsSubmenuWorkspace() {
+            stopAllMedia();
             document.getElementById('cosmetics-submenu').classList.remove('hidden');
             document.getElementById('cosmetics-submenu').classList.add('flex');
             document.getElementById('cosmetics-active-workspace').classList.remove('flex');
-            document.getElementById('cosmetics-active-[#cosmetics-active-workspace]').classList?.add('hidden');
             document.getElementById('cosmetics-active-workspace').classList.add('hidden');
         }
 
         function openCosmeticsSubmenuPlatform(platform) {
+            stopAllMedia();
             currentSelectedSkinSubPlatform = platform;
             document.getElementById('cosmetics-submenu').classList.remove('flex');
             document.getElementById('cosmetics-submenu').classList.add('hidden');
@@ -1141,7 +1165,13 @@
             localStorage.setItem('nexus_lang', currentLanguage);
             applyLanguagePack();
         });
-        document.querySelectorAll('.btn-back-to-home').forEach(btn => btn.addEventListener('click', () => navigateTo('home')));
+        document.querySelectorAll('.btn-back-to-home').forEach(btn => btn.addEventListener('click', () => {
+            if (currentViewName === 'cosmetics' && !document.getElementById('cosmetics-active-workspace').classList.contains('hidden')) {
+                resetCosmeticsSubmenuWorkspace();
+            } else {
+                navigateTo('home');
+            }
+        }));
 
         // BOTONES "PRÓXIMAMENTE" PARA FECHA
         document.getElementById('btn-lvl-coming-soon').addEventListener('click', () => {
@@ -1416,6 +1446,7 @@
             }
             if(activeAudioElement) {
                 activeAudioElement.pause();
+                activeAudioElement.currentTime = 0;
                 activeAudioElement = null;
             }
             if(activeAudioButton) {
@@ -1493,7 +1524,7 @@
                 return;
             }
             
-            stopGlobalAudioPreview();
+            stopAllMedia();
             btnElement.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-[10px]"></i>`;
 
             if(!audioCtx) {
@@ -1943,6 +1974,7 @@
 
             videoEl.addEventListener('playing', () => {
                 if (loaderEl) loaderEl.classList.add('hidden');
+                if (controlsOverlay) controlsOverlay.classList.add('opacity-0');
             });
 
             videoEl.addEventListener('ended', () => {
@@ -1954,17 +1986,29 @@
 
             vidWrapper.addEventListener('click', () => {
                 if (videoEl.paused) {
+                    if (activeVideoElement && activeVideoElement !== videoEl) {
+                        stopAllMedia();
+                    } else {
+                        stopGlobalAudioPreview();
+                    }
+
+                    activeVideoElement = videoEl;
+
                     if (loaderEl && videoEl.readyState < 3) {
                         loaderEl.classList.remove('hidden');
                     }
-                    videoEl.play().catch(err => {
+                    
+                    videoEl.play().then(() => {
+                        if (iconEl) iconEl.className = 'fa-solid fa-pause text-white text-xl drop-shadow-lg video-play-icon';
+                        if (controlsOverlay) controlsOverlay.classList.add('opacity-0');
+                    }).catch(err => {
                         console.log("Error al reproducir video:", err);
                         if (loaderEl) loaderEl.classList.add('hidden');
                     });
-                    if (iconEl) iconEl.className = 'fa-solid fa-pause text-white text-xl drop-shadow-lg video-play-icon';
                 } else {
                     videoEl.pause();
                     if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
+                    if (controlsOverlay) controlsOverlay.classList.remove('opacity-0');
                 }
             });
         }
