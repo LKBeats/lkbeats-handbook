@@ -68,7 +68,7 @@
     <!-- OVERLAY DE CARGA CON BOOGIE -->
     <div id="global-loading-overlay" class="hidden fixed inset-0 bg-black/85 z-[100] flex flex-col items-center justify-center gap-4">
         <img src="1455064703448645786.gif" alt="Boogie Loading..." class="w-[150px] h-auto mb-2">
-        <p id="loading-overlay-text" class="text-base font-bold text-white text-center px-4 font-sans">Boogie está trabajando en ello, espera un momento</p>
+        <p id="loading-overlay-text" class="text-base font-bold text-white text-center px-4 font-sans" data-i18n="savingChanges">Por favor espera un momento...</p>
     </div>
 
     <!-- MODAL DE CONFIRMACIÓN DE ELIMINACIÓN GENERAL -->
@@ -175,7 +175,7 @@
         <div class="bg-[#11091c] border border-orange-500/30 rounded-2xl max-w-4xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center">
             <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-fuchsia-400 font-display font-black text-xl sm:text-2xl uppercase tracking-wider mb-6" data-i18n="thanksTitle">Gracias por jugar a Beatclone</h4>
             <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-fuchsia-950/60 relative cursor-pointer">
-                <video id="download-thanks-video" class="w-full h-full object-cover" autoplay loop playsinline disablePictureInPicture></video>
+                <video id="download-thanks-video" class="w-full h-full object-cover" autoplay playsinline disablePictureInPicture></video>
             </div>
             <button id="thanks-modal-btn-close" class="absolute top-4 right-4 text-zinc-500 hover:text-white text-xl p-2">
                 <i class="fa-solid fa-xmark"></i>
@@ -877,7 +877,7 @@
                 formUploadChartFile: "Subir Archivo (.zip)", formUploadIcon: "Subir Icono",
                 formUploadBrand: "Subir Marca / Inspiración", formUploadSkinFile: "Subir Archivo (.zip)",
                 beatcloneNotice: "Es necesario tener instalada la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la página oficial de Beatclone",
-                savingChanges: "Boogie está trabajando en ello, espera un momento",
+                savingChanges: "Por favor espera un momento...",
                 visualAssetsMenuTitle: "Panel de Assets Visuales Dinámicos",
                 thanksTitle: "Gracias por jugar a Beatclone",
                 boogieAuthMsg: "Este espacio es solo para Boogie. Por favor introduce los códigos especiales",
@@ -923,7 +923,7 @@
                 formUploadChartFile: "Upload File (.zip)", formUploadIcon: "Upload Icon",
                 formUploadBrand: "Upload Brand / Inspiration", formUploadSkinFile: "Upload File (.zip)",
                 beatcloneNotice: "It is necessary to have the Beatstar application installed to use this content. Download it from the official Beatclone page.",
-                savingChanges: "Boogie is working on it, please wait a moment",
+                savingChanges: "Please wait a moment...",
                 visualAssetsMenuTitle: "Dynamic Visual Assets Panel",
                 thanksTitle: "Thanks for playing Beatclone",
                 boogieAuthMsg: "This space is only for Boogie. Please enter the special codes",
@@ -1274,7 +1274,7 @@
         function showLoadingOverlay() {
             const overlay = document.getElementById('global-loading-overlay');
             const text = document.getElementById('loading-overlay-text');
-            if(text && translations[currentLanguage]) text.innerText = translations[currentLanguage].savingChanges || "Boogie está trabajando en ello, espera un momento";
+            if(text && translations[currentLanguage]) text.innerText = translations[currentLanguage].savingChanges || "Por favor espera un momento...";
             if(overlay) overlay.classList.remove('hidden');
         }
 
@@ -1898,10 +1898,17 @@
 
             return `
                 <div class="${containerClass} custom-native-video-wrapper">
-                    <video class="w-full h-full object-cover pointer-events-none" loop playsinline preload="metadata" disablePictureInPicture>
+                    <video class="w-full h-full object-cover pointer-events-none" playsinline preload="metadata" disablePictureInPicture>
                         <source src="${videoUrl}" type="video/mp4">
                     </video>
-                    <div class="absolute inset-0 bg-black/30 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100">
+                    
+                    <!-- SPINNER DE CARGA DEL VIDEO -->
+                    <div class="video-loading-overlay hidden absolute inset-0 bg-black/70 flex flex-col items-center justify-center gap-2 z-10">
+                        <i class="fa-solid fa-circle-notch animate-spin text-fuchsia-400 text-2xl"></i>
+                    </div>
+
+                    <!-- OVERLAY / CONTROLES DE REPRODUCCIÓN -->
+                    <div class="video-controls-overlay absolute inset-0 bg-black/30 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100 z-20">
                         <i class="fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon"></i>
                     </div>
                 </div>
@@ -1914,6 +1921,53 @@
                 if (!a.date) return 1;  
                 if (!b.date) return -1; 
                 return new Date(a.date) - new Date(b.date);
+            });
+        }
+
+        function setupNativeVideoBehavior(vidWrapper) {
+            if (!vidWrapper) return;
+            const videoEl = vidWrapper.querySelector('video');
+            const iconEl = vidWrapper.querySelector('.video-play-icon');
+            const loaderEl = vidWrapper.querySelector('.video-loading-overlay');
+            const controlsOverlay = vidWrapper.querySelector('.video-controls-overlay');
+
+            if (!videoEl) return;
+
+            // Mostrar spinner mientras el vídeo se almacena en búfer o carga
+            videoEl.addEventListener('waiting', () => {
+                if (loaderEl) loaderEl.classList.remove('hidden');
+            });
+
+            videoEl.addEventListener('canplay', () => {
+                if (loaderEl) loaderEl.classList.add('hidden');
+            });
+
+            videoEl.addEventListener('playing', () => {
+                if (loaderEl) loaderEl.classList.add('hidden');
+            });
+
+            // Al finalizar el video: se detiene, regresa al inicio y muestra botón de Play
+            videoEl.addEventListener('ended', () => {
+                videoEl.currentTime = 0;
+                videoEl.pause();
+                if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
+                if (controlsOverlay) controlsOverlay.classList.remove('opacity-0');
+            });
+
+            vidWrapper.addEventListener('click', () => {
+                if (videoEl.paused) {
+                    if (loaderEl && videoEl.readyState < 3) {
+                        loaderEl.classList.remove('hidden');
+                    }
+                    videoEl.play().catch(err => {
+                        console.log("Error al reproducir video:", err);
+                        if (loaderEl) loaderEl.classList.add('hidden');
+                    });
+                    if (iconEl) iconEl.className = 'fa-solid fa-pause text-white text-xl drop-shadow-lg video-play-icon';
+                } else {
+                    videoEl.pause();
+                    if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
+                }
             });
         }
 
@@ -2055,20 +2109,7 @@
                     </td>
                 `;
 
-                const vidWrapper = tr.querySelector('.custom-native-video-wrapper');
-                if(vidWrapper) {
-                    const videoEl = vidWrapper.querySelector('video');
-                    const iconEl = vidWrapper.querySelector('.video-play-icon');
-                    vidWrapper.addEventListener('click', () => {
-                        if(videoEl.paused) {
-                            videoEl.play();
-                            if(iconEl) iconEl.className = 'fa-solid fa-pause text-white text-xl drop-shadow-lg video-play-icon';
-                        } else {
-                            videoEl.pause();
-                            if(iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
-                        }
-                    });
-                }
+                setupNativeVideoBehavior(tr.querySelector('.custom-native-video-wrapper'));
 
                 if(hasAudio) {
                     const btn = tr.querySelector('.btn-play-audio-preview');
@@ -2273,20 +2314,7 @@
                     </td>
                 `;
 
-                const vidWrapper = tr.querySelector('.custom-native-video-wrapper');
-                if(vidWrapper) {
-                    const videoEl = vidWrapper.querySelector('video');
-                    const iconEl = vidWrapper.querySelector('.video-play-icon');
-                    vidWrapper.addEventListener('click', () => {
-                        if(videoEl.paused) {
-                            videoEl.play();
-                            if(iconEl) iconEl.className = 'fa-solid fa-pause text-white text-xl drop-shadow-lg video-play-icon';
-                        } else {
-                            videoEl.pause();
-                            if(iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
-                        }
-                    });
-                }
+                setupNativeVideoBehavior(tr.querySelector('.custom-native-video-wrapper'));
                 
                 if(cos.skinDirectUrl) {
                     tr.querySelector('.btn-direct-skin-download')?.addEventListener('click', () => triggerDownloadAlert(cos.skinDirectUrl));
