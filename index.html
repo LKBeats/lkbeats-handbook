@@ -91,11 +91,11 @@
                 Este espacio es solo para Boogie. Por favor introduce los códigos especiales
             </p>
 
-            <form id="boogie-auth-form" class="w-full space-y-4 text-left" autocomplete="off">
+            <form id="boogie-auth-form" class="w-full space-y-4 text-left" autocomplete="off" novalidate>
                 <div>
                     <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred1">Credencial 1</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="boogieCred1" required autocomplete="off" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 pr-10 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
+                        <input type="password" id="boogieCred1" autocomplete="off" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 pr-10 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
                         <button type="button" class="toggle-password-btn absolute right-3 text-zinc-500 hover:text-white" data-target="boogieCred1">
                             <i class="fa-solid fa-eye"></i>
                         </button>
@@ -104,7 +104,7 @@
                 <div>
                     <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred2">Credencial 2</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="boogieCred2" required autocomplete="off" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 pr-10 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
+                        <input type="password" id="boogieCred2" autocomplete="off" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 pr-10 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
                         <button type="button" class="toggle-password-btn absolute right-3 text-zinc-500 hover:text-white" data-target="boogieCred2">
                             <i class="fa-solid fa-eye"></i>
                         </button>
@@ -113,7 +113,7 @@
                 <div>
                     <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred3">Credencial 3</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="boogieCred3" required autocomplete="off" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 pr-10 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
+                        <input type="password" id="boogieCred3" autocomplete="off" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 pr-10 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
                         <button type="button" class="toggle-password-btn absolute right-3 text-zinc-500 hover:text-white" data-target="boogieCred3">
                             <i class="fa-solid fa-eye"></i>
                         </button>
@@ -434,12 +434,13 @@
                             <input type="file" id="lvlAudioFile" accept="audio/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div>
-                            <div class="flex items-center justify-between mb-1">
+                            <div class="flex items-center justify-between mb-0.5">
                                 <label class="font-bold text-zinc-400" data-i18n="formUploadVideo">Subir Video (MP4)</label>
                                 <button type="button" id="btn-remove-lvl-video" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                     <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                 </button>
                             </div>
+                            <p class="text-[10px] text-orange-400/90 font-semibold mb-1" data-i18n="labelMaxVideoSize">Máx. 100 MB</p>
                             <div id="current-lvl-video-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate">Video Adjunto</div>
                             <input type="file" id="lvlVideoFile" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
@@ -638,12 +639,13 @@
                             <input type="file" id="cosIconFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div>
-                            <div class="flex items-center justify-between mb-1">
+                            <div class="flex items-center justify-between mb-0.5">
                                 <label class="font-bold text-zinc-400" data-i18n="formUploadVideo">Subir Video (MP4)</label>
                                 <button type="button" id="btn-remove-cos-video" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                     <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                 </button>
                             </div>
+                            <p class="text-[10px] text-fuchsia-400/90 font-semibold mb-1" data-i18n="labelMaxVideoSize">Máx. 100 MB</p>
                             <div id="current-cos-video-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate">Video Adjunto</div>
                             <input type="file" id="cosVideoFile" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
@@ -895,7 +897,9 @@
                 btnSaveThanksVideos: "Subir y Guardar Videos",
                 formUploadVideo: "Subir Video (MP4)", labelOptional: "Opcional",
                 btnComingSoon: "Próximamente", textComingSoon: "Próximamente",
-                selectGenreError: "Por favor selecciona al menos un género para la Skin."
+                selectGenreError: "Por favor selecciona al menos un género para la Skin.",
+                requiredFieldMsg: "Por favor completa este campo.",
+                labelMaxVideoSize: "Máx. 100 MB"
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -941,7 +945,9 @@
                 btnSaveThanksVideos: "Upload and Save Videos",
                 formUploadVideo: "Upload Video (MP4)", labelOptional: "Optional",
                 btnComingSoon: "Coming Soon", textComingSoon: "Coming Soon...",
-                selectGenreError: "Please select at least one genre for the Skin."
+                selectGenreError: "Please select at least one genre for the Skin.",
+                requiredFieldMsg: "Please fill out this field.",
+                labelMaxVideoSize: "Max 100 MB"
             }
         };
 
@@ -1141,8 +1147,26 @@
             });
         });
 
+        // VALIDACIÓN MANUAL MULTILENGUAJE PARA FORMULARIO DE CREDENCIALES
         document.getElementById('boogie-auth-form').addEventListener('submit', (e) => {
             e.preventDefault();
+            const inputs = ['boogieCred1', 'boogieCred2', 'boogieCred3'];
+            let emptyInput = null;
+
+            for (let id of inputs) {
+                const el = document.getElementById(id);
+                if (!el.value.trim()) {
+                    emptyInput = el;
+                    break;
+                }
+            }
+
+            if (emptyInput) {
+                emptyInput.setCustomValidity(translations[currentLanguage].requiredFieldMsg);
+                emptyInput.reportValidity();
+                return;
+            }
+
             const pass = document.getElementById('boogieCred1').value;
             const user = document.getElementById('boogieCred2').value.trim();
             const token = document.getElementById('boogieCred3').value.trim();
@@ -1156,8 +1180,14 @@
                 closeModalBoogie();
                 document.getElementById('boogie-auth-form').reset();
             } else {
-                alert("Credenciales incorrectas o incompletas.");
+                alert(currentLanguage === 'es' ? "Credenciales incorrectas o incompletas." : "Incorrect or incomplete credentials.");
             }
+        });
+
+        ['boogieCred1', 'boogieCred2', 'boogieCred3'].forEach(id => {
+            document.getElementById(id)?.addEventListener('input', (e) => {
+                e.target.setCustomValidity('');
+            });
         });
 
         document.getElementById('btn-lang-toggle').addEventListener('click', () => {
@@ -1921,9 +1951,11 @@
 
         function renderVideoPlayerMarkup(videoUrl, isSkin = false) {
             if (!videoUrl || videoUrl.trim() === "") return '[No Preview]';
+            
+            // TAMAÑO AUMENTADO EN MÓVILES MANTENIENDO ASPECT RATIO
             const containerClass = isSkin 
-                ? "w-28 h-48 sm:w-36 sm:h-64 mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl shrink-0 relative cursor-pointer group"
-                : "w-full aspect-video max-w-[240px] sm:max-w-[280px] mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl shrink-0 relative cursor-pointer group";
+                ? "w-36 h-60 sm:w-36 sm:h-64 mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl shrink-0 relative cursor-pointer group"
+                : "w-full aspect-video max-w-[280px] sm:max-w-[280px] mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl shrink-0 relative cursor-pointer group";
 
             if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
                 return `<div class="${containerClass}"><iframe src="${parseYoutubeEmbedUrl(videoUrl)}" class="w-full h-full border-0"></iframe></div>`;
@@ -2080,16 +2112,16 @@
                 const hasAudio = !!lvl.audioDirectUrl;
 
                 const hasAnyLinks = lvl.chartDirectUrl || lvl.dl1 || lvl.dl2 || lvl.dl3;
-                let linksLayout = `<div class="flex flex-col gap-1 max-w-[140px] sm:max-w-[160px] mx-auto">`;
+                let linksLayout = `<div class="flex flex-col gap-1 max-w-[130px] sm:max-w-[160px] mx-auto">`;
                 if(hasAnyLinks) {
                     if(lvl.chartDirectUrl) {
-                        linksLayout += `<button class="btn-direct-download-trigger bg-gradient-to-r from-emerald-500 to-teal-500 text-black px-2.5 py-1.5 rounded-lg text-[11px] font-black uppercase flex items-center justify-center gap-1 shadow"><i class="fa-solid fa-circle-down"></i>${translations[currentLanguage].downloadDirectBtn}</button>`;
+                        linksLayout += `<button class="btn-direct-download-trigger bg-gradient-to-r from-emerald-500 to-teal-500 text-black px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-[11px] font-black uppercase flex items-center justify-center gap-1 shadow"><i class="fa-solid fa-circle-down"></i>${translations[currentLanguage].downloadDirectBtn}</button>`;
                     }
-                    if (lvl.dl1) linksLayout += `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 px-2 py-1 text-center rounded-lg text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-3 h-3 force-white-icon">Discord</a>`;
-                    if (lvl.dl2) linksLayout += `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 px-2 py-1 text-center rounded-lg text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-3 h-3 force-white-icon">BSCM</a>`;
-                    if (lvl.dl3) linksLayout += `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-2 py-1 text-center rounded-lg text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-3 h-3 force-white-icon">beatcharts</a>`;
+                    if (lvl.dl1) linksLayout += `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 px-1.5 sm:px-2 py-0.5 sm:py-1 text-center rounded-lg text-[9px] sm:text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-2.5 sm:w-3 h-2.5 sm:h-3 force-white-icon">Discord</a>`;
+                    if (lvl.dl2) linksLayout += `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 px-1.5 sm:px-2 py-0.5 sm:py-1 text-center rounded-lg text-[9px] sm:text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-2.5 sm:w-3 h-2.5 sm:h-3 force-white-icon">BSCM</a>`;
+                    if (lvl.dl3) linksLayout += `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-1.5 sm:px-2 py-0.5 sm:py-1 text-center rounded-lg text-[9px] sm:text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-2.5 sm:w-3 h-2.5 sm:h-3 force-white-icon">beatcharts</a>`;
                 } else {
-                    linksLayout += `<span class="text-[10px] font-extrabold text-zinc-500 text-center block px-2 py-1.5 bg-zinc-950 border border-zinc-900 rounded-lg">${translations[currentLanguage].noDownloadsAvailable}</span>`;
+                    linksLayout += `<span class="text-[9px] sm:text-[10px] font-extrabold text-zinc-500 text-center block px-1.5 py-1 bg-zinc-950 border border-zinc-900 rounded-lg">${translations[currentLanguage].noDownloadsAvailable}</span>`;
                 }
                 linksLayout += `</div>`;
 
@@ -2307,15 +2339,15 @@
                 }
 
                 const hasAnyLinks = cos.skinDirectUrl || cos.dl1 || cos.dl2;
-                let linksLayout = `<div class="flex flex-col gap-1.5 max-w-[190px] sm:max-w-[240px] mx-auto">`;
+                let linksLayout = `<div class="flex flex-col gap-1 sm:gap-1.5 max-w-[150px] sm:max-w-[240px] mx-auto">`;
                 if(hasAnyLinks) {
                     if(cos.skinDirectUrl) {
-                        linksLayout += `<button class="btn-direct-skin-download bg-gradient-to-r from-fuchsia-500 to-pink-500 text-black px-4 py-2 rounded-xl text-xs font-black uppercase flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-circle-down"></i>${translations[currentLanguage].downloadDirectBtn}</button>`;
+                        linksLayout += `<button class="btn-direct-skin-download bg-gradient-to-r from-fuchsia-500 to-pink-500 text-black px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black uppercase flex items-center justify-center gap-1 sm:gap-1.5 shadow"><i class="fa-solid fa-circle-down"></i>${translations[currentLanguage].downloadDirectBtn}</button>`;
                     }
-                    if (cos.dl1) linksLayout += `<a href="${cos.dl1}" target="_blank" class="bg-zinc-900 px-4 py-2 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-fuchsia-500/40 transition"><img src="Discord_Logo.png" class="w-3.5 h-3.5 force-white-icon">Discord</a>`;
-                    if (cos.dl2) linksLayout += `<a href="${cos.dl2}" target="_blank" class="bg-zinc-900 px-4 py-2 text-center rounded-xl text-xs font-black border border-zinc-800 flex items-center justify-center gap-1.5 hover:border-fuchsia-500/40 transition"><img src="BSCM_Logo.png" class="w-3.5 h-3.5 force-white-icon">BSCM</a>`;
+                    if (cos.dl1) linksLayout += `<a href="${cos.dl1}" target="_blank" class="bg-zinc-900 px-2 sm:px-4 py-1 sm:py-2 text-center rounded-lg sm:rounded-xl text-[9px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 sm:gap-1.5 hover:border-fuchsia-500/40 transition"><img src="Discord_Logo.png" class="w-3 sm:w-3.5 h-3 sm:h-3.5 force-white-icon">Discord</a>`;
+                    if (cos.dl2) linksLayout += `<a href="${cos.dl2}" target="_blank" class="bg-zinc-900 px-2 sm:px-4 py-1 sm:py-2 text-center rounded-lg sm:rounded-xl text-[9px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 sm:gap-1.5 hover:border-fuchsia-500/40 transition"><img src="BSCM_Logo.png" class="w-3 sm:w-3.5 h-3 sm:h-3.5 force-white-icon">BSCM</a>`;
                 } else {
-                    linksLayout += `<span class="text-[10px] font-extrabold text-zinc-500 text-center block px-2 py-2 bg-zinc-950 border border-zinc-900 rounded-xl">${translations[currentLanguage].noDownloadsAvailable}</span>`;
+                    linksLayout += `<span class="text-[9px] sm:text-[10px] font-extrabold text-zinc-500 text-center block px-1.5 py-1.5 bg-zinc-950 border border-zinc-900 rounded-lg sm:rounded-xl">${translations[currentLanguage].noDownloadsAvailable}</span>`;
                 }
                 linksLayout += `</div>`;
 
