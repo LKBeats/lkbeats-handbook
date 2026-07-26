@@ -569,7 +569,7 @@
                     <div id="levels-table-wrapper" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                         <table class="w-full text-left border-collapse min-w-[700px] sm:min-w-[900px]">
                             <thead>
-                                <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                                <tr class="border-b-2 border-fuchsia-900/60 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                     <th class="p-4 w-32 sm:w-44 text-center align-middle" data-i18n="thArt">Arte</th>
                                     <th class="p-4 text-center align-middle" data-i18n="thSongInfo">Información</th>
                                     <th class="p-4 text-center w-52 sm:w-72 align-middle" data-i18n="thPreview">Preview</th>
@@ -577,7 +577,7 @@
                                     <th class="p-4 text-center w-24 creator-action-header hidden align-middle" data-i18n="thActions">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="levels-tbody" class="divide-y divide-fuchsia-950/20 text-xs"></tbody>
+                            <tbody id="levels-tbody" class="divide-y-2 divide-fuchsia-900/40 text-xs"></tbody>
                         </table>
                     </div>
                 </div>
@@ -742,7 +742,7 @@
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                             <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
                                 <thead>
-                                    <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                                    <tr class="border-b-2 border-fuchsia-900/60 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                         <th class="p-2 sm:p-4 w-20 sm:w-44 text-center align-middle" data-i18n="thIcon">Icono</th>
                                         <th class="p-2 sm:p-4 text-center align-middle" data-i18n="thSkinInfo">Información</th>
                                         <th class="p-4 text-center w-48 sm:w-64 align-middle" data-i18n="thPreview">Preview</th>
@@ -750,7 +750,7 @@
                                         <th class="p-4 text-center w-24 creator-action-header hidden align-middle" data-i18n="thActions">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tbody-beatstar" class="divide-y divide-fuchsia-950/20 text-xs"></tbody>
+                                <tbody id="tbody-beatstar" class="divide-y-2 divide-fuchsia-900/40 text-xs"></tbody>
                             </table>
                         </div>
                     </div>
@@ -771,7 +771,7 @@
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                             <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
                                 <thead>
-                                    <tr class="border-b border-fuchsia-950 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                                    <tr class="border-b-2 border-fuchsia-900/60 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                         <th class="p-2 sm:p-4 w-20 sm:w-44 text-center align-middle" data-i18n="thIcon">Icono</th>
                                         <th class="p-2 sm:p-4 text-center align-middle" data-i18n="thSkinInfo">Información</th>
                                         <th class="p-4 text-center w-48 sm:w-64 align-middle" data-i18n="thPreview">Preview</th>
@@ -779,7 +779,7 @@
                                         <th class="p-4 text-center w-24 creator-action-header hidden align-middle" data-i18n="thActions">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tbody-tapwave" class="divide-y divide-fuchsia-950/20 text-xs"></tbody>
+                                <tbody id="tbody-tapwave" class="divide-y-2 divide-fuchsia-900/40 text-xs"></tbody>
                             </table>
                         </div>
                     </div>
@@ -1012,7 +1012,7 @@
                 const loaderEl = wrapper.querySelector('.video-loading-overlay');
 
                 if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
-                if (controlsOverlay) controlsOverlay.classList.remove('opacity-0');
+                if (controlsOverlay) controlsOverlay.classList.remove('opacity-0', 'hidden');
                 if (loaderEl) loaderEl.classList.add('hidden');
             });
 
@@ -1609,6 +1609,101 @@
             return rawDate;
         }
 
+        function renderVideoPlayerMarkup(videoUrl, isSkin = false) {
+            if (!videoUrl || videoUrl.trim() === "") return '[No Preview]';
+            
+            const containerClass = isSkin 
+                ? "w-36 h-60 sm:w-36 sm:h-64 mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl shrink-0 relative cursor-pointer group"
+                : "w-full aspect-video max-w-[280px] sm:max-w-[280px] mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl shrink-0 relative cursor-pointer group";
+
+            return `
+                <div class="${containerClass} custom-native-video-wrapper">
+                    <video class="w-full h-full object-cover pointer-events-none" playsinline preload="metadata" disablePictureInPicture>
+                        <source src="${videoUrl}" type="video/mp4">
+                    </video>
+                    
+                    <div class="video-loading-overlay hidden absolute inset-0 bg-black/70 flex flex-col items-center justify-center gap-2 z-10">
+                        <i class="fa-solid fa-circle-notch animate-spin text-fuchsia-400 text-2xl"></i>
+                    </div>
+
+                    <div class="video-controls-overlay absolute inset-0 bg-black/30 flex items-center justify-center transition-opacity z-20">
+                        <i class="fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon"></i>
+                    </div>
+                </div>
+            `;
+        }
+
+        function sortAscendingByDate(arr) {
+            return [...arr].sort((a, b) => {
+                if (!a.date && !b.date) return 0;
+                if (!a.date) return 1;  
+                if (!b.date) return -1; 
+                return new Date(a.date) - new Date(b.date);
+            });
+        }
+
+        function setupNativeVideoBehavior(vidWrapper) {
+            if (!vidWrapper) return;
+            const videoEl = vidWrapper.querySelector('video');
+            const iconEl = vidWrapper.querySelector('.video-play-icon');
+            const loaderEl = vidWrapper.querySelector('.video-loading-overlay');
+            const controlsOverlay = vidWrapper.querySelector('.video-controls-overlay');
+
+            if (!videoEl) return;
+
+            videoEl.addEventListener('waiting', () => {
+                if (loaderEl) loaderEl.classList.remove('hidden');
+            });
+
+            videoEl.addEventListener('canplay', () => {
+                if (loaderEl) loaderEl.classList.add('hidden');
+            });
+
+            videoEl.addEventListener('playing', () => {
+                if (loaderEl) loaderEl.classList.add('hidden');
+                // OCULTAR INMEDIATAMENTE BOTÓN DE REPRODUCCIÓN EN MÓVIL Y ESCRITORIO
+                if (controlsOverlay) controlsOverlay.classList.add('hidden');
+            });
+
+            videoEl.addEventListener('pause', () => {
+                if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
+                if (controlsOverlay) controlsOverlay.classList.remove('hidden');
+            });
+
+            videoEl.addEventListener('ended', () => {
+                videoEl.currentTime = 0;
+                if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
+                if (controlsOverlay) controlsOverlay.classList.remove('hidden');
+            });
+
+            vidWrapper.addEventListener('click', () => {
+                if (videoEl.paused) {
+                    if (activeVideoElement && activeVideoElement !== videoEl) {
+                        stopAllMedia();
+                    } else {
+                        stopGlobalAudioPreview();
+                    }
+
+                    activeVideoElement = videoEl;
+
+                    if (loaderEl && videoEl.readyState < 3) {
+                        loaderEl.classList.remove('hidden');
+                    }
+                    
+                    videoEl.play().then(() => {
+                        if (controlsOverlay) controlsOverlay.classList.add('hidden');
+                    }).catch(err => {
+                        console.log("Error al reproducir video:", err);
+                        if (loaderEl) loaderEl.classList.add('hidden');
+                    });
+                } else {
+                    videoEl.pause();
+                    if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
+                    if (controlsOverlay) controlsOverlay.classList.remove('hidden');
+                }
+            });
+        }
+
         function applyRoleUIVisibility() {
             ['level-form-container', 'cosmetic-form-container', 'footer-links-management-box', 'visual-assets-panel-box', 'thanks-videos-panel-box'].forEach(id => {
                 document.getElementById(id)?.classList.toggle('hidden', !isCreatorMode);
@@ -1942,109 +2037,6 @@
             }).join(' ');
         }
 
-        function parseYoutubeEmbedUrl(url) {
-            if (!url) return '';
-            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
-            let match = url.match(regExp);
-            return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
-        }
-
-        function renderVideoPlayerMarkup(videoUrl, isSkin = false) {
-            if (!videoUrl || videoUrl.trim() === "") return '[No Preview]';
-            
-            // TAMAÑO AUMENTADO EN MÓVILES MANTENIENDO ASPECT RATIO
-            const containerClass = isSkin 
-                ? "w-36 h-60 sm:w-36 sm:h-64 mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl shrink-0 relative cursor-pointer group"
-                : "w-full aspect-video max-w-[280px] sm:max-w-[280px] mx-auto border border-fuchsia-950/40 rounded-xl bg-black overflow-hidden shadow-2xl shrink-0 relative cursor-pointer group";
-
-            if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
-                return `<div class="${containerClass}"><iframe src="${parseYoutubeEmbedUrl(videoUrl)}" class="w-full h-full border-0"></iframe></div>`;
-            }
-
-            return `
-                <div class="${containerClass} custom-native-video-wrapper">
-                    <video class="w-full h-full object-cover pointer-events-none" playsinline preload="metadata" disablePictureInPicture>
-                        <source src="${videoUrl}" type="video/mp4">
-                    </video>
-                    
-                    <div class="video-loading-overlay hidden absolute inset-0 bg-black/70 flex flex-col items-center justify-center gap-2 z-10">
-                        <i class="fa-solid fa-circle-notch animate-spin text-fuchsia-400 text-2xl"></i>
-                    </div>
-
-                    <div class="video-controls-overlay absolute inset-0 bg-black/30 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100 z-20">
-                        <i class="fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon"></i>
-                    </div>
-                </div>
-            `;
-        }
-
-        function sortAscendingByDate(arr) {
-            return [...arr].sort((a, b) => {
-                if (!a.date && !b.date) return 0;
-                if (!a.date) return 1;  
-                if (!b.date) return -1; 
-                return new Date(a.date) - new Date(b.date);
-            });
-        }
-
-        function setupNativeVideoBehavior(vidWrapper) {
-            if (!vidWrapper) return;
-            const videoEl = vidWrapper.querySelector('video');
-            const iconEl = vidWrapper.querySelector('.video-play-icon');
-            const loaderEl = vidWrapper.querySelector('.video-loading-overlay');
-            const controlsOverlay = vidWrapper.querySelector('.video-controls-overlay');
-
-            if (!videoEl) return;
-
-            videoEl.addEventListener('waiting', () => {
-                if (loaderEl) loaderEl.classList.remove('hidden');
-            });
-
-            videoEl.addEventListener('canplay', () => {
-                if (loaderEl) loaderEl.classList.add('hidden');
-            });
-
-            videoEl.addEventListener('playing', () => {
-                if (loaderEl) loaderEl.classList.add('hidden');
-                if (controlsOverlay) controlsOverlay.classList.add('opacity-0');
-            });
-
-            videoEl.addEventListener('ended', () => {
-                videoEl.currentTime = 0;
-                videoEl.pause();
-                if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
-                if (controlsOverlay) controlsOverlay.classList.remove('opacity-0');
-            });
-
-            vidWrapper.addEventListener('click', () => {
-                if (videoEl.paused) {
-                    if (activeVideoElement && activeVideoElement !== videoEl) {
-                        stopAllMedia();
-                    } else {
-                        stopGlobalAudioPreview();
-                    }
-
-                    activeVideoElement = videoEl;
-
-                    if (loaderEl && videoEl.readyState < 3) {
-                        loaderEl.classList.remove('hidden');
-                    }
-                    
-                    videoEl.play().then(() => {
-                        if (iconEl) iconEl.className = 'fa-solid fa-pause text-white text-xl drop-shadow-lg video-play-icon';
-                        if (controlsOverlay) controlsOverlay.classList.add('opacity-0');
-                    }).catch(err => {
-                        console.log("Error al reproducir video:", err);
-                        if (loaderEl) loaderEl.classList.add('hidden');
-                    });
-                } else {
-                    videoEl.pause();
-                    if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
-                    if (controlsOverlay) controlsOverlay.classList.remove('opacity-0');
-                }
-            });
-        }
-
         function renderLevelsTable() {
             const tbody = document.getElementById('levels-tbody');
             if(!tbody) return; tbody.innerHTML = '';
@@ -2077,7 +2069,8 @@
 
             filtered.forEach((lvl) => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-fuchsia-950/10 transition border-b border-fuchsia-950/20";
+                // SEPARACIÓN MÁS VISIBLE Y DEFINIDA ENTRE REGISTROS
+                tr.className = "hover:bg-fuchsia-950/20 transition border-b-2 border-fuchsia-900/50 shadow-sm";
                 
                 let diffText = lvl.diff; 
                 let hexColor = "#f97316"; 
@@ -2319,7 +2312,8 @@
                 const isT = (cos.platform === 'TapWave');
 
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-fuchsia-950/10 transition border-b border-fuchsia-950/20";
+                // SEPARACIÓN MÁS VISIBLE Y DEFINIDA ENTRE REGISTROS
+                tr.className = "hover:bg-fuchsia-950/20 transition border-b-2 border-fuchsia-900/50 shadow-sm";
                 
                 let pMarkup = renderVideoPlayerMarkup(cos.video, true);
                 
