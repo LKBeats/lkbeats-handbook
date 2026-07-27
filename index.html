@@ -486,6 +486,13 @@
                             <input type="date" id="lvlDate" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                             <input type="hidden" id="lvlIsComingSoon" value="false">
                         </div>
+                        <!-- CHECKBOX EXCLUSIVO -->
+                        <div class="pt-1">
+                            <label class="flex items-center gap-2 cursor-pointer bg-[#05020a] p-2 rounded-lg border border-fuchsia-950">
+                                <input type="checkbox" id="lvlIsExclusive" class="accent-fuchsia-500 w-4 h-4">
+                                <span class="font-extrabold text-orange-400 uppercase text-[11px]" data-i18n="btnExclusive">Exclusivo</span>
+                            </label>
+                        </div>
                         <div>
                             <div class="flex items-center justify-between mb-1">
                                 <label class="block font-bold text-zinc-400" data-i18n="formUploadChartFile">Subir Archivo (.zip)</label>
@@ -669,6 +676,14 @@
                             </div>
                             <div id="skin-genres-container" class="grid grid-cols-1 gap-1 max-h-36 overflow-y-auto border border-fuchsia-950 p-2 rounded-lg bg-[#05020a]"></div>
                             <input type="hidden" id="cosSelectedGenreMode" value="single">
+                        </div>
+
+                        <!-- CHECKBOX EXCLUSIVO SKIN -->
+                        <div class="pt-1">
+                            <label class="flex items-center gap-2 cursor-pointer bg-[#05020a] p-2 rounded-lg border border-fuchsia-950">
+                                <input type="checkbox" id="cosIsExclusive" class="accent-fuchsia-500 w-4 h-4">
+                                <span class="font-extrabold text-fuchsia-400 uppercase text-[11px]" data-i18n="btnExclusive">Exclusivo</span>
+                            </label>
                         </div>
 
                         <div>
@@ -899,7 +914,12 @@
                 btnComingSoon: "Próximamente", textComingSoon: "Próximamente",
                 selectGenreError: "Por favor selecciona al menos un género para la Skin.",
                 requiredFieldMsg: "Por favor completa este campo.",
-                labelMaxVideoSize: "Máx. 100 MB"
+                labelMaxVideoSize: "Máx. 100 MB",
+                btnExclusive: "Exclusivo",
+                chartExclusiveLabel: "Chart exclusivo del Handbook",
+                skinExclusiveLabel: "Skin exclusiva del Handbook",
+                btnMoreInfo: "Más información",
+                btnShowLess: "Mostrar menos"
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -947,7 +967,12 @@
                 btnComingSoon: "Coming Soon", textComingSoon: "Coming Soon...",
                 selectGenreError: "Please select at least one genre for the Skin.",
                 requiredFieldMsg: "Please fill out this field.",
-                labelMaxVideoSize: "Max 100 MB"
+                labelMaxVideoSize: "Max 100 MB",
+                btnExclusive: "Exclusive",
+                chartExclusiveLabel: "Handbook exclusive Chart",
+                skinExclusiveLabel: "Handbook exclusive Skin",
+                btnMoreInfo: "More information",
+                btnShowLess: "Show less"
             }
         };
 
@@ -1247,6 +1272,7 @@
             document.getElementById('btn-remove-lvl-audio').classList.add('hidden');
             document.getElementById('lvlArtPreviewBox').classList.add('hidden');
             document.getElementById('lvlIsComingSoon').value = "false";
+            document.getElementById('lvlIsExclusive').checked = false;
             
             levelZipToRemove = false;
             levelArtToRemove = false;
@@ -1274,6 +1300,7 @@
             document.getElementById('btn-remove-cos-video').classList.add('hidden');
             document.getElementById('cosIconPreviewBox').classList.add('hidden');
             document.getElementById('cosIsComingSoon').value = "false";
+            document.getElementById('cosIsExclusive').checked = false;
             
             document.getElementById('cosSelectedGenreMode').value = 'single';
             const btnU = document.getElementById('btn-skin-universal-genre');
@@ -1661,7 +1688,6 @@
 
             videoEl.addEventListener('playing', () => {
                 if (loaderEl) loaderEl.classList.add('hidden');
-                // OCULTAR INMEDIATAMENTE BOTÓN DE REPRODUCCIÓN EN MÓVIL Y ESCRITORIO
                 if (controlsOverlay) controlsOverlay.classList.add('hidden');
             });
 
@@ -1784,7 +1810,7 @@
                 const item = document.createElement('label');
                 item.className = "flex items-center gap-3 p-1.5 hover:bg-zinc-900 rounded cursor-pointer text-zinc-300";
                 item.innerHTML = `
-                    <input type="checkbox" name="skinGenres" value="${g.label}" class="skin-genre-checkbox accent-fuchsia-500">
+                    <input type="checkbox" name="skinGenres" value="${g.label}" class="skin-genre-checkbox accent-[#d946ef]">
                     <span class="w-3.5 h-3.5 rounded-full inline-block shrink-0 shadow" style="background-color: ${g.color}"></span>
                     <span class="font-extrabold text-sm text-zinc-200">${g.label}</span>
                 `;
@@ -2069,7 +2095,6 @@
 
             filtered.forEach((lvl) => {
                 const tr = document.createElement('tr');
-                // SEPARACIÓN MÁS VISIBLE Y DEFINIDA ENTRE REGISTROS
                 tr.className = "hover:bg-fuchsia-950/20 transition border-b-2 border-fuchsia-900/50 shadow-sm";
                 
                 let diffText = lvl.diff; 
@@ -2120,6 +2145,12 @@
 
                 let pMarkup = renderVideoPlayerMarkup(lvl.video, false);
 
+                const exclusiveBadge = lvl.isExclusive ? `
+                    <div class="mt-1 text-[10px] font-black text-orange-400 uppercase tracking-wider flex items-center gap-1 bg-orange-950/40 border border-orange-800/40 px-2 py-0.5 rounded-md w-max">
+                        <i class="fa-solid fa-star text-orange-400"></i> ${translations[currentLanguage].chartExclusiveLabel}
+                    </div>
+                ` : '';
+
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center align-middle">
                         <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
@@ -2138,7 +2169,11 @@
                         <ul class="space-y-2 list-none text-zinc-300 whitespace-normal break-words">
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formSong} / ${translations[currentLanguage].formArtist}:</span> 
-                                <div class="inline-block"><span class="text-white font-black tracking-wide text-base sm:text-lg">${lvl.song}</span> <span class="text-zinc-400 text-xs sm:text-sm font-medium"> - ${lvl.artist}</span></div>
+                                <div class="inline-block flex-1">
+                                    <span class="text-white font-black tracking-wide text-base sm:text-lg">${lvl.song}</span> 
+                                    <span class="text-zinc-400 text-xs sm:text-sm font-medium"> - ${lvl.artist}</span>
+                                    ${exclusiveBadge}
+                                </div>
                             </li>
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formGenre}:</span> 
@@ -2152,14 +2187,25 @@
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formEdition}:</span> 
                                 ${editionGraphicMarkup}
                             </li>
-                            <li class="flex flex-col sm:flex-row sm:items-baseline">
-                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listNotes}:</span> 
-                                <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${lvl.notes || translations[currentLanguage].textComingSoon}</span>
+
+                            <!-- DESPLEGABLE NOTAS Y DURACIÓN Oculto por defecto -->
+                            <li class="pt-1">
+                                <button type="button" class="btn-toggle-more-info text-[10px] sm:text-xs font-extrabold text-orange-400 hover:text-orange-300 flex items-center gap-1 bg-orange-950/30 border border-orange-900/40 px-2 py-1 rounded-lg transition">
+                                    <span class="btn-more-info-label">${translations[currentLanguage].btnMoreInfo}</span>
+                                    <i class="fa-solid fa-chevron-down text-[9px] transition-transform duration-200"></i>
+                                </button>
+                                <div class="extra-info-box hidden space-y-1.5 mt-2 bg-black/40 p-2.5 rounded-xl border border-fuchsia-950/40">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs w-20 shrink-0">${translations[currentLanguage].listNotes}:</span> 
+                                        <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${lvl.notes || translations[currentLanguage].textComingSoon}</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs w-20 shrink-0">${translations[currentLanguage].listDuration}:</span> 
+                                        <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${lvl.duration || translations[currentLanguage].textComingSoon}</span>
+                                    </div>
+                                </div>
                             </li>
-                            <li class="flex flex-col sm:flex-row sm:items-baseline">
-                                <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listDuration}:</span> 
-                                <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${lvl.duration || translations[currentLanguage].textComingSoon}</span>
-                            </li>
+
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formRelease}:</span> 
                                 <span class="font-sans font-bold text-zinc-400 text-xs sm:text-sm">${formatStringToDMY(lvl.date)}</span>
@@ -2177,6 +2223,25 @@
                 `;
 
                 setupNativeVideoBehavior(tr.querySelector('.custom-native-video-wrapper'));
+
+                // Manejo de despliegue "More Information / Show Less"
+                const toggleBtn = tr.querySelector('.btn-toggle-more-info');
+                const extraBox = tr.querySelector('.extra-info-box');
+                const toggleLabel = tr.querySelector('.btn-more-info-label');
+                const toggleIcon = toggleBtn?.querySelector('i');
+
+                toggleBtn?.addEventListener('click', () => {
+                    const isHidden = extraBox.classList.contains('hidden');
+                    if (isHidden) {
+                        extraBox.classList.remove('hidden');
+                        toggleLabel.innerText = translations[currentLanguage].btnShowLess;
+                        if (toggleIcon) toggleIcon.style.transform = 'rotate(180deg)';
+                    } else {
+                        extraBox.classList.add('hidden');
+                        toggleLabel.innerText = translations[currentLanguage].btnMoreInfo;
+                        if (toggleIcon) toggleIcon.style.transform = 'rotate(0deg)';
+                    }
+                });
 
                 if(hasAudio) {
                     const btn = tr.querySelector('.btn-play-audio-preview');
@@ -2202,6 +2267,7 @@
                     document.getElementById('lvlDl1').value = lvl.dl1 || '';
                     document.getElementById('lvlDl2').value = lvl.dl2 || '';
                     document.getElementById('lvlDl3').value = lvl.dl3 || '';
+                    document.getElementById('lvlIsExclusive').checked = !!lvl.isExclusive;
                     
                     const submitBtn = document.getElementById('lvlSubmitBtn');
                     if (submitBtn) {
@@ -2312,7 +2378,6 @@
                 const isT = (cos.platform === 'TapWave');
 
                 const tr = document.createElement('tr');
-                // SEPARACIÓN MÁS VISIBLE Y DEFINIDA ENTRE REGISTROS
                 tr.className = "hover:bg-fuchsia-950/20 transition border-b-2 border-fuchsia-900/50 shadow-sm";
                 
                 let pMarkup = renderVideoPlayerMarkup(cos.video, true);
@@ -2345,6 +2410,12 @@
                 }
                 linksLayout += `</div>`;
 
+                const exclusiveBadge = cos.isExclusive ? `
+                    <div class="mt-1 text-[10px] font-black text-fuchsia-400 uppercase tracking-wider flex items-center gap-1 bg-fuchsia-950/40 border border-fuchsia-800/40 px-2 py-0.5 rounded-md w-max">
+                        <i class="fa-solid fa-star text-fuchsia-400"></i> ${translations[currentLanguage].skinExclusiveLabel}
+                    </div>
+                ` : '';
+
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center align-middle">
                         <div class="w-20 h-20 sm:w-36 sm:h-36 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1 shrink-0 mx-auto">
@@ -2355,7 +2426,10 @@
                         <ul class="space-y-2 list-none text-zinc-300 whitespace-normal break-words">
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listName}:</span> 
-                                <h4 class="text-white font-black tracking-wide text-base sm:text-xl inline-block">${cos.name}</h4>
+                                <div class="inline-block flex-1">
+                                    <h4 class="text-white font-black tracking-wide text-base sm:text-xl inline-block">${cos.name}</h4>
+                                    ${exclusiveBadge}
+                                </div>
                             </li>
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listArtist}:</span> 
@@ -2395,6 +2469,7 @@
                     document.getElementById('cosDate').value = cos.date || '';
                     document.getElementById('cosDl1').value = cos.dl1 || '';
                     document.getElementById('cosDl2').value = cos.dl2 || '';
+                    document.getElementById('cosIsExclusive').checked = !!cos.isExclusive;
                     
                     const submitBtn = document.getElementById('cosSubmitBtn');
                     if (submitBtn) {
@@ -2739,6 +2814,7 @@
 
                 const isComingSoonFlag = document.getElementById('lvlIsComingSoon').value === "true";
                 const dateVal = isComingSoonFlag ? "" : document.getElementById('lvlDate').value;
+                const isExclusive = document.getElementById('lvlIsExclusive').checked;
 
                 const data = {
                     id: id, 
@@ -2754,6 +2830,7 @@
                     notes: document.getElementById('lvlNotes').value.trim(),
                     duration: document.getElementById('lvlDuration').value.trim(),
                     date: dateVal,
+                    isExclusive: isExclusive,
                     dl1: document.getElementById('lvlDl1').value.trim(), 
                     dl2: document.getElementById('lvlDl2').value.trim(), 
                     dl3: document.getElementById('lvlDl3').value.trim()
@@ -2818,6 +2895,7 @@
 
                 const isComingSoonFlag = document.getElementById('cosIsComingSoon').value === "true";
                 const dateVal = isComingSoonFlag ? "" : document.getElementById('cosDate').value;
+                const isExclusive = document.getElementById('cosIsExclusive').checked;
 
                 const data = {
                     id: id, 
@@ -2830,6 +2908,7 @@
                     insp: finalInspString, 
                     skinDirectUrl: finalSkinDirectUrl,
                     platform: currentSelectedSkinSubPlatform, 
+                    isExclusive: isExclusive,
                     dl1: document.getElementById('cosDl1').value.trim(), 
                     dl2: document.getElementById('cosDl2').value.trim()
                 };
@@ -2858,7 +2937,7 @@
 
                 if(f1) urlsDict[0] = await uploadVideoToCloudinary(f1, 'videos');
                 if(f2) urlsDict[1] = await uploadVideoToCloudinary(f2, 'videos');
-                if(f3) urlsDict[2] = await uploadVideoToCloudinary(f3, 'videos');
+                if(f3) urlsDict[3] = await uploadVideoToCloudinary(f3, 'videos');
 
                 if(db) {
                     await set(ref(db, 'thanks_videos'), urlsDict);
