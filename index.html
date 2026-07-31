@@ -552,7 +552,7 @@
                                         <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                     </button>
                                 </div>
-                                <div id="current-lvl-audio-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate">Audio Standard Adjunto</div>
+                                <div id="current-lvl-audio-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate" data-i18n="lblAttachedAudioStd">Audio Standard Adjunto</div>
                                 <input type="file" id="lvlAudioFile" accept="audio/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                             </div>
                             <div>
@@ -562,17 +562,17 @@
                                         <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                     </button>
                                 </div>
-                                <div id="current-lvl-video-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate">Video Standard Adjunto</div>
+                                <div id="current-lvl-video-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate" data-i18n="lblAttachedVideoStd">Video Standard Adjunto</div>
                                 <input type="file" id="lvlVideoFile" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                             </div>
                             <div>
                                 <div class="flex items-center justify-between mb-1">
-                                    <label class="block font-bold text-zinc-400">Standard ZIP (.zip)</label>
+                                    <label class="block font-bold text-zinc-400" data-i18n="formUploadZipStd">Standard ZIP (.zip)</label>
                                     <button type="button" id="btn-remove-chart-zip" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                         <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                     </button>
                                 </div>
-                                <div id="current-chart-zip-badge" class="hidden mb-1 px-2 py-1 bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 rounded text-[10px] font-mono truncate">ZIP Standard Adjunto</div>
+                                <div id="current-chart-zip-badge" class="hidden mb-1 px-2 py-1 bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 rounded text-[10px] font-mono truncate" data-i18n="lblAttachedZipStd">ZIP Standard Adjunto</div>
                                 <input type="file" id="lvlChartZipFile" accept=".zip" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                             </div>
                             <div class="space-y-1.5 pt-1">
@@ -589,7 +589,7 @@
                             </div>
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
-                                    <label class="block font-bold text-yellow-500/80 mb-1" data-i18n="formDifficulty">Dificultad Deluxe</label>
+                                    <label class="block font-bold text-yellow-500/80 mb-1" data-i18n="lblDeluxeDiff">Dificultad Deluxe</label>
                                     <select id="lvlDiffDeluxe" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-100">
                                         <option value="Normal">Normal</option>
                                         <option value="Hard">Hard</option>
@@ -597,46 +597,46 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block font-bold text-yellow-500/80 mb-1">Notas Deluxe</label>
+                                    <label class="block font-bold text-yellow-500/80 mb-1" data-i18n="lblDeluxeNotes">Notas Deluxe</label>
                                     <input type="number" id="lvlNotesDeluxe" placeholder="ej. 620" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-100">
                                 </div>
                             </div>
                             <div>
-                                <label class="block font-bold text-yellow-500/80 mb-1">Duración Deluxe</label>
+                                <label class="block font-bold text-yellow-500/80 mb-1" data-i18n="lblDeluxeDuration">Duración Deluxe</label>
                                 <input type="text" id="lvlDurationDeluxe" placeholder="ej. 2:40" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-100">
                             </div>
                             <div>
-                                <label class="block font-bold text-yellow-500/80 mb-1">Lanzamiento Deluxe</label>
+                                <label class="block font-bold text-yellow-500/80 mb-1" data-i18n="lblDeluxeRelease">Lanzamiento Deluxe</label>
                                 <input type="date" id="lvlDateDeluxe" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-100">
                             </div>
                             <div>
                                 <div class="flex items-center justify-between mb-1">
-                                    <label class="font-bold text-yellow-500/80">Audio Deluxe (Preview)</label>
+                                    <label class="font-bold text-yellow-500/80" data-i18n="lblDeluxeAudio">Audio Deluxe (Preview)</label>
                                     <button type="button" id="btn-remove-lvl-audio-deluxe" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                         <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                     </button>
                                 </div>
-                                <div id="current-lvl-audio-deluxe-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate">Audio Deluxe Adjunto</div>
+                                <div id="current-lvl-audio-deluxe-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate" data-i18n="lblAttachedAudioDlx">Audio Deluxe Adjunto</div>
                                 <input type="file" id="lvlAudioFileDeluxe" accept="audio/*" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-400">
                             </div>
                             <div>
                                 <div class="flex items-center justify-between mb-0.5">
-                                    <label class="font-bold text-yellow-500/80">Video Deluxe (MP4)</label>
+                                    <label class="font-bold text-yellow-500/80" data-i18n="lblDeluxeVideo">Video Deluxe (MP4)</label>
                                     <button type="button" id="btn-remove-lvl-video-deluxe" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                         <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                     </button>
                                 </div>
-                                <div id="current-lvl-video-deluxe-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate">Video Deluxe Adjunto</div>
+                                <div id="current-lvl-video-deluxe-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate" data-i18n="lblAttachedVideoDlx">Video Deluxe Adjunto</div>
                                 <input type="file" id="lvlVideoFileDeluxe" accept="video/*" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-400">
                             </div>
                             <div>
                                 <div class="flex items-center justify-between mb-1">
-                                    <label class="block font-bold text-yellow-500/80">Deluxe ZIP (.zip)</label>
+                                    <label class="block font-bold text-yellow-500/80" data-i18n="lblDeluxeZip">Deluxe ZIP (.zip)</label>
                                     <button type="button" id="btn-remove-chart-deluxe-zip" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                         <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                     </button>
                                 </div>
-                                <div id="current-chart-deluxe-zip-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate">ZIP Deluxe Adjunto</div>
+                                <div id="current-chart-deluxe-zip-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate" data-i18n="lblAttachedZipDlx">ZIP Deluxe Adjunto</div>
                                 <input type="file" id="lvlChartZipFileDeluxe" accept=".zip" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-400">
                             </div>
                             <div class="space-y-1.5 pt-1">
@@ -656,41 +656,41 @@
                             <div class="space-y-2 border-b border-red-950/60 pb-2">
                                 <span class="font-extrabold text-zinc-300 text-[10px] uppercase">Standard (Explicit)</span>
                                 <div class="grid grid-cols-2 gap-2">
-                                    <input type="number" id="lvlNotesExplicit" placeholder="Notas" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
-                                    <input type="text" id="lvlDurationExplicit" placeholder="Duración" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                    <input type="number" id="lvlNotesExplicit" placeholder="Notas" data-i18n-ph="formNotes" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                    <input type="text" id="lvlDurationExplicit" placeholder="Duración" data-i18n-ph="formDuration" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
                                 </div>
                                 <input type="date" id="lvlDateExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
                                 
                                 <div>
                                     <div class="flex items-center justify-between mb-0.5">
-                                        <label class="text-[10px] font-bold text-red-400">Audio Standard Explicit</label>
+                                        <label class="text-[10px] font-bold text-red-400" data-i18n="lblExpAudioStd">Audio Standard Explicit</label>
                                         <button type="button" id="btn-remove-lvl-audio-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                             <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                         </button>
                                     </div>
-                                    <div id="badge-lvl-audio-explicit" class="hidden mb-1 px-2 py-0.5 bg-red-950/40 border border-red-800/40 text-red-400 rounded text-[9px] font-mono truncate">Audio Standard Explicit Adjunto</div>
+                                    <div id="badge-lvl-audio-explicit" class="hidden mb-1 px-2 py-0.5 bg-red-950/40 border border-red-800/40 text-red-400 rounded text-[9px] font-mono truncate" data-i18n="lblAttachedExpAudioStd">Audio Standard Explicit Adjunto</div>
                                     <input type="file" id="lvlAudioFileExplicit" accept="audio/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                 </div>
 
                                 <div>
                                     <div class="flex items-center justify-between mb-0.5">
-                                        <label class="text-[10px] font-bold text-red-400">Video Standard Explicit</label>
+                                        <label class="text-[10px] font-bold text-red-400" data-i18n="lblExpVideoStd">Video Standard Explicit</label>
                                         <button type="button" id="btn-remove-lvl-video-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                             <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                         </button>
                                     </div>
-                                    <div id="badge-lvl-video-explicit" class="hidden mb-1 px-2 py-0.5 bg-red-950/40 border border-red-800/40 text-red-400 rounded text-[9px] font-mono truncate">Video Standard Explicit Adjunto</div>
+                                    <div id="badge-lvl-video-explicit" class="hidden mb-1 px-2 py-0.5 bg-red-950/40 border border-red-800/40 text-red-400 rounded text-[9px] font-mono truncate" data-i18n="lblAttachedExpVideoStd">Video Standard Explicit Adjunto</div>
                                     <input type="file" id="lvlVideoFileExplicit" accept="video/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                 </div>
 
                                 <div>
                                     <div class="flex items-center justify-between mb-0.5">
-                                        <label class="text-[10px] font-bold text-red-400">ZIP Standard Explicit</label>
+                                        <label class="text-[10px] font-bold text-red-400" data-i18n="lblExpZipStd">ZIP Standard Explicit</label>
                                         <button type="button" id="btn-remove-lvl-zip-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                             <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                         </button>
                                     </div>
-                                    <div id="badge-lvl-zip-explicit" class="hidden mb-1 px-2 py-0.5 bg-red-950/40 border border-red-800/40 text-red-400 rounded text-[9px] font-mono truncate">ZIP Standard Explicit Adjunto</div>
+                                    <div id="badge-lvl-zip-explicit" class="hidden mb-1 px-2 py-0.5 bg-red-950/40 border border-red-800/40 text-red-400 rounded text-[9px] font-mono truncate" data-i18n="lblAttachedExpZipStd">ZIP Standard Explicit Adjunto</div>
                                     <input type="file" id="lvlChartZipFileExplicit" accept=".zip" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                 </div>
 
@@ -703,41 +703,41 @@
                             <div id="sub-section-explicit-deluxe" class="space-y-2">
                                 <span class="font-extrabold text-yellow-400 text-[10px] uppercase">Deluxe (Explicit)</span>
                                 <div class="grid grid-cols-2 gap-2">
-                                    <input type="number" id="lvlNotesDeluxeExplicit" placeholder="Notas" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
-                                    <input type="text" id="lvlDurationDeluxeExplicit" placeholder="Duración" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                    <input type="number" id="lvlNotesDeluxeExplicit" placeholder="Notas" data-i18n-ph="formNotes" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                    <input type="text" id="lvlDurationDeluxeExplicit" placeholder="Duración" data-i18n-ph="formDuration" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
                                 </div>
                                 <input type="date" id="lvlDateDeluxeExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
 
                                 <div>
                                     <div class="flex items-center justify-between mb-0.5">
-                                        <label class="text-[10px] font-bold text-yellow-500">Audio Deluxe Explicit</label>
+                                        <label class="text-[10px] font-bold text-yellow-500" data-i18n="lblExpAudioDlx">Audio Deluxe Explicit</label>
                                         <button type="button" id="btn-remove-lvl-audio-dlx-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                             <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                         </button>
                                     </div>
-                                    <div id="badge-lvl-audio-dlx-explicit" class="hidden mb-1 px-2 py-0.5 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[9px] font-mono truncate">Audio Deluxe Explicit Adjunto</div>
+                                    <div id="badge-lvl-audio-dlx-explicit" class="hidden mb-1 px-2 py-0.5 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[9px] font-mono truncate" data-i18n="lblAttachedExpAudioDlx">Audio Deluxe Explicit Adjunto</div>
                                     <input type="file" id="lvlAudioFileDeluxeExplicit" accept="audio/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                 </div>
 
                                 <div>
                                     <div class="flex items-center justify-between mb-0.5">
-                                        <label class="text-[10px] font-bold text-yellow-500">Video Deluxe Explicit</label>
+                                        <label class="text-[10px] font-bold text-yellow-500" data-i18n="lblExpVideoDlx">Video Deluxe Explicit</label>
                                         <button type="button" id="btn-remove-lvl-video-dlx-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                             <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                         </button>
                                     </div>
-                                    <div id="badge-lvl-video-dlx-explicit" class="hidden mb-1 px-2 py-0.5 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[9px] font-mono truncate">Video Deluxe Explicit Adjunto</div>
+                                    <div id="badge-lvl-video-dlx-explicit" class="hidden mb-1 px-2 py-0.5 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[9px] font-mono truncate" data-i18n="lblAttachedExpVideoDlx">Video Deluxe Explicit Adjunto</div>
                                     <input type="file" id="lvlVideoFileDeluxeExplicit" accept="video/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                 </div>
 
                                 <div>
                                     <div class="flex items-center justify-between mb-0.5">
-                                        <label class="text-[10px] font-bold text-yellow-500">ZIP Deluxe Explicit</label>
+                                        <label class="text-[10px] font-bold text-yellow-500" data-i18n="lblExpZipDlx">ZIP Deluxe Explicit</label>
                                         <button type="button" id="btn-remove-lvl-zip-dlx-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                             <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                         </button>
                                     </div>
-                                    <div id="badge-lvl-zip-dlx-explicit" class="hidden mb-1 px-2 py-0.5 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[9px] font-mono truncate">ZIP Deluxe Explicit Adjunto</div>
+                                    <div id="badge-lvl-zip-dlx-explicit" class="hidden mb-1 px-2 py-0.5 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[9px] font-mono truncate" data-i18n="lblAttachedExpZipDlx">ZIP Deluxe Explicit Adjunto</div>
                                     <input type="file" id="lvlChartZipFileDeluxeExplicit" accept=".zip" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                 </div>
 
@@ -1145,7 +1145,33 @@
                 explicitModalNotice: "AVISO: Esta canción puede incluir contenido sensible no apto para todo público.",
                 btnActivate: "Activar",
                 lblExplicitContentToggle: "Contenido Explícito",
-                lblExplicitSectionHeader: "Datos Sin Censura / Explicit"
+                lblExplicitSectionHeader: "Datos Sin Censura / Explicit",
+                lblDeluxeDiff: "Dificultad Deluxe",
+                lblDeluxeNotes: "Notas Deluxe",
+                lblDeluxeDuration: "Duración Deluxe",
+                lblDeluxeRelease: "Lanzamiento Deluxe",
+                lblDeluxeAudio: "Audio Deluxe (Preview)",
+                lblDeluxeVideo: "Video Deluxe (MP4)",
+                lblDeluxeZip: "Deluxe ZIP (.zip)",
+                lblAttachedAudioStd: "Audio Standard Adjunto",
+                lblAttachedVideoStd: "Video Standard Adjunto",
+                lblAttachedZipStd: "ZIP Standard Adjunto",
+                lblAttachedAudioDlx: "Audio Deluxe Adjunto",
+                lblAttachedVideoDlx: "Video Deluxe Adjunto",
+                lblAttachedZipDlx: "ZIP Deluxe Adjunto",
+                lblExpAudioStd: "Audio Standard Explicit",
+                lblExpVideoStd: "Video Standard Explicit",
+                lblExpZipStd: "ZIP Standard Explicit",
+                lblExpAudioDlx: "Audio Deluxe Explicit",
+                lblExpVideoDlx: "Video Deluxe Explicit",
+                lblExpZipDlx: "ZIP Deluxe Explicit",
+                lblAttachedExpAudioStd: "Audio Standard Explicit Adjunto",
+                lblAttachedExpVideoStd: "Video Standard Explicit Adjunto",
+                lblAttachedExpZipStd: "ZIP Standard Explicit Adjunto",
+                lblAttachedExpAudioDlx: "Audio Deluxe Explicit Adjunto",
+                lblAttachedExpVideoDlx: "Video Deluxe Explicit Adjunto",
+                lblAttachedExpZipDlx: "ZIP Deluxe Explicit Adjunto",
+                formUploadZipStd: "Standard ZIP (.zip)"
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -1204,7 +1230,33 @@
                 explicitModalNotice: "NOTICE: This song may include sensitive content not suitable for all audiences.",
                 btnActivate: "Activate",
                 lblExplicitContentToggle: "Explicit Content",
-                lblExplicitSectionHeader: "Uncensored / Explicit Data"
+                lblExplicitSectionHeader: "Uncensored / Explicit Data",
+                lblDeluxeDiff: "Deluxe Difficulty",
+                lblDeluxeNotes: "Deluxe Notes",
+                lblDeluxeDuration: "Deluxe Duration",
+                lblDeluxeRelease: "Deluxe Release Date",
+                lblDeluxeAudio: "Deluxe Audio (Preview)",
+                lblDeluxeVideo: "Deluxe Video (MP4)",
+                lblDeluxeZip: "Deluxe ZIP (.zip)",
+                lblAttachedAudioStd: "Attached Standard Audio",
+                lblAttachedVideoStd: "Attached Standard Video",
+                lblAttachedZipStd: "Attached Standard ZIP",
+                lblAttachedAudioDlx: "Attached Deluxe Audio",
+                lblAttachedVideoDlx: "Attached Deluxe Video",
+                lblAttachedZipDlx: "Attached Deluxe ZIP",
+                lblExpAudioStd: "Explicit Standard Audio",
+                lblExpVideoStd: "Explicit Standard Video",
+                lblExpZipStd: "Explicit Standard ZIP",
+                lblExpAudioDlx: "Explicit Deluxe Audio",
+                lblExpVideoDlx: "Explicit Deluxe Video",
+                lblExpZipDlx: "Explicit Deluxe ZIP",
+                lblAttachedExpAudioStd: "Attached Explicit Standard Audio",
+                lblAttachedExpVideoStd: "Attached Explicit Standard Video",
+                lblAttachedExpZipStd: "Attached Explicit Standard ZIP",
+                lblAttachedExpAudioDlx: "Attached Explicit Deluxe Audio",
+                lblAttachedExpVideoDlx: "Attached Explicit Deluxe Video",
+                lblAttachedExpZipDlx: "Attached Explicit Deluxe ZIP",
+                formUploadZipStd: "Standard ZIP (.zip)"
             }
         };
 
@@ -2085,6 +2137,11 @@
                 if (translations[currentLanguage][key]) el.innerText = translations[currentLanguage][key];
             });
 
+            document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+                const key = el.getAttribute('data-i18n-ph');
+                if (translations[currentLanguage][key]) el.placeholder = translations[currentLanguage][key];
+            });
+
             const lvlIsEditing = !!document.getElementById('editingLvlId').value;
             const lvlSubmitBtn = document.getElementById('lvlSubmitBtn');
             if (lvlSubmitBtn) {
@@ -2444,7 +2501,7 @@
                 standardBadge.classList.remove('hidden');
                 deluxeBadge.classList.add('hidden');
                 document.getElementById('modal-check-standard').classList.remove('opacity-0');
-                document.getElementById('modal-check-deluxe').classList.opacity = '0';
+                document.getElementById('modal-check-deluxe').classList.add('opacity-0');
             }
 
             if(outerArtBox) outerArtBox.classList.add('art-circle-shape');
@@ -2605,14 +2662,14 @@
 
                 const artBoxBorderClass = isDeluxeActive ? "glow-gold border-2 border-yellow-400" : "border border-fuchsia-500/30";
 
-                // AJUSTE MÓVIL PORTRAIT: BADGE AFUERA / DEBAJO DEL ARTE EN MÓVIL
+                // AJUSTE MÓVIL PORTRAIT Y Z-INDEX: CANVAS (z-0), BADGES Y BOTÓN E (z-20 CON Z-INDEX ELEVADO)
                 const artOverlayBadgeDesktop = isDeluxeActive 
                     ? `<div class="hidden sm:block absolute bottom-1 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">DELUXE</div>`
                     : `<div class="hidden sm:block absolute bottom-1 left-1/2 -translate-x-1/2 bg-zinc-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">STANDARD</div>`;
 
                 const artOverlayBadgeMobileExternal = isDeluxeActive
-                    ? `<div class="block sm:hidden mt-1.5 text-center bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-md tracking-wider w-max mx-auto">DELUXE</div>`
-                    : `<div class="block sm:hidden mt-1.5 text-center bg-zinc-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-md tracking-wider w-max mx-auto">STANDARD</div>`;
+                    ? `<div class="block sm:hidden mt-1.5 text-center bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-md tracking-wider w-max mx-auto relative z-20">DELUXE</div>`
+                    : `<div class="block sm:hidden mt-1.5 text-center bg-zinc-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-md tracking-wider w-max mx-auto relative z-20">STANDARD</div>`;
 
                 // BOTÓN DE VERSIÓN EXPLICITA (E) CON LETRA EN COLOR NEGRO EN ESTADO ACTIVO
                 const explicitBtnStyle = isExplicitActive 
@@ -2627,7 +2684,7 @@
 
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center align-middle">
-                        <div class="flex flex-col items-center justify-center">
+                        <div class="flex flex-col items-center justify-center relative">
                             <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
                                 <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
                                 <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
