@@ -41,6 +41,7 @@
         .glow-orange { box-shadow: 0 0 20px rgba(249, 115, 22, 0.2); }
         .glow-fuchsia { box-shadow: 0 0 20px rgba(217, 70, 239, 0.2); }
         .glow-gold { box-shadow: 0 0 20px rgba(250, 204, 21, 0.6); border-color: #facc15 !important; }
+        .glow-red { box-shadow: 0 0 15px rgba(239, 68, 68, 0.8); border-color: #ef4444 !important; color: #ef4444 !important; }
         .glow-green { box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); border-color: #10b981 !important; color: #10b981 !important; }
         
         .force-white-icon { filter: brightness(0) invert(1); object-fit: contain; }
@@ -62,7 +63,6 @@
             mask-position: center;
         }
 
-        /* TRANSICIÓN DE ANIMACIÓN CIRCULO BEATSTAR */
         .art-beatstar-transform {
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-radius 0.4s ease, box-shadow 0.4s ease;
         }
@@ -80,11 +80,22 @@
         <p id="loading-overlay-text" class="text-base font-bold text-white text-center px-4 font-sans" data-i18n="savingChanges">Por favor espera un momento...</p>
     </div>
 
+    <!-- MODAL DE ADVERTENCIA PARA CONTENIDO EXPLÍCITO -->
+    <div id="explicit-warning-modal" class="hidden fixed inset-0 bg-black/90 z-[160] flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-[#11091c] border border-red-500/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full bg-red-500/20 border border-red-500 flex items-center justify-center text-red-500 font-black text-xl mb-3 shadow-lg glow-red">E</div>
+            <h3 class="text-base sm:text-lg font-black text-white uppercase tracking-wide mb-2">¿Activar versión sin censura?</h3>
+            <p class="text-xs text-zinc-300 font-medium mb-6 leading-relaxed">AVISO: Esta canción puede incluir contenido sensible no apto para todo público.</p>
+            <div class="flex gap-3 w-full">
+                <button id="btn-cancel-explicit" class="flex-1 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-300 hover:text-white transition">Cancelar</button>
+                <button id="btn-confirm-explicit" class="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-white font-black rounded-xl text-xs uppercase shadow transition glow-red">Activar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL SELECCIÓN DE EDICIONES ESTILO BEATSTAR -->
     <div id="beatstar-edition-modal" class="hidden fixed inset-0 bg-black/90 z-[150] flex items-center justify-center p-4 backdrop-blur-md transition-all duration-300">
         <div class="bg-[#11091c]/95 border border-fuchsia-500/40 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-8 border-t-2 border-t-fuchsia-500">
-            
-            <!-- ARTE CIRCULAR ANIMADO -->
             <div class="flex flex-col items-center justify-center shrink-0">
                 <div id="modal-edition-art-container" class="w-36 h-36 sm:w-44 sm:h-44 rounded-full overflow-hidden border-4 border-fuchsia-500 shadow-2xl relative bg-zinc-950 art-beatstar-transform">
                     <img id="modal-edition-art-img" src="free_song_Image.png" class="w-full h-full object-cover">
@@ -95,12 +106,9 @@
                 <p id="modal-edition-artist-title" class="text-xs text-zinc-400 font-medium text-center">Artist</p>
             </div>
 
-            <!-- MENÚ DE EDICIONES -->
             <div class="flex-1 w-full flex flex-col justify-center">
                 <div class="text-xs font-black uppercase tracking-widest text-zinc-400 text-center md:text-left mb-3" data-i18n="selectEditionPrompt">EDITIONS</div>
-                
                 <div class="space-y-3 w-full">
-                    <!-- BOTÓN OPTION STANDARD SIN CÍRCULO CON TAG DE DIFICULTAD -->
                     <button id="modal-opt-standard" type="button" class="w-full p-3.5 rounded-2xl border-2 border-zinc-800 bg-zinc-950/80 hover:border-fuchsia-500 transition flex items-center justify-between group">
                         <div class="text-left">
                             <div class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Standard</div>
@@ -109,7 +117,6 @@
                         <i id="modal-check-standard" class="fa-solid fa-circle-check text-fuchsia-400 text-lg opacity-0 transition-opacity"></i>
                     </button>
 
-                    <!-- BOTÓN OPTION DELUXE SIN CÍRCULO CON TAG DE DIFICULTAD -->
                     <button id="modal-opt-deluxe" type="button" class="w-full p-3.5 rounded-2xl border-2 border-yellow-500/40 bg-zinc-950/80 hover:border-yellow-400 transition flex items-center justify-between group glow-gold">
                         <div class="text-left">
                             <div class="text-xs sm:text-sm font-black text-yellow-400 uppercase tracking-wider">Deluxe</div>
@@ -455,7 +462,7 @@
             </button>
             
             <div id="levels-layout-grid" class="flex flex-col gap-6 items-start w-full relative">
-                <!-- FORMULARIO CREAR/EDITAR CHART CON LINKS INDEPENDIENTES POR EDICIÓN -->
+                <!-- FORMULARIO CREAR/EDITAR CHART -->
                 <div id="level-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto z-30">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addLevelTitle">Nuevo Chart</h2>
                     <form id="level-form" autocomplete="off" class="space-y-3 text-xs">
@@ -491,9 +498,28 @@
                             </select>
                         </div>
 
-                        <!-- SECCIÓN DATOS STANDARD / BASE -->
+                        <!-- CHECKBOXES DE EXCLUSIVO Y CONTENIDO EXPLICITO -->
+                        <div class="pt-1 space-y-2">
+                            <label class="flex items-center gap-2 cursor-pointer bg-[#05020a] p-2 rounded-lg border border-fuchsia-950">
+                                <input type="checkbox" id="lvlIsExclusive" class="accent-fuchsia-500 w-4 h-4">
+                                <span class="font-extrabold text-orange-400 uppercase text-[11px]" data-i18n="btnExclusive">Exclusivo</span>
+                            </label>
+
+                            <label class="flex items-center gap-2 cursor-pointer bg-[#05020a] p-2 rounded-lg border border-red-950/60">
+                                <input type="checkbox" id="lvlHasExplicit" class="accent-red-500 w-4 h-4">
+                                <span class="font-black text-red-500 uppercase text-[11px] flex items-center gap-1">
+                                    <span class="w-3.5 h-3.5 bg-red-600 text-white rounded flex items-center justify-center text-[9px] font-black">E</span>
+                                    Contenido Explícito
+                                </span>
+                            </label>
+                            <input type="hidden" id="lvlIsComingSoon" value="false">
+                        </div>
+
+                        <!-- SECCIÓN STANDARD -->
                         <div id="section-standard-fields" class="space-y-3 bg-black/20 p-2.5 rounded-xl border border-zinc-800">
-                            <div class="font-black text-zinc-300 uppercase tracking-wider text-[11px] pb-1 border-b border-zinc-800">Standard Data & Links</div>
+                            <div class="font-black text-zinc-300 uppercase tracking-wider text-[11px] pb-1 border-b border-zinc-800 flex items-center gap-1.5">
+                                <span id="cms-icon-standard" class="inline-block"></span> Standard
+                            </div>
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
                                     <label class="block font-bold text-zinc-400 mb-1" data-i18n="formDifficulty">Dificultad</label>
@@ -556,9 +582,11 @@
                             </div>
                         </div>
 
-                        <!-- SECCIÓN DATOS DELUXE OPCIONALES / DUALES -->
+                        <!-- SECCIÓN DELUXE -->
                         <div id="section-deluxe-fields" class="hidden space-y-3 bg-yellow-950/10 p-2.5 rounded-xl border border-yellow-500/30">
-                            <div class="font-black text-yellow-400 uppercase tracking-wider text-[11px] pb-1 border-b border-yellow-500/30 flex items-center gap-1.5"><i class="fa-solid fa-star text-xs"></i> Deluxe Data & Links</div>
+                            <div class="font-black text-yellow-400 uppercase tracking-wider text-[11px] pb-1 border-b border-yellow-500/30 flex items-center gap-1.5">
+                                <span id="cms-icon-deluxe" class="inline-block"></span> Deluxe
+                            </div>
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
                                     <label class="block font-bold text-yellow-500/80 mb-1" data-i18n="formDifficulty">Dificultad Deluxe</label>
@@ -618,13 +646,43 @@
                             </div>
                         </div>
 
-                        <!-- CHECKBOX EXCLUSIVO -->
-                        <div class="pt-1">
-                            <label class="flex items-center gap-2 cursor-pointer bg-[#05020a] p-2 rounded-lg border border-fuchsia-950">
-                                <input type="checkbox" id="lvlIsExclusive" class="accent-fuchsia-500 w-4 h-4">
-                                <span class="font-extrabold text-orange-400 uppercase text-[11px]" data-i18n="btnExclusive">Exclusivo</span>
-                            </label>
-                            <input type="hidden" id="lvlIsComingSoon" value="false">
+                        <!-- SECCIÓN EXPLICITA ADICIONAL SI EL TOGGLE ESTA ACTIVADO -->
+                        <div id="section-explicit-fields" class="hidden space-y-3 bg-red-950/20 p-2.5 rounded-xl border border-red-500/40">
+                            <div class="font-black text-red-400 uppercase tracking-wider text-[11px] pb-1 border-b border-red-500/30 flex items-center gap-1.5">
+                                <span class="w-3.5 h-3.5 bg-red-600 text-white rounded flex items-center justify-center text-[9px] font-black">E</span> Datos Sin Censura / Explicit
+                            </div>
+
+                            <!-- EXPLICIT STANDARD -->
+                            <div class="space-y-2 border-b border-red-950/60 pb-2">
+                                <span class="font-extrabold text-zinc-300 text-[10px] uppercase">Standard (Explicit)</span>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <input type="number" id="lvlNotesExplicit" placeholder="Notas" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                    <input type="text" id="lvlDurationExplicit" placeholder="Duración" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                </div>
+                                <input type="date" id="lvlDateExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                <input type="file" id="lvlAudioFileExplicit" accept="audio/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
+                                <input type="file" id="lvlVideoFileExplicit" accept="video/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
+                                <input type="file" id="lvlChartZipFileExplicit" accept=".zip" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
+                                <input type="url" id="lvlDl1Explicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="Discord Explicit URL">
+                                <input type="url" id="lvlDl2Explicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="BSCM Explicit URL">
+                                <input type="url" id="lvlDl3Explicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="beatcharts Explicit URL">
+                            </div>
+
+                            <!-- EXPLICIT DELUXE -->
+                            <div id="sub-section-explicit-deluxe" class="space-y-2">
+                                <span class="font-extrabold text-yellow-400 text-[10px] uppercase">Deluxe (Explicit)</span>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <input type="number" id="lvlNotesDeluxeExplicit" placeholder="Notas" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                    <input type="text" id="lvlDurationDeluxeExplicit" placeholder="Duración" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                </div>
+                                <input type="date" id="lvlDateDeluxeExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                <input type="file" id="lvlAudioFileDeluxeExplicit" accept="audio/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
+                                <input type="file" id="lvlVideoFileDeluxeExplicit" accept="video/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
+                                <input type="file" id="lvlChartZipFileDeluxeExplicit" accept=".zip" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
+                                <input type="url" id="lvlDl1DeluxeExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="Discord Deluxe Explicit URL">
+                                <input type="url" id="lvlDl2DeluxeExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="BSCM Deluxe Explicit URL">
+                                <input type="url" id="lvlDl3DeluxeExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="beatcharts Deluxe Explicit URL">
+                            </div>
                         </div>
 
                         <div class="flex gap-2 pt-2">
@@ -640,7 +698,6 @@
 
                 <!-- REGISTRO Y FILTROS CHARTS -->
                 <div id="levels-table-container" class="w-full overflow-hidden flex flex-col space-y-4 flex-grow">
-                    <!-- CONTENEDOR FILTROS & TITULOS -->
                     <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div class="flex flex-col items-start justify-center shrink-0">
                             <div class="text-base sm:text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">
@@ -651,9 +708,7 @@
                             </div>
                         </div>
 
-                        <!-- BARRA DE FILTROS ALINEADA Y CENTRADA EN VERTICAL -->
                         <div class="flex flex-wrap items-center justify-center sm:justify-end gap-2.5 w-full sm:w-auto ml-auto text-xs">
-                            <!-- CUSTOM DROPDOWN: GÉNERO CHARTS -->
                             <div class="flex flex-col relative">
                                 <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterGenre">Género</label>
                                 <button id="btn-custom-lvl-genre" type="button" class="w-32 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
@@ -663,7 +718,6 @@
                                 <div id="dropdown-custom-lvl-genre" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#11091c] border border-fuchsia-500/40 rounded-xl shadow-2xl overflow-hidden z-50 max-h-52 overflow-y-auto divide-y divide-fuchsia-950/40"></div>
                             </div>
 
-                            <!-- CUSTOM DROPDOWN: DIFICULTAD CHARTS -->
                             <div class="flex flex-col relative">
                                 <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterDiff">Dificultad</label>
                                 <button id="btn-custom-lvl-diff" type="button" class="w-32 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
@@ -673,7 +727,6 @@
                                 <div id="dropdown-custom-lvl-diff" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#11091c] border border-fuchsia-500/40 rounded-xl shadow-2xl overflow-hidden z-50 divide-y divide-fuchsia-950/40"></div>
                             </div>
 
-                            <!-- CUSTOM DROPDOWN: EDICIÓN CHARTS -->
                             <div class="flex flex-col relative">
                                 <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterEdit">Edición</label>
                                 <button id="btn-custom-lvl-edition" type="button" class="w-32 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
@@ -691,7 +744,6 @@
                         </div>
                     </div>
 
-                    <!-- TABLA CHARTS CON ENCABEZADOS Y TEXTO CENTRADO EN ARTE -->
                     <div id="levels-table-wrapper" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                         <table class="w-full text-left border-collapse min-w-[700px] sm:min-w-[900px]">
                             <thead>
@@ -710,13 +762,12 @@
             </div>
         </section>
 
-        <!-- ================= VIEW 3: COSMETICS (SKINS SUBMENU) ================= -->
+        <!-- ================= VIEW 3: COSMETICS ================= -->
         <section id="view-cosmetics" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
             <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-fuchsia-500/30 rounded-2xl mb-6 w-max">
                 <i class="fa-solid fa-chevron-left text-fuchsia-500"></i> <span data-i18n="backHome">Volver</span>
             </button>
 
-            <!-- SUBMENÚ EXCLUSIVO DE SKINS -->
             <div id="cosmetics-submenu" class="w-full max-w-4xl mx-auto py-6 flex flex-col items-center">
                 <div class="text-center mb-8 flex flex-col items-center w-full">
                     <div class="mb-4 max-w-full w-[450px]">
@@ -741,9 +792,7 @@
                 </div>
             </div>
 
-            <!-- REGISTRO Y FORMULARIO SKINS -->
             <div id="cosmetics-active-workspace" class="hidden flex-col gap-6 items-start w-full relative">
-                <!-- FORMULARIO NUEVA SKIN -->
                 <div id="cosmetic-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto z-30">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addCosmeticTitle">Nueva Skin</h2>
                     <form id="cosmetic-form" autocomplete="off" class="space-y-3 text-xs">
@@ -787,7 +836,6 @@
                             <input type="hidden" id="cosIsComingSoon" value="false">
                         </div>
 
-                        <!-- GÉNERO SKINS OBLIGATORIO -->
                         <div>
                             <div class="flex items-center justify-between mb-1">
                                 <label class="font-bold text-zinc-400 uppercase tracking-wider"><span data-i18n="formGenre">Género</span> <span class="text-red-500">*</span></label>
@@ -797,7 +845,6 @@
                             <input type="hidden" id="cosSelectedGenreMode" value="single">
                         </div>
 
-                        <!-- CHECKBOX EXCLUSIVO SKIN -->
                         <div class="pt-1">
                             <label class="flex items-center gap-2 cursor-pointer bg-[#05020a] p-2 rounded-lg border border-fuchsia-950">
                                 <input type="checkbox" id="cosIsExclusive" class="accent-fuchsia-500 w-4 h-4">
@@ -835,14 +882,11 @@
                     </form>
                 </div>
 
-                <!-- CONTENEDORES SKINS Y BARRA FILTROS -->
                 <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-6 flex-grow">
-                    <!-- BARRA DE FILTROS SKINS -->
                     <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div class="text-base sm:text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500 shrink-0" data-i18n="navCosmetics">Skins</div>
                         
                         <div class="flex flex-wrap items-center justify-center sm:justify-end gap-2.5 w-full sm:w-auto ml-auto text-xs">
-                            <!-- CUSTOM DROPDOWN: GÉNERO SKINS -->
                             <div class="flex flex-col relative">
                                 <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterGenre">Género</label>
                                 <button id="btn-custom-skin-genre" type="button" class="w-36 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
@@ -860,7 +904,6 @@
                         </div>
                     </div>
 
-                    <!-- Segmento Beatstar -->
                     <div id="container-workspace-beatstar" class="hidden flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
                             <div class="h-10 max-w-[50%] sm:max-w-[240px] flex-grow sm:flex-initial">
@@ -889,7 +932,6 @@
                         </div>
                     </div>
 
-                    <!-- Segmento Tapwave -->
                     <div id="container-workspace-tapwave" class="hidden flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
                             <div class="h-12 max-w-[50%] sm:max-w-[340px] flex-grow sm:flex-initial flex items-center">
@@ -949,9 +991,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // ==========================================
-        // CONFIGURACIÓN DE CLOUDINARY
-        // ==========================================
         const CLOUDINARY_CLOUD_NAME = "hdmx7anb";
         const CLOUDINARY_UPLOAD_PRESET = "lkbeats_preset"; 
 
@@ -1107,10 +1146,9 @@
         let globalVisualAssets = {}; 
         let globalThanksVideos = [];
 
-        // ESTADO DE EDICIONES SELECCIONADAS POR CHART EN TIEMPO REAL
         let activeChartSelectedEditions = {}; 
+        let activeChartExplicitStates = {};
 
-        // VALORES DE FILTROS SELECCIONADOS
         let activeLvlGenreFilter = "";
         let activeLvlDiffFilter = "";
         let activeLvlEditionFilter = "";
@@ -1149,8 +1187,8 @@
 
         let pendingDeleteActionCallback = null;
         let activeModalBeatstarChart = null;
+        let pendingExplicitActivationChartId = null;
 
-        // SISTEMA GLOBAL DE DETENCIÓN MULTIMEDIA
         function stopAllMedia() {
             stopGlobalAudioPreview();
 
@@ -1239,7 +1277,6 @@
         document.getElementById('card-to-levels').addEventListener('click', () => navigateTo('levels'));
         document.getElementById('card-to-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
         
-        // CREADOR / MODAL BOOGIE & SALIR
         const btnBoogieTrigger = document.getElementById('btn-boogie-admin-trigger');
         const modalBoogie = document.getElementById('boogie-auth-modal');
         const modalBoogieExit = document.getElementById('boogie-exit-modal');
@@ -1266,7 +1303,6 @@
         document.getElementById('btn-close-boogie-modal').addEventListener('click', closeModalBoogie);
         document.getElementById('btn-close-boogie-modal-x').addEventListener('click', closeModalBoogie);
 
-        // MODAL DE CONFIRMACIÓN DE ELIMINACIÓN
         const modalConfirmDelete = document.getElementById('confirm-delete-modal');
         function requestUserDeleteConfirmation(onConfirm) {
             pendingDeleteActionCallback = onConfirm;
@@ -1284,7 +1320,22 @@
             modalConfirmDelete.classList.add('hidden');
         });
 
-        // VISIBILIDAD DE CONTRASEÑA EN CREDENCIALES
+        // MODAL ADVERTENCIA CONTENIDO EXPLÍCITO
+        const modalExplicit = document.getElementById('explicit-warning-modal');
+        document.getElementById('btn-cancel-explicit').addEventListener('click', () => {
+            pendingExplicitActivationChartId = null;
+            modalExplicit.classList.add('hidden');
+        });
+
+        document.getElementById('btn-confirm-explicit').addEventListener('click', () => {
+            if (pendingExplicitActivationChartId) {
+                activeChartExplicitStates[pendingExplicitActivationChartId] = true;
+                pendingExplicitActivationChartId = null;
+                renderLevelsTable();
+            }
+            modalExplicit.classList.add('hidden');
+        });
+
         document.querySelectorAll('.toggle-password-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const targetId = btn.getAttribute('data-target');
@@ -1300,7 +1351,6 @@
             });
         });
 
-        // VALIDACIÓN MANUAL MULTILENGUAJE PARA FORMULARIO DE CREDENCIALES
         document.getElementById('boogie-auth-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const inputs = ['boogieCred1', 'boogieCred2', 'boogieCred3'];
@@ -1356,20 +1406,31 @@
             }
         }));
 
-        // MANEJO DE EDICIONES EN FORMULARIO CHART
         const editionModeSelect = document.getElementById('lvlEditionMode');
         const sectionDeluxe = document.getElementById('section-deluxe-fields');
+        const subSectionExplicitDeluxe = document.getElementById('sub-section-explicit-deluxe');
         
         editionModeSelect?.addEventListener('change', () => {
             const val = editionModeSelect.value;
             if (val === 'Deluxe' || val === 'Both') {
                 sectionDeluxe?.classList.remove('hidden');
+                subSectionExplicitDeluxe?.classList.remove('hidden');
             } else {
                 sectionDeluxe?.classList.add('hidden');
+                subSectionExplicitDeluxe?.classList.add('hidden');
             }
         });
 
-        // FUNCIONES AUXILIARES PARA LIMPIAR Y CANCELAR FORMULARIOS
+        const explicitToggle = document.getElementById('lvlHasExplicit');
+        const sectionExplicit = document.getElementById('section-explicit-fields');
+        explicitToggle?.addEventListener('change', () => {
+            if(explicitToggle.checked) {
+                sectionExplicit?.classList.remove('hidden');
+            } else {
+                sectionExplicit?.classList.add('hidden');
+            }
+        });
+
         function resetLevelFormState() {
             document.getElementById('level-form').reset();
             document.getElementById('editingLvlId').value = '';
@@ -1398,9 +1459,11 @@
             document.getElementById('lvlArtPreviewBox').classList.add('hidden');
             document.getElementById('lvlIsComingSoon').value = "false";
             document.getElementById('lvlIsExclusive').checked = false;
+            document.getElementById('lvlHasExplicit').checked = false;
             
             editionModeSelect.value = "Standard";
             sectionDeluxe?.classList.add('hidden');
+            sectionExplicit?.classList.add('hidden');
 
             levelZipToRemove = false;
             levelZipDeluxeToRemove = false;
@@ -1411,6 +1474,7 @@
             levelAudioDeluxeToRemove = false;
             
             buildGenresSelector();
+            updateCMSHeaderIcons();
         }
 
         function resetCosmeticFormState() {
@@ -1448,7 +1512,6 @@
         document.getElementById('btn-cancel-lvl-form')?.addEventListener('click', resetLevelFormState);
         document.getElementById('btn-cancel-cos-form')?.addEventListener('click', resetCosmeticFormState);
 
-        // BACKEND CONTROLLERS
         let db = null;
         try {
             const app = initializeApp(firebaseConfig);
@@ -1471,6 +1534,7 @@
             onValue(ref(db, 'visual_assets'), (snap) => { 
                 globalVisualAssets = snap.val() || {}; 
                 buildCustomDropdownMenus();
+                updateCMSHeaderIcons();
                 renderLevelsTable(); 
             });
             onValue(ref(db, 'thanks_videos'), (snap) => { 
@@ -1501,9 +1565,26 @@
             if(overlay) overlay.classList.add('hidden');
         }
 
-        // ==========================================
-        // SUBIDA DE VIDEOS MEDIANTE CLOUDINARY API
-        // ==========================================
+        function updateCMSHeaderIcons() {
+            const iconStdBox = document.getElementById('cms-icon-standard');
+            const iconDlxBox = document.getElementById('cms-icon-deluxe');
+
+            const stdAsset = globalVisualAssets[`edit_Standard`];
+            const dlxAsset = globalVisualAssets[`edit_Deluxe`];
+
+            if(iconStdBox) {
+                iconStdBox.innerHTML = stdAsset 
+                    ? `<span class="dynamic-color-mask w-3.5 h-3.5 align-middle" style="color: #71717a; -webkit-mask-image: url('${stdAsset}'); mask-image: url('${stdAsset}');"></span>`
+                    : `<i class="fa-solid fa-layer-group text-zinc-400"></i>`;
+            }
+
+            if(iconDlxBox) {
+                iconDlxBox.innerHTML = dlxAsset 
+                    ? `<span class="dynamic-color-mask w-3.5 h-3.5 align-middle" style="color: #facc15; -webkit-mask-image: url('${dlxAsset}'); mask-image: url('${dlxAsset}');"></span>`
+                    : `<i class="fa-solid fa-star text-yellow-400"></i>`;
+            }
+        }
+
         async function uploadVideoToCloudinary(fileObject, subfolderName) {
             if(!fileObject) return "";
             if(!CLOUDINARY_CLOUD_NAME) {
@@ -1537,7 +1618,6 @@
             }
         }
 
-        // SUBIDA A GITHUB (ARCHIVOS Y ZIPs)
         async function uploadFileToGitHubContent(fileObject, targetFolder, customFileName) {
             if(!githubToken || !githubUser) return "";
             const cleanName = customFileName.replace(/[^a-zA-Z0-9.\-_]/g, '_');
@@ -2217,7 +2297,6 @@
             return `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded border ${styleClass} font-black uppercase text-[10px]">${graphicMarkup} <span>${label}</span></div>`;
         }
 
-        // LÓGICA DE APERTURA DEL MODAL BEATSTAR SELECTOR DE EDICIONES
         function openBeatstarEditionSelector(lvl, outerArtBox) {
             stopAllMedia();
             activeModalBeatstarChart = lvl;
@@ -2250,7 +2329,7 @@
                 standardBadge.classList.remove('hidden');
                 deluxeBadge.classList.add('hidden');
                 document.getElementById('modal-check-standard').classList.remove('opacity-0');
-                document.getElementById('modal-check-deluxe').classList.add('opacity-0');
+                document.getElementById('modal-check-deluxe').classList.opacity = '0';
             }
 
             if(outerArtBox) outerArtBox.classList.add('art-circle-shape');
@@ -2273,14 +2352,8 @@
         }
 
         document.getElementById('btn-close-beatstar-modal')?.addEventListener('click', () => closeBeatstarEditionSelector(null));
-        
-        document.getElementById('modal-opt-standard')?.addEventListener('click', () => {
-            closeBeatstarEditionSelector('Standard');
-        });
-
-        document.getElementById('modal-opt-deluxe')?.addEventListener('click', () => {
-            closeBeatstarEditionSelector('Deluxe');
-        });
+        document.getElementById('modal-opt-standard')?.addEventListener('click', () => closeBeatstarEditionSelector('Standard'));
+        document.getElementById('modal-opt-deluxe')?.addEventListener('click', () => closeBeatstarEditionSelector('Deluxe'));
 
         function renderLevelsTable() {
             const tbody = document.getElementById('levels-tbody');
@@ -2321,29 +2394,48 @@
 
                 const currentSelectedEdition = activeChartSelectedEditions[lvl.id];
                 const isDeluxeActive = (currentSelectedEdition === 'Deluxe');
+                const isExplicitActive = !!activeChartExplicitStates[lvl.id];
 
-                const currentDiffVal = isDeluxeActive ? (lvl.diffDeluxe || 'Extreme') : (lvl.diff || 'Normal');
-                const currentNotesVal = isDeluxeActive ? (lvl.notesDeluxe || lvl.notes) : lvl.notes;
-                const currentDurationVal = isDeluxeActive ? (lvl.durationDeluxe || lvl.duration) : lvl.duration;
-                const currentDateVal = isDeluxeActive ? (lvl.dateDeluxe || lvl.date) : lvl.date;
-                const currentAudioUrl = isDeluxeActive ? (lvl.audioDirectUrlDeluxe || lvl.audioDirectUrl) : lvl.audioDirectUrl;
-                const currentVideoUrl = isDeluxeActive ? (lvl.videoDeluxe || lvl.video) : lvl.video;
+                // SELECCIÓN DE PROPIEDADES SEGÚN EDICIÓN Y ESTADO EXPLICITO
+                let currentDiffVal = isDeluxeActive ? (lvl.diffDeluxe || 'Extreme') : (lvl.diff || 'Normal');
+                let currentNotesVal = isExplicitActive 
+                    ? (isDeluxeActive ? (lvl.notesDeluxeExplicit || lvl.notesExplicit || lvl.notesDeluxe || lvl.notes) : (lvl.notesExplicit || lvl.notes))
+                    : (isDeluxeActive ? (lvl.notesDeluxe || lvl.notes) : lvl.notes);
 
-                // LINKS INDEPENDIENTES POR EDICIÓN
-                const currentChartZip = isDeluxeActive ? (lvl.chartDirectUrlDeluxe || lvl.chartDirectUrl) : lvl.chartDirectUrl;
-                const currentDl1 = isDeluxeActive ? (lvl.dl1Deluxe || lvl.dl1) : lvl.dl1;
-                const currentDl2 = isDeluxeActive ? (lvl.dl2Deluxe || lvl.dl2) : lvl.dl2;
-                const currentDl3 = isDeluxeActive ? (lvl.dl3Deluxe || lvl.dl3) : lvl.dl3;
+                let currentDurationVal = isExplicitActive
+                    ? (isDeluxeActive ? (lvl.durationDeluxeExplicit || lvl.durationExplicit || lvl.durationDeluxe || lvl.duration) : (lvl.durationExplicit || lvl.duration))
+                    : (isDeluxeActive ? (lvl.durationDeluxe || lvl.duration) : lvl.duration);
+
+                let currentDateVal = isExplicitActive
+                    ? (isDeluxeActive ? (lvl.dateDeluxeExplicit || lvl.dateExplicit || lvl.dateDeluxe || lvl.date) : (lvl.dateExplicit || lvl.date))
+                    : (isDeluxeActive ? (lvl.dateDeluxe || lvl.date) : lvl.date);
+
+                let currentAudioUrl = isExplicitActive
+                    ? (isDeluxeActive ? (lvl.audioDeluxeExplicit || lvl.audioExplicit || lvl.audioDirectUrlDeluxe || lvl.audioDirectUrl) : (lvl.audioExplicit || lvl.audioDirectUrl))
+                    : (isDeluxeActive ? (lvl.audioDirectUrlDeluxe || lvl.audioDirectUrl) : lvl.audioDirectUrl);
+
+                let currentVideoUrl = isExplicitActive
+                    ? (isDeluxeActive ? (lvl.videoDeluxeExplicit || lvl.videoExplicit || lvl.videoDeluxe || lvl.video) : (lvl.videoExplicit || lvl.video))
+                    : (isDeluxeActive ? (lvl.videoDeluxe || lvl.video) : lvl.video);
+
+                let currentChartZip = isExplicitActive
+                    ? (isDeluxeActive ? (lvl.zipDeluxeExplicit || lvl.zipExplicit || lvl.chartDirectUrlDeluxe || lvl.chartDirectUrl) : (lvl.zipExplicit || lvl.chartDirectUrl))
+                    : (isDeluxeActive ? (lvl.chartDirectUrlDeluxe || lvl.chartDirectUrl) : lvl.chartDirectUrl);
+
+                let currentDl1 = isExplicitActive
+                    ? (isDeluxeActive ? (lvl.dl1DeluxeExplicit || lvl.dl1Explicit || lvl.dl1Deluxe || lvl.dl1) : (lvl.dl1Explicit || lvl.dl1))
+                    : (isDeluxeActive ? (lvl.dl1Deluxe || lvl.dl1) : lvl.dl1);
+
+                let currentDl2 = isExplicitActive
+                    ? (isDeluxeActive ? (lvl.dl2DeluxeExplicit || lvl.dl2Explicit || lvl.dl2Deluxe || lvl.dl2) : (lvl.dl2Explicit || lvl.dl2))
+                    : (isDeluxeActive ? (lvl.dl2Deluxe || lvl.dl2) : lvl.dl2);
+
+                let currentDl3 = isExplicitActive
+                    ? (isDeluxeActive ? (lvl.dl3DeluxeExplicit || lvl.dl3Explicit || lvl.dl3Deluxe || lvl.dl3) : (lvl.dl3Explicit || lvl.dl3))
+                    : (isDeluxeActive ? (lvl.dl3Deluxe || lvl.dl3) : lvl.dl3);
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-fuchsia-950/20 transition border-b-2 border-fuchsia-900/50 shadow-sm";
-
-                const dynamicEditionLogoAsset = globalVisualAssets[isDeluxeActive ? `edit_Deluxe` : `edit_Standard`];
-                const targetEditionLogoHex = isDeluxeActive ? "#facc15" : "#71717a";
-
-                const editionLogoGraphicMarkup = dynamicEditionLogoAsset
-                    ? `<span class="dynamic-color-mask w-3.5 h-3.5 mr-1 align-middle" style="color: ${targetEditionLogoHex}; -webkit-mask-image: url('${dynamicEditionLogoAsset}'); mask-image: url('${dynamicEditionLogoAsset}');"></span>`
-                    : '';
 
                 let editionGraphicMarkup = '';
                 if(isDual) {
@@ -2373,8 +2465,8 @@
                 }
 
                 const hasAudio = !!currentAudioUrl;
-
                 const hasAnyLinks = currentChartZip || currentDl1 || currentDl2 || currentDl3;
+
                 let linksLayout = `<div class="flex flex-col gap-1 max-w-[130px] sm:max-w-[160px] mx-auto">`;
                 if(hasAnyLinks) {
                     if(currentChartZip) {
@@ -2402,6 +2494,17 @@
                     ? `<div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">DELUXE</div>`
                     : `<div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-zinc-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">STANDARD</div>`;
 
+                // BOTÓN DE VERSIÓN EXPLICITA (E)
+                const explicitBtnStyle = isExplicitActive 
+                    ? "bg-red-600 text-white border-red-500 glow-red" 
+                    : "bg-black/80 text-zinc-400 border-zinc-700 hover:text-white";
+
+                const explicitButtonMarkup = (lvl.hasExplicit || isExplicitActive) ? `
+                    <button class="btn-toggle-explicit-trigger absolute bottom-1 left-1 w-7 h-7 ${explicitBtnStyle} border rounded-full font-black text-xs flex items-center justify-center shadow-2xl transition hover:scale-110 z-20" title="Versión sin censura">
+                        E
+                    </button>
+                ` : '';
+
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center align-middle">
                         <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
@@ -2410,6 +2513,9 @@
                                 <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
                                 ${artOverlayBadgeMarkup}
                             </div>
+
+                            ${explicitButtonMarkup}
+
                             ${hasAudio ? `
                                 <button class="btn-play-audio-preview absolute bottom-1 right-1 w-7 h-7 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
                                     <i class="fa-solid fa-play text-[10px]"></i>
@@ -2422,7 +2528,7 @@
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formSong} / ${translations[currentLanguage].formArtist}:</span> 
                                 <div class="inline-block flex-1">
-                                    <span class="text-white font-black tracking-wide text-base sm:text-lg">${editionLogoGraphicMarkup}${lvl.song}</span> 
+                                    <span class="text-white font-black tracking-wide text-base sm:text-lg">${lvl.song}</span> 
                                     <span class="text-zinc-400 text-xs sm:text-sm font-medium"> - ${lvl.artist}</span>
                                     ${exclusiveBadge}
                                 </div>
@@ -2481,6 +2587,19 @@
                     });
                 }
 
+                // EVENTO BOTÓN EXPLICITO (E)
+                const explicitBtn = tr.querySelector('.btn-toggle-explicit-trigger');
+                explicitBtn?.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (activeChartExplicitStates[lvl.id]) {
+                        activeChartExplicitStates[lvl.id] = false;
+                        renderLevelsTable();
+                    } else {
+                        pendingExplicitActivationChartId = lvl.id;
+                        modalExplicit.classList.remove('hidden');
+                    }
+                });
+
                 setupNativeVideoBehavior(tr.querySelector('.custom-native-video-wrapper'));
 
                 const toggleBtn = tr.querySelector('.btn-toggle-more-info');
@@ -2521,8 +2640,10 @@
                     document.getElementById('lvlEditionMode').value = lvl.editionMode || (lvl.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
                     if(lvl.editionMode === 'Both' || lvl.editionMode === 'Deluxe') {
                         sectionDeluxe?.classList.remove('hidden');
+                        subSectionExplicitDeluxe?.classList.remove('hidden');
                     } else {
                         sectionDeluxe?.classList.add('hidden');
+                        subSectionExplicitDeluxe?.classList.add('hidden');
                     }
 
                     document.getElementById('lvlDiff').value = lvl.diff || 'Hard';
@@ -2544,7 +2665,27 @@
                     document.getElementById('lvlDl3Deluxe').value = lvl.dl3Deluxe || '';
 
                     document.getElementById('lvlIsExclusive').checked = !!lvl.isExclusive;
+                    document.getElementById('lvlHasExplicit').checked = !!lvl.hasExplicit;
                     
+                    if(lvl.hasExplicit) {
+                        sectionExplicit?.classList.remove('hidden');
+                        document.getElementById('lvlNotesExplicit').value = lvl.notesExplicit || '';
+                        document.getElementById('lvlDurationExplicit').value = lvl.durationExplicit || '';
+                        document.getElementById('lvlDateExplicit').value = lvl.dateExplicit || '';
+                        document.getElementById('lvlDl1Explicit').value = lvl.dl1Explicit || '';
+                        document.getElementById('lvlDl2Explicit').value = lvl.dl2Explicit || '';
+                        document.getElementById('lvlDl3Explicit').value = lvl.dl3Explicit || '';
+
+                        document.getElementById('lvlNotesDeluxeExplicit').value = lvl.notesDeluxeExplicit || '';
+                        document.getElementById('lvlDurationDeluxeExplicit').value = lvl.durationDeluxeExplicit || '';
+                        document.getElementById('lvlDateDeluxeExplicit').value = lvl.dateDeluxeExplicit || '';
+                        document.getElementById('lvlDl1DeluxeExplicit').value = lvl.dl1DeluxeExplicit || '';
+                        document.getElementById('lvlDl2DeluxeExplicit').value = lvl.dl2DeluxeExplicit || '';
+                        document.getElementById('lvlDl3DeluxeExplicit').value = lvl.dl3DeluxeExplicit || '';
+                    } else {
+                        sectionExplicit?.classList.add('hidden');
+                    }
+
                     const submitBtn = document.getElementById('lvlSubmitBtn');
                     if (submitBtn) {
                         const span = submitBtn.querySelector('span');
@@ -2558,74 +2699,6 @@
                         pImg.src = lvl.art;
                         pBox.classList.remove('hidden');
                     } else { pBox.classList.add('hidden'); }
-
-                    const badge = document.getElementById('current-chart-zip-badge');
-                    const removeBtn = document.getElementById('btn-remove-chart-zip');
-                    if(lvl.chartDirectUrl) {
-                        badge.classList.remove('hidden');
-                        removeBtn.classList.remove('hidden');
-                    } else {
-                        badge.classList.add('hidden');
-                        removeBtn.classList.add('hidden');
-                    }
-
-                    const badgeDlx = document.getElementById('current-chart-deluxe-zip-badge');
-                    const removeBtnDlx = document.getElementById('btn-remove-chart-deluxe-zip');
-                    if(lvl.chartDirectUrlDeluxe && badgeDlx && removeBtnDlx) {
-                        badgeDlx.classList.remove('hidden');
-                        removeBtnDlx.classList.remove('hidden');
-                    } else if(badgeDlx && removeBtnDlx) {
-                        badgeDlx.classList.add('hidden');
-                        removeBtnDlx.classList.add('hidden');
-                    }
-
-                    const vBadge = document.getElementById('current-lvl-video-badge');
-                    const vRemoveBtn = document.getElementById('btn-remove-lvl-video');
-                    if(lvl.video) {
-                        vBadge.classList.remove('hidden');
-                        vRemoveBtn.classList.remove('hidden');
-                    } else {
-                        vBadge.classList.add('hidden');
-                        vRemoveBtn.classList.add('hidden');
-                    }
-
-                    const aBadge = document.getElementById('current-lvl-audio-badge');
-                    const aRemoveBtn = document.getElementById('btn-remove-lvl-audio');
-                    if(lvl.audioDirectUrl) {
-                        aBadge.classList.remove('hidden');
-                        aRemoveBtn.classList.remove('hidden');
-                    } else {
-                        aBadge.classList.add('hidden');
-                        aRemoveBtn.classList.add('hidden');
-                    }
-
-                    const vdBadge = document.getElementById('current-lvl-video-deluxe-badge');
-                    const vdRemoveBtn = document.getElementById('btn-remove-lvl-video-deluxe');
-                    if(lvl.videoDeluxe && vdBadge && vdRemoveBtn) {
-                        vdBadge.classList.remove('hidden');
-                        vdRemoveBtn.classList.remove('hidden');
-                    } else if(vdBadge && vdRemoveBtn) {
-                        vdBadge.classList.add('hidden');
-                        vdRemoveBtn.classList.add('hidden');
-                    }
-
-                    const adBadge = document.getElementById('current-lvl-audio-deluxe-badge');
-                    const adRemoveBtn = document.getElementById('btn-remove-lvl-audio-deluxe');
-                    if(lvl.audioDirectUrlDeluxe && adBadge && adRemoveBtn) {
-                        adBadge.classList.remove('hidden');
-                        adRemoveBtn.classList.remove('hidden');
-                    } else if(adBadge && adRemoveBtn) {
-                        adBadge.classList.add('hidden');
-                        adRemoveBtn.classList.add('hidden');
-                    }
-
-                    levelZipToRemove = false;
-                    levelZipDeluxeToRemove = false;
-                    levelArtToRemove = false;
-                    levelVideoToRemove = false;
-                    levelVideoDeluxeToRemove = false;
-                    levelAudioToRemove = false;
-                    levelAudioDeluxeToRemove = false;
 
                     const currentGenresArray = lvl.genre ? lvl.genre.split(' / ').map(g => g.trim().toLowerCase()) : [];
                     document.querySelectorAll('.genre-checkbox').forEach(cb => {
@@ -2793,49 +2866,6 @@
                         pImg.src = cos.icon;
                         pBox.classList.remove('hidden');
                     } else { pBox.classList.add('hidden'); }
-
-                    const badge = document.getElementById('current-skin-zip-badge');
-                    const removeBtn = document.getElementById('btn-remove-skin-zip');
-                    if(cos.skinDirectUrl) {
-                        badge.classList.remove('hidden');
-                        removeBtn.classList.remove('hidden');
-                    } else {
-                        badge.classList.add('hidden');
-                        removeBtn.classList.add('hidden');
-                    }
-
-                    const vBadge = document.getElementById('current-cos-video-badge');
-                    const vRemoveBtn = document.getElementById('btn-remove-cos-video');
-                    if(cos.video) {
-                        vBadge.classList.remove('hidden');
-                        vRemoveBtn.classList.remove('hidden');
-                    } else {
-                        vBadge.classList.add('hidden');
-                        vRemoveBtn.classList.add('hidden');
-                    }
-
-                    cosmeticZipToRemove = false;
-                    cosmeticIconToRemove = false;
-                    cosmeticVideoToRemove = false;
-
-                    const currentGenresArray = cos.genre ? cos.genre.split(' / ').map(g => g.trim().toLowerCase()) : [];
-                    const isUniversal = currentGenresArray.length >= 7;
-                    
-                    const modeInput = document.getElementById('cosSelectedGenreMode');
-                    const btn = document.getElementById('btn-skin-universal-genre');
-                    
-                    if(isUniversal) {
-                        modeInput.value = 'universal';
-                        btn.classList.replace('bg-fuchsia-600', 'bg-emerald-600');
-                        document.querySelectorAll('.skin-genre-checkbox').forEach(cb => { cb.checked = true; cb.disabled = true; });
-                    } else {
-                        modeInput.value = 'single';
-                        btn.classList.replace('bg-emerald-600', 'bg-fuchsia-600');
-                        document.querySelectorAll('.skin-genre-checkbox').forEach(cb => {
-                            cb.disabled = false;
-                            cb.checked = currentGenresArray.includes(cb.value.toLowerCase());
-                        });
-                    }
 
                     editingCosBrandUrlsList = cos.insp ? cos.insp.split(/[\s,]+/).filter(url => url.trim() !== "") : [];
                     renderBrandManagementFormInterface();
@@ -3020,78 +3050,6 @@
             });
         });
 
-        document.getElementById('btn-remove-chart-zip')?.addEventListener('click', () => {
-            requestUserDeleteConfirmation(() => {
-                levelZipToRemove = true;
-                document.getElementById('current-chart-zip-badge').classList.add('hidden');
-                document.getElementById('btn-remove-chart-zip').classList.add('hidden');
-                document.getElementById('lvlChartZipFile').value = "";
-            });
-        });
-
-        document.getElementById('btn-remove-chart-deluxe-zip')?.addEventListener('click', () => {
-            requestUserDeleteConfirmation(() => {
-                levelZipDeluxeToRemove = true;
-                document.getElementById('current-chart-deluxe-zip-badge').classList.add('hidden');
-                document.getElementById('btn-remove-chart-deluxe-zip').classList.add('hidden');
-                document.getElementById('lvlChartZipFileDeluxe').value = "";
-            });
-        });
-
-        document.getElementById('btn-remove-skin-zip')?.addEventListener('click', () => {
-            requestUserDeleteConfirmation(() => {
-                cosmeticZipToRemove = true;
-                document.getElementById('current-skin-zip-badge').classList.add('hidden');
-                document.getElementById('btn-remove-skin-zip').classList.add('hidden');
-                document.getElementById('cosSkinZipFile').value = "";
-            });
-        });
-
-        document.getElementById('btn-remove-lvl-video')?.addEventListener('click', () => {
-            requestUserDeleteConfirmation(() => {
-                levelVideoToRemove = true;
-                document.getElementById('current-lvl-video-badge').classList.add('hidden');
-                document.getElementById('btn-remove-lvl-video').classList.add('hidden');
-                document.getElementById('lvlVideoFile').value = "";
-            });
-        });
-
-        document.getElementById('btn-remove-lvl-video-deluxe')?.addEventListener('click', () => {
-            requestUserDeleteConfirmation(() => {
-                levelVideoDeluxeToRemove = true;
-                document.getElementById('current-lvl-video-deluxe-badge').classList.add('hidden');
-                document.getElementById('btn-remove-lvl-video-deluxe').classList.add('hidden');
-                document.getElementById('lvlVideoFileDeluxe').value = "";
-            });
-        });
-
-        document.getElementById('btn-remove-cos-video')?.addEventListener('click', () => {
-            requestUserDeleteConfirmation(() => {
-                cosmeticVideoToRemove = true;
-                document.getElementById('current-cos-video-badge').classList.add('hidden');
-                document.getElementById('btn-remove-cos-video').classList.add('hidden');
-                document.getElementById('cosVideoFile').value = "";
-            });
-        });
-
-        document.getElementById('btn-remove-lvl-audio')?.addEventListener('click', () => {
-            requestUserDeleteConfirmation(() => {
-                levelAudioToRemove = true;
-                document.getElementById('current-lvl-audio-badge').classList.add('hidden');
-                document.getElementById('btn-remove-lvl-audio').classList.add('hidden');
-                document.getElementById('lvlAudioFile').value = "";
-            });
-        });
-
-        document.getElementById('btn-remove-lvl-audio-deluxe')?.addEventListener('click', () => {
-            requestUserDeleteConfirmation(() => {
-                levelAudioDeluxeToRemove = true;
-                document.getElementById('current-lvl-audio-deluxe-badge').classList.add('hidden');
-                document.getElementById('btn-remove-lvl-audio-deluxe').classList.add('hidden');
-                document.getElementById('lvlAudioFileDeluxe').value = "";
-            });
-        });
-
         document.getElementById('cosBrandFile').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if(file) {
@@ -3113,7 +3071,7 @@
             }
         });
 
-        // REGISTRO DE CHARTS DUAL CON LINKS INDEPENDIENTES
+        // REGISTRO DE CHARTS CON SOPORTE DE CONTENIDO EXPLÍCITO
         document.getElementById('level-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             showLoadingOverlay();
@@ -3133,6 +3091,14 @@
 
                 let finalChartDirectUrl = levelZipToRemove ? "" : (existingLvl?.chartDirectUrl || "");
                 let finalChartDirectUrlDeluxe = levelZipDeluxeToRemove ? "" : (existingLvl?.chartDirectUrlDeluxe || "");
+
+                // ASSETS EXPLICIT
+                let finalAudioExplicit = existingLvl?.audioExplicit || "";
+                let finalAudioDeluxeExplicit = existingLvl?.audioDeluxeExplicit || "";
+                let finalVideoExplicit = existingLvl?.videoExplicit || "";
+                let finalVideoDeluxeExplicit = existingLvl?.videoDeluxeExplicit || "";
+                let finalZipExplicit = existingLvl?.zipExplicit || "";
+                let finalZipDeluxeExplicit = existingLvl?.zipDeluxeExplicit || "";
 
                 const artFileInput = document.getElementById('lvlArtFile');
                 if(artFileInput.files && artFileInput.files[0] && githubToken && githubUser) {
@@ -3167,6 +3133,40 @@
                 const chartDeluxeFileInput = document.getElementById('lvlChartZipFileDeluxe');
                 if(chartDeluxeFileInput?.files && chartDeluxeFileInput.files[0] && githubToken && githubUser) {
                     finalChartDirectUrlDeluxe = await uploadFileToGitHubContent(chartDeluxeFileInput.files[0], 'charts', chartDeluxeFileInput.files[0].name);
+                }
+
+                // ARCHIVOS SIN CENSURA SI EL TOGGLE ESTA ACTIVO
+                const hasExplicit = document.getElementById('lvlHasExplicit').checked;
+                if(hasExplicit) {
+                    const audioExpIn = document.getElementById('lvlAudioFileExplicit');
+                    if(audioExpIn?.files && audioExpIn.files[0] && githubToken && githubUser) {
+                        finalAudioExplicit = await uploadFileToGitHubContent(audioExpIn.files[0], 'assets/audio', audioExpIn.files[0].name);
+                    }
+
+                    const audioDlxExpIn = document.getElementById('lvlAudioFileDeluxeExplicit');
+                    if(audioDlxExpIn?.files && audioDlxExpIn.files[0] && githubToken && githubUser) {
+                        finalAudioDeluxeExplicit = await uploadFileToGitHubContent(audioDlxExpIn.files[0], 'assets/audio', audioDlxExpIn.files[0].name);
+                    }
+
+                    const vidExpIn = document.getElementById('lvlVideoFileExplicit');
+                    if(vidExpIn?.files && vidExpIn.files[0]) {
+                        finalVideoExplicit = await uploadVideoToCloudinary(vidExpIn.files[0], 'prevchart');
+                    }
+
+                    const vidDlxExpIn = document.getElementById('lvlVideoFileDeluxeExplicit');
+                    if(vidDlxExpIn?.files && vidDlxExpIn.files[0]) {
+                        finalVideoDeluxeExplicit = await uploadVideoToCloudinary(vidDlxExpIn.files[0], 'prevchart');
+                    }
+
+                    const zipExpIn = document.getElementById('lvlChartZipFileExplicit');
+                    if(zipExpIn?.files && zipExpIn.files[0] && githubToken && githubUser) {
+                        finalZipExplicit = await uploadFileToGitHubContent(zipExpIn.files[0], 'charts', zipExpIn.files[0].name);
+                    }
+
+                    const zipDlxExpIn = document.getElementById('lvlChartZipFileDeluxeExplicit');
+                    if(zipDlxExpIn?.files && zipDlxExpIn.files[0] && githubToken && githubUser) {
+                        finalZipDeluxeExplicit = await uploadFileToGitHubContent(zipDlxExpIn.files[0], 'charts', zipDlxExpIn.files[0].name);
+                    }
                 }
 
                 const selectedEditionMode = document.getElementById('lvlEditionMode').value;
@@ -3205,6 +3205,28 @@
                     dl1Deluxe: document.getElementById('lvlDl1Deluxe').value.trim(),
                     dl2Deluxe: document.getElementById('lvlDl2Deluxe').value.trim(),
                     dl3Deluxe: document.getElementById('lvlDl3Deluxe').value.trim(),
+
+                    // Datos Explícitos Independientes
+                    hasExplicit: hasExplicit,
+                    notesExplicit: document.getElementById('lvlNotesExplicit').value.trim(),
+                    durationExplicit: document.getElementById('lvlDurationExplicit').value.trim(),
+                    dateExplicit: document.getElementById('lvlDateExplicit').value,
+                    audioExplicit: finalAudioExplicit,
+                    videoExplicit: finalVideoExplicit,
+                    zipExplicit: finalZipExplicit,
+                    dl1Explicit: document.getElementById('lvlDl1Explicit').value.trim(),
+                    dl2Explicit: document.getElementById('lvlDl2Explicit').value.trim(),
+                    dl3Explicit: document.getElementById('lvlDl3Explicit').value.trim(),
+
+                    notesDeluxeExplicit: document.getElementById('lvlNotesDeluxeExplicit').value.trim(),
+                    durationDeluxeExplicit: document.getElementById('lvlDurationDeluxeExplicit').value.trim(),
+                    dateDeluxeExplicit: document.getElementById('lvlDateDeluxeExplicit').value,
+                    audioDeluxeExplicit: finalAudioDeluxeExplicit,
+                    videoDeluxeExplicit: finalVideoDeluxeExplicit,
+                    zipDeluxeExplicit: finalZipDeluxeExplicit,
+                    dl1DeluxeExplicit: document.getElementById('lvlDl1DeluxeExplicit').value.trim(),
+                    dl2DeluxeExplicit: document.getElementById('lvlDl2DeluxeExplicit').value.trim(),
+                    dl3DeluxeExplicit: document.getElementById('lvlDl3DeluxeExplicit').value.trim(),
 
                     isExclusive: isExclusive
                 };
@@ -3298,7 +3320,6 @@
             }
         });
 
-        // SUBIDA DE VIDEOS DE AGRADECIMIENTO EN CLOUDINARY
         document.getElementById('btn-save-thanks-videos').addEventListener('click', async () => {
             showLoadingOverlay();
             try {
@@ -3310,7 +3331,7 @@
 
                 if(f1) urlsDict[0] = await uploadVideoToCloudinary(f1, 'videos');
                 if(f2) urlsDict[1] = await uploadVideoToCloudinary(f2, 'videos');
-                if(f3) urlsDict[3] = await uploadVideoToCloudinary(f3, 'videos');
+                if(f3) urlsDict[2] = await uploadVideoToCloudinary(f3, 'videos');
 
                 if(db) {
                     await set(ref(db, 'thanks_videos'), urlsDict);
@@ -3356,6 +3377,7 @@
         buildSkinGenresSelector();
         buildVisualAssetsPanelInterface();
         buildCustomDropdownMenus();
+        updateCMSHeaderIcons();
         applyLanguagePack();
     </script>
 </body>
