@@ -89,6 +89,7 @@
                 <div id="modal-edition-art-container" class="w-36 h-36 sm:w-44 sm:h-44 rounded-full overflow-hidden border-4 border-fuchsia-500 shadow-2xl relative bg-zinc-950 art-beatstar-transform">
                     <img id="modal-edition-art-img" src="free_song_Image.png" class="w-full h-full object-cover">
                     <div id="modal-edition-deluxe-badge" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest shadow-lg">DELUXE</div>
+                    <div id="modal-edition-standard-badge" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-zinc-400 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest shadow-lg">STANDARD</div>
                 </div>
                 <h3 id="modal-edition-song-title" class="text-base sm:text-lg font-black text-white text-center mt-3 uppercase tracking-wider">Song Title</h3>
                 <p id="modal-edition-artist-title" class="text-xs text-zinc-400 font-medium text-center">Artist</p>
@@ -99,26 +100,20 @@
                 <div class="text-xs font-black uppercase tracking-widest text-zinc-400 text-center md:text-left mb-3" data-i18n="selectEditionPrompt">EDITIONS</div>
                 
                 <div class="space-y-3 w-full">
-                    <!-- BOTÓN OPTION STANDARD -->
+                    <!-- BOTÓN OPTION STANDARD SIN CÍRCULO CON TAG DE DIFICULTAD -->
                     <button id="modal-opt-standard" type="button" class="w-full p-3.5 rounded-2xl border-2 border-zinc-800 bg-zinc-950/80 hover:border-fuchsia-500 transition flex items-center justify-between group">
-                        <div class="flex items-center gap-3">
-                            <span class="w-3 h-3 rounded-full bg-zinc-400 group-hover:bg-fuchsia-400"></span>
-                            <div class="text-left">
-                                <div class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Standard</div>
-                                <div id="modal-opt-standard-sub" class="text-[10px] text-zinc-400 font-bold">Normal</div>
-                            </div>
+                        <div class="text-left">
+                            <div class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Standard</div>
+                            <div id="modal-opt-standard-diff-tag" class="mt-1"></div>
                         </div>
                         <i id="modal-check-standard" class="fa-solid fa-circle-check text-fuchsia-400 text-lg opacity-0 transition-opacity"></i>
                     </button>
 
-                    <!-- BOTÓN OPTION DELUXE -->
+                    <!-- BOTÓN OPTION DELUXE SIN CÍRCULO CON TAG DE DIFICULTAD -->
                     <button id="modal-opt-deluxe" type="button" class="w-full p-3.5 rounded-2xl border-2 border-yellow-500/40 bg-zinc-950/80 hover:border-yellow-400 transition flex items-center justify-between group glow-gold">
-                        <div class="flex items-center gap-3">
-                            <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
-                            <div class="text-left">
-                                <div class="text-xs sm:text-sm font-black text-yellow-400 uppercase tracking-wider">Deluxe</div>
-                                <div id="modal-opt-deluxe-sub" class="text-[10px] text-yellow-500/80 font-bold">Hard</div>
-                            </div>
+                        <div class="text-left">
+                            <div class="text-xs sm:text-sm font-black text-yellow-400 uppercase tracking-wider">Deluxe</div>
+                            <div id="modal-opt-deluxe-diff-tag" class="mt-1"></div>
                         </div>
                         <i id="modal-check-deluxe" class="fa-solid fa-circle-check text-yellow-400 text-lg opacity-0 transition-opacity"></i>
                     </button>
@@ -460,7 +455,7 @@
             </button>
             
             <div id="levels-layout-grid" class="flex flex-col gap-6 items-start w-full relative">
-                <!-- FORMULARIO CREAR/EDITAR CHART CON SOPORTE DUAL STANDARD/DELUXE -->
+                <!-- FORMULARIO CREAR/EDITAR CHART CON LINKS INDEPENDIENTES POR EDICIÓN -->
                 <div id="level-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto z-30">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addLevelTitle">Nuevo Chart</h2>
                     <form id="level-form" autocomplete="off" class="space-y-3 text-xs">
@@ -498,7 +493,7 @@
 
                         <!-- SECCIÓN DATOS STANDARD / BASE -->
                         <div id="section-standard-fields" class="space-y-3 bg-black/20 p-2.5 rounded-xl border border-zinc-800">
-                            <div class="font-black text-zinc-300 uppercase tracking-wider text-[11px] pb-1 border-b border-zinc-800">Datos Edición Standard</div>
+                            <div class="font-black text-zinc-300 uppercase tracking-wider text-[11px] pb-1 border-b border-zinc-800">Standard Data & Links</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
                                     <label class="block font-bold text-zinc-400 mb-1" data-i18n="formDifficulty">Dificultad</label>
@@ -544,11 +539,26 @@
                                 <div id="current-lvl-video-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate">Video Standard Adjunto</div>
                                 <input type="file" id="lvlVideoFile" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                             </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <label class="block font-bold text-zinc-400">Standard ZIP (.zip)</label>
+                                    <button type="button" id="btn-remove-chart-zip" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                        <i class="fa-solid fa-trash"></i> Eliminar
+                                    </button>
+                                </div>
+                                <div id="current-chart-zip-badge" class="hidden mb-1 px-2 py-1 bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 rounded text-[10px] font-mono truncate">ZIP Standard Adjunto</div>
+                                <input type="file" id="lvlChartZipFile" accept=".zip" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                            </div>
+                            <div class="space-y-1.5 pt-1">
+                                <input type="url" id="lvlDl1" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="Discord Standard URL">
+                                <input type="url" id="lvlDl2" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="BSCM Standard URL">
+                                <input type="url" id="lvlDl3" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="beatcharts Standard URL">
+                            </div>
                         </div>
 
                         <!-- SECCIÓN DATOS DELUXE OPCIONALES / DUALES -->
                         <div id="section-deluxe-fields" class="hidden space-y-3 bg-yellow-950/10 p-2.5 rounded-xl border border-yellow-500/30">
-                            <div class="font-black text-yellow-400 uppercase tracking-wider text-[11px] pb-1 border-b border-yellow-500/30 flex items-center gap-1.5"><i class="fa-solid fa-star text-xs"></i> Datos Edición Deluxe</div>
+                            <div class="font-black text-yellow-400 uppercase tracking-wider text-[11px] pb-1 border-b border-yellow-500/30 flex items-center gap-1.5"><i class="fa-solid fa-star text-xs"></i> Deluxe Data & Links</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
                                     <label class="block font-bold text-yellow-500/80 mb-1" data-i18n="formDifficulty">Dificultad Deluxe</label>
@@ -591,6 +601,21 @@
                                 <div id="current-lvl-video-deluxe-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate">Video Deluxe Adjunto</div>
                                 <input type="file" id="lvlVideoFileDeluxe" accept="video/*" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-400">
                             </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <label class="block font-bold text-yellow-500/80">Deluxe ZIP (.zip)</label>
+                                    <button type="button" id="btn-remove-chart-deluxe-zip" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                        <i class="fa-solid fa-trash"></i> Eliminar
+                                    </button>
+                                </div>
+                                <div id="current-chart-deluxe-zip-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate">ZIP Deluxe Adjunto</div>
+                                <input type="file" id="lvlChartZipFileDeluxe" accept=".zip" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-400">
+                            </div>
+                            <div class="space-y-1.5 pt-1">
+                                <input type="url" id="lvlDl1Deluxe" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-[11px]" placeholder="Discord Deluxe URL">
+                                <input type="url" id="lvlDl2Deluxe" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-[11px]" placeholder="BSCM Deluxe URL">
+                                <input type="url" id="lvlDl3Deluxe" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-[11px]" placeholder="beatcharts Deluxe URL">
+                            </div>
                         </div>
 
                         <!-- CHECKBOX EXCLUSIVO -->
@@ -601,21 +626,7 @@
                             </label>
                             <input type="hidden" id="lvlIsComingSoon" value="false">
                         </div>
-                        <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <label class="block font-bold text-zinc-400" data-i18n="formUploadChartFile">Subir Archivo (.zip)</label>
-                                <button type="button" id="btn-remove-chart-zip" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                    <i class="fa-solid fa-trash"></i> Eliminar ZIP
-                                </button>
-                            </div>
-                            <div id="current-chart-zip-badge" class="hidden mb-1 px-2 py-1 bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 rounded text-[10px] font-mono truncate">ZIP Adjunto</div>
-                            <input type="file" id="lvlChartZipFile" accept=".zip" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
-                        </div>
-                        <div class="space-y-2 border-t border-fuchsia-950/40 pt-2">
-                            <input type="url" id="lvlDl1" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="Discord URL">
-                            <input type="url" id="lvlDl2" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="BSCM URL">
-                            <input type="url" id="lvlDl3" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="beatcharts URL">
-                        </div>
+
                         <div class="flex gap-2 pt-2">
                             <button type="button" id="btn-cancel-lvl-form" class="flex-1 py-2 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white font-black uppercase rounded-lg transition">
                                 <span data-i18n="btnCancel">Cancelar</span>
@@ -1028,7 +1039,7 @@
                 skinExclusiveLabel: "Skin exclusiva del Handbook",
                 btnMoreInfo: "Más información",
                 btnShowLess: "Mostrar menos",
-                selectEditionPrompt: "EDICIONES"
+                selectEditionPrompt: "EDITIONS"
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -1126,6 +1137,7 @@
         let activeVideoElement = null;
 
         let levelZipToRemove = false;
+        let levelZipDeluxeToRemove = false;
         let cosmeticZipToRemove = false;
         let levelArtToRemove = false;
         let cosmeticIconToRemove = false;
@@ -1376,6 +1388,8 @@
             document.getElementById('current-lvl-audio-badge').classList.add('hidden');
             document.getElementById('btn-remove-lvl-audio').classList.add('hidden');
             
+            document.getElementById('current-chart-deluxe-zip-badge')?.classList.add('hidden');
+            document.getElementById('btn-remove-chart-deluxe-zip')?.classList.add('hidden');
             document.getElementById('current-lvl-video-deluxe-badge')?.classList.add('hidden');
             document.getElementById('btn-remove-lvl-video-deluxe')?.classList.add('hidden');
             document.getElementById('current-lvl-audio-deluxe-badge')?.classList.add('hidden');
@@ -1389,6 +1403,7 @@
             sectionDeluxe?.classList.add('hidden');
 
             levelZipToRemove = false;
+            levelZipDeluxeToRemove = false;
             levelArtToRemove = false;
             levelVideoToRemove = false;
             levelVideoDeluxeToRemove = false;
@@ -2179,6 +2194,29 @@
             }).join(' ');
         }
 
+        function renderDifficultyTagMarkup(diffVal) {
+            let label = translations[currentLanguage].diffNormal;
+            let color = '#71717a';
+            let styleClass = 'bg-zinc-500/10 border-zinc-500/30 text-zinc-400';
+
+            if (diffVal === 'Hard') {
+                label = translations[currentLanguage].diffHard;
+                color = '#f97316';
+                styleClass = 'bg-orange-500/10 border-orange-500/30 text-orange-400';
+            } else if (diffVal === 'Extreme') {
+                label = translations[currentLanguage].diffExtreme;
+                color = '#ef4444';
+                styleClass = 'bg-red-500/10 border-red-500/30 text-red-500';
+            }
+
+            const dynamicAsset = globalVisualAssets[`diff_${diffVal}`];
+            const graphicMarkup = dynamicAsset
+                ? `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
+                : `<i class="fa-solid fa-layer-group"></i>`;
+
+            return `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded border ${styleClass} font-black uppercase text-[10px]">${graphicMarkup} <span>${label}</span></div>`;
+        }
+
         // LÓGICA DE APERTURA DEL MODAL BEATSTAR SELECTOR DE EDICIONES
         function openBeatstarEditionSelector(lvl, outerArtBox) {
             stopAllMedia();
@@ -2190,23 +2228,26 @@
             const artistLbl = document.getElementById('modal-edition-artist-title');
             const artContainer = document.getElementById('modal-edition-art-container');
             const deluxeBadge = document.getElementById('modal-edition-deluxe-badge');
+            const standardBadge = document.getElementById('modal-edition-standard-badge');
 
             img.src = lvl.art || 'free_song_Image.png';
             songLbl.innerText = lvl.song;
             artistLbl.innerText = lvl.artist;
 
-            document.getElementById('modal-opt-standard-sub').innerText = lvl.diff || 'Normal';
-            document.getElementById('modal-opt-deluxe-sub').innerText = lvl.diffDeluxe || 'Extreme';
+            document.getElementById('modal-opt-standard-diff-tag').innerHTML = renderDifficultyTagMarkup(lvl.diff || 'Normal');
+            document.getElementById('modal-opt-deluxe-diff-tag').innerHTML = renderDifficultyTagMarkup(lvl.diffDeluxe || 'Extreme');
 
             const currentActive = activeChartSelectedEditions[lvl.id] || 'Standard';
 
             if(currentActive === 'Deluxe') {
                 artContainer.classList.add('glow-gold');
                 deluxeBadge.classList.remove('hidden');
+                standardBadge.classList.add('hidden');
                 document.getElementById('modal-check-deluxe').classList.remove('opacity-0');
                 document.getElementById('modal-check-standard').classList.add('opacity-0');
             } else {
                 artContainer.classList.remove('glow-gold');
+                standardBadge.classList.remove('hidden');
                 deluxeBadge.classList.add('hidden');
                 document.getElementById('modal-check-standard').classList.remove('opacity-0');
                 document.getElementById('modal-check-deluxe').classList.add('opacity-0');
@@ -2288,29 +2329,21 @@
                 const currentAudioUrl = isDeluxeActive ? (lvl.audioDirectUrlDeluxe || lvl.audioDirectUrl) : lvl.audioDirectUrl;
                 const currentVideoUrl = isDeluxeActive ? (lvl.videoDeluxe || lvl.video) : lvl.video;
 
+                // LINKS INDEPENDIENTES POR EDICIÓN
+                const currentChartZip = isDeluxeActive ? (lvl.chartDirectUrlDeluxe || lvl.chartDirectUrl) : lvl.chartDirectUrl;
+                const currentDl1 = isDeluxeActive ? (lvl.dl1Deluxe || lvl.dl1) : lvl.dl1;
+                const currentDl2 = isDeluxeActive ? (lvl.dl2Deluxe || lvl.dl2) : lvl.dl2;
+                const currentDl3 = isDeluxeActive ? (lvl.dl3Deluxe || lvl.dl3) : lvl.dl3;
+
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-fuchsia-950/20 transition border-b-2 border-fuchsia-900/50 shadow-sm";
-                
-                let diffText = currentDiffVal; 
-                let hexColor = "#f97316"; 
-                let bStyle = "bg-orange-500/10 border-orange-500/30 text-orange-400"; 
-                
-                if (currentDiffVal === "Hard") {
-                    diffText = translations[currentLanguage].diffHard;
-                } else if (currentDiffVal === "Normal") { 
-                    diffText = translations[currentLanguage].diffNormal; 
-                    hexColor = "#71717a"; 
-                    bStyle = "bg-zinc-500/10 border-zinc-500/30 text-zinc-400"; 
-                } else if (currentDiffVal === "Extreme") { 
-                    diffText = translations[currentLanguage].diffExtreme; 
-                    hexColor = "#ef4444"; 
-                    bStyle = "bg-red-500/10 border-red-500/30 text-red-500"; 
-                }
 
-                const dynamicDiffAsset = globalVisualAssets[`diff_${currentDiffVal}`];
-                const diffGraphic = dynamicDiffAsset 
-                    ? `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${hexColor}; -webkit-mask-image: url('${dynamicDiffAsset}'); mask-image: url('${dynamicDiffAsset}');"></span>`
-                    : `<i class="fa-solid fa-layer-group"></i>`;
+                const dynamicEditionLogoAsset = globalVisualAssets[isDeluxeActive ? `edit_Deluxe` : `edit_Standard`];
+                const targetEditionLogoHex = isDeluxeActive ? "#facc15" : "#71717a";
+
+                const editionLogoGraphicMarkup = dynamicEditionLogoAsset
+                    ? `<span class="dynamic-color-mask w-3.5 h-3.5 mr-1 align-middle" style="color: ${targetEditionLogoHex}; -webkit-mask-image: url('${dynamicEditionLogoAsset}'); mask-image: url('${dynamicEditionLogoAsset}');"></span>`
+                    : '';
 
                 let editionGraphicMarkup = '';
                 if(isDual) {
@@ -2319,11 +2352,11 @@
 
                     editionGraphicMarkup = `
                         <div class="inline-flex items-center gap-1.5 flex-wrap">
-                            <div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${!isDeluxeActive ? 'bg-fuchsia-950/60 text-white border border-fuchsia-500' : 'bg-zinc-900 border border-zinc-800 text-zinc-400'} font-black text-[10px] uppercase truncate">
+                            <div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400 font-black text-[10px] uppercase truncate">
                                 ${dynamicStdAsset ? `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: #71717a; -webkit-mask-image: url('${dynamicStdAsset}'); mask-image: url('${dynamicStdAsset}');"></span>` : ''}
                                 <span>Standard</span>
                             </div>
-                            <div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${isDeluxeActive ? 'glow-gold bg-yellow-500/10 text-yellow-400 border border-yellow-500/40' : 'bg-zinc-900 border border-zinc-800 text-zinc-400'} font-black text-[10px] uppercase truncate">
+                            <div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded glow-gold bg-yellow-500/10 text-yellow-400 border border-yellow-500/40 font-black text-[10px] uppercase truncate">
                                 ${dynamicDlxAsset ? `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: #facc15; -webkit-mask-image: url('${dynamicDlxAsset}'); mask-image: url('${dynamicDlxAsset}');"></span>` : ''}
                                 <span>Deluxe</span>
                             </div>
@@ -2341,15 +2374,15 @@
 
                 const hasAudio = !!currentAudioUrl;
 
-                const hasAnyLinks = lvl.chartDirectUrl || lvl.dl1 || lvl.dl2 || lvl.dl3;
+                const hasAnyLinks = currentChartZip || currentDl1 || currentDl2 || currentDl3;
                 let linksLayout = `<div class="flex flex-col gap-1 max-w-[130px] sm:max-w-[160px] mx-auto">`;
                 if(hasAnyLinks) {
-                    if(lvl.chartDirectUrl) {
+                    if(currentChartZip) {
                         linksLayout += `<button class="btn-direct-download-trigger bg-gradient-to-r from-emerald-500 to-teal-500 text-black px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-[11px] font-black uppercase flex items-center justify-center gap-1 shadow"><i class="fa-solid fa-circle-down"></i>${translations[currentLanguage].downloadDirectBtn}</button>`;
                     }
-                    if (lvl.dl1) linksLayout += `<a href="${lvl.dl1}" target="_blank" class="bg-zinc-900 px-1.5 sm:px-2 py-0.5 sm:py-1 text-center rounded-lg text-[9px] sm:text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-2.5 sm:w-3 h-2.5 sm:h-3 force-white-icon">Discord</a>`;
-                    if (lvl.dl2) linksLayout += `<a href="${lvl.dl2}" target="_blank" class="bg-zinc-900 px-1.5 sm:px-2 py-0.5 sm:py-1 text-center rounded-lg text-[9px] sm:text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-2.5 sm:w-3 h-2.5 sm:h-3 force-white-icon">BSCM</a>`;
-                    if (lvl.dl3) linksLayout += `<a href="${lvl.dl3}" target="_blank" class="bg-zinc-900 px-1.5 sm:px-2 py-0.5 sm:py-1 text-center rounded-lg text-[9px] sm:text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-2.5 sm:w-3 h-2.5 sm:h-3 force-white-icon">beatcharts</a>`;
+                    if (currentDl1) linksLayout += `<a href="${currentDl1}" target="_blank" class="bg-zinc-900 px-1.5 sm:px-2 py-0.5 sm:py-1 text-center rounded-lg text-[9px] sm:text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-2.5 sm:w-3 h-2.5 sm:h-3 force-white-icon">Discord</a>`;
+                    if (currentDl2) linksLayout += `<a href="${currentDl2}" target="_blank" class="bg-zinc-900 px-1.5 sm:px-2 py-0.5 sm:py-1 text-center rounded-lg text-[9px] sm:text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-2.5 sm:w-3 h-2.5 sm:h-3 force-white-icon">BSCM</a>`;
+                    if (currentDl3) linksLayout += `<a href="${currentDl3}" target="_blank" class="bg-zinc-900 px-1.5 sm:px-2 py-0.5 sm:py-1 text-center rounded-lg text-[9px] sm:text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-2.5 sm:w-3 h-2.5 sm:h-3 force-white-icon">beatcharts</a>`;
                 } else {
                     linksLayout += `<span class="text-[9px] sm:text-[10px] font-extrabold text-zinc-500 text-center block px-1.5 py-1 bg-zinc-950 border border-zinc-900 rounded-lg">${translations[currentLanguage].noDownloadsAvailable}</span>`;
                 }
@@ -2365,13 +2398,17 @@
 
                 const artBoxBorderClass = isDeluxeActive ? "glow-gold border-2 border-yellow-400" : "border border-fuchsia-500/30";
 
+                const artOverlayBadgeMarkup = isDeluxeActive 
+                    ? `<div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">DELUXE</div>`
+                    : `<div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-zinc-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">STANDARD</div>`;
+
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center align-middle">
                         <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
                             <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
                             <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
                                 <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
-                                ${isDeluxeActive ? `<div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[8px] font-black uppercase px-1.5 py-0.2 rounded-full shadow z-20 tracking-wider">DELUXE</div>` : ''}
+                                ${artOverlayBadgeMarkup}
                             </div>
                             ${hasAudio ? `
                                 <button class="btn-play-audio-preview absolute bottom-1 right-1 w-7 h-7 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
@@ -2385,7 +2422,7 @@
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formSong} / ${translations[currentLanguage].formArtist}:</span> 
                                 <div class="inline-block flex-1">
-                                    <span class="text-white font-black tracking-wide text-base sm:text-lg">${lvl.song}</span> 
+                                    <span class="text-white font-black tracking-wide text-base sm:text-lg">${editionLogoGraphicMarkup}${lvl.song}</span> 
                                     <span class="text-zinc-400 text-xs sm:text-sm font-medium"> - ${lvl.artist}</span>
                                     ${exclusiveBadge}
                                 </div>
@@ -2396,7 +2433,7 @@
                             </li>
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formDifficulty}:</span> 
-                                <div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded border ${bStyle} font-black uppercase text-[10px]">${diffGraphic} <span>${diffText}</span></div>
+                                ${renderDifficultyTagMarkup(currentDiffVal)}
                             </li>
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formEdition}:</span> 
@@ -2472,8 +2509,8 @@
                     btn.addEventListener('click', () => toggleAudioPreviewEngine(currentAudioUrl, btn, img, canvas, containerBox));
                 }
 
-                if(lvl.chartDirectUrl) {
-                    tr.querySelector('.btn-direct-download-trigger')?.addEventListener('click', () => triggerDownloadAlert(lvl.chartDirectUrl));
+                if(currentChartZip) {
+                    tr.querySelector('.btn-direct-download-trigger')?.addEventListener('click', () => triggerDownloadAlert(currentChartZip));
                 }
 
                 tr.querySelector('.btn-edit-lvl')?.addEventListener('click', () => {
@@ -2493,14 +2530,19 @@
                     document.getElementById('lvlDuration').value = lvl.duration || '';
                     document.getElementById('lvlDate').value = lvl.date || '';
 
+                    document.getElementById('lvlDl1').value = lvl.dl1 || '';
+                    document.getElementById('lvlDl2').value = lvl.dl2 || '';
+                    document.getElementById('lvlDl3').value = lvl.dl3 || '';
+
                     document.getElementById('lvlDiffDeluxe').value = lvl.diffDeluxe || 'Extreme';
                     document.getElementById('lvlNotesDeluxe').value = lvl.notesDeluxe || '';
                     document.getElementById('lvlDurationDeluxe').value = lvl.durationDeluxe || '';
                     document.getElementById('lvlDateDeluxe').value = lvl.dateDeluxe || '';
 
-                    document.getElementById('lvlDl1').value = lvl.dl1 || '';
-                    document.getElementById('lvlDl2').value = lvl.dl2 || '';
-                    document.getElementById('lvlDl3').value = lvl.dl3 || '';
+                    document.getElementById('lvlDl1Deluxe').value = lvl.dl1Deluxe || '';
+                    document.getElementById('lvlDl2Deluxe').value = lvl.dl2Deluxe || '';
+                    document.getElementById('lvlDl3Deluxe').value = lvl.dl3Deluxe || '';
+
                     document.getElementById('lvlIsExclusive').checked = !!lvl.isExclusive;
                     
                     const submitBtn = document.getElementById('lvlSubmitBtn');
@@ -2525,6 +2567,16 @@
                     } else {
                         badge.classList.add('hidden');
                         removeBtn.classList.add('hidden');
+                    }
+
+                    const badgeDlx = document.getElementById('current-chart-deluxe-zip-badge');
+                    const removeBtnDlx = document.getElementById('btn-remove-chart-deluxe-zip');
+                    if(lvl.chartDirectUrlDeluxe && badgeDlx && removeBtnDlx) {
+                        badgeDlx.classList.remove('hidden');
+                        removeBtnDlx.classList.remove('hidden');
+                    } else if(badgeDlx && removeBtnDlx) {
+                        badgeDlx.classList.add('hidden');
+                        removeBtnDlx.classList.add('hidden');
                     }
 
                     const vBadge = document.getElementById('current-lvl-video-badge');
@@ -2568,6 +2620,7 @@
                     }
 
                     levelZipToRemove = false;
+                    levelZipDeluxeToRemove = false;
                     levelArtToRemove = false;
                     levelVideoToRemove = false;
                     levelVideoDeluxeToRemove = false;
@@ -2976,6 +3029,15 @@
             });
         });
 
+        document.getElementById('btn-remove-chart-deluxe-zip')?.addEventListener('click', () => {
+            requestUserDeleteConfirmation(() => {
+                levelZipDeluxeToRemove = true;
+                document.getElementById('current-chart-deluxe-zip-badge').classList.add('hidden');
+                document.getElementById('btn-remove-chart-deluxe-zip').classList.add('hidden');
+                document.getElementById('lvlChartZipFileDeluxe').value = "";
+            });
+        });
+
         document.getElementById('btn-remove-skin-zip')?.addEventListener('click', () => {
             requestUserDeleteConfirmation(() => {
                 cosmeticZipToRemove = true;
@@ -3051,7 +3113,7 @@
             }
         });
 
-        // REGISTRO DE CHARTS DUAL
+        // REGISTRO DE CHARTS DUAL CON LINKS INDEPENDIENTES
         document.getElementById('level-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             showLoadingOverlay();
@@ -3070,6 +3132,7 @@
                 let finalVideoDeluxeUrl = levelVideoDeluxeToRemove ? "" : (existingLvl?.videoDeluxe || "");
 
                 let finalChartDirectUrl = levelZipToRemove ? "" : (existingLvl?.chartDirectUrl || "");
+                let finalChartDirectUrlDeluxe = levelZipDeluxeToRemove ? "" : (existingLvl?.chartDirectUrlDeluxe || "");
 
                 const artFileInput = document.getElementById('lvlArtFile');
                 if(artFileInput.files && artFileInput.files[0] && githubToken && githubUser) {
@@ -3101,6 +3164,11 @@
                     finalChartDirectUrl = await uploadFileToGitHubContent(chartFileInput.files[0], 'charts', chartFileInput.files[0].name);
                 }
 
+                const chartDeluxeFileInput = document.getElementById('lvlChartZipFileDeluxe');
+                if(chartDeluxeFileInput?.files && chartDeluxeFileInput.files[0] && githubToken && githubUser) {
+                    finalChartDirectUrlDeluxe = await uploadFileToGitHubContent(chartDeluxeFileInput.files[0], 'charts', chartDeluxeFileInput.files[0].name);
+                }
+
                 const selectedEditionMode = document.getElementById('lvlEditionMode').value;
                 const isExclusive = document.getElementById('lvlIsExclusive').checked;
 
@@ -3109,32 +3177,36 @@
                     song: document.getElementById('lvlSong').value.trim(), 
                     artist: document.getElementById('lvlArtist').value.trim(),
                     art: finalArtUrl, 
-                    chartDirectUrl: finalChartDirectUrl,
                     genre: checked.join(' / ') || 'General', 
                     
                     editionMode: selectedEditionMode,
                     edition: (selectedEditionMode === 'Deluxe') ? 'Deluxe' : 'Standard',
 
-                    // Standard Data
+                    // Standard Data & Links
                     diff: document.getElementById('lvlDiff').value,
                     notes: document.getElementById('lvlNotes').value.trim(),
                     duration: document.getElementById('lvlDuration').value.trim(),
                     date: document.getElementById('lvlDate').value,
                     audioDirectUrl: finalAudioUrl, 
                     video: finalVideoUrl,
+                    chartDirectUrl: finalChartDirectUrl,
+                    dl1: document.getElementById('lvlDl1').value.trim(), 
+                    dl2: document.getElementById('lvlDl2').value.trim(), 
+                    dl3: document.getElementById('lvlDl3').value.trim(),
 
-                    // Deluxe Data
+                    // Deluxe Data & Links
                     diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
                     notesDeluxe: document.getElementById('lvlNotesDeluxe').value.trim(),
                     durationDeluxe: document.getElementById('lvlDurationDeluxe').value.trim(),
                     dateDeluxe: document.getElementById('lvlDateDeluxe').value,
                     audioDirectUrlDeluxe: finalAudioDeluxeUrl,
                     videoDeluxe: finalVideoDeluxeUrl,
+                    chartDirectUrlDeluxe: finalChartDirectUrlDeluxe,
+                    dl1Deluxe: document.getElementById('lvlDl1Deluxe').value.trim(),
+                    dl2Deluxe: document.getElementById('lvlDl2Deluxe').value.trim(),
+                    dl3Deluxe: document.getElementById('lvlDl3Deluxe').value.trim(),
 
-                    isExclusive: isExclusive,
-                    dl1: document.getElementById('lvlDl1').value.trim(), 
-                    dl2: document.getElementById('lvlDl2').value.trim(), 
-                    dl3: document.getElementById('lvlDl3').value.trim()
+                    isExclusive: isExclusive
                 };
 
                 if(db) {
