@@ -41,7 +41,7 @@
         .glow-orange { box-shadow: 0 0 20px rgba(249, 115, 22, 0.2); }
         .glow-fuchsia { box-shadow: 0 0 20px rgba(217, 70, 239, 0.2); }
         .glow-gold { box-shadow: 0 0 20px rgba(250, 204, 21, 0.6); border-color: #facc15 !important; }
-        .glow-red { box-shadow: 0 0 15px rgba(239, 68, 68, 0.8); border-color: #ef4444 !important; color: #ef4444 !important; }
+        .glow-red { box-shadow: 0 0 15px rgba(239, 68, 68, 0.8); border-color: #ef4444 !important; background-color: #ef4444 !important; color: #000000 !important; }
         .glow-green { box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); border-color: #10b981 !important; color: #10b981 !important; }
         
         .force-white-icon { filter: brightness(0) invert(1); object-fit: contain; }
@@ -84,11 +84,11 @@
     <div id="explicit-warning-modal" class="hidden fixed inset-0 bg-black/90 z-[160] flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#11091c] border border-red-500/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center">
             <div class="w-12 h-12 rounded-full bg-red-500/20 border border-red-500 flex items-center justify-center text-red-500 font-black text-xl mb-3 shadow-lg glow-red">E</div>
-            <h3 class="text-base sm:text-lg font-black text-white uppercase tracking-wide mb-2">¿Activar versión sin censura?</h3>
-            <p class="text-xs text-zinc-300 font-medium mb-6 leading-relaxed">AVISO: Esta canción puede incluir contenido sensible no apto para todo público.</p>
+            <h3 class="text-base sm:text-lg font-black text-white uppercase tracking-wide mb-2" data-i18n="explicitModalTitle">¿Activar versión sin censura?</h3>
+            <p class="text-xs text-zinc-300 font-medium mb-6 leading-relaxed" data-i18n="explicitModalNotice">AVISO: Esta canción puede incluir contenido sensible no apto para todo público.</p>
             <div class="flex gap-3 w-full">
-                <button id="btn-cancel-explicit" class="flex-1 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-300 hover:text-white transition">Cancelar</button>
-                <button id="btn-confirm-explicit" class="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-white font-black rounded-xl text-xs uppercase shadow transition glow-red">Activar</button>
+                <button id="btn-cancel-explicit" class="flex-1 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-300 hover:text-white transition" data-i18n="btnCancel">Cancelar</button>
+                <button id="btn-confirm-explicit" class="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-black font-black rounded-xl text-xs uppercase shadow transition glow-red" data-i18n="btnActivate">Activar</button>
             </div>
         </div>
     </div>
@@ -509,7 +509,7 @@
                                 <input type="checkbox" id="lvlHasExplicit" class="accent-red-500 w-4 h-4">
                                 <span class="font-black text-red-500 uppercase text-[11px] flex items-center gap-1">
                                     <span class="w-3.5 h-3.5 bg-red-600 text-white rounded flex items-center justify-center text-[9px] font-black">E</span>
-                                    Contenido Explícito
+                                    <span data-i18n="lblExplicitContentToggle">Contenido Explícito</span>
                                 </span>
                             </label>
                             <input type="hidden" id="lvlIsComingSoon" value="false">
@@ -569,7 +569,7 @@
                                 <div class="flex items-center justify-between mb-1">
                                     <label class="block font-bold text-zinc-400">Standard ZIP (.zip)</label>
                                     <button type="button" id="btn-remove-chart-zip" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                        <i class="fa-solid fa-trash"></i> Eliminar
+                                        <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                     </button>
                                 </div>
                                 <div id="current-chart-zip-badge" class="hidden mb-1 px-2 py-1 bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 rounded text-[10px] font-mono truncate">ZIP Standard Adjunto</div>
@@ -613,7 +613,7 @@
                                 <div class="flex items-center justify-between mb-1">
                                     <label class="font-bold text-yellow-500/80">Audio Deluxe (Preview)</label>
                                     <button type="button" id="btn-remove-lvl-audio-deluxe" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                        <i class="fa-solid fa-trash"></i> Eliminar
+                                        <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                     </button>
                                 </div>
                                 <div id="current-lvl-audio-deluxe-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate">Audio Deluxe Adjunto</div>
@@ -623,7 +623,7 @@
                                 <div class="flex items-center justify-between mb-0.5">
                                     <label class="font-bold text-yellow-500/80">Video Deluxe (MP4)</label>
                                     <button type="button" id="btn-remove-lvl-video-deluxe" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                        <i class="fa-solid fa-trash"></i> Eliminar
+                                        <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                     </button>
                                 </div>
                                 <div id="current-lvl-video-deluxe-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate">Video Deluxe Adjunto</div>
@@ -633,7 +633,7 @@
                                 <div class="flex items-center justify-between mb-1">
                                     <label class="block font-bold text-yellow-500/80">Deluxe ZIP (.zip)</label>
                                     <button type="button" id="btn-remove-chart-deluxe-zip" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                        <i class="fa-solid fa-trash"></i> Eliminar
+                                        <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                     </button>
                                 </div>
                                 <div id="current-chart-deluxe-zip-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate">ZIP Deluxe Adjunto</div>
@@ -649,7 +649,7 @@
                         <!-- SECCIÓN EXPLICITA ADICIONAL SI EL TOGGLE ESTA ACTIVADO -->
                         <div id="section-explicit-fields" class="hidden space-y-3 bg-red-950/20 p-2.5 rounded-xl border border-red-500/40">
                             <div class="font-black text-red-400 uppercase tracking-wider text-[11px] pb-1 border-b border-red-500/30 flex items-center gap-1.5">
-                                <span class="w-3.5 h-3.5 bg-red-600 text-white rounded flex items-center justify-center text-[9px] font-black">E</span> Datos Sin Censura / Explicit
+                                <span class="w-3.5 h-3.5 bg-red-600 text-white rounded flex items-center justify-center text-[9px] font-black">E</span> <span data-i18n="lblExplicitSectionHeader">Datos Sin Censura / Explicit</span>
                             </div>
 
                             <!-- EXPLICIT STANDARD -->
@@ -660,9 +660,40 @@
                                     <input type="text" id="lvlDurationExplicit" placeholder="Duración" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
                                 </div>
                                 <input type="date" id="lvlDateExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
-                                <input type="file" id="lvlAudioFileExplicit" accept="audio/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
-                                <input type="file" id="lvlVideoFileExplicit" accept="video/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
-                                <input type="file" id="lvlChartZipFileExplicit" accept=".zip" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
+                                
+                                <div>
+                                    <div class="flex items-center justify-between mb-0.5">
+                                        <label class="text-[10px] font-bold text-red-400">Audio Standard Explicit</label>
+                                        <button type="button" id="btn-remove-lvl-audio-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                            <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
+                                        </button>
+                                    </div>
+                                    <div id="badge-lvl-audio-explicit" class="hidden mb-1 px-2 py-0.5 bg-red-950/40 border border-red-800/40 text-red-400 rounded text-[9px] font-mono truncate">Audio Standard Explicit Adjunto</div>
+                                    <input type="file" id="lvlAudioFileExplicit" accept="audio/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center justify-between mb-0.5">
+                                        <label class="text-[10px] font-bold text-red-400">Video Standard Explicit</label>
+                                        <button type="button" id="btn-remove-lvl-video-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                            <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
+                                        </button>
+                                    </div>
+                                    <div id="badge-lvl-video-explicit" class="hidden mb-1 px-2 py-0.5 bg-red-950/40 border border-red-800/40 text-red-400 rounded text-[9px] font-mono truncate">Video Standard Explicit Adjunto</div>
+                                    <input type="file" id="lvlVideoFileExplicit" accept="video/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center justify-between mb-0.5">
+                                        <label class="text-[10px] font-bold text-red-400">ZIP Standard Explicit</label>
+                                        <button type="button" id="btn-remove-lvl-zip-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                            <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
+                                        </button>
+                                    </div>
+                                    <div id="badge-lvl-zip-explicit" class="hidden mb-1 px-2 py-0.5 bg-red-950/40 border border-red-800/40 text-red-400 rounded text-[9px] font-mono truncate">ZIP Standard Explicit Adjunto</div>
+                                    <input type="file" id="lvlChartZipFileExplicit" accept=".zip" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
+                                </div>
+
                                 <input type="url" id="lvlDl1Explicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="Discord Explicit URL">
                                 <input type="url" id="lvlDl2Explicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="BSCM Explicit URL">
                                 <input type="url" id="lvlDl3Explicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="beatcharts Explicit URL">
@@ -676,9 +707,40 @@
                                     <input type="text" id="lvlDurationDeluxeExplicit" placeholder="Duración" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
                                 </div>
                                 <input type="date" id="lvlDateDeluxeExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
-                                <input type="file" id="lvlAudioFileDeluxeExplicit" accept="audio/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
-                                <input type="file" id="lvlVideoFileDeluxeExplicit" accept="video/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
-                                <input type="file" id="lvlChartZipFileDeluxeExplicit" accept=".zip" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
+
+                                <div>
+                                    <div class="flex items-center justify-between mb-0.5">
+                                        <label class="text-[10px] font-bold text-yellow-500">Audio Deluxe Explicit</label>
+                                        <button type="button" id="btn-remove-lvl-audio-dlx-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                            <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
+                                        </button>
+                                    </div>
+                                    <div id="badge-lvl-audio-dlx-explicit" class="hidden mb-1 px-2 py-0.5 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[9px] font-mono truncate">Audio Deluxe Explicit Adjunto</div>
+                                    <input type="file" id="lvlAudioFileDeluxeExplicit" accept="audio/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center justify-between mb-0.5">
+                                        <label class="text-[10px] font-bold text-yellow-500">Video Deluxe Explicit</label>
+                                        <button type="button" id="btn-remove-lvl-video-dlx-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                            <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
+                                        </button>
+                                    </div>
+                                    <div id="badge-lvl-video-dlx-explicit" class="hidden mb-1 px-2 py-0.5 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[9px] font-mono truncate">Video Deluxe Explicit Adjunto</div>
+                                    <input type="file" id="lvlVideoFileDeluxeExplicit" accept="video/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center justify-between mb-0.5">
+                                        <label class="text-[10px] font-bold text-yellow-500">ZIP Deluxe Explicit</label>
+                                        <button type="button" id="btn-remove-lvl-zip-dlx-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                            <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
+                                        </button>
+                                    </div>
+                                    <div id="badge-lvl-zip-dlx-explicit" class="hidden mb-1 px-2 py-0.5 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[9px] font-mono truncate">ZIP Deluxe Explicit Adjunto</div>
+                                    <input type="file" id="lvlChartZipFileDeluxeExplicit" accept=".zip" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
+                                </div>
+
                                 <input type="url" id="lvlDl1DeluxeExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="Discord Deluxe Explicit URL">
                                 <input type="url" id="lvlDl2DeluxeExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="BSCM Deluxe Explicit URL">
                                 <input type="url" id="lvlDl3DeluxeExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="beatcharts Deluxe Explicit URL">
@@ -861,7 +923,7 @@
                             <div class="flex items-center justify-between mb-1">
                                 <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadSkinFile">Subir Archivo (.zip)</label>
                                 <button type="button" id="btn-remove-skin-zip" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                    <i class="fa-solid fa-trash"></i> Eliminar ZIP
+                                    <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                 </button>
                             </div>
                             <div id="current-skin-zip-badge" class="hidden mb-1 px-2 py-1 bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 rounded text-[10px] font-mono truncate">ZIP Adjunto</div>
@@ -1078,7 +1140,12 @@
                 skinExclusiveLabel: "Skin exclusiva del Handbook",
                 btnMoreInfo: "Más información",
                 btnShowLess: "Mostrar menos",
-                selectEditionPrompt: "EDITIONS"
+                selectEditionPrompt: "EDITIONS",
+                explicitModalTitle: "¿Activar versión sin censura?",
+                explicitModalNotice: "AVISO: Esta canción puede incluir contenido sensible no apto para todo público.",
+                btnActivate: "Activar",
+                lblExplicitContentToggle: "Contenido Explícito",
+                lblExplicitSectionHeader: "Datos Sin Censura / Explicit"
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -1132,7 +1199,12 @@
                 skinExclusiveLabel: "Handbook exclusive Skin",
                 btnMoreInfo: "More information",
                 btnShowLess: "Show less",
-                selectEditionPrompt: "EDITIONS"
+                selectEditionPrompt: "EDITIONS",
+                explicitModalTitle: "Activate uncensored version?",
+                explicitModalNotice: "NOTICE: This song may include sensitive content not suitable for all audiences.",
+                btnActivate: "Activate",
+                lblExplicitContentToggle: "Explicit Content",
+                lblExplicitSectionHeader: "Uncensored / Explicit Data"
             }
         };
 
@@ -1176,14 +1248,24 @@
 
         let levelZipToRemove = false;
         let levelZipDeluxeToRemove = false;
-        let cosmeticZipToRemove = false;
+        let levelZipExplicitToRemove = false;
+        let levelZipDeluxeExplicitToRemove = false;
+
         let levelArtToRemove = false;
         let cosmeticIconToRemove = false;
+
         let levelVideoToRemove = false;
         let levelVideoDeluxeToRemove = false;
+        let levelVideoExplicitToRemove = false;
+        let levelVideoDeluxeExplicitToRemove = false;
         let cosmeticVideoToRemove = false;
+
         let levelAudioToRemove = false;
         let levelAudioDeluxeToRemove = false;
+        let levelAudioExplicitToRemove = false;
+        let levelAudioDeluxeExplicitToRemove = false;
+
+        let cosmeticZipToRemove = false;
 
         let pendingDeleteActionCallback = null;
         let activeModalBeatstarChart = null;
@@ -1442,19 +1524,23 @@
                 else submitBtn.innerText = translations[currentLanguage].btnRegister;
             }
 
-            document.getElementById('current-chart-zip-badge').classList.add('hidden');
-            document.getElementById('btn-remove-chart-zip').classList.add('hidden');
-            document.getElementById('current-lvl-video-badge').classList.add('hidden');
-            document.getElementById('btn-remove-lvl-video').classList.add('hidden');
-            document.getElementById('current-lvl-audio-badge').classList.add('hidden');
-            document.getElementById('btn-remove-lvl-audio').classList.add('hidden');
-            
-            document.getElementById('current-chart-deluxe-zip-badge')?.classList.add('hidden');
-            document.getElementById('btn-remove-chart-deluxe-zip')?.classList.add('hidden');
-            document.getElementById('current-lvl-video-deluxe-badge')?.classList.add('hidden');
-            document.getElementById('btn-remove-lvl-video-deluxe')?.classList.add('hidden');
-            document.getElementById('current-lvl-audio-deluxe-badge')?.classList.add('hidden');
-            document.getElementById('btn-remove-lvl-audio-deluxe')?.classList.add('hidden');
+            // Ocultar Badges y botones de borrado
+            const badgesToHide = [
+                'current-chart-zip-badge', 'btn-remove-chart-zip',
+                'current-lvl-video-badge', 'btn-remove-lvl-video',
+                'current-lvl-audio-badge', 'btn-remove-lvl-audio',
+                'current-chart-deluxe-zip-badge', 'btn-remove-chart-deluxe-zip',
+                'current-lvl-video-deluxe-badge', 'btn-remove-lvl-video-deluxe',
+                'current-lvl-audio-deluxe-badge', 'btn-remove-lvl-audio-deluxe',
+                'badge-lvl-audio-explicit', 'btn-remove-lvl-audio-explicit',
+                'badge-lvl-video-explicit', 'btn-remove-lvl-video-explicit',
+                'badge-lvl-zip-explicit', 'btn-remove-lvl-zip-explicit',
+                'badge-lvl-audio-dlx-explicit', 'btn-remove-lvl-audio-dlx-explicit',
+                'badge-lvl-video-dlx-explicit', 'btn-remove-lvl-video-dlx-explicit',
+                'badge-lvl-zip-dlx-explicit', 'btn-remove-lvl-zip-dlx-explicit'
+            ];
+
+            badgesToHide.forEach(id => document.getElementById(id)?.classList.add('hidden'));
 
             document.getElementById('lvlArtPreviewBox').classList.add('hidden');
             document.getElementById('lvlIsComingSoon').value = "false";
@@ -1467,11 +1553,20 @@
 
             levelZipToRemove = false;
             levelZipDeluxeToRemove = false;
+            levelZipExplicitToRemove = false;
+            levelZipDeluxeExplicitToRemove = false;
+
             levelArtToRemove = false;
+
             levelVideoToRemove = false;
             levelVideoDeluxeToRemove = false;
+            levelVideoExplicitToRemove = false;
+            levelVideoDeluxeExplicitToRemove = false;
+
             levelAudioToRemove = false;
             levelAudioDeluxeToRemove = false;
+            levelAudioExplicitToRemove = false;
+            levelAudioDeluxeExplicitToRemove = false;
             
             buildGenresSelector();
             updateCMSHeaderIcons();
@@ -1511,6 +1606,26 @@
 
         document.getElementById('btn-cancel-lvl-form')?.addEventListener('click', resetLevelFormState);
         document.getElementById('btn-cancel-cos-form')?.addEventListener('click', resetCosmeticFormState);
+
+        // EVENTOS DE BORRADO INDIVIDUAL EN CMS
+        document.getElementById('btn-remove-lvl-audio')?.addEventListener('click', () => { levelAudioToRemove = true; document.getElementById('current-lvl-audio-badge').classList.add('hidden'); document.getElementById('btn-remove-lvl-audio').classList.add('hidden'); });
+        document.getElementById('btn-remove-lvl-video')?.addEventListener('click', () => { levelVideoToRemove = true; document.getElementById('current-lvl-video-badge').classList.add('hidden'); document.getElementById('btn-remove-lvl-video').classList.add('hidden'); });
+        document.getElementById('btn-remove-chart-zip')?.addEventListener('click', () => { levelZipToRemove = true; document.getElementById('current-chart-zip-badge').classList.add('hidden'); document.getElementById('btn-remove-chart-zip').classList.add('hidden'); });
+
+        document.getElementById('btn-remove-lvl-audio-deluxe')?.addEventListener('click', () => { levelAudioDeluxeToRemove = true; document.getElementById('current-lvl-audio-deluxe-badge').classList.add('hidden'); document.getElementById('btn-remove-lvl-audio-deluxe').classList.add('hidden'); });
+        document.getElementById('btn-remove-lvl-video-deluxe')?.addEventListener('click', () => { levelVideoDeluxeToRemove = true; document.getElementById('current-lvl-video-deluxe-badge').classList.add('hidden'); document.getElementById('btn-remove-lvl-video-deluxe').classList.add('hidden'); });
+        document.getElementById('btn-remove-chart-deluxe-zip')?.addEventListener('click', () => { levelZipDeluxeToRemove = true; document.getElementById('current-chart-deluxe-zip-badge').classList.add('hidden'); document.getElementById('btn-remove-chart-deluxe-zip').classList.add('hidden'); });
+
+        document.getElementById('btn-remove-lvl-audio-explicit')?.addEventListener('click', () => { levelAudioExplicitToRemove = true; document.getElementById('badge-lvl-audio-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-audio-explicit').classList.add('hidden'); });
+        document.getElementById('btn-remove-lvl-video-explicit')?.addEventListener('click', () => { levelVideoExplicitToRemove = true; document.getElementById('badge-lvl-video-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-video-explicit').classList.add('hidden'); });
+        document.getElementById('btn-remove-lvl-zip-explicit')?.addEventListener('click', () => { levelZipExplicitToRemove = true; document.getElementById('badge-lvl-zip-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-zip-explicit').classList.add('hidden'); });
+
+        document.getElementById('btn-remove-lvl-audio-dlx-explicit')?.addEventListener('click', () => { levelAudioDeluxeExplicitToRemove = true; document.getElementById('badge-lvl-audio-dlx-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-audio-dlx-explicit').classList.add('hidden'); });
+        document.getElementById('btn-remove-lvl-video-dlx-explicit')?.addEventListener('click', () => { levelVideoDeluxeExplicitToRemove = true; document.getElementById('badge-lvl-video-dlx-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-video-dlx-explicit').classList.add('hidden'); });
+        document.getElementById('btn-remove-lvl-zip-dlx-explicit')?.addEventListener('click', () => { levelZipDeluxeExplicitToRemove = true; document.getElementById('badge-lvl-zip-dlx-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-zip-dlx-explicit').classList.add('hidden'); });
+
+        document.getElementById('btn-remove-cos-video')?.addEventListener('click', () => { cosmeticVideoToRemove = true; document.getElementById('current-cos-video-badge').classList.add('hidden'); document.getElementById('btn-remove-cos-video').classList.add('hidden'); });
+        document.getElementById('btn-remove-skin-zip')?.addEventListener('click', () => { cosmeticZipToRemove = true; document.getElementById('current-skin-zip-badge').classList.add('hidden'); document.getElementById('btn-remove-skin-zip').classList.add('hidden'); });
 
         let db = null;
         try {
@@ -2294,7 +2409,7 @@
                 ? `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
                 : `<i class="fa-solid fa-layer-group"></i>`;
 
-            return `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded border ${styleClass} font-black uppercase text-[10px]">${graphicMarkup} <span>${label}</span></div>`;
+            return `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${styleClass} font-black uppercase text-[10px]">${graphicMarkup} <span>${label}</span></div>`;
         }
 
         function openBeatstarEditionSelector(lvl, outerArtBox) {
@@ -2490,13 +2605,18 @@
 
                 const artBoxBorderClass = isDeluxeActive ? "glow-gold border-2 border-yellow-400" : "border border-fuchsia-500/30";
 
-                const artOverlayBadgeMarkup = isDeluxeActive 
-                    ? `<div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">DELUXE</div>`
-                    : `<div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-zinc-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">STANDARD</div>`;
+                // AJUSTE MÓVIL PORTRAIT: BADGE AFUERA / DEBAJO DEL ARTE EN MÓVIL
+                const artOverlayBadgeDesktop = isDeluxeActive 
+                    ? `<div class="hidden sm:block absolute bottom-1 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">DELUXE</div>`
+                    : `<div class="hidden sm:block absolute bottom-1 left-1/2 -translate-x-1/2 bg-zinc-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">STANDARD</div>`;
 
-                // BOTÓN DE VERSIÓN EXPLICITA (E)
+                const artOverlayBadgeMobileExternal = isDeluxeActive
+                    ? `<div class="block sm:hidden mt-1.5 text-center bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-md tracking-wider w-max mx-auto">DELUXE</div>`
+                    : `<div class="block sm:hidden mt-1.5 text-center bg-zinc-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-md tracking-wider w-max mx-auto">STANDARD</div>`;
+
+                // BOTÓN DE VERSIÓN EXPLICITA (E) CON LETRA EN COLOR NEGRO EN ESTADO ACTIVO
                 const explicitBtnStyle = isExplicitActive 
-                    ? "bg-red-600 text-white border-red-500 glow-red" 
+                    ? "bg-red-600 text-black border-red-500 glow-red" 
                     : "bg-black/80 text-zinc-400 border-zinc-700 hover:text-white";
 
                 const explicitButtonMarkup = (lvl.hasExplicit || isExplicitActive) ? `
@@ -2507,20 +2627,23 @@
 
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center align-middle">
-                        <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
-                            <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
-                            <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
-                                <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
-                                ${artOverlayBadgeMarkup}
+                        <div class="flex flex-col items-center justify-center">
+                            <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
+                                <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
+                                <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
+                                    <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
+                                    ${artOverlayBadgeDesktop}
+                                </div>
+
+                                ${explicitButtonMarkup}
+
+                                ${hasAudio ? `
+                                    <button class="btn-play-audio-preview absolute bottom-1 right-1 w-7 h-7 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
+                                        <i class="fa-solid fa-play text-[10px]"></i>
+                                    </button>
+                                ` : ''}
                             </div>
-
-                            ${explicitButtonMarkup}
-
-                            ${hasAudio ? `
-                                <button class="btn-play-audio-preview absolute bottom-1 right-1 w-7 h-7 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
-                                    <i class="fa-solid fa-play text-[10px]"></i>
-                                </button>
-                            ` : ''}
+                            ${artOverlayBadgeMobileExternal}
                         </div>
                     </td>
                     <td class="p-2 sm:p-4 min-w-[220px] sm:min-w-[320px] flex-1 align-middle">
@@ -2655,6 +2778,11 @@
                     document.getElementById('lvlDl2').value = lvl.dl2 || '';
                     document.getElementById('lvlDl3').value = lvl.dl3 || '';
 
+                    // Badges de archivos Standard
+                    if(lvl.audioDirectUrl) { document.getElementById('current-lvl-audio-badge').classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio').classList.remove('hidden'); }
+                    if(lvl.video) { document.getElementById('current-lvl-video-badge').classList.remove('hidden'); document.getElementById('btn-remove-lvl-video').classList.remove('hidden'); }
+                    if(lvl.chartDirectUrl) { document.getElementById('current-chart-zip-badge').classList.remove('hidden'); document.getElementById('btn-remove-chart-zip').classList.remove('hidden'); }
+
                     document.getElementById('lvlDiffDeluxe').value = lvl.diffDeluxe || 'Extreme';
                     document.getElementById('lvlNotesDeluxe').value = lvl.notesDeluxe || '';
                     document.getElementById('lvlDurationDeluxe').value = lvl.durationDeluxe || '';
@@ -2663,6 +2791,11 @@
                     document.getElementById('lvlDl1Deluxe').value = lvl.dl1Deluxe || '';
                     document.getElementById('lvlDl2Deluxe').value = lvl.dl2Deluxe || '';
                     document.getElementById('lvlDl3Deluxe').value = lvl.dl3Deluxe || '';
+
+                    // Badges de archivos Deluxe
+                    if(lvl.audioDirectUrlDeluxe) { document.getElementById('current-lvl-audio-deluxe-badge').classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio-deluxe').classList.remove('hidden'); }
+                    if(lvl.videoDeluxe) { document.getElementById('current-lvl-video-deluxe-badge').classList.remove('hidden'); document.getElementById('btn-remove-lvl-video-deluxe').classList.remove('hidden'); }
+                    if(lvl.chartDirectUrlDeluxe) { document.getElementById('current-chart-deluxe-zip-badge').classList.remove('hidden'); document.getElementById('btn-remove-chart-deluxe-zip').classList.remove('hidden'); }
 
                     document.getElementById('lvlIsExclusive').checked = !!lvl.isExclusive;
                     document.getElementById('lvlHasExplicit').checked = !!lvl.hasExplicit;
@@ -2682,6 +2815,15 @@
                         document.getElementById('lvlDl1DeluxeExplicit').value = lvl.dl1DeluxeExplicit || '';
                         document.getElementById('lvlDl2DeluxeExplicit').value = lvl.dl2DeluxeExplicit || '';
                         document.getElementById('lvlDl3DeluxeExplicit').value = lvl.dl3DeluxeExplicit || '';
+
+                        // Badges de archivos Explicit
+                        if(lvl.audioExplicit) { document.getElementById('badge-lvl-audio-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio-explicit').classList.remove('hidden'); }
+                        if(lvl.videoExplicit) { document.getElementById('badge-lvl-video-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-video-explicit').classList.remove('hidden'); }
+                        if(lvl.zipExplicit) { document.getElementById('badge-lvl-zip-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-zip-explicit').classList.remove('hidden'); }
+
+                        if(lvl.audioDeluxeExplicit) { document.getElementById('badge-lvl-audio-dlx-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio-dlx-explicit').classList.remove('hidden'); }
+                        if(lvl.videoDeluxeExplicit) { document.getElementById('badge-lvl-video-dlx-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-video-dlx-explicit').classList.remove('hidden'); }
+                        if(lvl.zipDeluxeExplicit) { document.getElementById('badge-lvl-zip-dlx-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-zip-dlx-explicit').classList.remove('hidden'); }
                     } else {
                         sectionExplicit?.classList.add('hidden');
                     }
@@ -2853,6 +2995,9 @@
                     document.getElementById('cosDl2').value = cos.dl2 || '';
                     document.getElementById('cosIsExclusive').checked = !!cos.isExclusive;
                     
+                    if(cos.video) { document.getElementById('current-cos-video-badge').classList.remove('hidden'); document.getElementById('btn-remove-cos-video').classList.remove('hidden'); }
+                    if(cos.skinDirectUrl) { document.getElementById('current-skin-zip-badge').classList.remove('hidden'); document.getElementById('btn-remove-skin-zip').classList.remove('hidden'); }
+
                     const submitBtn = document.getElementById('cosSubmitBtn');
                     if (submitBtn) {
                         const span = submitBtn.querySelector('span');
@@ -3093,12 +3238,12 @@
                 let finalChartDirectUrlDeluxe = levelZipDeluxeToRemove ? "" : (existingLvl?.chartDirectUrlDeluxe || "");
 
                 // ASSETS EXPLICIT
-                let finalAudioExplicit = existingLvl?.audioExplicit || "";
-                let finalAudioDeluxeExplicit = existingLvl?.audioDeluxeExplicit || "";
-                let finalVideoExplicit = existingLvl?.videoExplicit || "";
-                let finalVideoDeluxeExplicit = existingLvl?.videoDeluxeExplicit || "";
-                let finalZipExplicit = existingLvl?.zipExplicit || "";
-                let finalZipDeluxeExplicit = existingLvl?.zipDeluxeExplicit || "";
+                let finalAudioExplicit = levelAudioExplicitToRemove ? "" : (existingLvl?.audioExplicit || "");
+                let finalAudioDeluxeExplicit = levelAudioDeluxeExplicitToRemove ? "" : (existingLvl?.audioDeluxeExplicit || "");
+                let finalVideoExplicit = levelVideoExplicitToRemove ? "" : (existingLvl?.videoExplicit || "");
+                let finalVideoDeluxeExplicit = levelVideoDeluxeExplicitToRemove ? "" : (existingLvl?.videoDeluxeExplicit || "");
+                let finalZipExplicit = levelZipExplicitToRemove ? "" : (existingLvl?.zipExplicit || "");
+                let finalZipDeluxeExplicit = levelZipDeluxeExplicitToRemove ? "" : (existingLvl?.zipDeluxeExplicit || "");
 
                 const artFileInput = document.getElementById('lvlArtFile');
                 if(artFileInput.files && artFileInput.files[0] && githubToken && githubUser) {
@@ -3331,7 +3476,7 @@
 
                 if(f1) urlsDict[0] = await uploadVideoToCloudinary(f1, 'videos');
                 if(f2) urlsDict[1] = await uploadVideoToCloudinary(f2, 'videos');
-                if(f3) urlsDict[2] = await uploadVideoToCloudinary(f3, 'videos');
+                if(f3) urlsDict[3] = await uploadVideoToCloudinary(f3, 'videos');
 
                 if(db) {
                     await set(ref(db, 'thanks_videos'), urlsDict);
