@@ -40,7 +40,7 @@
         
         .glow-orange { box-shadow: 0 0 20px rgba(249, 115, 22, 0.2); }
         .glow-fuchsia { box-shadow: 0 0 20px rgba(217, 70, 239, 0.2); }
-        .glow-gold { box-shadow: 0 0 20px rgba(250, 204, 21, 0.4); border-color: #facc15 !important; }
+        .glow-gold { box-shadow: 0 0 20px rgba(250, 204, 21, 0.6); border-color: #facc15 !important; }
         .glow-green { box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); border-color: #10b981 !important; color: #10b981 !important; }
         
         .force-white-icon { filter: brightness(0) invert(1); object-fit: contain; }
@@ -61,6 +61,15 @@
             -webkit-mask-position: center;
             mask-position: center;
         }
+
+        /* TRANSICIÓN DE ANIMACIÓN CIRCULO BEATSTAR */
+        .art-beatstar-transform {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-radius 0.4s ease, box-shadow 0.4s ease;
+        }
+        .art-circle-shape {
+            border-radius: 50% !important;
+            transform: scale(1.08);
+        }
     </style>
 </head>
 <body class="bg-[#05020a] text-zinc-100 min-h-screen font-sans flex flex-col relative overflow-x-hidden">
@@ -69,6 +78,55 @@
     <div id="global-loading-overlay" class="hidden fixed inset-0 bg-black/85 z-[100] flex flex-col items-center justify-center gap-4">
         <img src="1455064703448645786.gif" alt="Boogie Loading..." class="w-[150px] h-auto mb-2">
         <p id="loading-overlay-text" class="text-base font-bold text-white text-center px-4 font-sans" data-i18n="savingChanges">Por favor espera un momento...</p>
+    </div>
+
+    <!-- MODAL SELECCIÓN DE EDICIONES ESTILO BEATSTAR -->
+    <div id="beatstar-edition-modal" class="hidden fixed inset-0 bg-black/90 z-[150] flex items-center justify-center p-4 backdrop-blur-md transition-all duration-300">
+        <div class="bg-[#11091c]/95 border border-fuchsia-500/40 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-8 border-t-2 border-t-fuchsia-500">
+            
+            <!-- ARTE CIRCULAR ANIMADO -->
+            <div class="flex flex-col items-center justify-center shrink-0">
+                <div id="modal-edition-art-container" class="w-36 h-36 sm:w-44 sm:h-44 rounded-full overflow-hidden border-4 border-fuchsia-500 shadow-2xl relative bg-zinc-950 art-beatstar-transform">
+                    <img id="modal-edition-art-img" src="free_song_Image.png" class="w-full h-full object-cover">
+                    <div id="modal-edition-deluxe-badge" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest shadow-lg">DELUXE</div>
+                </div>
+                <h3 id="modal-edition-song-title" class="text-base sm:text-lg font-black text-white text-center mt-3 uppercase tracking-wider">Song Title</h3>
+                <p id="modal-edition-artist-title" class="text-xs text-zinc-400 font-medium text-center">Artist</p>
+            </div>
+
+            <!-- MENÚ DE EDICIONES -->
+            <div class="flex-1 w-full flex flex-col justify-center">
+                <div class="text-xs font-black uppercase tracking-widest text-zinc-400 text-center md:text-left mb-3" data-i18n="selectEditionPrompt">EDITIONS</div>
+                
+                <div class="space-y-3 w-full">
+                    <!-- BOTÓN OPTION STANDARD -->
+                    <button id="modal-opt-standard" type="button" class="w-full p-3.5 rounded-2xl border-2 border-zinc-800 bg-zinc-950/80 hover:border-fuchsia-500 transition flex items-center justify-between group">
+                        <div class="flex items-center gap-3">
+                            <span class="w-3 h-3 rounded-full bg-zinc-400 group-hover:bg-fuchsia-400"></span>
+                            <div class="text-left">
+                                <div class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Standard</div>
+                                <div id="modal-opt-standard-sub" class="text-[10px] text-zinc-400 font-bold">Normal</div>
+                            </div>
+                        </div>
+                        <i id="modal-check-standard" class="fa-solid fa-circle-check text-fuchsia-400 text-lg opacity-0 transition-opacity"></i>
+                    </button>
+
+                    <!-- BOTÓN OPTION DELUXE -->
+                    <button id="modal-opt-deluxe" type="button" class="w-full p-3.5 rounded-2xl border-2 border-yellow-500/40 bg-zinc-950/80 hover:border-yellow-400 transition flex items-center justify-between group glow-gold">
+                        <div class="flex items-center gap-3">
+                            <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+                            <div class="text-left">
+                                <div class="text-xs sm:text-sm font-black text-yellow-400 uppercase tracking-wider">Deluxe</div>
+                                <div id="modal-opt-deluxe-sub" class="text-[10px] text-yellow-500/80 font-bold">Hard</div>
+                            </div>
+                        </div>
+                        <i id="modal-check-deluxe" class="fa-solid fa-circle-check text-yellow-400 text-lg opacity-0 transition-opacity"></i>
+                    </button>
+                </div>
+
+                <button id="btn-close-beatstar-modal" type="button" class="mt-5 w-full py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-400 hover:text-white transition" data-i18n="btnClose">CLOSE</button>
+            </div>
+        </div>
     </div>
 
     <!-- MODAL DE CONFIRMACIÓN DE ELIMINACIÓN GENERAL -->
@@ -402,7 +460,7 @@
             </button>
             
             <div id="levels-layout-grid" class="flex flex-col gap-6 items-start w-full relative">
-                <!-- FORMULARIO CREAR/EDITAR CHART -->
+                <!-- FORMULARIO CREAR/EDITAR CHART CON SOPORTE DUAL STANDARD/DELUXE -->
                 <div id="level-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto z-30">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addLevelTitle">Nuevo Chart</h2>
                     <form id="level-form" autocomplete="off" class="space-y-3 text-xs">
@@ -424,74 +482,124 @@
                             <input type="file" id="lvlArtFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <label class="font-bold text-zinc-400" data-i18n="formUploadAudio">Subir Preview de Audio (Opcional)</label>
-                                <button type="button" id="btn-remove-lvl-audio" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                    <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                </button>
-                            </div>
-                            <div id="current-lvl-audio-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate">Audio Adjunto</div>
-                            <input type="file" id="lvlAudioFile" accept="audio/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
-                        </div>
-                        <div>
-                            <div class="flex items-center justify-between mb-0.5">
-                                <label class="font-bold text-zinc-400" data-i18n="formUploadVideo">Subir Video (MP4)</label>
-                                <button type="button" id="btn-remove-lvl-video" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                    <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                </button>
-                            </div>
-                            <p class="text-[10px] text-orange-400/90 font-semibold mb-1" data-i18n="labelMaxVideoSize">Máx. 100 MB</p>
-                            <div id="current-lvl-video-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate">Video Adjunto</div>
-                            <input type="file" id="lvlVideoFile" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
-                        </div>
-                        <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formGenre">Género</label>
                             <div id="genres-container" class="grid grid-cols-1 gap-1 max-h-36 overflow-y-auto border border-fuchsia-950 p-2 rounded-lg bg-[#05020a]"></div>
                         </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block font-bold text-zinc-400 mb-1" data-i18n="formDifficulty">Dificultad</label>
-                                <select id="lvlDiff" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
-                                    <option value="Normal">Normal</option>
-                                    <option value="Hard" selected>Hard</option>
-                                    <option value="Extreme">Extreme</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block font-bold text-zinc-400 mb-1" data-i18n="formEdition">Edición</label>
-                                <select id="lvlEdition" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
-                                    <option value="Standard" selected>Standard</option>
-                                    <option value="Deluxe">Deluxe</option>
-                                </select>
-                            </div>
+
+                        <!-- SELECTOR MODALIDAD DE EDICIONES -->
+                        <div class="bg-black/40 p-2.5 rounded-xl border border-fuchsia-950/60 space-y-2">
+                            <label class="block font-black text-fuchsia-400 uppercase tracking-wider" data-i18n="formEdition">Edición Registrada</label>
+                            <select id="lvlEditionMode" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100 font-bold">
+                                <option value="Standard" selected>Solo Standard</option>
+                                <option value="Deluxe">Solo Deluxe</option>
+                                <option value="Both">Ambas (Standard + Deluxe)</option>
+                            </select>
                         </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block font-bold text-zinc-400 mb-1"><span data-i18n="formNotes">Notas</span> (<span data-i18n="labelOptional">Opcional</span>)</label>
-                                <input type="number" id="lvlNotes" placeholder="ej. 450" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
-                            </div>
-                            <div>
-                                <label class="block font-bold text-zinc-400 mb-1"><span data-i18n="formDuration">Duración</span> (<span data-i18n="labelOptional">Opcional</span>)</label>
-                                <input type="text" id="lvlDuration" placeholder="ej. 2:15" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex items-center justify-between mb-1 gap-1">
-                                <label class="font-bold text-zinc-400 uppercase tracking-wider"><span data-i18n="formRelease">Lanzamiento</span> (<span data-i18n="labelOptional">Opcional</span>)</label>
-                                <div class="flex items-center gap-1">
-                                    <button type="button" id="btn-picker-lvl" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar Fecha</button>
-                                    <button type="button" id="btn-lvl-coming-soon" class="px-2 py-0.5 bg-fuchsia-950 border border-fuchsia-700 text-fuchsia-300 font-extrabold rounded text-[10px] hover:bg-fuchsia-900 transition" data-i18n="btnComingSoon">Próximamente</button>
+
+                        <!-- SECCIÓN DATOS STANDARD / BASE -->
+                        <div id="section-standard-fields" class="space-y-3 bg-black/20 p-2.5 rounded-xl border border-zinc-800">
+                            <div class="font-black text-zinc-300 uppercase tracking-wider text-[11px] pb-1 border-b border-zinc-800">Datos Edición Standard</div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block font-bold text-zinc-400 mb-1" data-i18n="formDifficulty">Dificultad</label>
+                                    <select id="lvlDiff" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                                        <option value="Normal">Normal</option>
+                                        <option value="Hard" selected>Hard</option>
+                                        <option value="Extreme">Extreme</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-zinc-400 mb-1"><span data-i18n="formNotes">Notas</span></label>
+                                    <input type="number" id="lvlNotes" placeholder="ej. 450" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                                 </div>
                             </div>
-                            <input type="date" id="lvlDate" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
-                            <input type="hidden" id="lvlIsComingSoon" value="false">
+                            <div>
+                                <label class="block font-bold text-zinc-400 mb-1"><span data-i18n="formDuration">Duración</span></label>
+                                <input type="text" id="lvlDuration" placeholder="ej. 2:15" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-1 gap-1">
+                                    <label class="font-bold text-zinc-400 uppercase tracking-wider"><span data-i18n="formRelease">Lanzamiento</span></label>
+                                    <button type="button" id="btn-picker-lvl" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Fecha</button>
+                                </div>
+                                <input type="date" id="lvlDate" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <label class="font-bold text-zinc-400" data-i18n="formUploadAudio">Audio Standard (Preview)</label>
+                                    <button type="button" id="btn-remove-lvl-audio" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                        <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
+                                    </button>
+                                </div>
+                                <div id="current-lvl-audio-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate">Audio Standard Adjunto</div>
+                                <input type="file" id="lvlAudioFile" accept="audio/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-0.5">
+                                    <label class="font-bold text-zinc-400" data-i18n="formUploadVideo">Video Standard (MP4)</label>
+                                    <button type="button" id="btn-remove-lvl-video" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                        <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
+                                    </button>
+                                </div>
+                                <div id="current-lvl-video-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate">Video Standard Adjunto</div>
+                                <input type="file" id="lvlVideoFile" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                            </div>
                         </div>
+
+                        <!-- SECCIÓN DATOS DELUXE OPCIONALES / DUALES -->
+                        <div id="section-deluxe-fields" class="hidden space-y-3 bg-yellow-950/10 p-2.5 rounded-xl border border-yellow-500/30">
+                            <div class="font-black text-yellow-400 uppercase tracking-wider text-[11px] pb-1 border-b border-yellow-500/30 flex items-center gap-1.5"><i class="fa-solid fa-star text-xs"></i> Datos Edición Deluxe</div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block font-bold text-yellow-500/80 mb-1" data-i18n="formDifficulty">Dificultad Deluxe</label>
+                                    <select id="lvlDiffDeluxe" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-100">
+                                        <option value="Normal">Normal</option>
+                                        <option value="Hard">Hard</option>
+                                        <option value="Extreme" selected>Extreme</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-yellow-500/80 mb-1">Notas Deluxe</label>
+                                    <input type="number" id="lvlNotesDeluxe" placeholder="ej. 620" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-100">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block font-bold text-yellow-500/80 mb-1">Duración Deluxe</label>
+                                <input type="text" id="lvlDurationDeluxe" placeholder="ej. 2:40" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-100">
+                            </div>
+                            <div>
+                                <label class="block font-bold text-yellow-500/80 mb-1">Lanzamiento Deluxe</label>
+                                <input type="date" id="lvlDateDeluxe" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-100">
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <label class="font-bold text-yellow-500/80">Audio Deluxe (Preview)</label>
+                                    <button type="button" id="btn-remove-lvl-audio-deluxe" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                        <i class="fa-solid fa-trash"></i> Eliminar
+                                    </button>
+                                </div>
+                                <div id="current-lvl-audio-deluxe-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate">Audio Deluxe Adjunto</div>
+                                <input type="file" id="lvlAudioFileDeluxe" accept="audio/*" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-400">
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-0.5">
+                                    <label class="font-bold text-yellow-500/80">Video Deluxe (MP4)</label>
+                                    <button type="button" id="btn-remove-lvl-video-deluxe" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                        <i class="fa-solid fa-trash"></i> Eliminar
+                                    </button>
+                                </div>
+                                <div id="current-lvl-video-deluxe-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate">Video Deluxe Adjunto</div>
+                                <input type="file" id="lvlVideoFileDeluxe" accept="video/*" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-400">
+                            </div>
+                        </div>
+
                         <!-- CHECKBOX EXCLUSIVO -->
                         <div class="pt-1">
                             <label class="flex items-center gap-2 cursor-pointer bg-[#05020a] p-2 rounded-lg border border-fuchsia-950">
                                 <input type="checkbox" id="lvlIsExclusive" class="accent-fuchsia-500 w-4 h-4">
                                 <span class="font-extrabold text-orange-400 uppercase text-[11px]" data-i18n="btnExclusive">Exclusivo</span>
                             </label>
+                            <input type="hidden" id="lvlIsComingSoon" value="false">
                         </div>
                         <div>
                             <div class="flex items-center justify-between mb-1">
@@ -919,7 +1027,8 @@
                 chartExclusiveLabel: "Chart exclusivo del Handbook",
                 skinExclusiveLabel: "Skin exclusiva del Handbook",
                 btnMoreInfo: "Más información",
-                btnShowLess: "Mostrar menos"
+                btnShowLess: "Mostrar menos",
+                selectEditionPrompt: "EDICIONES"
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -972,7 +1081,8 @@
                 chartExclusiveLabel: "Handbook exclusive Chart",
                 skinExclusiveLabel: "Handbook exclusive Skin",
                 btnMoreInfo: "More information",
-                btnShowLess: "Show less"
+                btnShowLess: "Show less",
+                selectEditionPrompt: "EDITIONS"
             }
         };
 
@@ -985,6 +1095,9 @@
         let currentSelectedSkinSubPlatform = 'Beatstar'; 
         let globalVisualAssets = {}; 
         let globalThanksVideos = [];
+
+        // ESTADO DE EDICIONES SELECCIONADAS POR CHART EN TIEMPO REAL
+        let activeChartSelectedEditions = {}; 
 
         // VALORES DE FILTROS SELECCIONADOS
         let activeLvlGenreFilter = "";
@@ -1017,10 +1130,13 @@
         let levelArtToRemove = false;
         let cosmeticIconToRemove = false;
         let levelVideoToRemove = false;
+        let levelVideoDeluxeToRemove = false;
         let cosmeticVideoToRemove = false;
         let levelAudioToRemove = false;
+        let levelAudioDeluxeToRemove = false;
 
         let pendingDeleteActionCallback = null;
+        let activeModalBeatstarChart = null;
 
         // SISTEMA GLOBAL DE DETENCIÓN MULTIMEDIA
         function stopAllMedia() {
@@ -1228,28 +1344,17 @@
             }
         }));
 
-        // BOTONES "PRÓXIMAMENTE" PARA FECHA
-        document.getElementById('btn-lvl-coming-soon').addEventListener('click', () => {
-            const dateInput = document.getElementById('lvlDate');
-            const hiddenFlag = document.getElementById('lvlIsComingSoon');
-            dateInput.value = "";
-            hiddenFlag.value = "true";
-            alert(currentLanguage === 'es' ? 'Fecha establecida como "Próximamente".' : 'Release date set to "Coming Soon".');
-        });
-
-        document.getElementById('btn-cos-coming-soon').addEventListener('click', () => {
-            const dateInput = document.getElementById('cosDate');
-            const hiddenFlag = document.getElementById('cosIsComingSoon');
-            dateInput.value = "";
-            hiddenFlag.value = "true";
-            alert(currentLanguage === 'es' ? 'Fecha establecida como "Próximamente".' : 'Release date set to "Coming Soon".');
-        });
-
-        document.getElementById('lvlDate').addEventListener('change', () => {
-            if(document.getElementById('lvlDate').value) document.getElementById('lvlIsComingSoon').value = "false";
-        });
-        document.getElementById('cosDate').addEventListener('change', () => {
-            if(document.getElementById('cosDate').value) document.getElementById('cosIsComingSoon').value = "false";
+        // MANEJO DE EDICIONES EN FORMULARIO CHART
+        const editionModeSelect = document.getElementById('lvlEditionMode');
+        const sectionDeluxe = document.getElementById('section-deluxe-fields');
+        
+        editionModeSelect?.addEventListener('change', () => {
+            const val = editionModeSelect.value;
+            if (val === 'Deluxe' || val === 'Both') {
+                sectionDeluxe?.classList.remove('hidden');
+            } else {
+                sectionDeluxe?.classList.add('hidden');
+            }
         });
 
         // FUNCIONES AUXILIARES PARA LIMPIAR Y CANCELAR FORMULARIOS
@@ -1270,14 +1375,25 @@
             document.getElementById('btn-remove-lvl-video').classList.add('hidden');
             document.getElementById('current-lvl-audio-badge').classList.add('hidden');
             document.getElementById('btn-remove-lvl-audio').classList.add('hidden');
+            
+            document.getElementById('current-lvl-video-deluxe-badge')?.classList.add('hidden');
+            document.getElementById('btn-remove-lvl-video-deluxe')?.classList.add('hidden');
+            document.getElementById('current-lvl-audio-deluxe-badge')?.classList.add('hidden');
+            document.getElementById('btn-remove-lvl-audio-deluxe')?.classList.add('hidden');
+
             document.getElementById('lvlArtPreviewBox').classList.add('hidden');
             document.getElementById('lvlIsComingSoon').value = "false";
             document.getElementById('lvlIsExclusive').checked = false;
             
+            editionModeSelect.value = "Standard";
+            sectionDeluxe?.classList.add('hidden');
+
             levelZipToRemove = false;
             levelArtToRemove = false;
             levelVideoToRemove = false;
+            levelVideoDeluxeToRemove = false;
             levelAudioToRemove = false;
+            levelAudioDeluxeToRemove = false;
             
             buildGenresSelector();
         }
@@ -2063,6 +2179,68 @@
             }).join(' ');
         }
 
+        // LÓGICA DE APERTURA DEL MODAL BEATSTAR SELECTOR DE EDICIONES
+        function openBeatstarEditionSelector(lvl, outerArtBox) {
+            stopAllMedia();
+            activeModalBeatstarChart = lvl;
+
+            const modal = document.getElementById('beatstar-edition-modal');
+            const img = document.getElementById('modal-edition-art-img');
+            const songLbl = document.getElementById('modal-edition-song-title');
+            const artistLbl = document.getElementById('modal-edition-artist-title');
+            const artContainer = document.getElementById('modal-edition-art-container');
+            const deluxeBadge = document.getElementById('modal-edition-deluxe-badge');
+
+            img.src = lvl.art || 'free_song_Image.png';
+            songLbl.innerText = lvl.song;
+            artistLbl.innerText = lvl.artist;
+
+            document.getElementById('modal-opt-standard-sub').innerText = lvl.diff || 'Normal';
+            document.getElementById('modal-opt-deluxe-sub').innerText = lvl.diffDeluxe || 'Extreme';
+
+            const currentActive = activeChartSelectedEditions[lvl.id] || 'Standard';
+
+            if(currentActive === 'Deluxe') {
+                artContainer.classList.add('glow-gold');
+                deluxeBadge.classList.remove('hidden');
+                document.getElementById('modal-check-deluxe').classList.remove('opacity-0');
+                document.getElementById('modal-check-standard').classList.add('opacity-0');
+            } else {
+                artContainer.classList.remove('glow-gold');
+                deluxeBadge.classList.add('hidden');
+                document.getElementById('modal-check-standard').classList.remove('opacity-0');
+                document.getElementById('modal-check-deluxe').classList.add('opacity-0');
+            }
+
+            if(outerArtBox) outerArtBox.classList.add('art-circle-shape');
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeBeatstarEditionSelector(selectedEdition) {
+            const modal = document.getElementById('beatstar-edition-modal');
+            if (activeModalBeatstarChart && selectedEdition) {
+                activeChartSelectedEditions[activeModalBeatstarChart.id] = selectedEdition;
+            }
+
+            document.querySelectorAll('.target-art-outer-container').forEach(box => {
+                box.classList.remove('art-circle-shape');
+            });
+
+            modal.classList.add('hidden');
+            renderLevelsTable();
+        }
+
+        document.getElementById('btn-close-beatstar-modal')?.addEventListener('click', () => closeBeatstarEditionSelector(null));
+        
+        document.getElementById('modal-opt-standard')?.addEventListener('click', () => {
+            closeBeatstarEditionSelector('Standard');
+        });
+
+        document.getElementById('modal-opt-deluxe')?.addEventListener('click', () => {
+            closeBeatstarEditionSelector('Deluxe');
+        });
+
         function renderLevelsTable() {
             const tbody = document.getElementById('levels-tbody');
             if(!tbody) return; tbody.innerHTML = '';
@@ -2070,8 +2248,8 @@
             let filtered = sortAscendingByDate(levels);
 
             if(activeLvlGenreFilter) filtered = filtered.filter(l => l.genre && l.genre.toLowerCase().includes(activeLvlGenreFilter.toLowerCase()));
-            if(activeLvlDiffFilter) filtered = filtered.filter(l => l.diff === activeLvlDiffFilter);
-            if(activeLvlEditionFilter) filtered = filtered.filter(l => l.edition === activeLvlEditionFilter);
+            if(activeLvlDiffFilter) filtered = filtered.filter(l => (l.diff === activeLvlDiffFilter) || (l.diffDeluxe === activeLvlDiffFilter));
+            if(activeLvlEditionFilter) filtered = filtered.filter(l => (l.edition === activeLvlEditionFilter) || (l.editionMode === 'Both'));
 
             const hasActiveFilters = activeLvlGenreFilter || activeLvlDiffFilter || activeLvlEditionFilter;
             const counterLbl = document.getElementById('lbl-counter-charts');
@@ -2094,40 +2272,74 @@
             }
 
             filtered.forEach((lvl) => {
+                const isDual = (lvl.editionMode === 'Both');
+                
+                if (!activeChartSelectedEditions[lvl.id]) {
+                    activeChartSelectedEditions[lvl.id] = (lvl.editionMode === 'Deluxe') ? 'Deluxe' : 'Standard';
+                }
+
+                const currentSelectedEdition = activeChartSelectedEditions[lvl.id];
+                const isDeluxeActive = (currentSelectedEdition === 'Deluxe');
+
+                const currentDiffVal = isDeluxeActive ? (lvl.diffDeluxe || 'Extreme') : (lvl.diff || 'Normal');
+                const currentNotesVal = isDeluxeActive ? (lvl.notesDeluxe || lvl.notes) : lvl.notes;
+                const currentDurationVal = isDeluxeActive ? (lvl.durationDeluxe || lvl.duration) : lvl.duration;
+                const currentDateVal = isDeluxeActive ? (lvl.dateDeluxe || lvl.date) : lvl.date;
+                const currentAudioUrl = isDeluxeActive ? (lvl.audioDirectUrlDeluxe || lvl.audioDirectUrl) : lvl.audioDirectUrl;
+                const currentVideoUrl = isDeluxeActive ? (lvl.videoDeluxe || lvl.video) : lvl.video;
+
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-fuchsia-950/20 transition border-b-2 border-fuchsia-900/50 shadow-sm";
                 
-                let diffText = lvl.diff; 
+                let diffText = currentDiffVal; 
                 let hexColor = "#f97316"; 
                 let bStyle = "bg-orange-500/10 border-orange-500/30 text-orange-400"; 
                 
-                if (lvl.diff === "Hard") {
+                if (currentDiffVal === "Hard") {
                     diffText = translations[currentLanguage].diffHard;
-                } else if (lvl.diff === "Normal") { 
+                } else if (currentDiffVal === "Normal") { 
                     diffText = translations[currentLanguage].diffNormal; 
                     hexColor = "#71717a"; 
                     bStyle = "bg-zinc-500/10 border-zinc-500/30 text-zinc-400"; 
-                } else if (lvl.diff === "Extreme") { 
+                } else if (currentDiffVal === "Extreme") { 
                     diffText = translations[currentLanguage].diffExtreme; 
                     hexColor = "#ef4444"; 
                     bStyle = "bg-red-500/10 border-red-500/30 text-red-500"; 
                 }
 
-                const dynamicDiffAsset = globalVisualAssets[`diff_${lvl.diff}`];
+                const dynamicDiffAsset = globalVisualAssets[`diff_${currentDiffVal}`];
                 const diffGraphic = dynamicDiffAsset 
                     ? `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${hexColor}; -webkit-mask-image: url('${dynamicDiffAsset}'); mask-image: url('${dynamicDiffAsset}');"></span>`
                     : `<i class="fa-solid fa-layer-group"></i>`;
 
-                const isDeluxe = (lvl.edition === "Deluxe");
-                const dynamicEditionAsset = globalVisualAssets[isDeluxe ? `edit_Deluxe` : `edit_Standard`];
-                const targetEditionHex = isDeluxe ? "#facc15" : "#71717a";
-                const editionContainerClass = isDeluxe ? "glow-gold bg-yellow-500/10 text-yellow-400 border border-yellow-500/40" : "bg-zinc-900 border border-zinc-800 text-zinc-400";
+                let editionGraphicMarkup = '';
+                if(isDual) {
+                    const dynamicStdAsset = globalVisualAssets[`edit_Standard`];
+                    const dynamicDlxAsset = globalVisualAssets[`edit_Deluxe`];
 
-                const editionGraphicMarkup = dynamicEditionAsset
-                    ? `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${editionContainerClass} font-black text-[10px] uppercase truncate"><span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${targetEditionHex}; -webkit-mask-image: url('${dynamicEditionAsset}'); mask-image: url('${dynamicEditionAsset}');"></span><span>${lvl.edition}</span></div>`
-                    : `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${editionContainerClass} font-black text-[10px] uppercase truncate"><span>${lvl.edition}</span></div>`;
+                    editionGraphicMarkup = `
+                        <div class="inline-flex items-center gap-1.5 flex-wrap">
+                            <div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${!isDeluxeActive ? 'bg-fuchsia-950/60 text-white border border-fuchsia-500' : 'bg-zinc-900 border border-zinc-800 text-zinc-400'} font-black text-[10px] uppercase truncate">
+                                ${dynamicStdAsset ? `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: #71717a; -webkit-mask-image: url('${dynamicStdAsset}'); mask-image: url('${dynamicStdAsset}');"></span>` : ''}
+                                <span>Standard</span>
+                            </div>
+                            <div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${isDeluxeActive ? 'glow-gold bg-yellow-500/10 text-yellow-400 border border-yellow-500/40' : 'bg-zinc-900 border border-zinc-800 text-zinc-400'} font-black text-[10px] uppercase truncate">
+                                ${dynamicDlxAsset ? `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: #facc15; -webkit-mask-image: url('${dynamicDlxAsset}'); mask-image: url('${dynamicDlxAsset}');"></span>` : ''}
+                                <span>Deluxe</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    const targetEditionHex = isDeluxeActive ? "#facc15" : "#71717a";
+                    const editionContainerClass = isDeluxeActive ? "glow-gold bg-yellow-500/10 text-yellow-400 border border-yellow-500/40" : "bg-zinc-900 border border-zinc-800 text-zinc-400";
+                    const dynamicEditionAsset = globalVisualAssets[isDeluxeActive ? `edit_Deluxe` : `edit_Standard`];
 
-                const hasAudio = !!lvl.audioDirectUrl;
+                    editionGraphicMarkup = dynamicEditionAsset
+                        ? `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${editionContainerClass} font-black text-[10px] uppercase truncate"><span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${targetEditionHex}; -webkit-mask-image: url('${dynamicEditionAsset}'); mask-image: url('${dynamicEditionAsset}');"></span><span>${isDeluxeActive ? 'Deluxe' : 'Standard'}</span></div>`
+                        : `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${editionContainerClass} font-black text-[10px] uppercase truncate"><span>${isDeluxeActive ? 'Deluxe' : 'Standard'}</span></div>`;
+                }
+
+                const hasAudio = !!currentAudioUrl;
 
                 const hasAnyLinks = lvl.chartDirectUrl || lvl.dl1 || lvl.dl2 || lvl.dl3;
                 let linksLayout = `<div class="flex flex-col gap-1 max-w-[130px] sm:max-w-[160px] mx-auto">`;
@@ -2143,7 +2355,7 @@
                 }
                 linksLayout += `</div>`;
 
-                let pMarkup = renderVideoPlayerMarkup(lvl.video, false);
+                let pMarkup = renderVideoPlayerMarkup(currentVideoUrl, false);
 
                 const exclusiveBadge = lvl.isExclusive ? `
                     <div class="mt-1 text-[10px] font-black text-orange-400 uppercase tracking-wider flex items-center gap-1 bg-orange-950/40 border border-orange-800/40 px-2 py-0.5 rounded-md w-max">
@@ -2151,12 +2363,15 @@
                     </div>
                 ` : '';
 
+                const artBoxBorderClass = isDeluxeActive ? "glow-gold border-2 border-yellow-400" : "border border-fuchsia-500/30";
+
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center align-middle">
                         <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
                             <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
-                            <div class="target-art-outer-container w-full h-full relative z-10 overflow-hidden rounded-xl border border-fuchsia-500/30 shadow-lg shrink-0 transition-all duration-300">
+                            <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
                                 <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
+                                ${isDeluxeActive ? `<div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[8px] font-black uppercase px-1.5 py-0.2 rounded-full shadow z-20 tracking-wider">DELUXE</div>` : ''}
                             </div>
                             ${hasAudio ? `
                                 <button class="btn-play-audio-preview absolute bottom-1 right-1 w-7 h-7 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
@@ -2188,7 +2403,6 @@
                                 ${editionGraphicMarkup}
                             </li>
 
-                            <!-- DESPLEGABLE NOTAS Y DURACIÓN Oculto por defecto -->
                             <li class="pt-1">
                                 <button type="button" class="btn-toggle-more-info text-[10px] sm:text-xs font-extrabold text-orange-400 hover:text-orange-300 flex items-center gap-1 bg-orange-950/30 border border-orange-900/40 px-2 py-1 rounded-lg transition">
                                     <span class="btn-more-info-label">${translations[currentLanguage].btnMoreInfo}</span>
@@ -2197,18 +2411,18 @@
                                 <div class="extra-info-box hidden space-y-1.5 mt-2 bg-black/40 p-2.5 rounded-xl border border-fuchsia-950/40">
                                     <div class="flex items-center gap-2">
                                         <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs w-20 shrink-0">${translations[currentLanguage].listNotes}:</span> 
-                                        <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${lvl.notes || translations[currentLanguage].textComingSoon}</span>
+                                        <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${currentNotesVal || translations[currentLanguage].textComingSoon}</span>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs w-20 shrink-0">${translations[currentLanguage].listDuration}:</span> 
-                                        <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${lvl.duration || translations[currentLanguage].textComingSoon}</span>
+                                        <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${currentDurationVal || translations[currentLanguage].textComingSoon}</span>
                                     </div>
                                 </div>
                             </li>
 
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formRelease}:</span> 
-                                <span class="font-sans font-bold text-zinc-400 text-xs sm:text-sm">${formatStringToDMY(lvl.date)}</span>
+                                <span class="font-sans font-bold text-zinc-400 text-xs sm:text-sm">${formatStringToDMY(currentDateVal)}</span>
                             </li>
                         </ul>
                     </td>
@@ -2222,9 +2436,16 @@
                     </td>
                 `;
 
+                if (isDual) {
+                    const artOuterBox = tr.querySelector('.target-art-outer-container');
+                    artOuterBox?.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        openBeatstarEditionSelector(lvl, artOuterBox);
+                    });
+                }
+
                 setupNativeVideoBehavior(tr.querySelector('.custom-native-video-wrapper'));
 
-                // Manejo de despliegue "More Information / Show Less"
                 const toggleBtn = tr.querySelector('.btn-toggle-more-info');
                 const extraBox = tr.querySelector('.extra-info-box');
                 const toggleLabel = tr.querySelector('.btn-more-info-label');
@@ -2248,7 +2469,7 @@
                     const img = tr.querySelector('.target-lvl-art-img');
                     const canvas = tr.querySelector('canvas');
                     const containerBox = tr.querySelector('.target-art-outer-container');
-                    btn.addEventListener('click', () => toggleAudioPreviewEngine(lvl.audioDirectUrl, btn, img, canvas, containerBox));
+                    btn.addEventListener('click', () => toggleAudioPreviewEngine(currentAudioUrl, btn, img, canvas, containerBox));
                 }
 
                 if(lvl.chartDirectUrl) {
@@ -2259,11 +2480,24 @@
                     document.getElementById('editingLvlId').value = lvl.id;
                     document.getElementById('lvlSong').value = lvl.song;
                     document.getElementById('lvlArtist').value = lvl.artist;
-                    document.getElementById('lvlDiff').value = lvl.diff;
-                    document.getElementById('lvlEdition').value = lvl.edition;
+                    
+                    document.getElementById('lvlEditionMode').value = lvl.editionMode || (lvl.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
+                    if(lvl.editionMode === 'Both' || lvl.editionMode === 'Deluxe') {
+                        sectionDeluxe?.classList.remove('hidden');
+                    } else {
+                        sectionDeluxe?.classList.add('hidden');
+                    }
+
+                    document.getElementById('lvlDiff').value = lvl.diff || 'Hard';
                     document.getElementById('lvlNotes').value = lvl.notes || '';
                     document.getElementById('lvlDuration').value = lvl.duration || '';
                     document.getElementById('lvlDate').value = lvl.date || '';
+
+                    document.getElementById('lvlDiffDeluxe').value = lvl.diffDeluxe || 'Extreme';
+                    document.getElementById('lvlNotesDeluxe').value = lvl.notesDeluxe || '';
+                    document.getElementById('lvlDurationDeluxe').value = lvl.durationDeluxe || '';
+                    document.getElementById('lvlDateDeluxe').value = lvl.dateDeluxe || '';
+
                     document.getElementById('lvlDl1').value = lvl.dl1 || '';
                     document.getElementById('lvlDl2').value = lvl.dl2 || '';
                     document.getElementById('lvlDl3').value = lvl.dl3 || '';
@@ -2313,10 +2547,32 @@
                         aRemoveBtn.classList.add('hidden');
                     }
 
+                    const vdBadge = document.getElementById('current-lvl-video-deluxe-badge');
+                    const vdRemoveBtn = document.getElementById('btn-remove-lvl-video-deluxe');
+                    if(lvl.videoDeluxe && vdBadge && vdRemoveBtn) {
+                        vdBadge.classList.remove('hidden');
+                        vdRemoveBtn.classList.remove('hidden');
+                    } else if(vdBadge && vdRemoveBtn) {
+                        vdBadge.classList.add('hidden');
+                        vdRemoveBtn.classList.add('hidden');
+                    }
+
+                    const adBadge = document.getElementById('current-lvl-audio-deluxe-badge');
+                    const adRemoveBtn = document.getElementById('btn-remove-lvl-audio-deluxe');
+                    if(lvl.audioDirectUrlDeluxe && adBadge && adRemoveBtn) {
+                        adBadge.classList.remove('hidden');
+                        adRemoveBtn.classList.remove('hidden');
+                    } else if(adBadge && adRemoveBtn) {
+                        adBadge.classList.add('hidden');
+                        adRemoveBtn.classList.add('hidden');
+                    }
+
                     levelZipToRemove = false;
                     levelArtToRemove = false;
                     levelVideoToRemove = false;
+                    levelVideoDeluxeToRemove = false;
                     levelAudioToRemove = false;
+                    levelAudioDeluxeToRemove = false;
 
                     const currentGenresArray = lvl.genre ? lvl.genre.split(' / ').map(g => g.trim().toLowerCase()) : [];
                     document.querySelectorAll('.genre-checkbox').forEach(cb => {
@@ -2738,6 +2994,15 @@
             });
         });
 
+        document.getElementById('btn-remove-lvl-video-deluxe')?.addEventListener('click', () => {
+            requestUserDeleteConfirmation(() => {
+                levelVideoDeluxeToRemove = true;
+                document.getElementById('current-lvl-video-deluxe-badge').classList.add('hidden');
+                document.getElementById('btn-remove-lvl-video-deluxe').classList.add('hidden');
+                document.getElementById('lvlVideoFileDeluxe').value = "";
+            });
+        });
+
         document.getElementById('btn-remove-cos-video')?.addEventListener('click', () => {
             requestUserDeleteConfirmation(() => {
                 cosmeticVideoToRemove = true;
@@ -2753,6 +3018,15 @@
                 document.getElementById('current-lvl-audio-badge').classList.add('hidden');
                 document.getElementById('btn-remove-lvl-audio').classList.add('hidden');
                 document.getElementById('lvlAudioFile').value = "";
+            });
+        });
+
+        document.getElementById('btn-remove-lvl-audio-deluxe')?.addEventListener('click', () => {
+            requestUserDeleteConfirmation(() => {
+                levelAudioDeluxeToRemove = true;
+                document.getElementById('current-lvl-audio-deluxe-badge').classList.add('hidden');
+                document.getElementById('btn-remove-lvl-audio-deluxe').classList.add('hidden');
+                document.getElementById('lvlAudioFileDeluxe').value = "";
             });
         });
 
@@ -2777,7 +3051,7 @@
             }
         });
 
-        // REGISTRO DE CHARTS
+        // REGISTRO DE CHARTS DUAL
         document.getElementById('level-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             showLoadingOverlay();
@@ -2788,8 +3062,13 @@
                 
                 let existingLvl = levels.find(l => l.id === id);
                 let finalArtUrl = levelArtToRemove ? "free_song_Image.png" : (existingLvl?.art || "free_song_Image.png");
+                
                 let finalAudioUrl = levelAudioToRemove ? "" : (existingLvl?.audioDirectUrl || "");
+                let finalAudioDeluxeUrl = levelAudioDeluxeToRemove ? "" : (existingLvl?.audioDirectUrlDeluxe || "");
+                
                 let finalVideoUrl = levelVideoToRemove ? "" : (existingLvl?.video || "");
+                let finalVideoDeluxeUrl = levelVideoDeluxeToRemove ? "" : (existingLvl?.videoDeluxe || "");
+
                 let finalChartDirectUrl = levelZipToRemove ? "" : (existingLvl?.chartDirectUrl || "");
 
                 const artFileInput = document.getElementById('lvlArtFile');
@@ -2802,9 +3081,19 @@
                     finalAudioUrl = await uploadFileToGitHubContent(audioFileInput.files[0], 'assets/audio', audioFileInput.files[0].name);
                 }
 
+                const audioDeluxeFileInput = document.getElementById('lvlAudioFileDeluxe');
+                if(audioDeluxeFileInput?.files && audioDeluxeFileInput.files[0] && githubToken && githubUser) {
+                    finalAudioDeluxeUrl = await uploadFileToGitHubContent(audioDeluxeFileInput.files[0], 'assets/audio', audioDeluxeFileInput.files[0].name);
+                }
+
                 const videoFileInput = document.getElementById('lvlVideoFile');
                 if(videoFileInput.files && videoFileInput.files[0]) {
                     finalVideoUrl = await uploadVideoToCloudinary(videoFileInput.files[0], 'prevchart');
+                }
+
+                const videoDeluxeFileInput = document.getElementById('lvlVideoFileDeluxe');
+                if(videoDeluxeFileInput?.files && videoDeluxeFileInput.files[0]) {
+                    finalVideoDeluxeUrl = await uploadVideoToCloudinary(videoDeluxeFileInput.files[0], 'prevchart');
                 }
 
                 const chartFileInput = document.getElementById('lvlChartZipFile');
@@ -2812,8 +3101,7 @@
                     finalChartDirectUrl = await uploadFileToGitHubContent(chartFileInput.files[0], 'charts', chartFileInput.files[0].name);
                 }
 
-                const isComingSoonFlag = document.getElementById('lvlIsComingSoon').value === "true";
-                const dateVal = isComingSoonFlag ? "" : document.getElementById('lvlDate').value;
+                const selectedEditionMode = document.getElementById('lvlEditionMode').value;
                 const isExclusive = document.getElementById('lvlIsExclusive').checked;
 
                 const data = {
@@ -2821,15 +3109,28 @@
                     song: document.getElementById('lvlSong').value.trim(), 
                     artist: document.getElementById('lvlArtist').value.trim(),
                     art: finalArtUrl, 
-                    audioDirectUrl: finalAudioUrl, 
                     chartDirectUrl: finalChartDirectUrl,
-                    video: finalVideoUrl,
                     genre: checked.join(' / ') || 'General', 
+                    
+                    editionMode: selectedEditionMode,
+                    edition: (selectedEditionMode === 'Deluxe') ? 'Deluxe' : 'Standard',
+
+                    // Standard Data
                     diff: document.getElementById('lvlDiff').value,
-                    edition: document.getElementById('lvlEdition').value, 
                     notes: document.getElementById('lvlNotes').value.trim(),
                     duration: document.getElementById('lvlDuration').value.trim(),
-                    date: dateVal,
+                    date: document.getElementById('lvlDate').value,
+                    audioDirectUrl: finalAudioUrl, 
+                    video: finalVideoUrl,
+
+                    // Deluxe Data
+                    diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
+                    notesDeluxe: document.getElementById('lvlNotesDeluxe').value.trim(),
+                    durationDeluxe: document.getElementById('lvlDurationDeluxe').value.trim(),
+                    dateDeluxe: document.getElementById('lvlDateDeluxe').value,
+                    audioDirectUrlDeluxe: finalAudioDeluxeUrl,
+                    videoDeluxe: finalVideoDeluxeUrl,
+
                     isExclusive: isExclusive,
                     dl1: document.getElementById('lvlDl1').value.trim(), 
                     dl2: document.getElementById('lvlDl2').value.trim(), 
