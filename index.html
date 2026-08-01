@@ -1273,6 +1273,7 @@
         let activeAudioImg = null;
         let activeCanvas = null;
         let activeArtContainer = null;
+        let activeVideoElement = null;
         let activeVisualizerColor = "#d946ef";
 
         // Búfer reutilizable para evitar la asignación de memoria recurrente en cada frame de dibujo
@@ -1904,14 +1905,6 @@
 
             function draw() {
                 if(!activeCanvas || activeCanvas !== canvas) return;
-                
-                // NO MOSTRAR EL VISUALIZADOR SI EL AUDIO SE ENCUENTRA EN ESTADO DE CARGA / BUFFERING
-                if (activeAudioElement && activeAudioElement.readyState < 3) {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    canvasAnimationId = requestAnimationFrame(draw);
-                    return;
-                }
-
                 canvasAnimationId = requestAnimationFrame(draw);
                 analyser.getByteFrequencyData(audioDataArray);
                 
@@ -1956,7 +1949,7 @@
         // Sincronización estricta: Se espera al evento canplaythrough para reproducciones de audio
         function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement, containerElement, isModalOpen = false, themeColor = "#d946ef") {
             if(activeAudioElement && activeAudioElement.dataset.url === audioUrl) {
-                // Si el audio ya está activo y sonando, se actualizan canvas/estilos sin reiniciar el audio desde cero
+                // Si el audio ya está activo y sonando, solo transferimos o actualizamos los elementos de vista (Canvas/Boton/Color) sin reiniciar la música
                 if(canvasAnimationId) cancelAnimationFrame(canvasAnimationId);
                 
                 if(activeCanvas && activeCanvas !== canvasElement) {
@@ -1964,9 +1957,6 @@
                     oldCtx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
                 }
                 
-                // Aplicar regla de bucle según contexto (Modal = Bucle activado)
-                activeAudioElement.loop = isModalOpen;
-
                 activeAudioButton = btnElement;
                 activeAudioImg = imgElement;
                 activeArtContainer = containerElement;
@@ -1994,7 +1984,7 @@
             audio.src = audioUrl;
             audio.dataset.url = audioUrl;
             audio.preload = "auto";
-            audio.loop = isModalOpen; // Aplica bucle si se activa desde el modal de ediciones
+            audio.loop = isModalOpen; // Si está dentro del modal, hace bucle indefinido mientras siga abierto
 
             const handleCanPlayThrough = () => {
                 if (activeAudioElement !== audio) return;
@@ -2504,12 +2494,6 @@
 
         // DESPLIEGUE DEL VISUALIZADOR EN EL MODAL DE EDICIÓN CON COLOR SEGÚN SELECCIÓN Y BUCLE INFINITO
         function openBeatstarEditionSelector(lvl, outerArtBox) {
-            // Detener únicamente videos activos si existen (para no reiniciar el audio si ya está sonando la misma canción)
-            if (activeVideoElement) {
-                activeVideoElement.pause();
-                activeVideoElement = null;
-            }
-
             activeModalBeatstarChart = lvl;
 
             const modal = document.getElementById('beatstar-edition-modal');
@@ -2551,9 +2535,14 @@
 
                 if(audioUrl) {
                     const themeColor = (selectedEd === 'Deluxe') ? "#facc15" : "#d946ef";
-                    // Si la canción ya se está reproduciendo, continuar reproduciendo sin reiniciar
-                    // Si no se está reproduciendo, iniciarla automáticamente
-                    toggleAudioPreviewEngine(audioUrl, null, img, canvas, artContainer, true, themeColor);
+                    if (activeAudioElement && activeAudioElement.dataset.url === audioUrl) {
+                        activeAudioElement.loop = true;
+                        // Transferir controles y vista sin reiniciar la música
+                        toggleAudioPreviewEngine(audioUrl, null, img, canvas, artContainer, true, themeColor);
+                    } else {
+                        // Si no se estaba reproduciendo el audio correspondiente, iniciar reproducción
+                        toggleAudioPreviewEngine(audioUrl, null, img, canvas, artContainer, true, themeColor);
+                    }
                 }
             }
 
@@ -2873,9 +2862,17 @@
                     const canvas = tr.querySelector('canvas');
                     const containerBox = tr.querySelector('.target-art-outer-container');
                     
-                    // Si el audio que está sonando globalmente coincide con este chart, reasociamos el canvas a la tabla sin reiniciarlo
+                    // Si el audio que está sonando globalmente coincide con este chart...
                     if (activeAudioElement && activeAudioElement.dataset.url === currentAudioUrl) {
-                        toggleAudioPreviewEngine(currentAudioUrl, btn, img, canvas, containerBox, false, targetAudioThemeColor);
+                        if (activeAudioElement.readyState < 3) {
+                            // Si la canción se encuentra cargando, ocultar el visualizador en la tabla
+                            if (canvas) {
+                                const ctx = canvas.getContext('2d');
+                                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            }
+                        } else {
+                            toggleAudioPreviewEngine(currentAudioUrl, btn, img, canvas, containerBox, false, targetAudioThemeColor);
+                        }
                     }
 
                     btn.addEventListener('click', () => toggleAudioPreviewEngine(currentAudioUrl, btn, img, canvas, containerBox, false, targetAudioThemeColor));
