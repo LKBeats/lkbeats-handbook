@@ -97,10 +97,10 @@
     <div id="beatstar-edition-modal" class="hidden fixed inset-0 bg-black/90 z-[150] flex items-center justify-center p-4 backdrop-blur-md transition-all duration-300">
         <div class="bg-[#11091c]/95 border border-fuchsia-500/40 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-8 border-t-2 border-t-fuchsia-500">
             <div class="flex flex-col items-center justify-center shrink-0">
-                <div class="relative w-36 h-36 sm:w-44 sm:h-44 flex items-center justify-center">
+                <div class="relative w-36 h-36 sm:w-44 sm:h-44 flex items-center justify-center pointer-events-none">
                     <canvas id="modal-edition-canvas" class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
-                    <div id="modal-edition-art-container" class="w-full h-full rounded-full overflow-hidden border-4 border-fuchsia-500 shadow-2xl relative bg-zinc-950 art-beatstar-transform z-10">
-                        <img id="modal-edition-art-img" src="free_song_Image.png" class="w-full h-full object-cover">
+                    <div id="modal-edition-art-container" class="w-full h-full rounded-full overflow-hidden border-4 border-fuchsia-500 shadow-2xl relative bg-zinc-950 art-beatstar-transform z-10 pointer-events-none">
+                        <img id="modal-edition-art-img" src="free_song_Image.png" class="w-full h-full object-cover pointer-events-none">
                         <div id="modal-edition-deluxe-badge" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest shadow-lg z-20">DELUXE</div>
                         <div id="modal-edition-standard-badge" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-zinc-400 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest shadow-lg z-20">STANDARD</div>
                     </div>
@@ -1883,13 +1883,14 @@
 
         // VISUALIZADOR MÁS COMPACTO Y DINÁMICO (SENSIBILIDAD MAYOR EN BAJOS Y TAMAÑO REDUCIDO)
         function startRadialCanvasVisualizer(canvas, analyser, containerElement, themeColor = "#d946ef") {
+            if(!canvas) return;
             const ctx = canvas.getContext('2d');
             const bufferLength = analyser.frequencyBinCount;
             if(!audioDataArray || audioDataArray.length !== bufferLength) {
                 audioDataArray = new Uint8Array(bufferLength);
             }
             
-            const rect = containerElement.getBoundingClientRect();
+            const rect = containerElement ? containerElement.getBoundingClientRect() : canvas.getBoundingClientRect();
             const displaySize = Math.max(rect.width, rect.height) || 144;
             
             // Ligera reducción del lienzo canvas para evitar saturación
@@ -1944,7 +1945,24 @@
         // Sincronización estricta: Se espera al evento canplaythrough para reproducciones de audio
         function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement, containerElement, isModalOpen = false, themeColor = "#d946ef") {
             if(activeAudioElement && activeAudioElement.dataset.url === audioUrl) {
-                stopGlobalAudioPreview();
+                // Si el audio ya está activo y sonando, solo transferimos o actualizamos los elementos de vista (Canvas/Boton/Color) sin reiniciar la música
+                if(canvasAnimationId) cancelAnimationFrame(canvasAnimationId);
+                
+                if(activeCanvas && activeCanvas !== canvasElement) {
+                    const oldCtx = activeCanvas.getContext('2d');
+                    oldCtx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
+                }
+                
+                activeAudioButton = btnElement;
+                activeAudioImg = imgElement;
+                activeArtContainer = containerElement;
+                activeVisualizerColor = themeColor;
+
+                if (containerElement) containerElement.classList.add('art-container-circular');
+                if (imgElement) imgElement.classList.remove('bg-zinc-900');
+                if (btnElement) btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
+
+                startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement, themeColor);
                 return;
             }
             
@@ -1968,8 +1986,8 @@
                 if (activeAudioElement !== audio) return;
                 
                 if(btnElement) btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
-                containerElement.classList.add('art-container-circular');
-                imgElement.classList.remove('bg-zinc-900');
+                if(containerElement) containerElement.classList.add('art-container-circular');
+                if(imgElement) imgElement.classList.remove('bg-zinc-900');
 
                 if(audioCtx.state === 'suspended') audioCtx.resume();
 
@@ -2472,7 +2490,6 @@
 
         // DESPLIEGUE DEL VISUALIZADOR EN EL MODAL DE EDICIÓN CON COLOR SEGÚN SELECCIÓN Y BUCLE INFINITO
         function openBeatstarEditionSelector(lvl, outerArtBox) {
-            stopAllMedia();
             activeModalBeatstarChart = lvl;
 
             const modal = document.getElementById('beatstar-edition-modal');
@@ -2514,6 +2531,10 @@
 
                 if(audioUrl) {
                     const themeColor = (selectedEd === 'Deluxe') ? "#facc15" : "#d946ef";
+                    // Si el audio está sonando, mantenemos el estado de reproducción y permitimos bucle continuo
+                    if (activeAudioElement && activeAudioElement.dataset.url === audioUrl) {
+                        activeAudioElement.loop = true;
+                    }
                     toggleAudioPreviewEngine(audioUrl, null, img, canvas, artContainer, true, themeColor);
                 }
             }
@@ -2535,7 +2556,7 @@
                 box.classList.remove('art-circle-shape');
             });
 
-            // Si el audio está reproduciéndose al cerrar el modal, desactiva el bucle para que termine normalmente
+            // Si el audio está reproduciéndose al cerrar el modal, desactiva el bucle para que termine normalmente sin cortar la reproducción
             if(activeAudioElement) {
                 activeAudioElement.loop = false;
             }
@@ -2832,6 +2853,12 @@
                     const img = tr.querySelector('.target-lvl-art-img');
                     const canvas = tr.querySelector('canvas');
                     const containerBox = tr.querySelector('.target-art-outer-container');
+                    
+                    // Si el audio que está sonando globalmente coincide con este chart, reasociamos el canvas a la tabla sin reiniciarlo
+                    if (activeAudioElement && activeAudioElement.dataset.url === currentAudioUrl) {
+                        toggleAudioPreviewEngine(currentAudioUrl, btn, img, canvas, containerBox, false, targetAudioThemeColor);
+                    }
+
                     btn.addEventListener('click', () => toggleAudioPreviewEngine(currentAudioUrl, btn, img, canvas, containerBox, false, targetAudioThemeColor));
                 }
 
