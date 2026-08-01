@@ -70,6 +70,24 @@
             border-radius: 50% !important;
             transform: scale(1.08);
         }
+
+        /* Ajustes específicos para vista móvil horizontal (landscape) */
+        @media (orientation: landscape) and (max-height: 600px) {
+            #beatstar-edition-modal .bg-\[\#11091c\]\/95,
+            #download-custom-modal .bg-\[\#11091c\],
+            #explicit-warning-modal .bg-\[\#11091c\],
+            #thanks-custom-modal .bg-\[\#11091c\],
+            #confirm-delete-modal .bg-\[\#11091c\],
+            #boogie-auth-modal .bg-\[\#11091c\] {
+                max-height: 90vh;
+                overflow-y: auto;
+                padding: 1rem !important;
+            }
+            #beatstar-edition-modal .relative.w-36.h-36 {
+                width: 7rem !important;
+                height: 7rem !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-[#05020a] text-zinc-100 min-h-screen font-sans flex flex-col relative overflow-x-hidden">
@@ -82,7 +100,7 @@
 
     <!-- MODAL DE ADVERTENCIA PARA CONTENIDO EXPLÍCITO -->
     <div id="explicit-warning-modal" class="hidden fixed inset-0 bg-black/90 z-[160] flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#11091c] border border-red-500/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center">
+        <div class="bg-[#11091c] border border-red-500/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center max-h-[90vh] overflow-y-auto">
             <div class="w-12 h-12 rounded-full bg-red-500/20 border border-red-500 flex items-center justify-center text-red-500 font-black text-xl mb-3 shadow-lg glow-red">E</div>
             <h3 class="text-base sm:text-lg font-black text-white uppercase tracking-wide mb-2" data-i18n="explicitModalTitle">¿Habilitar versión sin censura?</h3>
             <p class="text-xs text-zinc-300 font-medium mb-6 leading-relaxed" data-i18n="explicitModalNotice">AVISO: Esta canción puede incluir contenido sensible no apto para todo público.</p>
@@ -95,7 +113,7 @@
 
     <!-- MODAL SELECCIÓN DE EDICIONES ESTILO BEATSTAR -->
     <div id="beatstar-edition-modal" class="hidden fixed inset-0 bg-black/90 z-[150] flex items-center justify-center p-4 backdrop-blur-md transition-all duration-300">
-        <div class="bg-[#11091c]/95 border border-fuchsia-500/40 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-8 border-t-2 border-t-fuchsia-500">
+        <div class="bg-[#11091c]/95 border border-fuchsia-500/40 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-8 border-t-2 border-t-fuchsia-500 max-h-[90vh] overflow-y-auto">
             <div class="flex flex-col items-center justify-center shrink-0">
                 <div class="relative w-36 h-36 sm:w-44 sm:h-44 flex items-center justify-center pointer-events-none">
                     <canvas id="modal-edition-canvas" class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
@@ -136,7 +154,7 @@
 
     <!-- MODAL DE CONFIRMACIÓN DE ELIMINACIÓN GENERAL -->
     <div id="confirm-delete-modal" class="hidden fixed inset-0 bg-black/90 z-[140] flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#11091c] border border-red-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center">
+        <div class="bg-[#11091c] border border-red-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center max-h-[90vh] overflow-y-auto">
             <i class="fa-solid fa-triangle-exclamation text-red-500 text-3xl mb-3"></i>
             <h3 class="text-base sm:text-lg font-black text-white uppercase tracking-wide mb-6" data-i18n="confirmDeleteTitle">¿Seguro que quieres eliminarlo?</h3>
             <div class="flex gap-3 w-full">
@@ -148,7 +166,7 @@
 
     <!-- MODAL BOOGIE ADM / CREDENCIALES -->
     <div id="boogie-auth-modal" class="hidden fixed inset-0 bg-black/90 z-[130] flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#11091c] border border-fuchsia-500/40 rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative text-center flex flex-col items-center">
+        <div class="bg-[#11091c] border border-fuchsia-500/40 rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative text-center flex flex-col items-center max-h-[90vh] overflow-y-auto">
             <img src="1455064703448645786.gif" alt="Boogie" class="w-24 h-auto mb-3">
             <p id="boogie-auth-msg" class="text-sm sm:text-base font-bold text-zinc-200 mb-6 leading-relaxed" data-i18n="boogieAuthMsg">
                 Este espacio es solo para Boogie. Por favor introduce los códigos especiales
@@ -197,7 +215,7 @@
 
     <!-- MODAL CONFIRMACIÓN SALIR MODO CREADOR -->
     <div id="boogie-exit-modal" class="hidden fixed inset-0 bg-black/90 z-[135] flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#11091c] border border-red-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center">
+        <div class="bg-[#11091c] border border-red-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center max-h-[90vh] overflow-y-auto">
             <i class="fa-solid fa-right-from-bracket text-red-400 text-3xl mb-3"></i>
             <h3 class="text-lg font-black text-white uppercase tracking-wide mb-6" data-i18n="exitPromptTitle">¿Deseas salir?</h3>
             <div class="flex gap-3 w-full">
@@ -209,7 +227,7 @@
 
     <!-- MODAL 1: ADVERTENCIA DE DESCARGA -->
     <div id="download-custom-modal" class="hidden fixed inset-0 bg-black/90 z-[110] flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-[#11091c] border border-fuchsia-500/30 rounded-2xl max-w-3xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center">
+        <div class="bg-[#11091c] border border-fuchsia-500/30 rounded-2xl max-w-3xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center max-h-[90vh] overflow-y-auto">
             <p id="download-modal-msg" class="text-base sm:text-lg font-bold text-zinc-200 mb-6 leading-relaxed">
                 Es necesario tener instalada la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la página oficial de Beatclone
             </p>
@@ -235,7 +253,7 @@
 
     <!-- MODAL 2: POP-UP AGRADECIMIENTO EN BUCLE -->
     <div id="thanks-custom-modal" class="hidden fixed inset-0 bg-black/95 z-[120] flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#11091c] border border-orange-500/30 rounded-2xl max-w-4xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center">
+        <div class="bg-[#11091c] border border-orange-500/30 rounded-2xl max-w-4xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center max-h-[90vh] overflow-y-auto">
             <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-fuchsia-400 font-display font-black text-xl sm:text-2xl uppercase tracking-wider mb-6" data-i18n="thanksTitle">Gracias por jugar a Beatclone</h4>
             <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-fuchsia-950/60 relative">
                 <video id="download-thanks-video" class="w-full h-full object-cover pointer-events-none" autoplay loop playsinline disablePictureInPicture></video>
@@ -750,7 +768,7 @@
                             <div class="text-base sm:text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">
                                 Charts / <span data-i18n="bannerSongs">Canciones</span>
                             </div>
-                            <div class="hidden landscape:block sm:block mt-0.5 text-[10px] sm:text-xs font-bold text-orange-400">
+                            <div class="block mt-0.5 text-[10px] sm:text-xs font-bold text-orange-400">
                                 <span id="lbl-counter-charts">Total: 0 Charts</span>
                             </div>
                         </div>
@@ -1258,10 +1276,6 @@
         let editingCosBrandUrlsList = [];
         let currentActiveDownloadUrl = "";
 
-        let githubToken = "";
-        let githubUser = "";
-        let githubRepo = "lkbeats-handbook";
-
         let audioCtx = null;
         let audioAnalyser = null;
         let audioSource = null;
@@ -1276,7 +1290,6 @@
         let activeVideoElement = null;
         let activeVisualizerColor = "#d946ef";
 
-        // Búfer reutilizable para evitar la asignación de memoria recurrente en cada frame de dibujo
         let audioDataArray = null;
 
         let levelZipToRemove = false;
@@ -1302,6 +1315,54 @@
         let activeModalBeatstarChart = null;
         let pendingExplicitActivationChartId = null;
 
+        function closeAllActiveModalsAndMenus() {
+            let wasModalOpen = false;
+            const modalIds = [
+                'beatstar-edition-modal',
+                'explicit-warning-modal',
+                'confirm-delete-modal',
+                'boogie-auth-modal',
+                'boogie-exit-modal',
+                'download-custom-modal',
+                'thanks-custom-modal'
+            ];
+
+            modalIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && !el.classList.contains('hidden')) {
+                    el.classList.add('hidden');
+                    wasModalOpen = true;
+                }
+            });
+
+            const dropdownIds = [
+                'dropdown-custom-lvl-genre',
+                'dropdown-custom-lvl-diff',
+                'dropdown-custom-lvl-edition',
+                'dropdown-custom-skin-genre'
+            ];
+
+            dropdownIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && !el.classList.contains('hidden')) {
+                    el.classList.add('hidden');
+                    wasModalOpen = true;
+                }
+            });
+
+            document.querySelectorAll('.target-art-outer-container').forEach(box => {
+                box.classList.remove('art-circle-shape');
+            });
+
+            const thanksVideo = document.getElementById('download-thanks-video');
+            if (thanksVideo) {
+                thanksVideo.pause();
+                thanksVideo.src = "";
+            }
+
+            return wasModalOpen;
+        }
+
         function stopAllMedia() {
             stopGlobalAudioPreview();
 
@@ -1325,6 +1386,7 @@
 
         function navigateTo(view, pushState = true) {
             stopAllMedia();
+            closeAllActiveModalsAndMenus();
             currentViewName = view;
             ['home', 'levels', 'cosmetics'].forEach(v => document.getElementById(`view-${v}`)?.classList.add('hidden'));
             document.getElementById(`view-${view}`)?.classList.remove('hidden');
@@ -1375,8 +1437,17 @@
 
         history.replaceState({ view: 'home' }, '', '');
         window.addEventListener('popstate', (event) => {
-            if (event.state && event.state.view) navigateTo(event.state.view, false);
-            else navigateTo('home', false);
+            const modalOrMenuClosed = closeAllActiveModalsAndMenus();
+            if (modalOrMenuClosed) {
+                history.pushState({ view: currentViewName }, '', '');
+                return;
+            }
+
+            if (event.state && event.state.view) {
+                navigateTo(event.state.view, false);
+            } else {
+                navigateTo('home', false);
+            }
         });
 
         document.getElementById('submenu-card-beatstar').addEventListener('click', () => openCosmeticsSubmenuPlatform('Beatstar'));
@@ -1405,8 +1476,6 @@
         document.getElementById('btn-cancel-exit-creator').addEventListener('click', () => modalBoogieExit.classList.add('hidden'));
         document.getElementById('btn-confirm-exit-creator').addEventListener('click', () => {
             isCreatorMode = false;
-            githubToken = "";
-            githubUser = "";
             btnBoogieTrigger.classList.remove('glow-green');
             modalBoogieExit.classList.add('hidden');
             applyRoleUIVisibility();
@@ -1441,7 +1510,7 @@
         });
 
         document.getElementById('btn-confirm-explicit').addEventListener('click', () => {
-            stopAllMedia(); // Detención completa de audio y video al confirmar activación explícita
+            stopAllMedia();
             if (pendingExplicitActivationChartId) {
                 activeChartExplicitStates[pendingExplicitActivationChartId] = true;
                 pendingExplicitActivationChartId = null;
@@ -1467,37 +1536,16 @@
 
         document.getElementById('boogie-auth-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const inputs = ['boogieCred1', 'boogieCred2', 'boogieCred3'];
-            let emptyInput = null;
-
-            for (let id of inputs) {
-                const el = document.getElementById(id);
-                if (!el.value.trim()) {
-                    emptyInput = el;
-                    break;
-                }
-            }
-
-            if (emptyInput) {
-                emptyInput.setCustomValidity(translations[currentLanguage].requiredFieldMsg);
-                emptyInput.reportValidity();
-                return;
-            }
-
             const pass = document.getElementById('boogieCred1').value;
-            const user = document.getElementById('boogieCred2').value.trim();
-            const token = document.getElementById('boogieCred3').value.trim();
 
-            if(pass === "BeatstarTest" && user !== "" && token !== "") {
+            if(pass === "BeatstarTest") {
                 isCreatorMode = true;
-                githubUser = user;
-                githubToken = token;
                 btnBoogieTrigger.classList.add('glow-green');
                 applyRoleUIVisibility();
                 closeModalBoogie();
                 document.getElementById('boogie-auth-form').reset();
             } else {
-                alert(currentLanguage === 'es' ? "Credenciales incorrectas o incompletas." : "Incorrect or incomplete credentials.");
+                alert(currentLanguage === 'es' ? "Credencial incorrecta." : "Incorrect credential.");
             }
         });
 
@@ -1557,7 +1605,6 @@
                 else submitBtn.innerText = translations[currentLanguage].btnRegister;
             }
 
-            // Ocultar Badges y botones de borrado
             const badgesToHide = [
                 'current-chart-zip-badge', 'btn-remove-chart-zip',
                 'current-lvl-video-badge', 'btn-remove-lvl-video',
@@ -1636,7 +1683,6 @@
         document.getElementById('btn-cancel-lvl-form')?.addEventListener('click', resetLevelFormState);
         document.getElementById('btn-cancel-cos-form')?.addEventListener('click', resetCosmeticFormState);
 
-        // EVENTOS DE BORRADO INDIVIDUAL EN CMS
         document.getElementById('btn-remove-lvl-audio')?.addEventListener('click', () => { levelAudioToRemove = true; document.getElementById('current-lvl-audio-badge').classList.add('hidden'); document.getElementById('btn-remove-lvl-audio').classList.add('hidden'); });
         document.getElementById('btn-remove-lvl-video')?.addEventListener('click', () => { levelVideoToRemove = true; document.getElementById('current-lvl-video-badge').classList.add('hidden'); document.getElementById('btn-remove-lvl-video').classList.add('hidden'); });
         document.getElementById('btn-remove-chart-zip')?.addEventListener('click', () => { levelZipToRemove = true; document.getElementById('current-chart-zip-badge').classList.add('hidden'); document.getElementById('btn-remove-chart-zip').classList.add('hidden'); });
@@ -1727,11 +1773,18 @@
             }
         }
 
-        async function uploadVideoToCloudinary(fileObject, subfolderName) {
+        async function uploadFileToCloudinary(fileObject, subfolderName, resourceType = 'auto') {
             if(!fileObject) return "";
             if(!CLOUDINARY_CLOUD_NAME) {
                 alert("Por favor configura tu CLOUDINARY_CLOUD_NAME en el código JavaScript.");
                 return "";
+            }
+
+            let typePath = resourceType;
+            if (resourceType === 'auto') {
+                if (fileObject.type.startsWith('video/')) typePath = 'video';
+                else if (fileObject.type.startsWith('image/')) typePath = 'image';
+                else typePath = 'raw';
             }
 
             const formData = new FormData();
@@ -1740,7 +1793,7 @@
             formData.append("folder", `lkbeats/${subfolderName}`);
 
             try {
-                const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`, {
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${typePath}/upload`, {
                     method: "POST",
                     body: formData
                 });
@@ -1751,53 +1804,13 @@
                 } else {
                     const errData = await response.json();
                     console.error("Error en subida a Cloudinary:", errData);
-                    alert("Error al subir video a Cloudinary: " + (errData.error?.message || "Revisa la consola"));
+                    alert("Error al subir archivo a Cloudinary: " + (errData.error?.message || "Revisa la consola"));
                     return "";
                 }
             } catch(e) {
                 console.error("Excepción en Cloudinary upload:", e);
                 return "";
             }
-        }
-
-        async function uploadFileToGitHubContent(fileObject, targetFolder, customFileName) {
-            if(!githubToken || !githubUser) return "";
-            const cleanName = customFileName.replace(/[^a-zA-Z0-9.\-_]/g, '_');
-            const targetPath = `${targetFolder}/${Date.now()}_${cleanName}`;
-            
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(fileObject);
-                reader.onload = async () => {
-                    const base64Data = reader.result.split(',')[1];
-                    try {
-                        const response = await fetch(`https://api.github.com/repos/${githubUser}/${githubRepo}/contents/${targetPath}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Authorization': `token ${githubToken}`,
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/vnd.github.v3+json'
-                            },
-                            body: JSON.stringify({
-                                message: `Upload asset payload via Handbook CMS: ${cleanName}`,
-                                content: base64Data
-                            })
-                        });
-                        
-                        if(response.ok) {
-                            const rawUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/main/${targetPath}`;
-                            resolve(rawUrl);
-                        } else {
-                            console.error("Error al subir a GitHub API:", await response.text());
-                            resolve("");
-                        }
-                    } catch(err) {
-                        console.error("Excepción en subida:", err);
-                        resolve("");
-                    }
-                };
-                reader.onerror = () => resolve("");
-            });
         }
 
         function triggerDownloadAlert(url) {
@@ -1856,12 +1869,12 @@
             }
             if(activeAudioElement) {
                 activeAudioElement.pause();
-                activeAudioElement.src = ""; // Liberar memoria del navegador
+                activeAudioElement.src = "";
                 activeAudioElement.load();
                 activeAudioElement = null;
             }
             if(audioCtx && audioCtx.state === 'running') {
-                audioCtx.suspend(); // Suspender para no consumir procesador en segundo plano
+                audioCtx.suspend();
             }
             if(activeAudioButton) {
                 activeAudioButton.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
@@ -1883,7 +1896,7 @@
             currentRotationAngle = 0;
         }
 
-        // VISUALIZADOR DE AUDIO - SIMÉTRICO Y UNIFICADO PARA TODAS LAS VISTAS
+        // VISUALIZADOR DE AUDIO - RECALCULADO PARA AJUSTARSE DINÁMICAMENTE EN CADA DRAW
         function startRadialCanvasVisualizer(canvas, analyser, containerElement, themeColor = "#d946ef") {
             if(!canvas) return;
             const ctx = canvas.getContext('2d');
@@ -1891,21 +1904,25 @@
             if(!audioDataArray || audioDataArray.length !== bufferLength) {
                 audioDataArray = new Uint8Array(bufferLength);
             }
-            
-            const rect = containerElement ? containerElement.getBoundingClientRect() : canvas.getBoundingClientRect();
-            const displaySize = Math.max(rect.width, rect.height) || 144;
-            
-            // Incremento suave del tamaño del visualizador manteniendo perfecta proporción
-            canvas.width = displaySize + 40; 
-            canvas.height = displaySize + 40;
-            
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const radius = (displaySize / 2) + 2; 
+
+            activeCanvas = canvas;
 
             function draw() {
                 if(!activeCanvas || activeCanvas !== canvas) return;
                 canvasAnimationId = requestAnimationFrame(draw);
+
+                const rect = containerElement ? containerElement.getBoundingClientRect() : canvas.getBoundingClientRect();
+                const displaySize = Math.max(rect.width, rect.height) || 144;
+                
+                if (canvas.width !== displaySize + 40 || canvas.height !== displaySize + 40) {
+                    canvas.width = displaySize + 40;
+                    canvas.height = displaySize + 40;
+                }
+                
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                const radius = (displaySize / 2) + 2; 
+
                 analyser.getByteFrequencyData(audioDataArray);
                 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1915,12 +1932,10 @@
                 for (let i = 0; i < barCount; i++) {
                     const angle = ((i / barCount) * Math.PI * 2) + currentRotationAngle;
                     
-                    // Mapeo simétrico perfecto
                     const targetIndex = i < barCount / 2 ? i : barCount - i;
                     const dataIndex = Math.floor((targetIndex / (barCount / 2)) * (bufferLength * 0.7));
                     const rawValue = audioDataArray[dataIndex] || 0;
                     
-                    // Mismo escalado de sensibilidad simétrico para PC y Móvil
                     let barHeight = (rawValue / 255);
                     if(dataIndex < 8) {
                         barHeight = Math.pow(barHeight, 1.2) * 16;
@@ -1942,31 +1957,14 @@
                     ctx.stroke();
                 }
             }
-            activeCanvas = canvas;
             draw();
         }
 
-        // Sincronización estricta: Se espera al evento canplaythrough para reproducciones de audio
+        // MOTOR DE AUDIO CON BOTÓN DE "ALTO" (STOP) TOTALMENTE FUNCIONAL
         function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement, containerElement, isModalOpen = false, themeColor = "#d946ef") {
-            if(activeAudioElement && activeAudioElement.dataset.url === audioUrl) {
-                // Si el audio ya está activo y sonando, solo transferimos o actualizamos los elementos de vista (Canvas/Boton/Color) sin reiniciar la música
-                if(canvasAnimationId) cancelAnimationFrame(canvasAnimationId);
-                
-                if(activeCanvas && activeCanvas !== canvasElement) {
-                    const oldCtx = activeCanvas.getContext('2d');
-                    oldCtx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
-                }
-                
-                activeAudioButton = btnElement;
-                activeAudioImg = imgElement;
-                activeArtContainer = containerElement;
-                activeVisualizerColor = themeColor;
-
-                if (containerElement) containerElement.classList.add('art-container-circular');
-                if (imgElement) imgElement.classList.remove('bg-zinc-900');
-                if (btnElement) btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
-
-                startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement, themeColor);
+            // Si el mismo audio está sonando y se pulsa el botón, DETENER (ALTO)
+            if(activeAudioElement && activeAudioElement.dataset.url === audioUrl && !activeAudioElement.paused) {
+                stopGlobalAudioPreview();
                 return;
             }
             
@@ -1984,7 +1982,7 @@
             audio.src = audioUrl;
             audio.dataset.url = audioUrl;
             audio.preload = "auto";
-            audio.loop = isModalOpen; // Si está dentro del modal, hace bucle indefinido mientras siga abierto
+            audio.loop = isModalOpen;
 
             const handleCanPlayThrough = () => {
                 if (activeAudioElement !== audio) return;
@@ -2069,7 +2067,6 @@
             });
         }
 
-        // Sincronización de video: Esperar a carga completa antes de arrancar
         function setupNativeVideoBehavior(vidWrapper) {
             if (!vidWrapper) return;
             const videoEl = vidWrapper.querySelector('video');
@@ -2492,7 +2489,6 @@
             return `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${styleClass} font-black uppercase text-[10px]">${graphicMarkup} <span>${label}</span></div>`;
         }
 
-        // DESPLIEGUE DEL VISUALIZADOR EN EL MODAL DE EDICIÓN CON COLOR SEGÚN SELECCIÓN Y BUCLE INFINITO
         function openBeatstarEditionSelector(lvl, outerArtBox) {
             activeModalBeatstarChart = lvl;
 
@@ -2515,7 +2511,6 @@
             const currentActive = activeChartSelectedEditions[lvl.id] || 'Standard';
             const isExplicit = !!activeChartExplicitStates[lvl.id];
             
-            // Preview Unificado de Audio
             const audioUrl = isExplicit ? (lvl.audioExplicit || lvl.audioDirectUrl) : lvl.audioDirectUrl;
 
             function updateModalEditionUI(selectedEd) {
@@ -2537,10 +2532,8 @@
                     const themeColor = (selectedEd === 'Deluxe') ? "#facc15" : "#d946ef";
                     if (activeAudioElement && activeAudioElement.dataset.url === audioUrl) {
                         activeAudioElement.loop = true;
-                        // Transferir controles y vista sin reiniciar la música
                         toggleAudioPreviewEngine(audioUrl, null, img, canvas, artContainer, true, themeColor);
                     } else {
-                        // Si no se estaba reproduciendo el audio correspondiente, iniciar reproducción
                         toggleAudioPreviewEngine(audioUrl, null, img, canvas, artContainer, true, themeColor);
                     }
                 }
@@ -2563,7 +2556,6 @@
                 box.classList.remove('art-circle-shape');
             });
 
-            // Si el audio está reproduciéndose al cerrar el modal, desactiva el bucle para que termine normalmente sin cortar la reproducción
             if(activeAudioElement) {
                 activeAudioElement.loop = false;
             }
@@ -2580,7 +2572,6 @@
             const tbody = document.getElementById('levels-tbody');
             if(!tbody) return; 
 
-            // Fragmento de documento para minimizar reflows y optimizar memoria en DOM
             const fragment = document.createDocumentFragment();
 
             let filtered = sortAscendingByDate(levels);
@@ -2621,7 +2612,6 @@
                 const isDeluxeActive = (currentSelectedEdition === 'Deluxe');
                 const isExplicitActive = !!activeChartExplicitStates[lvl.id];
 
-                // SELECCIÓN DE PROPIEDADES SEGÚN EDICIÓN Y ESTADO EXPLICITO
                 let currentDiffVal = isDeluxeActive ? (lvl.diffDeluxe || 'Extreme') : (lvl.diff || 'Normal');
                 let currentNotesVal = isExplicitActive 
                     ? (isDeluxeActive ? (lvl.notesDeluxeExplicit || lvl.notesExplicit || lvl.notesDeluxe || lvl.notes) : (lvl.notesExplicit || lvl.notes))
@@ -2635,7 +2625,6 @@
                     ? (isDeluxeActive ? (lvl.dateDeluxeExplicit || lvl.dateExplicit || lvl.dateDeluxe || lvl.date) : (lvl.dateExplicit || lvl.date))
                     : (isDeluxeActive ? (lvl.dateDeluxe || lvl.date) : lvl.date);
 
-                // AUDIO PREVIEW UNIFICADO (Solo 2 previews: Censurado vs Sin Censura)
                 let currentAudioUrl = isExplicitActive
                     ? (lvl.audioExplicit || lvl.audioDirectUrl)
                     : lvl.audioDirectUrl;
@@ -2724,7 +2713,6 @@
                     ? `<div class="block sm:hidden mt-1.5 text-center bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-md tracking-wider w-max mx-auto relative z-20">DELUXE</div>`
                     : `<div class="block sm:hidden mt-1.5 text-center bg-zinc-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-md tracking-wider w-max mx-auto relative z-20">STANDARD</div>`;
 
-                // SIMETRÍA Y TAMAÑO IDENTICO PARA BOTÓN "E" Y BOTÓN "PLAY" (w-7 h-7 sm:w-8 sm:h-8)
                 const explicitBtnStyle = isExplicitActive 
                     ? "bg-red-600 text-black border-red-500 glow-red" 
                     : "bg-black/80 text-zinc-400 border-zinc-700 hover:text-white";
@@ -2736,6 +2724,9 @@
                 ` : '';
 
                 const targetAudioThemeColor = isDeluxeActive ? "#facc15" : "#d946ef";
+
+                const isAudioPlayingThis = activeAudioElement && activeAudioElement.dataset.url === currentAudioUrl && !activeAudioElement.paused;
+                const playBtnIconClass = isAudioPlayingThis ? "fa-stop" : "fa-play";
 
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center align-middle">
@@ -2751,7 +2742,7 @@
 
                                 ${hasAudio ? `
                                     <button class="btn-play-audio-preview absolute bottom-1 right-1 w-7 h-7 sm:w-8 sm:h-8 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
-                                        <i class="fa-solid fa-play text-[10px]"></i>
+                                        <i class="fa-solid ${playBtnIconClass} text-[10px]"></i>
                                     </button>
                                 ` : ''}
                             </div>
@@ -2822,12 +2813,11 @@
                     });
                 }
 
-                // EVENTO BOTÓN EXPLICITO (E)
                 const explicitBtn = tr.querySelector('.btn-toggle-explicit-trigger');
                 explicitBtn?.addEventListener('click', (e) => {
                     e.stopPropagation();
                     if (activeChartExplicitStates[lvl.id]) {
-                        stopAllMedia(); // Detención completa al volver a la versión censurada
+                        stopAllMedia();
                         activeChartExplicitStates[lvl.id] = false;
                         renderLevelsTable();
                     } else {
@@ -2862,10 +2852,8 @@
                     const canvas = tr.querySelector('canvas');
                     const containerBox = tr.querySelector('.target-art-outer-container');
                     
-                    // Si el audio que está sonando globalmente coincide con este chart...
                     if (activeAudioElement && activeAudioElement.dataset.url === currentAudioUrl) {
                         if (activeAudioElement.readyState < 3) {
-                            // Si la canción se encuentra cargando, ocultar el visualizador en la tabla
                             if (canvas) {
                                 const ctx = canvas.getContext('2d');
                                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -2905,7 +2893,6 @@
                     document.getElementById('lvlDl2').value = lvl.dl2 || '';
                     document.getElementById('lvlDl3').value = lvl.dl3 || '';
 
-                    // Badges de archivos Standard / Audio Unificado
                     if(lvl.audioDirectUrl) { document.getElementById('current-lvl-audio-badge').classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio').classList.remove('hidden'); }
                     if(lvl.video) { document.getElementById('current-lvl-video-badge').classList.remove('hidden'); document.getElementById('btn-remove-lvl-video').classList.remove('hidden'); }
                     if(lvl.chartDirectUrl) { document.getElementById('current-chart-zip-badge').classList.remove('hidden'); document.getElementById('btn-remove-chart-zip').classList.remove('hidden'); }
@@ -3330,17 +3317,13 @@
             });
         });
 
+        // SUBIDA DE IMÁGENES DE MARCAS Y INSPIRACIÓN A CLOUDINARY
         document.getElementById('cosBrandFile').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if(file) {
-                if(!githubToken || !githubUser) {
-                    alert("Para subir imágenes debes haber iniciado sesión como Creador con tu Token de GitHub.");
-                    e.target.value = "";
-                    return;
-                }
                 showLoadingOverlay();
                 try {
-                    const uploadedUrl = await uploadFileToGitHubContent(file, 'assets/brands', file.name);
+                    const uploadedUrl = await uploadFileToCloudinary(file, 'brands', 'image');
                     if(uploadedUrl) {
                         editingCosBrandUrlsList.push(uploadedUrl);
                         renderBrandManagementFormInterface();
@@ -3351,7 +3334,7 @@
             }
         });
 
-        // REGISTRO DE CHARTS CON SOPORTE DE UNIFICACIÓN DE AUDIOS PREVIEW
+        // REGISTRO DE CHARTS CON MIGRACIÓN COMPLETA DE ASSETS A CLOUDINARY
         document.getElementById('level-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             showLoadingOverlay();
@@ -3378,64 +3361,66 @@
                 let finalZipExplicit = levelZipExplicitToRemove ? "" : (existingLvl?.zipExplicit || "");
                 let finalZipDeluxeExplicit = levelZipDeluxeExplicitToRemove ? "" : (existingLvl?.zipDeluxeExplicit || "");
 
+                // SUBIDA DE ARTE DE CANCIÓN A CLOUDINARY (IMAGEN)
                 const artFileInput = document.getElementById('lvlArtFile');
-                if(artFileInput.files && artFileInput.files[0] && githubToken && githubUser) {
-                    finalArtUrl = await uploadFileToGitHubContent(artFileInput.files[0], 'assets/charts', artFileInput.files[0].name);
+                if(artFileInput.files && artFileInput.files[0]) {
+                    finalArtUrl = await uploadFileToCloudinary(artFileInput.files[0], 'charts_art', 'image');
                 }
                 
-                // AUDIO PREVIEW UNIFICADO (NORMAL)
+                // SUBIDA DE AUDIO PREVIEW A CLOUDINARY
                 const audioFileInput = document.getElementById('lvlAudioFile');
-                if(audioFileInput.files && audioFileInput.files[0] && githubToken && githubUser) {
-                    finalAudioUrl = await uploadFileToGitHubContent(audioFileInput.files[0], 'assets/audio', audioFileInput.files[0].name);
+                if(audioFileInput.files && audioFileInput.files[0]) {
+                    finalAudioUrl = await uploadFileToCloudinary(audioFileInput.files[0], 'audio', 'auto');
                 }
 
+                // SUBIDA DE VIDEOS DE PREVIEW A CLOUDINARY
                 const videoFileInput = document.getElementById('lvlVideoFile');
                 if(videoFileInput.files && videoFileInput.files[0]) {
-                    finalVideoUrl = await uploadVideoToCloudinary(videoFileInput.files[0], 'prevchart');
+                    finalVideoUrl = await uploadFileToCloudinary(videoFileInput.files[0], 'prevchart', 'video');
                 }
 
                 const videoDeluxeFileInput = document.getElementById('lvlVideoFileDeluxe');
                 if(videoDeluxeFileInput?.files && videoDeluxeFileInput.files[0]) {
-                    finalVideoDeluxeUrl = await uploadVideoToCloudinary(videoDeluxeFileInput.files[0], 'prevchart');
+                    finalVideoDeluxeUrl = await uploadFileToCloudinary(videoDeluxeFileInput.files[0], 'prevchart', 'video');
                 }
 
+                // SUBIDA DE ARCHIVOS ZIP A CLOUDINARY (RAW)
                 const chartFileInput = document.getElementById('lvlChartZipFile');
-                if(chartFileInput.files && chartFileInput.files[0] && githubToken && githubUser) {
-                    finalChartDirectUrl = await uploadFileToGitHubContent(chartFileInput.files[0], 'charts', chartFileInput.files[0].name);
+                if(chartFileInput.files && chartFileInput.files[0]) {
+                    finalChartDirectUrl = await uploadFileToCloudinary(chartFileInput.files[0], 'charts_zip', 'raw');
                 }
 
                 const chartDeluxeFileInput = document.getElementById('lvlChartZipFileDeluxe');
-                if(chartDeluxeFileInput?.files && chartDeluxeFileInput.files[0] && githubToken && githubUser) {
-                    finalChartDirectUrlDeluxe = await uploadFileToGitHubContent(chartDeluxeFileInput.files[0], 'charts', chartDeluxeFileInput.files[0].name);
+                if(chartDeluxeFileInput?.files && chartDeluxeFileInput.files[0]) {
+                    finalChartDirectUrlDeluxe = await uploadFileToCloudinary(chartDeluxeFileInput.files[0], 'charts_zip', 'raw');
                 }
 
-                // ARCHIVOS SIN CENSURA SI EL TOGGLE ESTA ACTIVO
+                // ARCHIVOS SIN CENSURA SI EL TOGGLE ESTÁ ACTIVO (MIGRADO A CLOUDINARY)
                 const hasExplicit = document.getElementById('lvlHasExplicit').checked;
                 if(hasExplicit) {
-                    // AUDIO PREVIEW UNIFICADO (EXPLICIT)
                     const audioExpIn = document.getElementById('lvlAudioFileExplicit');
-                    if(audioExpIn?.files && audioExpIn.files[0] && githubToken && githubUser) {
-                        finalAudioExplicit = await uploadFileToGitHubContent(audioExpIn.files[0], 'assets/audio', audioExpIn.files[0].name);
+                    if(audioExpIn?.files && audioExpIn.files[0]) {
+                        finalAudioExplicit = await uploadFileToCloudinary(audioExpIn.files[0], 'audio', 'auto');
                     }
 
                     const vidExpIn = document.getElementById('lvlVideoFileExplicit');
                     if(vidExpIn?.files && vidExpIn.files[0]) {
-                        finalVideoExplicit = await uploadVideoToCloudinary(vidExpIn.files[0], 'prevchart');
+                        finalVideoExplicit = await uploadFileToCloudinary(vidExpIn.files[0], 'prevchart', 'video');
                     }
 
                     const vidDlxExpIn = document.getElementById('lvlVideoFileDeluxeExplicit');
                     if(vidDlxExpIn?.files && vidDlxExpIn.files[0]) {
-                        finalVideoDeluxeExplicit = await uploadVideoToCloudinary(vidDlxExpIn.files[0], 'prevchart');
+                        finalVideoDeluxeExplicit = await uploadFileToCloudinary(vidDlxExpIn.files[0], 'prevchart', 'video');
                     }
 
                     const zipExpIn = document.getElementById('lvlChartZipFileExplicit');
-                    if(zipExpIn?.files && zipExpIn.files[0] && githubToken && githubUser) {
-                        finalZipExplicit = await uploadFileToGitHubContent(zipExpIn.files[0], 'charts', zipExpIn.files[0].name);
+                    if(zipExpIn?.files && zipExpIn.files[0]) {
+                        finalZipExplicit = await uploadFileToCloudinary(zipExpIn.files[0], 'charts_zip', 'raw');
                     }
 
                     const zipDlxExpIn = document.getElementById('lvlChartZipFileDeluxeExplicit');
-                    if(zipDlxExpIn?.files && zipDlxExpIn.files[0] && githubToken && githubUser) {
-                        finalZipDeluxeExplicit = await uploadFileToGitHubContent(zipDlxExpIn.files[0], 'charts', zipDlxExpIn.files[0].name);
+                    if(zipDlxExpIn?.files && zipDlxExpIn.files[0]) {
+                        finalZipDeluxeExplicit = await uploadFileToCloudinary(zipDlxExpIn.files[0], 'charts_zip', 'raw');
                     }
                 }
 
@@ -3452,10 +3437,8 @@
                     editionMode: selectedEditionMode,
                     edition: (selectedEditionMode === 'Deluxe') ? 'Deluxe' : 'Standard',
 
-                    // Preview Unificado Normal
                     audioDirectUrl: finalAudioUrl, 
 
-                    // Standard Data & Links
                     diff: document.getElementById('lvlDiff').value,
                     notes: document.getElementById('lvlNotes').value.trim(),
                     duration: document.getElementById('lvlDuration').value.trim(),
@@ -3466,7 +3449,6 @@
                     dl2: document.getElementById('lvlDl2').value.trim(), 
                     dl3: document.getElementById('lvlDl3').value.trim(),
 
-                    // Deluxe Data & Links
                     diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
                     notesDeluxe: document.getElementById('lvlNotesDeluxe').value.trim(),
                     durationDeluxe: document.getElementById('lvlDurationDeluxe').value.trim(),
@@ -3477,7 +3459,6 @@
                     dl2Deluxe: document.getElementById('lvlDl2Deluxe').value.trim(),
                     dl3Deluxe: document.getElementById('lvlDl3Deluxe').value.trim(),
 
-                    // Datos Explícitos Independientes (con Preview Unificado Explicit)
                     hasExplicit: hasExplicit,
                     audioExplicit: finalAudioExplicit,
                     notesExplicit: document.getElementById('lvlNotesExplicit').value.trim(),
@@ -3513,7 +3494,7 @@
             }
         });
 
-        // REGISTRO DE SKINS
+        // REGISTRO DE SKINS MIGRADO A CLOUDINARY
         document.getElementById('cosmetic-form').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -3533,19 +3514,22 @@
                 let finalVideoUrl = cosmeticVideoToRemove ? "" : (existingCos?.video || "");
                 let finalSkinDirectUrl = cosmeticZipToRemove ? "" : (existingCos?.skinDirectUrl || "");
 
+                // SUBIDA DE ICONO DE SKIN A CLOUDINARY
                 const iconFileInput = document.getElementById('cosIconFile');
-                if(iconFileInput.files && iconFileInput.files[0] && githubToken && githubUser) {
-                    finalIconUrl = await uploadFileToGitHubContent(iconFileInput.files[0], 'assets/skins', iconFileInput.files[0].name);
+                if(iconFileInput.files && iconFileInput.files[0]) {
+                    finalIconUrl = await uploadFileToCloudinary(iconFileInput.files[0], 'skins_icon', 'image');
                 }
 
+                // SUBIDA DE VIDEO A CLOUDINARY
                 const videoFileInput = document.getElementById('cosVideoFile');
                 if(videoFileInput.files && videoFileInput.files[0]) {
-                    finalVideoUrl = await uploadVideoToCloudinary(videoFileInput.files[0], 'prevskins');
+                    finalVideoUrl = await uploadFileToCloudinary(videoFileInput.files[0], 'prevskins', 'video');
                 }
 
+                // SUBIDA DE ZIP DE SKIN A CLOUDINARY (RAW)
                 const skinZipFileInput = document.getElementById('cosSkinZipFile');
-                if(skinZipFileInput.files && skinZipFileInput.files[0] && githubToken && githubUser) {
-                    finalSkinDirectUrl = await uploadFileToGitHubContent(skinZipFileInput.files[0], 'skins', skinZipFileInput.files[0].name);
+                if(skinZipFileInput.files && skinZipFileInput.files[0]) {
+                    finalSkinDirectUrl = await uploadFileToCloudinary(skinZipFileInput.files[0], 'skins_zip', 'raw');
                 }
 
                 let finalInspString = editingCosBrandUrlsList.join(', ');
@@ -3599,9 +3583,9 @@
                 const f2 = document.getElementById('thanks-vid2-file').files[0];
                 const f3 = document.getElementById('thanks-vid3-file').files[0];
 
-                if(f1) urlsDict[0] = await uploadVideoToCloudinary(f1, 'videos');
-                if(f2) urlsDict[1] = await uploadVideoToCloudinary(f2, 'videos');
-                if(f3) urlsDict[3] = await uploadVideoToCloudinary(f3, 'videos');
+                if(f1) urlsDict[0] = await uploadFileToCloudinary(f1, 'videos', 'video');
+                if(f2) urlsDict[1] = await uploadFileToCloudinary(f2, 'videos', 'video');
+                if(f3) urlsDict[2] = await uploadFileToCloudinary(f3, 'videos', 'video');
 
                 if(db) {
                     await set(ref(db, 'thanks_videos'), urlsDict);
