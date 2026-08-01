@@ -265,7 +265,7 @@
     <!-- MODAL SELECCIÓN DE EDICIONES ESTILO BEATSTAR -->
     <div id="beatstar-edition-modal" class="hidden fixed inset-0 bg-black/90 z-[150] flex items-center justify-center p-4 backdrop-blur-md transition-all duration-300">
         <div class="bg-[#11091c]/95 border border-fuchsia-500/40 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative flex flex-col md:flex-row landscape-pc-edition-layout items-center justify-center gap-6 sm:gap-8 border-t-2 border-t-fuchsia-500 max-h-[88vh] overflow-y-auto">
-            <div class="flex flex-col items-center justify-center shrink-0 pc-shift-right landscape-shift-right">
+            <div class="flex flex-col items-center justify-center shrink-0 pc-shift-right landscape-shift-right relative z-20">
                 <div class="relative w-36 h-36 sm:w-44 sm:h-44 flex items-center justify-center pointer-events-none">
                     <canvas id="modal-edition-canvas" class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
                     <div id="modal-edition-art-container" class="w-full h-full rounded-full overflow-hidden border-4 border-fuchsia-500 shadow-2xl relative bg-zinc-950 art-beatstar-transform z-10 pointer-events-none">
@@ -274,8 +274,8 @@
                         <div id="modal-edition-standard-badge" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-zinc-400 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest shadow-lg z-20">STANDARD</div>
                     </div>
                 </div>
-                <h3 id="modal-edition-song-title" class="text-base sm:text-lg font-black text-white text-center mt-3 uppercase tracking-wider">Song Title</h3>
-                <p id="modal-edition-artist-title" class="text-xs text-zinc-400 font-medium text-center">Artist</p>
+                <h3 id="modal-edition-song-title" class="text-base sm:text-lg font-black text-white text-center mt-3 uppercase tracking-wider relative z-20">Song Title</h3>
+                <p id="modal-edition-artist-title" class="text-xs text-zinc-400 font-medium text-center relative z-20">Artist</p>
             </div>
 
             <div class="flex-1 w-full flex flex-col justify-center">
