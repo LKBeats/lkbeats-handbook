@@ -1441,6 +1441,7 @@
         });
 
         document.getElementById('btn-confirm-explicit').addEventListener('click', () => {
+            stopAllMedia(); // Detención completa de audio y video al confirmar activación explícita
             if (pendingExplicitActivationChartId) {
                 activeChartExplicitStates[pendingExplicitActivationChartId] = true;
                 pendingExplicitActivationChartId = null;
@@ -1881,7 +1882,7 @@
             currentRotationAngle = 0;
         }
 
-        // VISUALIZADOR MÁS COMPACTO Y DINÁMICO (SENSIBILIDAD MAYOR EN BAJOS Y TAMAÑO REDUCIDO)
+        // VISUALIZADOR DE AUDIO - SIMÉTRICO Y UNIFICADO PARA TODAS LAS VISTAS
         function startRadialCanvasVisualizer(canvas, analyser, containerElement, themeColor = "#d946ef") {
             if(!canvas) return;
             const ctx = canvas.getContext('2d');
@@ -1893,13 +1894,13 @@
             const rect = containerElement ? containerElement.getBoundingClientRect() : canvas.getBoundingClientRect();
             const displaySize = Math.max(rect.width, rect.height) || 144;
             
-            // Ligera reducción del lienzo canvas para evitar saturación
-            canvas.width = displaySize + 32; 
-            canvas.height = displaySize + 32;
+            // Incremento suave del tamaño del visualizador manteniendo perfecta proporción
+            canvas.width = displaySize + 40; 
+            canvas.height = displaySize + 40;
             
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            const radius = (displaySize / 2) - 1; 
+            const radius = (displaySize / 2) + 2; 
 
             function draw() {
                 if(!activeCanvas || activeCanvas !== canvas) return;
@@ -1912,16 +1913,18 @@
                 const barCount = 64; 
                 for (let i = 0; i < barCount; i++) {
                     const angle = ((i / barCount) * Math.PI * 2) + currentRotationAngle;
+                    
+                    // Mapeo simétrico perfecto
                     const targetIndex = i < barCount / 2 ? i : barCount - i;
-                    const dataIndex = Math.floor((targetIndex / (barCount / 2)) * bufferLength * 0.5);
+                    const dataIndex = Math.floor((targetIndex / (barCount / 2)) * (bufferLength * 0.7));
                     const rawValue = audioDataArray[dataIndex] || 0;
                     
-                    // Ajuste de sensibilidad: Frecuencias bajas (bajos) más marcadas, altas reducidas un poco
+                    // Mismo escalado de sensibilidad simétrico para PC y Móvil
                     let barHeight = (rawValue / 255);
-                    if(dataIndex < 6) {
-                        barHeight = barHeight * 18; // Resalte de Bajos
+                    if(dataIndex < 8) {
+                        barHeight = Math.pow(barHeight, 1.2) * 16;
                     } else {
-                        barHeight = Math.pow(barHeight, 1.3) * 12; // Sensibilidad atenuada en agudos/medios
+                        barHeight = Math.pow(barHeight, 1.3) * 14;
                     }
                     
                     const startX = centerX + Math.cos(angle) * radius;
@@ -2734,7 +2737,7 @@
                     <td class="p-2 sm:p-4 text-center align-middle">
                         <div class="flex flex-col items-center justify-center relative">
                             <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
-                                <canvas class="absolute -inset-4 w-[calc(100%+2rem)] h-[calc(100%+2rem)] pointer-events-none z-0"></canvas>
+                                <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
                                 <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
                                     <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
                                     ${artOverlayBadgeDesktop}
@@ -2819,6 +2822,7 @@
                 const explicitBtn = tr.querySelector('.btn-toggle-explicit-trigger');
                 explicitBtn?.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    stopAllMedia(); // Detención completa al desactivar/cambiar estado sin censura
                     if (activeChartExplicitStates[lvl.id]) {
                         activeChartExplicitStates[lvl.id] = false;
                         renderLevelsTable();
