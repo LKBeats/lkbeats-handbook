@@ -97,10 +97,10 @@
     <div id="beatstar-edition-modal" class="hidden fixed inset-0 bg-black/90 z-[150] flex items-center justify-center p-4 backdrop-blur-md transition-all duration-300">
         <div class="bg-[#11091c]/95 border border-fuchsia-500/40 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-8 border-t-2 border-t-fuchsia-500">
             <div class="flex flex-col items-center justify-center shrink-0">
-                <div class="relative w-36 h-36 sm:w-44 sm:h-44 flex items-center justify-center pointer-events-none">
+                <div class="relative w-36 h-36 sm:w-44 sm:h-44 flex items-center justify-center">
                     <canvas id="modal-edition-canvas" class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
-                    <div id="modal-edition-art-container" class="w-full h-full rounded-full overflow-hidden border-4 border-fuchsia-500 shadow-2xl relative bg-zinc-950 art-beatstar-transform z-10 pointer-events-none">
-                        <img id="modal-edition-art-img" src="free_song_Image.png" class="w-full h-full object-cover pointer-events-none">
+                    <div id="modal-edition-art-container" class="w-full h-full rounded-full overflow-hidden border-4 border-fuchsia-500 shadow-2xl relative bg-zinc-950 art-beatstar-transform z-10">
+                        <img id="modal-edition-art-img" src="free_song_Image.png" class="w-full h-full object-cover">
                         <div id="modal-edition-deluxe-badge" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest shadow-lg z-20">DELUXE</div>
                         <div id="modal-edition-standard-badge" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-zinc-400 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest shadow-lg z-20">STANDARD</div>
                     </div>
@@ -885,7 +885,7 @@
 
                         <div>
                             <div class="flex items-center justify-between mb-1">
-                                <label class="block font-bold text-zinc-400 uppercase tracking-wider"><span data-i18n="formGenre">Género</span> <span class="text-red-500">*</span></label>
+                                <label class="font-bold text-zinc-400 uppercase tracking-wider"><span data-i18n="formGenre">Género</span> <span class="text-red-500">*</span></label>
                                 <button type="button" id="btn-skin-universal-genre" class="px-2 py-0.5 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-extrabold rounded text-[10px] transition uppercase" data-i18n="btnUniversal">Universal</button>
                             </div>
                             <div id="skin-genres-container" class="grid grid-cols-1 gap-1 max-h-36 overflow-y-auto border border-fuchsia-950 p-2 rounded-lg bg-[#05020a]"></div>
@@ -1881,7 +1881,7 @@
             currentRotationAngle = 0;
         }
 
-        // VISUALIZADOR MÁS COMPACTO Y DINÁMICO (SENSIBILIDAD UNIFICADA Y CONSTANTE EN BASS Y FRECUENCIAS)
+        // VISUALIZADOR MÁS COMPACTO Y DINÁMICO (SENSIBILIDAD MAYOR EN BAJOS Y TAMAÑO REDUCIDO)
         function startRadialCanvasVisualizer(canvas, analyser, containerElement, themeColor = "#d946ef") {
             const ctx = canvas.getContext('2d');
             const bufferLength = analyser.frequencyBinCount;
@@ -1892,6 +1892,7 @@
             const rect = containerElement.getBoundingClientRect();
             const displaySize = Math.max(rect.width, rect.height) || 144;
             
+            // Ligera reducción del lienzo canvas para evitar saturación
             canvas.width = displaySize + 32; 
             canvas.height = displaySize + 32;
             
@@ -1914,12 +1915,12 @@
                     const dataIndex = Math.floor((targetIndex / (barCount / 2)) * bufferLength * 0.5);
                     const rawValue = audioDataArray[dataIndex] || 0;
                     
-                    // Ajuste de sensibilidad unificado: Frecuencias bajas (bajos) más marcadas y homogéneas en todo el handbook
+                    // Ajuste de sensibilidad: Frecuencias bajas (bajos) más marcadas, altas reducidas un poco
                     let barHeight = (rawValue / 255);
                     if(dataIndex < 6) {
-                        barHeight = barHeight * 18; // Resalte constante de Bajos
+                        barHeight = barHeight * 18; // Resalte de Bajos
                     } else {
-                        barHeight = Math.pow(barHeight, 1.3) * 12; // Sensibilidad unificada
+                        barHeight = Math.pow(barHeight, 1.3) * 12; // Sensibilidad atenuada en agudos/medios
                     }
                     
                     const startX = centerX + Math.cos(angle) * radius;
@@ -1927,7 +1928,7 @@
                     const endX = centerX + Math.cos(angle) * (radius + barHeight);
                     const endY = centerY + Math.sin(angle) * (radius + barHeight);
                     
-                    ctx.strokeStyle = activeVisualizerColor || themeColor;
+                    ctx.strokeStyle = themeColor;
                     ctx.lineWidth = 2.2;
                     ctx.lineCap = 'round';
                     ctx.beginPath();
@@ -1940,29 +1941,9 @@
             draw();
         }
 
-        // Sincronización estricta: Se espera al evento canplaythrough para reproducciones de audio con soporte de transferencia continua
+        // Sincronización estricta: Se espera al evento canplaythrough para reproducciones de audio
         function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement, containerElement, isModalOpen = false, themeColor = "#d946ef") {
             if(activeAudioElement && activeAudioElement.dataset.url === audioUrl) {
-                // Si el audio es el mismo y se cambia el contenedor (ej. al abrir o cerrar modal)
-                if (activeCanvas !== canvasElement || activeArtContainer !== containerElement) {
-                    if (canvasAnimationId) cancelAnimationFrame(canvasAnimationId);
-                    if (activeArtContainer) activeArtContainer.classList.remove('art-container-circular');
-                    if (activeCanvas) {
-                        const ctx = activeCanvas.getContext('2d');
-                        ctx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
-                    }
-                    activeAudioButton = btnElement;
-                    activeAudioImg = imgElement;
-                    activeArtContainer = containerElement;
-                    activeVisualizerColor = themeColor;
-                    if (activeArtContainer) activeArtContainer.classList.add('art-container-circular');
-                    if (activeAudioImg) activeAudioImg.classList.remove('bg-zinc-900');
-                    if (btnElement) btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
-                    activeCanvas = canvasElement;
-                    activeAudioElement.loop = isModalOpen;
-                    startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement, themeColor);
-                    return;
-                }
                 stopGlobalAudioPreview();
                 return;
             }
@@ -1981,7 +1962,7 @@
             audio.src = audioUrl;
             audio.dataset.url = audioUrl;
             audio.preload = "auto";
-            audio.loop = isModalOpen; 
+            audio.loop = isModalOpen; // Si está dentro del modal, hace bucle indefinido mientras siga abierto
 
             const handleCanPlayThrough = () => {
                 if (activeAudioElement !== audio) return;
@@ -2489,8 +2470,9 @@
             return `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${styleClass} font-black uppercase text-[10px]">${graphicMarkup} <span>${label}</span></div>`;
         }
 
-        // DESPLIEGUE DEL VISUALIZADOR EN EL MODAL DE EDICIÓN CON CONTINUIDAD Y BUCLE MIENTRAS ESTÉ ABIERTO
+        // DESPLIEGUE DEL VISUALIZADOR EN EL MODAL DE EDICIÓN CON COLOR SEGÚN SELECCIÓN Y BUCLE INFINITO
         function openBeatstarEditionSelector(lvl, outerArtBox) {
+            stopAllMedia();
             activeModalBeatstarChart = lvl;
 
             const modal = document.getElementById('beatstar-edition-modal');
@@ -2553,27 +2535,13 @@
                 box.classList.remove('art-circle-shape');
             });
 
-            const currentChart = activeModalBeatstarChart;
-            activeModalBeatstarChart = null;
+            // Si el audio está reproduciéndose al cerrar el modal, desactiva el bucle para que termine normalmente
+            if(activeAudioElement) {
+                activeAudioElement.loop = false;
+            }
 
             modal.classList.add('hidden');
             renderLevelsTable();
-
-            // Sincronizar y re-vincular el visualizador al contenedor de la tabla para dar continuidad sin pausar la música
-            if (currentChart && activeAudioElement) {
-                const targetTr = document.querySelector(`tr[data-chart-id="${currentChart.id}"]`);
-                if (targetTr) {
-                    const tableBtn = targetTr.querySelector('.btn-play-audio-preview');
-                    const tableImg = targetTr.querySelector('.target-lvl-art-img');
-                    const tableCanvas = targetTr.querySelector('canvas');
-                    const tableContainerBox = targetTr.querySelector('.target-art-outer-container');
-                    const isDeluxe = activeChartSelectedEditions[currentChart.id] === 'Deluxe';
-                    const themeColor = isDeluxe ? "#facc15" : "#d946ef";
-                    
-                    activeAudioElement.loop = false; // Quitar bucle del modal para que termine normalmente en la tabla
-                    toggleAudioPreviewEngine(activeAudioElement.dataset.url, tableBtn, tableImg, tableCanvas, tableContainerBox, false, themeColor);
-                }
-            }
         }
 
         document.getElementById('btn-close-beatstar-modal')?.addEventListener('click', () => closeBeatstarEditionSelector(null));
@@ -2665,7 +2633,6 @@
                     : (isDeluxeActive ? (lvl.dl3Deluxe || lvl.dl3) : lvl.dl3);
 
                 const tr = document.createElement('tr');
-                tr.setAttribute('data-chart-id', lvl.id);
                 tr.className = "hover:bg-fuchsia-950/20 transition border-b-2 border-fuchsia-900/50 shadow-sm";
 
                 let editionGraphicMarkup = '';
@@ -2742,15 +2709,13 @@
 
                 const targetAudioThemeColor = isDeluxeActive ? "#facc15" : "#d946ef";
 
-                const isCurrentlyPlayingThisTrack = activeAudioElement && activeAudioElement.dataset.url === currentAudioUrl;
-
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center align-middle">
                         <div class="flex flex-col items-center justify-center relative">
                             <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
                                 <canvas class="absolute -inset-4 w-[calc(100%+2rem)] h-[calc(100%+2rem)] pointer-events-none z-0"></canvas>
-                                <div class="target-art-outer-container art-beatstar-transform ${isCurrentlyPlayingThisTrack ? 'art-container-circular' : ''} ${isDual ? 'cursor-pointer hover:scale-105' : ''} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
-                                    <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover ${isCurrentlyPlayingThisTrack ? '' : 'bg-zinc-900'} transition-colors" onerror="this.src='free_song_Image.png'">
+                                <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
+                                    <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
                                     ${artOverlayBadgeDesktop}
                                 </div>
 
@@ -2758,7 +2723,7 @@
 
                                 ${hasAudio ? `
                                     <button class="btn-play-audio-preview absolute bottom-1 right-1 w-7 h-7 sm:w-8 sm:h-8 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
-                                        <i class="fa-solid ${isCurrentlyPlayingThisTrack ? 'fa-stop' : 'fa-play'} text-[10px]"></i>
+                                        <i class="fa-solid fa-play text-[10px]"></i>
                                     </button>
                                 ` : ''}
                             </div>
@@ -2820,14 +2785,6 @@
                         </div>
                     </td>
                 `;
-
-                if (isCurrentlyPlayingThisTrack) {
-                    activeAudioButton = tr.querySelector('.btn-play-audio-preview');
-                    activeAudioImg = tr.querySelector('.target-lvl-art-img');
-                    activeArtContainer = tr.querySelector('.target-art-outer-container');
-                    activeCanvas = tr.querySelector('canvas');
-                    startRadialCanvasVisualizer(activeCanvas, audioAnalyser, activeArtContainer, targetAudioThemeColor);
-                }
 
                 if (isDual) {
                     const artOuterBox = tr.querySelector('.target-art-outer-container');
