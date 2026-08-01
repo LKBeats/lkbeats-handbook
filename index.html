@@ -99,7 +99,7 @@
             <div class="flex flex-col items-center justify-center shrink-0">
                 <div class="relative w-36 h-36 sm:w-44 sm:h-44 flex items-center justify-center">
                     <canvas id="modal-edition-canvas" class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
-                    <div id="modal-edition-art-container" class="w-full h-full rounded-full overflow-hidden border-4 border-fuchsia-500 shadow-2xl relative bg-zinc-950 art-beatstar-transform z-10">
+                    <div id="modal-edition-art-container" class="w-full h-full rounded-full overflow-hidden border-4 border-fuchsia-500 shadow-2xl relative bg-zinc-950 art-beatstar-transform z-10 pointer-events-none">
                         <img id="modal-edition-art-img" src="free_song_Image.png" class="w-full h-full object-cover">
                         <div id="modal-edition-deluxe-badge" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest shadow-lg z-20">DELUXE</div>
                         <div id="modal-edition-standard-badge" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-zinc-400 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest shadow-lg z-20">STANDARD</div>
@@ -1121,14 +1121,14 @@
                 requiredFieldMsg: "Por favor completa este campo.",
                 labelMaxVideoSize: "Máx. 100 MB",
                 btnExclusive: "Exclusivo",
-                chartExclusiveLabel: "Exclusivo del Handbook",
-                skinExclusiveLabel: "Exclusivo del Handbook",
+                chartExclusiveLabel: "Handbook Exclusive",
+                skinExclusiveLabel: "Handbook Exclusive",
                 btnMoreInfo: "Más información",
                 btnShowLess: "Mostrar menos",
                 selectEditionPrompt: "EDITIONS",
-                explicitModalTitle: "¿Habilitar versión sin censura?",
+                explicitModalTitle: "Enable uncensored version?",
                 explicitModalNotice: "AVISO: Esta canción puede incluir contenido sensible no apto para todo público.",
-                btnActivate: "Habilitar",
+                btnActivate: "Enable",
                 lblExplicitContentToggle: "Contenido Explícito",
                 lblExplicitSectionHeader: "Datos Sin Censura / Explicit",
                 lblDeluxeDiff: "Dificultad Deluxe",
@@ -1276,7 +1276,6 @@
         let activeVideoElement = null;
         let activeVisualizerColor = "#d946ef";
 
-        // Búfer reutilizable para evitar la asignación de memoria recurrente en cada frame de dibujo
         let audioDataArray = null;
 
         let levelZipToRemove = false;
@@ -1555,7 +1554,6 @@
                 else submitBtn.innerText = translations[currentLanguage].btnRegister;
             }
 
-            // Ocultar Badges y botones de borrado
             const badgesToHide = [
                 'current-chart-zip-badge', 'btn-remove-chart-zip',
                 'current-lvl-video-badge', 'btn-remove-lvl-video',
@@ -1854,12 +1852,12 @@
             }
             if(activeAudioElement) {
                 activeAudioElement.pause();
-                activeAudioElement.src = ""; // Liberar memoria del navegador
+                activeAudioElement.src = "";
                 activeAudioElement.load();
                 activeAudioElement = null;
             }
             if(audioCtx && audioCtx.state === 'running') {
-                audioCtx.suspend(); // Suspender para no consumir procesador en segundo plano
+                audioCtx.suspend();
             }
             if(activeAudioButton) {
                 activeAudioButton.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
@@ -1881,7 +1879,7 @@
             currentRotationAngle = 0;
         }
 
-        // VISUALIZADOR MÁS COMPACTO Y DINÁMICO (SENSIBILIDAD MAYOR EN BAJOS Y TAMAÑO REDUCIDO)
+        // VISUALIZADOR CON SENSIBILIDAD UNIFORME EN TODO EL ESPECTRO DE FRECUENCIAS
         function startRadialCanvasVisualizer(canvas, analyser, containerElement, themeColor = "#d946ef") {
             const ctx = canvas.getContext('2d');
             const bufferLength = analyser.frequencyBinCount;
@@ -1892,7 +1890,6 @@
             const rect = containerElement.getBoundingClientRect();
             const displaySize = Math.max(rect.width, rect.height) || 144;
             
-            // Ligera reducción del lienzo canvas para evitar saturación
             canvas.width = displaySize + 32; 
             canvas.height = displaySize + 32;
             
@@ -1915,20 +1912,15 @@
                     const dataIndex = Math.floor((targetIndex / (barCount / 2)) * bufferLength * 0.5);
                     const rawValue = audioDataArray[dataIndex] || 0;
                     
-                    // Ajuste de sensibilidad: Frecuencias bajas (bajos) más marcadas, altas reducidas un poco
-                    let barHeight = (rawValue / 255);
-                    if(dataIndex < 6) {
-                        barHeight = barHeight * 18; // Resalte de Bajos
-                    } else {
-                        barHeight = Math.pow(barHeight, 1.3) * 12; // Sensibilidad atenuada en agudos/medios
-                    }
+                    // SENSIBILIDAD UNIFORME Y DINÁMICA IGUAL PARA BASS, MEDIOS Y AGUDOS
+                    const barHeight = (rawValue / 255) * 16;
                     
                     const startX = centerX + Math.cos(angle) * radius;
                     const startY = centerY + Math.sin(angle) * radius;
                     const endX = centerX + Math.cos(angle) * (radius + barHeight);
                     const endY = centerY + Math.sin(angle) * (radius + barHeight);
                     
-                    ctx.strokeStyle = themeColor;
+                    ctx.strokeStyle = activeVisualizerColor || themeColor;
                     ctx.lineWidth = 2.2;
                     ctx.lineCap = 'round';
                     ctx.beginPath();
@@ -1941,14 +1933,33 @@
             draw();
         }
 
-        // Sincronización estricta: Se espera al evento canplaythrough para reproducciones de audio
+        // CONTROL CONTINUO Y REUTILIZACIÓN DE INSTANCIA DE AUDIO ACTIVA
         function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement, containerElement, isModalOpen = false, themeColor = "#d946ef") {
+            // Si el audio que intenta sonar ya es la instancia activa, solo reconectamos su destino de dibujo
             if(activeAudioElement && activeAudioElement.dataset.url === audioUrl) {
-                stopGlobalAudioPreview();
+                if(btnElement && btnElement !== activeAudioButton) {
+                    if(activeAudioButton) activeAudioButton.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
+                    activeAudioButton = btnElement;
+                    activeAudioButton.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
+                }
+
+                activeAudioElement.loop = isModalOpen;
+                activeVisualizerColor = themeColor;
+                activeCanvas = canvasElement;
+                activeArtContainer = containerElement;
+
+                if (activeAudioElement.paused) {
+                    activeAudioElement.play();
+                }
+
+                if(audioAnalyser) {
+                    startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement, themeColor);
+                }
                 return;
             }
-            
-            stopAllMedia();
+
+            // Si es un audio totalmente nuevo, detenemos el anterior y cargamos la nueva canción
+            stopGlobalAudioPreview();
             if(btnElement) btnElement.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-[10px]"></i>`;
 
             if(!audioCtx) {
@@ -1962,23 +1973,21 @@
             audio.src = audioUrl;
             audio.dataset.url = audioUrl;
             audio.preload = "auto";
-            audio.loop = isModalOpen; // Si está dentro del modal, hace bucle indefinido mientras siga abierto
+            audio.loop = isModalOpen;
 
             const handleCanPlayThrough = () => {
                 if (activeAudioElement !== audio) return;
                 
                 if(btnElement) btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
-                containerElement.classList.add('art-container-circular');
-                imgElement.classList.remove('bg-zinc-900');
+                if(containerElement) containerElement.classList.add('art-container-circular');
+                if(imgElement) imgElement.classList.remove('bg-zinc-900');
 
                 if(audioCtx.state === 'suspended') audioCtx.resume();
 
                 try {
-                    if(!audioSource || audioSource.mediaElement !== audio) {
-                        audioSource = audioCtx.createMediaElementSource(audio);
-                        audioSource.connect(audioAnalyser);
-                        audioAnalyser.connect(audioCtx.destination);
-                    }
+                    audioSource = audioCtx.createMediaElementSource(audio);
+                    audioSource.connect(audioAnalyser);
+                    audioAnalyser.connect(audioCtx.destination);
                 } catch(e) {}
 
                 audio.play().then(() => {
@@ -2047,7 +2056,6 @@
             });
         }
 
-        // Sincronización de video: Esperar a carga completa antes de arrancar
         function setupNativeVideoBehavior(vidWrapper) {
             if (!vidWrapper) return;
             const videoEl = vidWrapper.querySelector('video');
@@ -2470,9 +2478,8 @@
             return `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${styleClass} font-black uppercase text-[10px]">${graphicMarkup} <span>${label}</span></div>`;
         }
 
-        // DESPLIEGUE DEL VISUALIZADOR EN EL MODAL DE EDICIÓN CON COLOR SEGÚN SELECCIÓN Y BUCLE INFINITO
+        // APERTURA DE MODAL CON CONTINUIDAD Y TRANSICIÓN DE VISUALIZADOR
         function openBeatstarEditionSelector(lvl, outerArtBox) {
-            stopAllMedia();
             activeModalBeatstarChart = lvl;
 
             const modal = document.getElementById('beatstar-edition-modal');
@@ -2494,7 +2501,6 @@
             const currentActive = activeChartSelectedEditions[lvl.id] || 'Standard';
             const isExplicit = !!activeChartExplicitStates[lvl.id];
             
-            // Preview Unificado de Audio
             const audioUrl = isExplicit ? (lvl.audioExplicit || lvl.audioDirectUrl) : lvl.audioDirectUrl;
 
             function updateModalEditionUI(selectedEd) {
@@ -2514,7 +2520,17 @@
 
                 if(audioUrl) {
                     const themeColor = (selectedEd === 'Deluxe') ? "#facc15" : "#d946ef";
-                    toggleAudioPreviewEngine(audioUrl, null, img, canvas, artContainer, true, themeColor);
+                    
+                    // Si ya estaba sonando la canción, traslada el visualizador al canvas del modal sin pausar
+                    if(activeAudioElement && activeAudioElement.dataset.url === audioUrl) {
+                        activeAudioElement.loop = true;
+                        activeVisualizerColor = themeColor;
+                        if(audioAnalyser) {
+                            startRadialCanvasVisualizer(canvas, audioAnalyser, artContainer, themeColor);
+                        }
+                    } else {
+                        toggleAudioPreviewEngine(audioUrl, null, img, canvas, artContainer, true, themeColor);
+                    }
                 }
             }
 
@@ -2525,6 +2541,7 @@
             modal.classList.remove('hidden');
         }
 
+        // CIERRE DE MODAL Y RETORNO DE CONTINUIDAD A LA PORTADA
         function closeBeatstarEditionSelector(selectedEdition) {
             const modal = document.getElementById('beatstar-edition-modal');
             if (activeModalBeatstarChart && selectedEdition) {
@@ -2535,13 +2552,12 @@
                 box.classList.remove('art-circle-shape');
             });
 
-            // Si el audio está reproduciéndose al cerrar el modal, desactiva el bucle para que termine normalmente
             if(activeAudioElement) {
-                activeAudioElement.loop = false;
+                activeAudioElement.loop = false; // Desactivar bucle al salir del modal
             }
 
             modal.classList.add('hidden');
-            renderLevelsTable();
+            renderLevelsTable(); // Re-renderizar la tabla trasladando el visualizador sin cortar audio
         }
 
         document.getElementById('btn-close-beatstar-modal')?.addEventListener('click', () => closeBeatstarEditionSelector(null));
@@ -2552,7 +2568,6 @@
             const tbody = document.getElementById('levels-tbody');
             if(!tbody) return; 
 
-            // Fragmento de documento para minimizar reflows y optimizar memoria en DOM
             const fragment = document.createDocumentFragment();
 
             let filtered = sortAscendingByDate(levels);
@@ -2593,7 +2608,6 @@
                 const isDeluxeActive = (currentSelectedEdition === 'Deluxe');
                 const isExplicitActive = !!activeChartExplicitStates[lvl.id];
 
-                // SELECCIÓN DE PROPIEDADES SEGÚN EDICIÓN Y ESTADO EXPLICITO
                 let currentDiffVal = isDeluxeActive ? (lvl.diffDeluxe || 'Extreme') : (lvl.diff || 'Normal');
                 let currentNotesVal = isExplicitActive 
                     ? (isDeluxeActive ? (lvl.notesDeluxeExplicit || lvl.notesExplicit || lvl.notesDeluxe || lvl.notes) : (lvl.notesExplicit || lvl.notes))
@@ -2607,7 +2621,6 @@
                     ? (isDeluxeActive ? (lvl.dateDeluxeExplicit || lvl.dateExplicit || lvl.dateDeluxe || lvl.date) : (lvl.dateExplicit || lvl.date))
                     : (isDeluxeActive ? (lvl.dateDeluxe || lvl.date) : lvl.date);
 
-                // AUDIO PREVIEW UNIFICADO (Solo 2 previews: Censurado vs Sin Censura)
                 let currentAudioUrl = isExplicitActive
                     ? (lvl.audioExplicit || lvl.audioDirectUrl)
                     : lvl.audioDirectUrl;
@@ -2625,12 +2638,10 @@
                     : (isDeluxeActive ? (lvl.dl1Deluxe || lvl.dl1) : lvl.dl1);
 
                 let currentDl2 = isExplicitActive
-                    ? (isDeluxeActive ? (lvl.dl2DeluxeExplicit || lvl.dl2Explicit || lvl.dl2Deluxe || lvl.dl2) : (lvl.dl2Explicit || lvl.dl2))
-                    : (isDeluxeActive ? (lvl.dl2Deluxe || lvl.dl2) : lvl.dl2);
+                    ? (isDeluxeActive ? (lvl.dl2DeluxeExplicit || lvl.dl2Explicit || lvl.dl2Deluxe || lvl.dl2) : (lvl.dl2Explicit || lvl.dl2));
 
                 let currentDl3 = isExplicitActive
-                    ? (isDeluxeActive ? (lvl.dl3DeluxeExplicit || lvl.dl3Explicit || lvl.dl3Deluxe || lvl.dl3) : (lvl.dl3Explicit || lvl.dl3))
-                    : (isDeluxeActive ? (lvl.dl3Deluxe || lvl.dl3) : lvl.dl3);
+                    ? (isDeluxeActive ? (lvl.dl3DeluxeExplicit || lvl.dl3Explicit || lvl.dl3Deluxe || lvl.dl3) : (lvl.dl3Explicit || lvl.dl3));
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-fuchsia-950/20 transition border-b-2 border-fuchsia-900/50 shadow-sm";
@@ -2696,7 +2707,6 @@
                     ? `<div class="block sm:hidden mt-1.5 text-center bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-md tracking-wider w-max mx-auto relative z-20">DELUXE</div>`
                     : `<div class="block sm:hidden mt-1.5 text-center bg-zinc-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-md tracking-wider w-max mx-auto relative z-20">STANDARD</div>`;
 
-                // SIMETRÍA Y TAMAÑO IDENTICO PARA BOTÓN "E" Y BOTÓN "PLAY" (w-7 h-7 sm:w-8 sm:h-8)
                 const explicitBtnStyle = isExplicitActive 
                     ? "bg-red-600 text-black border-red-500 glow-red" 
                     : "bg-black/80 text-zinc-400 border-zinc-700 hover:text-white";
@@ -2709,12 +2719,14 @@
 
                 const targetAudioThemeColor = isDeluxeActive ? "#facc15" : "#d946ef";
 
+                const isCurrentlyPlayingThis = (activeAudioElement && activeAudioElement.dataset.url === currentAudioUrl);
+
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center align-middle">
                         <div class="flex flex-col items-center justify-center relative">
                             <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
                                 <canvas class="absolute -inset-4 w-[calc(100%+2rem)] h-[calc(100%+2rem)] pointer-events-none z-0"></canvas>
-                                <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
+                                <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} ${isCurrentlyPlayingThis ? 'art-container-circular' : ''} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
                                     <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
                                     ${artOverlayBadgeDesktop}
                                 </div>
@@ -2723,7 +2735,7 @@
 
                                 ${hasAudio ? `
                                     <button class="btn-play-audio-preview absolute bottom-1 right-1 w-7 h-7 sm:w-8 sm:h-8 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
-                                        <i class="fa-solid fa-play text-[10px]"></i>
+                                        <i class="fa-solid ${isCurrentlyPlayingThis ? 'fa-stop' : 'fa-play'} text-[10px]"></i>
                                     </button>
                                 ` : ''}
                             </div>
@@ -2786,6 +2798,19 @@
                     </td>
                 `;
 
+                const btnAudio = tr.querySelector('.btn-play-audio-preview');
+                const imgArt = tr.querySelector('.target-lvl-art-img');
+                const canvasEl = tr.querySelector('canvas');
+                const containerBox = tr.querySelector('.target-art-outer-container');
+
+                // Si esta canción era la que estaba sonando antes de re-renderizar la tabla, reenganchamos el visualizador a este canvas
+                if(isCurrentlyPlayingThis && audioAnalyser && canvasEl && containerBox) {
+                    activeAudioButton = btnAudio;
+                    activeAudioImg = imgArt;
+                    activeVisualizerColor = targetAudioThemeColor;
+                    startRadialCanvasVisualizer(canvasEl, audioAnalyser, containerBox, targetAudioThemeColor);
+                }
+
                 if (isDual) {
                     const artOuterBox = tr.querySelector('.target-art-outer-container');
                     artOuterBox?.addEventListener('click', (e) => {
@@ -2794,7 +2819,6 @@
                     });
                 }
 
-                // EVENTO BOTÓN EXPLICITO (E)
                 const explicitBtn = tr.querySelector('.btn-toggle-explicit-trigger');
                 explicitBtn?.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -2827,12 +2851,8 @@
                     }
                 });
 
-                if(hasAudio) {
-                    const btn = tr.querySelector('.btn-play-audio-preview');
-                    const img = tr.querySelector('.target-lvl-art-img');
-                    const canvas = tr.querySelector('canvas');
-                    const containerBox = tr.querySelector('.target-art-outer-container');
-                    btn.addEventListener('click', () => toggleAudioPreviewEngine(currentAudioUrl, btn, img, canvas, containerBox, false, targetAudioThemeColor));
+                if(hasAudio && btnAudio) {
+                    btnAudio.addEventListener('click', () => toggleAudioPreviewEngine(currentAudioUrl, btnAudio, imgArt, canvasEl, containerBox, false, targetAudioThemeColor));
                 }
 
                 if(currentChartZip) {
@@ -2862,7 +2882,6 @@
                     document.getElementById('lvlDl2').value = lvl.dl2 || '';
                     document.getElementById('lvlDl3').value = lvl.dl3 || '';
 
-                    // Badges de archivos Standard / Audio Unificado
                     if(lvl.audioDirectUrl) { document.getElementById('current-lvl-audio-badge').classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio').classList.remove('hidden'); }
                     if(lvl.video) { document.getElementById('current-lvl-video-badge').classList.remove('hidden'); document.getElementById('btn-remove-lvl-video').classList.remove('hidden'); }
                     if(lvl.chartDirectUrl) { document.getElementById('current-chart-zip-badge').classList.remove('hidden'); document.getElementById('btn-remove-chart-zip').classList.remove('hidden'); }
@@ -3328,7 +3347,6 @@
                 let finalChartDirectUrl = levelZipToRemove ? "" : (existingLvl?.chartDirectUrl || "");
                 let finalChartDirectUrlDeluxe = levelZipDeluxeToRemove ? "" : (existingLvl?.chartDirectUrlDeluxe || "");
 
-                // ASSETS EXPLICIT
                 let finalAudioExplicit = levelAudioExplicitToRemove ? "" : (existingLvl?.audioExplicit || "");
                 let finalVideoExplicit = levelVideoExplicitToRemove ? "" : (existingLvl?.videoExplicit || "");
                 let finalVideoDeluxeExplicit = levelVideoDeluxeExplicitToRemove ? "" : (existingLvl?.videoDeluxeExplicit || "");
@@ -3340,7 +3358,6 @@
                     finalArtUrl = await uploadFileToGitHubContent(artFileInput.files[0], 'assets/charts', artFileInput.files[0].name);
                 }
                 
-                // AUDIO PREVIEW UNIFICADO (NORMAL)
                 const audioFileInput = document.getElementById('lvlAudioFile');
                 if(audioFileInput.files && audioFileInput.files[0] && githubToken && githubUser) {
                     finalAudioUrl = await uploadFileToGitHubContent(audioFileInput.files[0], 'assets/audio', audioFileInput.files[0].name);
@@ -3366,10 +3383,8 @@
                     finalChartDirectUrlDeluxe = await uploadFileToGitHubContent(chartDeluxeFileInput.files[0], 'charts', chartDeluxeFileInput.files[0].name);
                 }
 
-                // ARCHIVOS SIN CENSURA SI EL TOGGLE ESTA ACTIVO
                 const hasExplicit = document.getElementById('lvlHasExplicit').checked;
                 if(hasExplicit) {
-                    // AUDIO PREVIEW UNIFICADO (EXPLICIT)
                     const audioExpIn = document.getElementById('lvlAudioFileExplicit');
                     if(audioExpIn?.files && audioExpIn.files[0] && githubToken && githubUser) {
                         finalAudioExplicit = await uploadFileToGitHubContent(audioExpIn.files[0], 'assets/audio', audioExpIn.files[0].name);
@@ -3409,10 +3424,8 @@
                     editionMode: selectedEditionMode,
                     edition: (selectedEditionMode === 'Deluxe') ? 'Deluxe' : 'Standard',
 
-                    // Preview Unificado Normal
                     audioDirectUrl: finalAudioUrl, 
 
-                    // Standard Data & Links
                     diff: document.getElementById('lvlDiff').value,
                     notes: document.getElementById('lvlNotes').value.trim(),
                     duration: document.getElementById('lvlDuration').value.trim(),
@@ -3423,7 +3436,6 @@
                     dl2: document.getElementById('lvlDl2').value.trim(), 
                     dl3: document.getElementById('lvlDl3').value.trim(),
 
-                    // Deluxe Data & Links
                     diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
                     notesDeluxe: document.getElementById('lvlNotesDeluxe').value.trim(),
                     durationDeluxe: document.getElementById('lvlDurationDeluxe').value.trim(),
@@ -3434,7 +3446,6 @@
                     dl2Deluxe: document.getElementById('lvlDl2Deluxe').value.trim(),
                     dl3Deluxe: document.getElementById('lvlDl3Deluxe').value.trim(),
 
-                    // Datos Explícitos Independientes (con Preview Unificado Explicit)
                     hasExplicit: hasExplicit,
                     audioExplicit: finalAudioExplicit,
                     notesExplicit: document.getElementById('lvlNotesExplicit').value.trim(),
