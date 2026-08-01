@@ -91,26 +91,55 @@
             #thanks-custom-modal .bg-\[\#11091c\],
             #confirm-delete-modal .bg-\[\#11091c\],
             #boogie-auth-modal .bg-\[\#11091c\] {
-                max-height: 85vh !important;
+                max-height: 94vh !important;
                 overflow-y: auto !important;
-                padding: 1rem 1.5rem !important;
-                width: 90% !important;
-                max-width: 680px !important;
+                padding: 0.75rem 1.25rem !important;
+                width: 95% !important;
+                max-width: 620px !important;
             }
 
-            /* Evita espacios muertos en pop-ups con imágenes */
+            /* Fix 1: Modal Menú de Ediciones (evita desbordamiento horizontal) */
+            #beatstar-edition-modal .bg-\[\#11091c\]\/95 {
+                gap: 1rem !important;
+                padding: 0.75rem 1rem !important;
+            }
+            #beatstar-edition-modal .relative.w-36.h-36 {
+                width: 5rem !important;
+                height: 5rem !important;
+            }
+
+            /* Fix 2: Modal de Video de Agradecimiento (se ajusta la altura para no cortarse) */
+            #thanks-custom-modal h4 {
+                font-size: 0.95rem !important;
+                margin-bottom: 0.35rem !important;
+            }
+            #thanks-custom-modal .aspect-video {
+                max-height: 68vh !important;
+                width: auto !important;
+                margin: 0 auto !important;
+            }
+
+            /* Fix 3: Modal Aviso de Descarga (Imagen más prominente, textos y botones compactos) */
+            #download-custom-modal #download-modal-msg {
+                font-size: 0.75rem !important;
+                line-height: 1.2 !important;
+                margin-bottom: 0.4rem !important;
+                padding-right: 1.5rem !important;
+            }
             #download-custom-modal .w-full.max-h-80 {
-                max-height: 42vh !important;
-                margin-bottom: 0.75rem !important;
+                max-height: 48vh !important;
+                margin-bottom: 0.5rem !important;
+                padding: 0.25rem !important;
             }
             #download-custom-modal img {
-                max-height: 38vh !important;
+                max-height: 44vh !important;
                 object-fit: contain !important;
             }
-
-            #beatstar-edition-modal .relative.w-36.h-36 {
-                width: 6.5rem !important;
-                height: 6.5rem !important;
+            #download-custom-modal a, 
+            #download-custom-modal button {
+                padding-top: 0.4rem !important;
+                padding-bottom: 0.4rem !important;
+                font-size: 0.7rem !important;
             }
 
             #nav-shortcuts {
