@@ -71,6 +71,18 @@
             transform: scale(1.08);
         }
 
+        /* Modales ajustados para evitar cubrir toda la pantalla y espacio muerto */
+        #beatstar-edition-modal > div,
+        #download-custom-modal > div,
+        #explicit-warning-modal > div,
+        #thanks-custom-modal > div,
+        #confirm-delete-modal > div,
+        #boogie-auth-modal > div,
+        #boogie-exit-modal > div {
+            max-height: 88vh !important;
+            overflow-y: auto !important;
+        }
+
         /* Ajustes específicos para vista móvil horizontal (landscape) */
         @media (orientation: landscape) and (max-height: 600px) {
             #beatstar-edition-modal .bg-\[\#11091c\]\/95,
@@ -99,6 +111,20 @@
             .landscape-shift-right {
                 transform: translateX(0.75rem) !important;
             }
+
+            /* Forzar comportamiento idéntico a la versión de PC en móvil horizontal */
+            .landscape-pc-table {
+                min-width: 700px !important;
+            }
+            .landscape-pc-flex-row {
+                flex-direction: row !important;
+            }
+            .landscape-pc-edition-layout {
+                flex-direction: row !important;
+            }
+            .landscape-pc-edition-layout .text-left {
+                text-align: left !important;
+            }
         }
 
         @media (min-width: 768px) {
@@ -118,7 +144,7 @@
 
     <!-- MODAL DE ADVERTENCIA PARA CONTENIDO EXPLÍCITO -->
     <div id="explicit-warning-modal" class="hidden fixed inset-0 bg-black/90 z-[160] flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#11091c] border border-red-500/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center max-h-[90vh] overflow-y-auto">
+        <div class="bg-[#11091c] border border-red-500/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center max-h-[88vh] overflow-y-auto">
             <div class="w-12 h-12 rounded-full bg-red-500/20 border border-red-500 flex items-center justify-center text-red-500 font-black text-xl mb-3 shadow-lg glow-red">E</div>
             <h3 class="text-base sm:text-lg font-black text-white uppercase tracking-wide mb-2" data-i18n="explicitModalTitle">¿Habilitar versión sin censura?</h3>
             <p class="text-xs text-zinc-300 font-medium mb-6 leading-relaxed" data-i18n="explicitModalNotice">AVISO: Esta canción puede incluir contenido sensible no apto para todo público.</p>
@@ -131,7 +157,7 @@
 
     <!-- MODAL SELECCIÓN DE EDICIONES ESTILO BEATSTAR -->
     <div id="beatstar-edition-modal" class="hidden fixed inset-0 bg-black/90 z-[150] flex items-center justify-center p-4 backdrop-blur-md transition-all duration-300">
-        <div class="bg-[#11091c]/95 border border-fuchsia-500/40 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-8 border-t-2 border-t-fuchsia-500 max-h-[90vh] overflow-y-auto">
+        <div class="bg-[#11091c]/95 border border-fuchsia-500/40 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative flex flex-col md:flex-row landscape-pc-edition-layout items-center justify-center gap-6 sm:gap-8 border-t-2 border-t-fuchsia-500 max-h-[88vh] overflow-y-auto">
             <div class="flex flex-col items-center justify-center shrink-0 pc-shift-right landscape-shift-right">
                 <div class="relative w-36 h-36 sm:w-44 sm:h-44 flex items-center justify-center pointer-events-none">
                     <canvas id="modal-edition-canvas" class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
@@ -172,7 +198,7 @@
 
     <!-- MODAL DE CONFIRMACIÓN DE ELIMINACIÓN GENERAL -->
     <div id="confirm-delete-modal" class="hidden fixed inset-0 bg-black/90 z-[140] flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#11091c] border border-red-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center max-h-[90vh] overflow-y-auto">
+        <div class="bg-[#11091c] border border-red-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center max-h-[88vh] overflow-y-auto">
             <i class="fa-solid fa-triangle-exclamation text-red-500 text-3xl mb-3"></i>
             <h3 class="text-base sm:text-lg font-black text-white uppercase tracking-wide mb-6" data-i18n="confirmDeleteTitle">¿Seguro que quieres eliminarlo?</h3>
             <div class="flex gap-3 w-full">
@@ -184,7 +210,7 @@
 
     <!-- MODAL BOOGIE ADM / CREDENCIALES -->
     <div id="boogie-auth-modal" class="hidden fixed inset-0 bg-black/90 z-[130] flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#11091c] border border-fuchsia-500/40 rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative text-center flex flex-col items-center max-h-[90vh] overflow-y-auto">
+        <div class="bg-[#11091c] border border-fuchsia-500/40 rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative text-center flex flex-col items-center max-h-[88vh] overflow-y-auto">
             <img src="1455064703448645786.gif" alt="Boogie" class="w-24 h-auto mb-3">
             <p id="boogie-auth-msg" class="text-sm sm:text-base font-bold text-zinc-200 mb-6 leading-relaxed" data-i18n="boogieAuthMsg">
                 Este espacio es solo para Boogie. Por favor introduce los códigos especiales
@@ -233,7 +259,7 @@
 
     <!-- MODAL CONFIRMACIÓN SALIR MODO CREADOR -->
     <div id="boogie-exit-modal" class="hidden fixed inset-0 bg-black/90 z-[135] flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#11091c] border border-red-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center max-h-[90vh] overflow-y-auto">
+        <div class="bg-[#11091c] border border-red-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center max-h-[88vh] overflow-y-auto">
             <i class="fa-solid fa-right-from-bracket text-red-400 text-3xl mb-3"></i>
             <h3 class="text-lg font-black text-white uppercase tracking-wide mb-6" data-i18n="exitPromptTitle">¿Deseas salir?</h3>
             <div class="flex gap-3 w-full">
@@ -245,7 +271,7 @@
 
     <!-- MODAL 1: ADVERTENCIA DE DESCARGA -->
     <div id="download-custom-modal" class="hidden fixed inset-0 bg-black/90 z-[110] flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-[#11091c] border border-fuchsia-500/30 rounded-2xl max-w-3xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center max-h-[90vh] overflow-y-auto">
+        <div class="bg-[#11091c] border border-fuchsia-500/30 rounded-2xl max-w-3xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center max-h-[88vh] overflow-y-auto">
             <p id="download-modal-msg" class="text-base sm:text-lg font-bold text-zinc-200 mb-6 leading-relaxed">
                 Es necesario tener instalada la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la página oficial de Beatclone
             </p>
@@ -271,7 +297,7 @@
 
     <!-- MODAL 2: POP-UP AGRADECIMIENTO EN BUCLE -->
     <div id="thanks-custom-modal" class="hidden fixed inset-0 bg-black/95 z-[120] flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#11091c] border border-orange-500/30 rounded-2xl max-w-4xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center max-h-[90vh] overflow-y-auto">
+        <div class="bg-[#11091c] border border-orange-500/30 rounded-2xl max-w-4xl w-full p-8 shadow-2xl relative text-center flex flex-col items-center max-h-[88vh] overflow-y-auto">
             <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-fuchsia-400 font-display font-black text-xl sm:text-2xl uppercase tracking-wider mb-6" data-i18n="thanksTitle">Gracias por jugar a Beatclone</h4>
             <div class="w-full aspect-video rounded-xl overflow-hidden bg-black border border-fuchsia-950/60 relative">
                 <video id="download-thanks-video" class="w-full h-full object-cover pointer-events-none" autoplay loop playsinline disablePictureInPicture></video>
@@ -530,7 +556,7 @@
                         <!-- AUDIO PREVIEW UNIFICADO (NORMAL) -->
                         <div class="bg-black/30 p-2.5 rounded-xl border border-fuchsia-950/60 space-y-2">
                             <div class="flex items-center justify-between">
-                                <label class="font-bold text-fuchsia-400" data-i18n="formUploadAudio">Subir Audio Preview (Censurado/Normal)</label>
+                                <label class="font-bold text-fuchsia-400" data-i18n="formUploadAudio">Upload Audio Preview (Censored)</label>
                                 <button type="button" id="btn-remove-lvl-audio" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                     <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                 </button>
@@ -543,9 +569,9 @@
                         <div class="bg-black/40 p-2.5 rounded-xl border border-fuchsia-950/60 space-y-2">
                             <label class="block font-black text-fuchsia-400 uppercase tracking-wider" data-i18n="formEdition">Edición Registrada</label>
                             <select id="lvlEditionMode" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100 font-bold">
-                                <option value="Standard" selected>Solo Standard</option>
-                                <option value="Deluxe">Solo Deluxe</option>
-                                <option value="Both">Ambas (Standard + Deluxe)</option>
+                                <option value="Standard" selected data-i18n="optStandard">Standard</option>
+                                <option value="Deluxe" data-i18n="optDeluxe">Deluxe</option>
+                                <option value="Both" data-i18n="optBoth">Standard + Deluxe</option>
                             </select>
                         </div>
 
@@ -686,7 +712,7 @@
                             <!-- AUDIO PREVIEW UNIFICADO SIN CENSURA -->
                             <div class="space-y-1 bg-black/40 p-2 rounded-lg border border-red-950">
                                 <div class="flex items-center justify-between mb-0.5">
-                                    <label class="text-[10px] font-bold text-red-400" data-i18n="lblExpAudioStd">Audio Preview Explicit (Unificado)</label>
+                                    <label class="text-[10px] font-bold text-red-400" data-i18n="lblExpAudioStd">Upload Audio Preview (Uncensored)</label>
                                     <button type="button" id="btn-remove-lvl-audio-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
                                         <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
                                     </button>
@@ -781,7 +807,7 @@
 
                 <!-- REGISTRO Y FILTROS CHARTS -->
                 <div id="levels-table-container" class="w-full overflow-hidden flex flex-col space-y-4 flex-grow">
-                    <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex flex-col sm:flex-row landscape-pc-flex-row items-start sm:items-center justify-between gap-4">
                         <div class="flex flex-col items-start justify-center shrink-0">
                             <div class="text-base sm:text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">
                                 Charts / <span data-i18n="bannerSongs">Canciones</span>
@@ -828,7 +854,7 @@
                     </div>
 
                     <div id="levels-table-wrapper" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
-                        <table class="w-full text-left border-collapse min-w-[700px] sm:min-w-[900px]">
+                        <table class="w-full text-left border-collapse min-w-[700px] sm:min-w-[900px] landscape-pc-table">
                             <thead>
                                 <tr class="border-b-2 border-fuchsia-900/60 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                     <th class="p-4 w-32 sm:w-44 text-center align-middle" data-i18n="thArt">Arte</th>
@@ -966,7 +992,7 @@
                 </div>
 
                 <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-6 flex-grow">
-                    <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex flex-col sm:flex-row landscape-pc-flex-row items-start sm:items-center justify-between gap-4">
                         <div class="text-base sm:text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500 shrink-0" data-i18n="navCosmetics">Skins</div>
                         
                         <div class="flex flex-wrap items-center justify-center sm:justify-end gap-2.5 w-full sm:w-auto ml-auto text-xs">
@@ -1000,7 +1026,7 @@
                             </div>
                         </div>
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
-                            <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
+                            <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px] landscape-pc-table">
                                 <thead>
                                     <tr class="border-b-2 border-fuchsia-900/60 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                         <th class="p-2 sm:p-4 w-20 sm:w-44 text-center align-middle" data-i18n="thIcon">Icono</th>
@@ -1028,7 +1054,7 @@
                             </div>
                         </div>
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
-                            <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px]">
+                            <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px] landscape-pc-table">
                                 <thead>
                                     <tr class="border-b-2 border-fuchsia-900/60 bg-[#05020a] text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                                         <th class="p-2 sm:p-4 w-20 sm:w-44 text-center align-middle" data-i18n="thIcon">Icono</th>
@@ -1131,7 +1157,7 @@
                 formBrandUrl: "URL de la marca", txtNoLinksAvailable: "Sin links disponibles", btnSaveChanges: "Guardar Cambios",
                 btnSaveFooterLinks: "Guardar Enlaces del Menú", jumpToTxt: "Ir a",
                 selectSubmenuSkin: "Selecciona una Plataforma", downloadDirectBtn: "Descargar",
-                formUploadArt: "Subir Arte", formUploadAudio: "Subir Preview de Audio (Censurado/Normal)",
+                formUploadArt: "Subir Arte", formUploadAudio: "Upload Audio Preview (Censored)",
                 formUploadChartFile: "Subir Archivo (.zip)", formUploadIcon: "Subir Icono",
                 formUploadBrand: "Subir Marca / Inspiración", formUploadSkinFile: "Subir Archivo (.zip)",
                 beatcloneNotice: "Es necesario tener instalada la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la página oficial de Beatclone",
@@ -1178,7 +1204,7 @@
                 lblAttachedZipStd: "ZIP Standard Adjunto",
                 lblAttachedVideoDlx: "Video Deluxe Adjunto",
                 lblAttachedZipDlx: "ZIP Deluxe Adjunto",
-                lblExpAudioStd: "Audio Preview Explicit (Unificado)",
+                lblExpAudioStd: "Upload Audio Preview (Uncensored)",
                 lblExpVideoStd: "Video Standard Explicit",
                 lblExpZipStd: "ZIP Standard Explicit",
                 lblExpVideoDlx: "Video Deluxe Explicit",
@@ -1188,7 +1214,10 @@
                 lblAttachedExpZipStd: "Attached Explicit Standard ZIP",
                 lblAttachedExpVideoDlx: "Attached Explicit Deluxe Video",
                 lblAttachedExpZipDlx: "Attached Explicit Deluxe ZIP",
-                formUploadZipStd: "Standard ZIP (.zip)"
+                formUploadZipStd: "Standard ZIP (.zip)",
+                optStandard: "Standard",
+                optDeluxe: "Deluxe",
+                optBoth: "Standard + Deluxe"
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -1212,7 +1241,7 @@
                 formBrandUrl: "Brand URL", txtNoLinksAvailable: "No links available", btnSaveChanges: "Save Changes",
                 btnSaveFooterLinks: "Save Menu Links", jumpToTxt: "Go to",
                 selectSubmenuSkin: "Select a Platform", downloadDirectBtn: "Download",
-                formUploadArt: "Upload Art", formUploadAudio: "Upload Audio Preview (Censored/Normal)",
+                formUploadArt: "Upload Art", formUploadAudio: "Upload Audio Preview (Censored)",
                 formUploadChartFile: "Upload File (.zip)", formUploadIcon: "Upload Icon",
                 formUploadBrand: "Upload Brand / Inspiration", formUploadSkinFile: "Upload File (.zip)",
                 beatcloneNotice: "It is necessary to have the Beatstar application installed to use this content. Download it from the official Beatclone page.",
@@ -1259,7 +1288,7 @@
                 lblAttachedZipStd: "Attached Standard ZIP",
                 lblAttachedVideoDlx: "Attached Deluxe Video",
                 lblAttachedZipDlx: "Attached Deluxe ZIP",
-                lblExpAudioStd: "Explicit Audio Preview (Unified)",
+                lblExpAudioStd: "Upload Audio Preview (Uncensored)",
                 lblExpVideoStd: "Explicit Standard Video",
                 lblExpZipStd: "Explicit Standard ZIP",
                 lblExpVideoDlx: "Explicit Deluxe Video",
@@ -1269,7 +1298,10 @@
                 lblAttachedExpZipStd: "Attached Explicit Standard ZIP",
                 lblAttachedExpVideoDlx: "Attached Explicit Deluxe Video",
                 lblAttachedExpZipDlx: "Attached Explicit Deluxe ZIP",
-                formUploadZipStd: "Standard ZIP (.zip)"
+                formUploadZipStd: "Standard ZIP (.zip)",
+                optStandard: "Standard",
+                optDeluxe: "Deluxe",
+                optBoth: "Standard + Deluxe"
             }
         };
 
@@ -1368,9 +1400,11 @@
                 }
             });
 
-            document.querySelectorAll('.target-art-outer-container').forEach(box => {
-                box.classList.remove('art-circle-shape');
-            });
+            if (!activeAudioElement || activeAudioElement.paused) {
+                document.querySelectorAll('.target-art-outer-container').forEach(box => {
+                    box.classList.remove('art-circle-shape');
+                });
+            }
 
             const thanksVideo = document.getElementById('download-thanks-video');
             if (thanksVideo) {
@@ -1904,8 +1938,12 @@
             }
             if(activeArtContainer) {
                 activeArtContainer.classList.remove('art-container-circular');
+                activeArtContainer.classList.remove('art-circle-shape');
                 activeArtContainer = null;
             }
+            document.querySelectorAll('.target-art-outer-container').forEach(box => {
+                box.classList.remove('art-circle-shape');
+            });
             if(activeCanvas) {
                 const ctx = activeCanvas.getContext('2d');
                 ctx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
@@ -1984,6 +2022,10 @@
             if(activeAudioElement && activeAudioElement.dataset.url === audioUrl && !activeAudioElement.paused) {
                 if (keepPlayingIfSame) {
                     activeAudioElement.loop = isModalOpen;
+                    if (containerElement) {
+                        containerElement.classList.add('art-container-circular');
+                        containerElement.classList.add('art-circle-shape');
+                    }
                     startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement, themeColor);
                     return;
                 }
@@ -2011,7 +2053,10 @@
                 if (activeAudioElement !== audio) return;
                 
                 if(btnElement) btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
-                if(containerElement) containerElement.classList.add('art-container-circular');
+                if(containerElement) {
+                    containerElement.classList.add('art-container-circular');
+                    containerElement.classList.add('art-circle-shape');
+                }
                 if(imgElement) imgElement.classList.remove('bg-zinc-900');
 
                 if(audioCtx.state === 'suspended') audioCtx.resume();
@@ -2574,9 +2619,11 @@
                 activeChartSelectedEditions[activeModalBeatstarChart.id] = selectedEdition;
             }
 
-            document.querySelectorAll('.target-art-outer-container').forEach(box => {
-                box.classList.remove('art-circle-shape');
-            });
+            if (!activeAudioElement || activeAudioElement.paused) {
+                document.querySelectorAll('.target-art-outer-container').forEach(box => {
+                    box.classList.remove('art-circle-shape');
+                });
+            }
 
             if(activeAudioElement) {
                 activeAudioElement.loop = false;
@@ -2750,12 +2797,14 @@
                 const isAudioPlayingThis = activeAudioElement && activeAudioElement.dataset.url === currentAudioUrl && !activeAudioElement.paused;
                 const playBtnIconClass = isAudioPlayingThis ? "fa-stop" : "fa-play";
 
+                const isCircleShapeActive = isAudioPlayingThis ? 'art-circle-shape art-container-circular' : '';
+
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center align-middle">
                         <div class="flex flex-col items-center justify-center relative">
                             <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
                                 <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
-                                <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
+                                <div class="target-art-outer-container art-beatstar-transform ${isCircleShapeActive} ${isDual ? 'cursor-pointer hover:scale-105' : ''} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
                                     <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
                                     ${artOverlayBadgeDesktop}
                                 </div>
