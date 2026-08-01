@@ -2619,9 +2619,12 @@
                 activeChartSelectedEditions[activeModalBeatstarChart.id] = selectedEdition;
             }
 
-            if (!activeAudioElement || activeAudioElement.paused) {
+            const isAudioPlaying = activeAudioElement && !activeAudioElement.paused;
+
+            if (!isAudioPlaying) {
                 document.querySelectorAll('.target-art-outer-container').forEach(box => {
                     box.classList.remove('art-circle-shape');
+                    box.classList.remove('art-container-circular');
                 });
             }
 
