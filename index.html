@@ -2628,20 +2628,9 @@
 
             updateModalEditionUI(currentActive);
 
+            if(outerArtBox) outerArtBox.classList.add('art-circle-shape');
+
             modal.classList.remove('hidden');
-        }
-
-        function closeBeatstarEditionSelector(selectedEdition) {
-            const modal = document.getElementById('beatstar-edition-modal');
-            if (activeModalBeatstarChart && selectedEdition) {
-                activeChartSelectedEditions[activeModalBeatstarChart.id] = selectedEdition;
-            }
-
-            // Detiene el audio del preview del modal y limpia todas las clases circulares de la tabla
-            stopGlobalAudioPreview();
-
-            modal.classList.add('hidden');
-            renderLevelsTable();
         }
 
         function closeBeatstarEditionSelector(selectedEdition) {
