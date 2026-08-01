@@ -885,7 +885,7 @@
 
                         <div>
                             <div class="flex items-center justify-between mb-1">
-                                <label class="font-bold text-zinc-400 uppercase tracking-wider"><span data-i18n="formGenre">Género</span> <span class="text-red-500">*</span></label>
+                                <label class="block font-bold text-zinc-400 uppercase tracking-wider"><span data-i18n="formGenre">Género</span> <span class="text-red-500">*</span></label>
                                 <button type="button" id="btn-skin-universal-genre" class="px-2 py-0.5 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-extrabold rounded text-[10px] transition uppercase" data-i18n="btnUniversal">Universal</button>
                             </div>
                             <div id="skin-genres-container" class="grid grid-cols-1 gap-1 max-h-36 overflow-y-auto border border-fuchsia-950 p-2 rounded-lg bg-[#05020a]"></div>
@@ -1273,6 +1273,7 @@
         let activeAudioImg = null;
         let activeCanvas = null;
         let activeArtContainer = null;
+        let activeVideoElement = null;
         let activeVisualizerColor = "#d946ef";
 
         // Búfer reutilizable para evitar la asignación de memoria recurrente en cada frame de dibujo
