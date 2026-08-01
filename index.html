@@ -84,11 +84,11 @@
     <div id="explicit-warning-modal" class="hidden fixed inset-0 bg-black/90 z-[160] flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#11091c] border border-red-500/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center">
             <div class="w-12 h-12 rounded-full bg-red-500/20 border border-red-500 flex items-center justify-center text-red-500 font-black text-xl mb-3 shadow-lg glow-red">E</div>
-            <h3 class="text-base sm:text-lg font-black text-white uppercase tracking-wide mb-2" data-i18n="explicitModalTitle">¿Activar versión sin censura?</h3>
+            <h3 class="text-base sm:text-lg font-black text-white uppercase tracking-wide mb-2" data-i18n="explicitModalTitle">¿Habilitar versión sin censura?</h3>
             <p class="text-xs text-zinc-300 font-medium mb-6 leading-relaxed" data-i18n="explicitModalNotice">AVISO: Esta canción puede incluir contenido sensible no apto para todo público.</p>
             <div class="flex gap-3 w-full">
                 <button id="btn-cancel-explicit" class="flex-1 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-300 hover:text-white transition" data-i18n="btnCancel">Cancelar</button>
-                <button id="btn-confirm-explicit" class="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-black font-black rounded-xl text-xs uppercase shadow transition glow-red" data-i18n="btnActivate">Activar</button>
+                <button id="btn-confirm-explicit" class="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-black font-black rounded-xl text-xs uppercase shadow transition glow-red" data-i18n="btnActivate">Habilitar</button>
             </div>
         </div>
     </div>
@@ -97,10 +97,13 @@
     <div id="beatstar-edition-modal" class="hidden fixed inset-0 bg-black/90 z-[150] flex items-center justify-center p-4 backdrop-blur-md transition-all duration-300">
         <div class="bg-[#11091c]/95 border border-fuchsia-500/40 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-8 border-t-2 border-t-fuchsia-500">
             <div class="flex flex-col items-center justify-center shrink-0">
-                <div id="modal-edition-art-container" class="w-36 h-36 sm:w-44 sm:h-44 rounded-full overflow-hidden border-4 border-fuchsia-500 shadow-2xl relative bg-zinc-950 art-beatstar-transform">
-                    <img id="modal-edition-art-img" src="free_song_Image.png" class="w-full h-full object-cover">
-                    <div id="modal-edition-deluxe-badge" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest shadow-lg">DELUXE</div>
-                    <div id="modal-edition-standard-badge" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-zinc-400 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest shadow-lg">STANDARD</div>
+                <div class="relative w-36 h-36 sm:w-44 sm:h-44 flex items-center justify-center">
+                    <canvas id="modal-edition-canvas" class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
+                    <div id="modal-edition-art-container" class="w-full h-full rounded-full overflow-hidden border-4 border-fuchsia-500 shadow-2xl relative bg-zinc-950 art-beatstar-transform z-10">
+                        <img id="modal-edition-art-img" src="free_song_Image.png" class="w-full h-full object-cover">
+                        <div id="modal-edition-deluxe-badge" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest shadow-lg z-20">DELUXE</div>
+                        <div id="modal-edition-standard-badge" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 bg-zinc-400 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest shadow-lg z-20">STANDARD</div>
+                    </div>
                 </div>
                 <h3 id="modal-edition-song-title" class="text-base sm:text-lg font-black text-white text-center mt-3 uppercase tracking-wider">Song Title</h3>
                 <p id="modal-edition-artist-title" class="text-xs text-zinc-400 font-medium text-center">Artist</p>
@@ -488,6 +491,18 @@
                             <div id="genres-container" class="grid grid-cols-1 gap-1 max-h-36 overflow-y-auto border border-fuchsia-950 p-2 rounded-lg bg-[#05020a]"></div>
                         </div>
 
+                        <!-- AUDIO PREVIEW UNIFICADO (NORMAL) -->
+                        <div class="bg-black/30 p-2.5 rounded-xl border border-fuchsia-950/60 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <label class="font-bold text-fuchsia-400" data-i18n="formUploadAudio">Subir Audio Preview (Censurado/Normal)</label>
+                                <button type="button" id="btn-remove-lvl-audio" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                    <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
+                                </button>
+                            </div>
+                            <div id="current-lvl-audio-badge" class="hidden px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate" data-i18n="lblAttachedAudioStd">Audio Preview Adjunto</div>
+                            <input type="file" id="lvlAudioFile" accept="audio/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                        </div>
+
                         <!-- SELECTOR MODALIDAD DE EDICIONES -->
                         <div class="bg-black/40 p-2.5 rounded-xl border border-fuchsia-950/60 space-y-2">
                             <label class="block font-black text-fuchsia-400 uppercase tracking-wider" data-i18n="formEdition">Edición Registrada</label>
@@ -546,16 +561,6 @@
                                 <input type="date" id="lvlDate" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                             </div>
                             <div>
-                                <div class="flex items-center justify-between mb-1">
-                                    <label class="font-bold text-zinc-400" data-i18n="formUploadAudio">Audio Standard (Preview)</label>
-                                    <button type="button" id="btn-remove-lvl-audio" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                        <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                    </button>
-                                </div>
-                                <div id="current-lvl-audio-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate" data-i18n="lblAttachedAudioStd">Audio Standard Adjunto</div>
-                                <input type="file" id="lvlAudioFile" accept="audio/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
-                            </div>
-                            <div>
                                 <div class="flex items-center justify-between mb-0.5">
                                     <label class="font-bold text-zinc-400" data-i18n="formUploadVideo">Video Standard (MP4)</label>
                                     <button type="button" id="btn-remove-lvl-video" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
@@ -610,16 +615,6 @@
                                 <input type="date" id="lvlDateDeluxe" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-100">
                             </div>
                             <div>
-                                <div class="flex items-center justify-between mb-1">
-                                    <label class="font-bold text-yellow-500/80" data-i18n="lblDeluxeAudio">Audio Deluxe (Preview)</label>
-                                    <button type="button" id="btn-remove-lvl-audio-deluxe" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                        <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                    </button>
-                                </div>
-                                <div id="current-lvl-audio-deluxe-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate" data-i18n="lblAttachedAudioDlx">Audio Deluxe Adjunto</div>
-                                <input type="file" id="lvlAudioFileDeluxe" accept="audio/*" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-400">
-                            </div>
-                            <div>
                                 <div class="flex items-center justify-between mb-0.5">
                                     <label class="font-bold text-yellow-500/80" data-i18n="lblDeluxeVideo">Video Deluxe (MP4)</label>
                                     <button type="button" id="btn-remove-lvl-video-deluxe" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
@@ -652,6 +647,18 @@
                                 <span class="w-3.5 h-3.5 bg-red-600 text-white rounded flex items-center justify-center text-[9px] font-black">E</span> <span data-i18n="lblExplicitSectionHeader">Datos Sin Censura / Explicit</span>
                             </div>
 
+                            <!-- AUDIO PREVIEW UNIFICADO SIN CENSURA -->
+                            <div class="space-y-1 bg-black/40 p-2 rounded-lg border border-red-950">
+                                <div class="flex items-center justify-between mb-0.5">
+                                    <label class="text-[10px] font-bold text-red-400" data-i18n="lblExpAudioStd">Audio Preview Explicit (Unificado)</label>
+                                    <button type="button" id="btn-remove-lvl-audio-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
+                                        <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
+                                    </button>
+                                </div>
+                                <div id="badge-lvl-audio-explicit" class="hidden mb-1 px-2 py-0.5 bg-red-950/40 border border-red-800/40 text-red-400 rounded text-[9px] font-mono truncate" data-i18n="lblAttachedExpAudioStd">Audio Explicit Adjunto</div>
+                                <input type="file" id="lvlAudioFileExplicit" accept="audio/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
+                            </div>
+
                             <!-- EXPLICIT STANDARD -->
                             <div class="space-y-2 border-b border-red-950/60 pb-2">
                                 <span class="font-extrabold text-zinc-300 text-[10px] uppercase">Standard (Explicit)</span>
@@ -660,17 +667,6 @@
                                     <input type="text" id="lvlDurationExplicit" placeholder="Duración" data-i18n-ph="formDuration" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
                                 </div>
                                 <input type="date" id="lvlDateExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
-                                
-                                <div>
-                                    <div class="flex items-center justify-between mb-0.5">
-                                        <label class="text-[10px] font-bold text-red-400" data-i18n="lblExpAudioStd">Audio Standard Explicit</label>
-                                        <button type="button" id="btn-remove-lvl-audio-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                            <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                        </button>
-                                    </div>
-                                    <div id="badge-lvl-audio-explicit" class="hidden mb-1 px-2 py-0.5 bg-red-950/40 border border-red-800/40 text-red-400 rounded text-[9px] font-mono truncate" data-i18n="lblAttachedExpAudioStd">Audio Standard Explicit Adjunto</div>
-                                    <input type="file" id="lvlAudioFileExplicit" accept="audio/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
-                                </div>
 
                                 <div>
                                     <div class="flex items-center justify-between mb-0.5">
@@ -707,17 +703,6 @@
                                     <input type="text" id="lvlDurationDeluxeExplicit" placeholder="Duración" data-i18n-ph="formDuration" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
                                 </div>
                                 <input type="date" id="lvlDateDeluxeExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
-
-                                <div>
-                                    <div class="flex items-center justify-between mb-0.5">
-                                        <label class="text-[10px] font-bold text-yellow-500" data-i18n="lblExpAudioDlx">Audio Deluxe Explicit</label>
-                                        <button type="button" id="btn-remove-lvl-audio-dlx-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                            <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                        </button>
-                                    </div>
-                                    <div id="badge-lvl-audio-dlx-explicit" class="hidden mb-1 px-2 py-0.5 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[9px] font-mono truncate" data-i18n="lblAttachedExpAudioDlx">Audio Deluxe Explicit Adjunto</div>
-                                    <input type="file" id="lvlAudioFileDeluxeExplicit" accept="audio/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
-                                </div>
 
                                 <div>
                                     <div class="flex items-center justify-between mb-0.5">
@@ -1110,7 +1095,7 @@
                 formBrandUrl: "URL de la marca", txtNoLinksAvailable: "Sin links disponibles", btnSaveChanges: "Guardar Cambios",
                 btnSaveFooterLinks: "Guardar Enlaces del Menú", jumpToTxt: "Ir a",
                 selectSubmenuSkin: "Selecciona una Plataforma", downloadDirectBtn: "Descargar",
-                formUploadArt: "Subir Arte", formUploadAudio: "Subir Preview de Audio (Opcional)",
+                formUploadArt: "Subir Arte", formUploadAudio: "Subir Preview de Audio (Censurado/Normal)",
                 formUploadChartFile: "Subir Archivo (.zip)", formUploadIcon: "Subir Icono",
                 formUploadBrand: "Subir Marca / Inspiración", formUploadSkinFile: "Subir Archivo (.zip)",
                 beatcloneNotice: "Es necesario tener instalada la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la página oficial de Beatclone",
@@ -1136,41 +1121,37 @@
                 requiredFieldMsg: "Por favor completa este campo.",
                 labelMaxVideoSize: "Máx. 100 MB",
                 btnExclusive: "Exclusivo",
-                chartExclusiveLabel: "Chart exclusivo del Handbook",
-                skinExclusiveLabel: "Skin exclusiva del Handbook",
+                chartExclusiveLabel: "Exclusivo del Handbook",
+                skinExclusiveLabel: "Exclusivo del Handbook",
                 btnMoreInfo: "Más información",
                 btnShowLess: "Mostrar menos",
                 selectEditionPrompt: "EDITIONS",
-                explicitModalTitle: "¿Activar versión sin censura?",
+                explicitModalTitle: "¿Habilitar versión sin censura?",
                 explicitModalNotice: "AVISO: Esta canción puede incluir contenido sensible no apto para todo público.",
-                btnActivate: "Activar",
+                btnActivate: "Habilitar",
                 lblExplicitContentToggle: "Contenido Explícito",
                 lblExplicitSectionHeader: "Datos Sin Censura / Explicit",
                 lblDeluxeDiff: "Dificultad Deluxe",
                 lblDeluxeNotes: "Notas Deluxe",
                 lblDeluxeDuration: "Duración Deluxe",
                 lblDeluxeRelease: "Lanzamiento Deluxe",
-                lblDeluxeAudio: "Audio Deluxe (Preview)",
                 lblDeluxeVideo: "Video Deluxe (MP4)",
                 lblDeluxeZip: "Deluxe ZIP (.zip)",
-                lblAttachedAudioStd: "Audio Standard Adjunto",
+                lblAttachedAudioStd: "Audio Preview Adjunto",
                 lblAttachedVideoStd: "Video Standard Adjunto",
                 lblAttachedZipStd: "ZIP Standard Adjunto",
-                lblAttachedAudioDlx: "Audio Deluxe Adjunto",
                 lblAttachedVideoDlx: "Video Deluxe Adjunto",
                 lblAttachedZipDlx: "ZIP Deluxe Adjunto",
-                lblExpAudioStd: "Audio Standard Explicit",
+                lblExpAudioStd: "Audio Preview Explicit (Unificado)",
                 lblExpVideoStd: "Video Standard Explicit",
                 lblExpZipStd: "ZIP Standard Explicit",
-                lblExpAudioDlx: "Audio Deluxe Explicit",
                 lblExpVideoDlx: "Video Deluxe Explicit",
                 lblExpZipDlx: "ZIP Deluxe Explicit",
-                lblAttachedExpAudioStd: "Audio Standard Explicit Adjunto",
-                lblAttachedExpVideoStd: "Video Standard Explicit Adjunto",
-                lblAttachedExpZipStd: "ZIP Standard Explicit Adjunto",
-                lblAttachedExpAudioDlx: "Audio Deluxe Explicit Adjunto",
-                lblAttachedExpVideoDlx: "Video Deluxe Explicit Adjunto",
-                lblAttachedExpZipDlx: "ZIP Deluxe Explicit Adjunto",
+                lblAttachedExpAudioStd: "Audio Explicit Adjunto",
+                lblAttachedExpVideoStd: "Attached Explicit Standard Video",
+                lblAttachedExpZipStd: "Attached Explicit Standard ZIP",
+                lblAttachedExpVideoDlx: "Attached Explicit Deluxe Video",
+                lblAttachedExpZipDlx: "Attached Explicit Deluxe ZIP",
                 formUploadZipStd: "Standard ZIP (.zip)"
             },
             en: {
@@ -1195,7 +1176,7 @@
                 formBrandUrl: "Brand URL", txtNoLinksAvailable: "No links available", btnSaveChanges: "Save Changes",
                 btnSaveFooterLinks: "Save Menu Links", jumpToTxt: "Go to",
                 selectSubmenuSkin: "Select a Platform", downloadDirectBtn: "Download",
-                formUploadArt: "Upload Art", formUploadAudio: "Upload Audio Preview (Optional)",
+                formUploadArt: "Upload Art", formUploadAudio: "Upload Audio Preview (Censored/Normal)",
                 formUploadChartFile: "Upload File (.zip)", formUploadIcon: "Upload Icon",
                 formUploadBrand: "Upload Brand / Inspiration", formUploadSkinFile: "Upload File (.zip)",
                 beatcloneNotice: "It is necessary to have the Beatstar application installed to use this content. Download it from the official Beatclone page.",
@@ -1221,39 +1202,35 @@
                 requiredFieldMsg: "Please fill out this field.",
                 labelMaxVideoSize: "Max 100 MB",
                 btnExclusive: "Exclusive",
-                chartExclusiveLabel: "Handbook exclusive Chart",
-                skinExclusiveLabel: "Handbook exclusive Skin",
+                chartExclusiveLabel: "Handbook Exclusive",
+                skinExclusiveLabel: "Handbook Exclusive",
                 btnMoreInfo: "More information",
                 btnShowLess: "Show less",
                 selectEditionPrompt: "EDITIONS",
-                explicitModalTitle: "Activate uncensored version?",
+                explicitModalTitle: "Enable uncensored version?",
                 explicitModalNotice: "NOTICE: This song may include sensitive content not suitable for all audiences.",
-                btnActivate: "Activate",
+                btnActivate: "Enable",
                 lblExplicitContentToggle: "Explicit Content",
                 lblExplicitSectionHeader: "Uncensored / Explicit Data",
                 lblDeluxeDiff: "Deluxe Difficulty",
                 lblDeluxeNotes: "Deluxe Notes",
                 lblDeluxeDuration: "Deluxe Duration",
                 lblDeluxeRelease: "Deluxe Release Date",
-                lblDeluxeAudio: "Deluxe Audio (Preview)",
                 lblDeluxeVideo: "Deluxe Video (MP4)",
                 lblDeluxeZip: "Deluxe ZIP (.zip)",
-                lblAttachedAudioStd: "Attached Standard Audio",
+                lblAttachedAudioStd: "Attached Audio Preview",
                 lblAttachedVideoStd: "Attached Standard Video",
                 lblAttachedZipStd: "Attached Standard ZIP",
-                lblAttachedAudioDlx: "Attached Deluxe Audio",
                 lblAttachedVideoDlx: "Attached Deluxe Video",
                 lblAttachedZipDlx: "Attached Deluxe ZIP",
-                lblExpAudioStd: "Explicit Standard Audio",
+                lblExpAudioStd: "Explicit Audio Preview (Unified)",
                 lblExpVideoStd: "Explicit Standard Video",
                 lblExpZipStd: "Explicit Standard ZIP",
-                lblExpAudioDlx: "Explicit Deluxe Audio",
                 lblExpVideoDlx: "Explicit Deluxe Video",
                 lblExpZipDlx: "Explicit Deluxe ZIP",
-                lblAttachedExpAudioStd: "Attached Explicit Standard Audio",
+                lblAttachedExpAudioStd: "Attached Explicit Audio",
                 lblAttachedExpVideoStd: "Attached Explicit Standard Video",
                 lblAttachedExpZipStd: "Attached Explicit Standard ZIP",
-                lblAttachedExpAudioDlx: "Attached Explicit Deluxe Audio",
                 lblAttachedExpVideoDlx: "Attached Explicit Deluxe Video",
                 lblAttachedExpZipDlx: "Attached Explicit Deluxe ZIP",
                 formUploadZipStd: "Standard ZIP (.zip)"
@@ -1297,6 +1274,10 @@
         let activeCanvas = null;
         let activeArtContainer = null;
         let activeVideoElement = null;
+        let activeVisualizerColor = "#d946ef";
+
+        // Búfer reutilizable para evitar la asignación de memoria recurrente en cada frame de dibujo
+        let audioDataArray = null;
 
         let levelZipToRemove = false;
         let levelZipDeluxeToRemove = false;
@@ -1313,9 +1294,7 @@
         let cosmeticVideoToRemove = false;
 
         let levelAudioToRemove = false;
-        let levelAudioDeluxeToRemove = false;
         let levelAudioExplicitToRemove = false;
-        let levelAudioDeluxeExplicitToRemove = false;
 
         let cosmeticZipToRemove = false;
 
@@ -1583,11 +1562,9 @@
                 'current-lvl-audio-badge', 'btn-remove-lvl-audio',
                 'current-chart-deluxe-zip-badge', 'btn-remove-chart-deluxe-zip',
                 'current-lvl-video-deluxe-badge', 'btn-remove-lvl-video-deluxe',
-                'current-lvl-audio-deluxe-badge', 'btn-remove-lvl-audio-deluxe',
                 'badge-lvl-audio-explicit', 'btn-remove-lvl-audio-explicit',
                 'badge-lvl-video-explicit', 'btn-remove-lvl-video-explicit',
                 'badge-lvl-zip-explicit', 'btn-remove-lvl-zip-explicit',
-                'badge-lvl-audio-dlx-explicit', 'btn-remove-lvl-audio-dlx-explicit',
                 'badge-lvl-video-dlx-explicit', 'btn-remove-lvl-video-dlx-explicit',
                 'badge-lvl-zip-dlx-explicit', 'btn-remove-lvl-zip-dlx-explicit'
             ];
@@ -1616,9 +1593,7 @@
             levelVideoDeluxeExplicitToRemove = false;
 
             levelAudioToRemove = false;
-            levelAudioDeluxeToRemove = false;
             levelAudioExplicitToRemove = false;
-            levelAudioDeluxeExplicitToRemove = false;
             
             buildGenresSelector();
             updateCMSHeaderIcons();
@@ -1664,7 +1639,6 @@
         document.getElementById('btn-remove-lvl-video')?.addEventListener('click', () => { levelVideoToRemove = true; document.getElementById('current-lvl-video-badge').classList.add('hidden'); document.getElementById('btn-remove-lvl-video').classList.add('hidden'); });
         document.getElementById('btn-remove-chart-zip')?.addEventListener('click', () => { levelZipToRemove = true; document.getElementById('current-chart-zip-badge').classList.add('hidden'); document.getElementById('btn-remove-chart-zip').classList.add('hidden'); });
 
-        document.getElementById('btn-remove-lvl-audio-deluxe')?.addEventListener('click', () => { levelAudioDeluxeToRemove = true; document.getElementById('current-lvl-audio-deluxe-badge').classList.add('hidden'); document.getElementById('btn-remove-lvl-audio-deluxe').classList.add('hidden'); });
         document.getElementById('btn-remove-lvl-video-deluxe')?.addEventListener('click', () => { levelVideoDeluxeToRemove = true; document.getElementById('current-lvl-video-deluxe-badge').classList.add('hidden'); document.getElementById('btn-remove-lvl-video-deluxe').classList.add('hidden'); });
         document.getElementById('btn-remove-chart-deluxe-zip')?.addEventListener('click', () => { levelZipDeluxeToRemove = true; document.getElementById('current-chart-deluxe-zip-badge').classList.add('hidden'); document.getElementById('btn-remove-chart-deluxe-zip').classList.add('hidden'); });
 
@@ -1672,7 +1646,6 @@
         document.getElementById('btn-remove-lvl-video-explicit')?.addEventListener('click', () => { levelVideoExplicitToRemove = true; document.getElementById('badge-lvl-video-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-video-explicit').classList.add('hidden'); });
         document.getElementById('btn-remove-lvl-zip-explicit')?.addEventListener('click', () => { levelZipExplicitToRemove = true; document.getElementById('badge-lvl-zip-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-zip-explicit').classList.add('hidden'); });
 
-        document.getElementById('btn-remove-lvl-audio-dlx-explicit')?.addEventListener('click', () => { levelAudioDeluxeExplicitToRemove = true; document.getElementById('badge-lvl-audio-dlx-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-audio-dlx-explicit').classList.add('hidden'); });
         document.getElementById('btn-remove-lvl-video-dlx-explicit')?.addEventListener('click', () => { levelVideoDeluxeExplicitToRemove = true; document.getElementById('badge-lvl-video-dlx-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-video-dlx-explicit').classList.add('hidden'); });
         document.getElementById('btn-remove-lvl-zip-dlx-explicit')?.addEventListener('click', () => { levelZipDeluxeExplicitToRemove = true; document.getElementById('badge-lvl-zip-dlx-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-zip-dlx-explicit').classList.add('hidden'); });
 
@@ -1881,8 +1854,12 @@
             }
             if(activeAudioElement) {
                 activeAudioElement.pause();
-                activeAudioElement.currentTime = 0;
+                activeAudioElement.src = ""; // Liberar memoria del navegador
+                activeAudioElement.load();
                 activeAudioElement = null;
+            }
+            if(audioCtx && audioCtx.state === 'running') {
+                audioCtx.suspend(); // Suspender para no consumir procesador en segundo plano
             }
             if(activeAudioButton) {
                 activeAudioButton.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
@@ -1904,44 +1881,55 @@
             currentRotationAngle = 0;
         }
 
-        function startRadialCanvasVisualizer(canvas, analyser, containerElement) {
+        // VISUALIZADOR MÁS COMPACTO Y DINÁMICO (SENSIBILIDAD MAYOR EN BAJOS Y TAMAÑO REDUCIDO)
+        function startRadialCanvasVisualizer(canvas, analyser, containerElement, themeColor = "#d946ef") {
             const ctx = canvas.getContext('2d');
             const bufferLength = analyser.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
+            if(!audioDataArray || audioDataArray.length !== bufferLength) {
+                audioDataArray = new Uint8Array(bufferLength);
+            }
             
             const rect = containerElement.getBoundingClientRect();
             const displaySize = Math.max(rect.width, rect.height) || 144;
             
-            canvas.width = displaySize + 40; 
-            canvas.height = displaySize + 40;
+            // Ligera reducción del lienzo canvas para evitar saturación
+            canvas.width = displaySize + 32; 
+            canvas.height = displaySize + 32;
             
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            const radius = (displaySize / 2) - 2; 
+            const radius = (displaySize / 2) - 1; 
 
             function draw() {
                 if(!activeCanvas || activeCanvas !== canvas) return;
                 canvasAnimationId = requestAnimationFrame(draw);
-                analyser.getByteFrequencyData(dataArray);
+                analyser.getByteFrequencyData(audioDataArray);
                 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 currentRotationAngle += 0.008; 
 
-                const barCount = 72; 
+                const barCount = 64; 
                 for (let i = 0; i < barCount; i++) {
                     const angle = ((i / barCount) * Math.PI * 2) + currentRotationAngle;
                     const targetIndex = i < barCount / 2 ? i : barCount - i;
-                    const dataIndex = Math.floor((targetIndex / (barCount / 2)) * bufferLength * 0.6);
-                    const rawValue = dataArray[dataIndex] || 0;
-                    const barHeight = (rawValue / 255) * 22; 
+                    const dataIndex = Math.floor((targetIndex / (barCount / 2)) * bufferLength * 0.5);
+                    const rawValue = audioDataArray[dataIndex] || 0;
+                    
+                    // Ajuste de sensibilidad: Frecuencias bajas (bajos) más marcadas, altas reducidas un poco
+                    let barHeight = (rawValue / 255);
+                    if(dataIndex < 6) {
+                        barHeight = barHeight * 18; // Resalte de Bajos
+                    } else {
+                        barHeight = Math.pow(barHeight, 1.3) * 12; // Sensibilidad atenuada en agudos/medios
+                    }
                     
                     const startX = centerX + Math.cos(angle) * radius;
                     const startY = centerY + Math.sin(angle) * radius;
                     const endX = centerX + Math.cos(angle) * (radius + barHeight);
                     const endY = centerY + Math.sin(angle) * (radius + barHeight);
                     
-                    ctx.strokeStyle = '#d946ef';
-                    ctx.lineWidth = 2.5;
+                    ctx.strokeStyle = themeColor;
+                    ctx.lineWidth = 2.2;
                     ctx.lineCap = 'round';
                     ctx.beginPath();
                     ctx.moveTo(startX, startY);
@@ -1953,14 +1941,15 @@
             draw();
         }
 
-        function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement, containerElement) {
-            if(activeAudioElement && activeAudioElement.src === audioUrl) {
+        // Sincronización estricta: Se espera al evento canplaythrough para reproducciones de audio
+        function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement, containerElement, isModalOpen = false, themeColor = "#d946ef") {
+            if(activeAudioElement && activeAudioElement.dataset.url === audioUrl) {
                 stopGlobalAudioPreview();
                 return;
             }
             
             stopAllMedia();
-            btnElement.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-[10px]"></i>`;
+            if(btnElement) btnElement.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-[10px]"></i>`;
 
             if(!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
@@ -1971,12 +1960,14 @@
             const audio = new Audio();
             audio.crossOrigin = "anonymous"; 
             audio.src = audioUrl;
-            audio.preload = "metadata";
+            audio.dataset.url = audioUrl;
+            audio.preload = "auto";
+            audio.loop = isModalOpen; // Si está dentro del modal, hace bucle indefinido mientras siga abierto
 
-            audio.addEventListener('playing', () => {
+            const handleCanPlayThrough = () => {
                 if (activeAudioElement !== audio) return;
                 
-                btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
+                if(btnElement) btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
                 containerElement.classList.add('art-container-circular');
                 imgElement.classList.remove('bg-zinc-900');
 
@@ -1990,20 +1981,29 @@
                     }
                 } catch(e) {}
 
-                startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement);
-            });
+                audio.play().then(() => {
+                    startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement, themeColor);
+                }).catch(err => {
+                    console.error("Audio playback error:", err);
+                    stopGlobalAudioPreview();
+                });
+
+                audio.removeEventListener('canplaythrough', handleCanPlayThrough);
+            };
+
+            audio.addEventListener('canplaythrough', handleCanPlayThrough);
 
             activeAudioElement = audio;
             activeAudioButton = btnElement;
             activeAudioImg = imgElement;
             activeArtContainer = containerElement;
+            activeVisualizerColor = themeColor;
 
-            audio.play().catch(err => {
-                console.error("Audio playback error:", err);
-                stopGlobalAudioPreview();
-            });
+            audio.load();
 
-            audio.onended = () => { stopGlobalAudioPreview(); };
+            audio.onended = () => { 
+                if(!audio.loop) stopGlobalAudioPreview(); 
+            };
         }
 
         function formatStringToDMY(rawDate) {
@@ -2023,7 +2023,7 @@
 
             return `
                 <div class="${containerClass} custom-native-video-wrapper">
-                    <video class="w-full h-full object-cover pointer-events-none" playsinline preload="metadata" disablePictureInPicture>
+                    <video class="w-full h-full object-cover pointer-events-none" playsinline preload="auto" disablePictureInPicture>
                         <source src="${videoUrl}" type="video/mp4">
                     </video>
                     
@@ -2047,6 +2047,7 @@
             });
         }
 
+        // Sincronización de video: Esperar a carga completa antes de arrancar
         function setupNativeVideoBehavior(vidWrapper) {
             if (!vidWrapper) return;
             const videoEl = vidWrapper.querySelector('video');
@@ -2060,7 +2061,7 @@
                 if (loaderEl) loaderEl.classList.remove('hidden');
             });
 
-            videoEl.addEventListener('canplay', () => {
+            videoEl.addEventListener('canplaythrough', () => {
                 if (loaderEl) loaderEl.classList.add('hidden');
             });
 
@@ -2090,7 +2091,7 @@
 
                     activeVideoElement = videoEl;
 
-                    if (loaderEl && videoEl.readyState < 3) {
+                    if (loaderEl && videoEl.readyState < 4) {
                         loaderEl.classList.remove('hidden');
                     }
                     
@@ -2469,6 +2470,7 @@
             return `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${styleClass} font-black uppercase text-[10px]">${graphicMarkup} <span>${label}</span></div>`;
         }
 
+        // DESPLIEGUE DEL VISUALIZADOR EN EL MODAL DE EDICIÓN CON COLOR SEGÚN SELECCIÓN Y BUCLE INFINITO
         function openBeatstarEditionSelector(lvl, outerArtBox) {
             stopAllMedia();
             activeModalBeatstarChart = lvl;
@@ -2480,6 +2482,7 @@
             const artContainer = document.getElementById('modal-edition-art-container');
             const deluxeBadge = document.getElementById('modal-edition-deluxe-badge');
             const standardBadge = document.getElementById('modal-edition-standard-badge');
+            const canvas = document.getElementById('modal-edition-canvas');
 
             img.src = lvl.art || 'free_song_Image.png';
             songLbl.innerText = lvl.song;
@@ -2489,20 +2492,33 @@
             document.getElementById('modal-opt-deluxe-diff-tag').innerHTML = renderDifficultyTagMarkup(lvl.diffDeluxe || 'Extreme');
 
             const currentActive = activeChartSelectedEditions[lvl.id] || 'Standard';
+            const isExplicit = !!activeChartExplicitStates[lvl.id];
+            
+            // Preview Unificado de Audio
+            const audioUrl = isExplicit ? (lvl.audioExplicit || lvl.audioDirectUrl) : lvl.audioDirectUrl;
 
-            if(currentActive === 'Deluxe') {
-                artContainer.classList.add('glow-gold');
-                deluxeBadge.classList.remove('hidden');
-                standardBadge.classList.add('hidden');
-                document.getElementById('modal-check-deluxe').classList.remove('opacity-0');
-                document.getElementById('modal-check-standard').classList.add('opacity-0');
-            } else {
-                artContainer.classList.remove('glow-gold');
-                standardBadge.classList.remove('hidden');
-                deluxeBadge.classList.add('hidden');
-                document.getElementById('modal-check-standard').classList.remove('opacity-0');
-                document.getElementById('modal-check-deluxe').classList.add('opacity-0');
+            function updateModalEditionUI(selectedEd) {
+                if(selectedEd === 'Deluxe') {
+                    artContainer.classList.add('glow-gold');
+                    deluxeBadge.classList.remove('hidden');
+                    standardBadge.classList.add('hidden');
+                    document.getElementById('modal-check-deluxe').classList.remove('opacity-0');
+                    document.getElementById('modal-check-standard').classList.add('opacity-0');
+                } else {
+                    artContainer.classList.remove('glow-gold');
+                    standardBadge.classList.remove('hidden');
+                    deluxeBadge.classList.add('hidden');
+                    document.getElementById('modal-check-standard').classList.remove('opacity-0');
+                    document.getElementById('modal-check-deluxe').classList.add('opacity-0');
+                }
+
+                if(audioUrl) {
+                    const themeColor = (selectedEd === 'Deluxe') ? "#facc15" : "#d946ef";
+                    toggleAudioPreviewEngine(audioUrl, null, img, canvas, artContainer, true, themeColor);
+                }
             }
+
+            updateModalEditionUI(currentActive);
 
             if(outerArtBox) outerArtBox.classList.add('art-circle-shape');
 
@@ -2519,6 +2535,11 @@
                 box.classList.remove('art-circle-shape');
             });
 
+            // Si el audio está reproduciéndose al cerrar el modal, desactiva el bucle para que termine normalmente
+            if(activeAudioElement) {
+                activeAudioElement.loop = false;
+            }
+
             modal.classList.add('hidden');
             renderLevelsTable();
         }
@@ -2529,7 +2550,10 @@
 
         function renderLevelsTable() {
             const tbody = document.getElementById('levels-tbody');
-            if(!tbody) return; tbody.innerHTML = '';
+            if(!tbody) return; 
+
+            // Fragmento de documento para minimizar reflows y optimizar memoria en DOM
+            const fragment = document.createDocumentFragment();
 
             let filtered = sortAscendingByDate(levels);
 
@@ -2553,6 +2577,7 @@
                         </div>
                     </td>
                 `;
+                tbody.innerHTML = '';
                 tbody.appendChild(tr);
                 return;
             }
@@ -2582,9 +2607,10 @@
                     ? (isDeluxeActive ? (lvl.dateDeluxeExplicit || lvl.dateExplicit || lvl.dateDeluxe || lvl.date) : (lvl.dateExplicit || lvl.date))
                     : (isDeluxeActive ? (lvl.dateDeluxe || lvl.date) : lvl.date);
 
+                // AUDIO PREVIEW UNIFICADO (Solo 2 previews: Censurado vs Sin Censura)
                 let currentAudioUrl = isExplicitActive
-                    ? (isDeluxeActive ? (lvl.audioDeluxeExplicit || lvl.audioExplicit || lvl.audioDirectUrlDeluxe || lvl.audioDirectUrl) : (lvl.audioExplicit || lvl.audioDirectUrl))
-                    : (isDeluxeActive ? (lvl.audioDirectUrlDeluxe || lvl.audioDirectUrl) : lvl.audioDirectUrl);
+                    ? (lvl.audioExplicit || lvl.audioDirectUrl)
+                    : lvl.audioDirectUrl;
 
                 let currentVideoUrl = isExplicitActive
                     ? (isDeluxeActive ? (lvl.videoDeluxeExplicit || lvl.videoExplicit || lvl.videoDeluxe || lvl.video) : (lvl.videoExplicit || lvl.video))
@@ -2662,7 +2688,6 @@
 
                 const artBoxBorderClass = isDeluxeActive ? "glow-gold border-2 border-yellow-400" : "border border-fuchsia-500/30";
 
-                // AJUSTE MÓVIL PORTRAIT Y Z-INDEX: CANVAS (z-0), BADGES Y BOTÓN E (z-20 CON Z-INDEX ELEVADO)
                 const artOverlayBadgeDesktop = isDeluxeActive 
                     ? `<div class="hidden sm:block absolute bottom-1 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">DELUXE</div>`
                     : `<div class="hidden sm:block absolute bottom-1 left-1/2 -translate-x-1/2 bg-zinc-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">STANDARD</div>`;
@@ -2671,22 +2696,24 @@
                     ? `<div class="block sm:hidden mt-1.5 text-center bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-md tracking-wider w-max mx-auto relative z-20">DELUXE</div>`
                     : `<div class="block sm:hidden mt-1.5 text-center bg-zinc-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-md tracking-wider w-max mx-auto relative z-20">STANDARD</div>`;
 
-                // BOTÓN DE VERSIÓN EXPLICITA (E) CON LETRA EN COLOR NEGRO EN ESTADO ACTIVO
+                // SIMETRÍA Y TAMAÑO IDENTICO PARA BOTÓN "E" Y BOTÓN "PLAY" (w-7 h-7 sm:w-8 sm:h-8)
                 const explicitBtnStyle = isExplicitActive 
                     ? "bg-red-600 text-black border-red-500 glow-red" 
                     : "bg-black/80 text-zinc-400 border-zinc-700 hover:text-white";
 
                 const explicitButtonMarkup = (lvl.hasExplicit || isExplicitActive) ? `
-                    <button class="btn-toggle-explicit-trigger absolute bottom-1 left-1 w-7 h-7 ${explicitBtnStyle} border rounded-full font-black text-xs flex items-center justify-center shadow-2xl transition hover:scale-110 z-20" title="Versión sin censura">
+                    <button class="btn-toggle-explicit-trigger absolute bottom-1 left-1 w-7 h-7 sm:w-8 sm:h-8 ${explicitBtnStyle} border rounded-full font-black text-xs sm:text-sm flex items-center justify-center shadow-2xl transition hover:scale-110 z-20" title="Versión sin censura">
                         E
                     </button>
                 ` : '';
+
+                const targetAudioThemeColor = isDeluxeActive ? "#facc15" : "#d946ef";
 
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center align-middle">
                         <div class="flex flex-col items-center justify-center relative">
                             <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
-                                <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
+                                <canvas class="absolute -inset-4 w-[calc(100%+2rem)] h-[calc(100%+2rem)] pointer-events-none z-0"></canvas>
                                 <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
                                     <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
                                     ${artOverlayBadgeDesktop}
@@ -2695,7 +2722,7 @@
                                 ${explicitButtonMarkup}
 
                                 ${hasAudio ? `
-                                    <button class="btn-play-audio-preview absolute bottom-1 right-1 w-7 h-7 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
+                                    <button class="btn-play-audio-preview absolute bottom-1 right-1 w-7 h-7 sm:w-8 sm:h-8 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
                                         <i class="fa-solid fa-play text-[10px]"></i>
                                     </button>
                                 ` : ''}
@@ -2805,7 +2832,7 @@
                     const img = tr.querySelector('.target-lvl-art-img');
                     const canvas = tr.querySelector('canvas');
                     const containerBox = tr.querySelector('.target-art-outer-container');
-                    btn.addEventListener('click', () => toggleAudioPreviewEngine(currentAudioUrl, btn, img, canvas, containerBox));
+                    btn.addEventListener('click', () => toggleAudioPreviewEngine(currentAudioUrl, btn, img, canvas, containerBox, false, targetAudioThemeColor));
                 }
 
                 if(currentChartZip) {
@@ -2835,7 +2862,7 @@
                     document.getElementById('lvlDl2').value = lvl.dl2 || '';
                     document.getElementById('lvlDl3').value = lvl.dl3 || '';
 
-                    // Badges de archivos Standard
+                    // Badges de archivos Standard / Audio Unificado
                     if(lvl.audioDirectUrl) { document.getElementById('current-lvl-audio-badge').classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio').classList.remove('hidden'); }
                     if(lvl.video) { document.getElementById('current-lvl-video-badge').classList.remove('hidden'); document.getElementById('btn-remove-lvl-video').classList.remove('hidden'); }
                     if(lvl.chartDirectUrl) { document.getElementById('current-chart-zip-badge').classList.remove('hidden'); document.getElementById('btn-remove-chart-zip').classList.remove('hidden'); }
@@ -2849,8 +2876,6 @@
                     document.getElementById('lvlDl2Deluxe').value = lvl.dl2Deluxe || '';
                     document.getElementById('lvlDl3Deluxe').value = lvl.dl3Deluxe || '';
 
-                    // Badges de archivos Deluxe
-                    if(lvl.audioDirectUrlDeluxe) { document.getElementById('current-lvl-audio-deluxe-badge').classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio-deluxe').classList.remove('hidden'); }
                     if(lvl.videoDeluxe) { document.getElementById('current-lvl-video-deluxe-badge').classList.remove('hidden'); document.getElementById('btn-remove-lvl-video-deluxe').classList.remove('hidden'); }
                     if(lvl.chartDirectUrlDeluxe) { document.getElementById('current-chart-deluxe-zip-badge').classList.remove('hidden'); document.getElementById('btn-remove-chart-deluxe-zip').classList.remove('hidden'); }
 
@@ -2873,12 +2898,10 @@
                         document.getElementById('lvlDl2DeluxeExplicit').value = lvl.dl2DeluxeExplicit || '';
                         document.getElementById('lvlDl3DeluxeExplicit').value = lvl.dl3DeluxeExplicit || '';
 
-                        // Badges de archivos Explicit
                         if(lvl.audioExplicit) { document.getElementById('badge-lvl-audio-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio-explicit').classList.remove('hidden'); }
                         if(lvl.videoExplicit) { document.getElementById('badge-lvl-video-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-video-explicit').classList.remove('hidden'); }
                         if(lvl.zipExplicit) { document.getElementById('badge-lvl-zip-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-zip-explicit').classList.remove('hidden'); }
 
-                        if(lvl.audioDeluxeExplicit) { document.getElementById('badge-lvl-audio-dlx-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio-dlx-explicit').classList.remove('hidden'); }
                         if(lvl.videoDeluxeExplicit) { document.getElementById('badge-lvl-video-dlx-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-video-dlx-explicit').classList.remove('hidden'); }
                         if(lvl.zipDeluxeExplicit) { document.getElementById('badge-lvl-zip-dlx-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-zip-dlx-explicit').classList.remove('hidden'); }
                     } else {
@@ -2913,14 +2936,20 @@
                         }
                     });
                 });
-                tbody.appendChild(tr);
+                fragment.appendChild(tr);
             });
+
+            tbody.innerHTML = '';
+            tbody.appendChild(fragment);
         }
 
         function renderCosmeticsTables() {
             const tbodyB = document.getElementById('tbody-beatstar');
             const tbodyT = document.getElementById('tbody-tapwave');
-            if(!tbodyB || !tbodyT) return; tbodyB.innerHTML = ''; tbodyT.innerHTML = '';
+            if(!tbodyB || !tbodyT) return; 
+
+            const fragB = document.createDocumentFragment();
+            const fragT = document.createDocumentFragment();
 
             let filtered = sortAscendingByDate(cosmetics);
             if(activeSkinGenreFilter) filtered = filtered.filter(c => c.genre && c.genre.toLowerCase().includes(activeSkinGenreFilter.toLowerCase()));
@@ -2951,6 +2980,7 @@
                         </div>
                     </td>
                 `;
+                targetTbody.innerHTML = '';
                 targetTbody.appendChild(tr);
                 return;
             }
@@ -3082,8 +3112,13 @@
                     });
                 });
                 
-                if (isT) tbodyT.appendChild(tr); else tbodyB.appendChild(tr);
+                if (isT) fragT.appendChild(tr); else fragB.appendChild(tr);
             });
+
+            tbodyB.innerHTML = '';
+            tbodyT.innerHTML = '';
+            tbodyB.appendChild(fragB);
+            tbodyT.appendChild(fragT);
         }
 
         document.getElementById('btn-clear-lvl-filters')?.addEventListener('click', () => {
@@ -3273,7 +3308,7 @@
             }
         });
 
-        // REGISTRO DE CHARTS CON SOPORTE DE CONTENIDO EXPLÍCITO
+        // REGISTRO DE CHARTS CON SOPORTE DE UNIFICACIÓN DE AUDIOS PREVIEW
         document.getElementById('level-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             showLoadingOverlay();
@@ -3286,7 +3321,6 @@
                 let finalArtUrl = levelArtToRemove ? "free_song_Image.png" : (existingLvl?.art || "free_song_Image.png");
                 
                 let finalAudioUrl = levelAudioToRemove ? "" : (existingLvl?.audioDirectUrl || "");
-                let finalAudioDeluxeUrl = levelAudioDeluxeToRemove ? "" : (existingLvl?.audioDirectUrlDeluxe || "");
                 
                 let finalVideoUrl = levelVideoToRemove ? "" : (existingLvl?.video || "");
                 let finalVideoDeluxeUrl = levelVideoDeluxeToRemove ? "" : (existingLvl?.videoDeluxe || "");
@@ -3296,7 +3330,6 @@
 
                 // ASSETS EXPLICIT
                 let finalAudioExplicit = levelAudioExplicitToRemove ? "" : (existingLvl?.audioExplicit || "");
-                let finalAudioDeluxeExplicit = levelAudioDeluxeExplicitToRemove ? "" : (existingLvl?.audioDeluxeExplicit || "");
                 let finalVideoExplicit = levelVideoExplicitToRemove ? "" : (existingLvl?.videoExplicit || "");
                 let finalVideoDeluxeExplicit = levelVideoDeluxeExplicitToRemove ? "" : (existingLvl?.videoDeluxeExplicit || "");
                 let finalZipExplicit = levelZipExplicitToRemove ? "" : (existingLvl?.zipExplicit || "");
@@ -3307,14 +3340,10 @@
                     finalArtUrl = await uploadFileToGitHubContent(artFileInput.files[0], 'assets/charts', artFileInput.files[0].name);
                 }
                 
+                // AUDIO PREVIEW UNIFICADO (NORMAL)
                 const audioFileInput = document.getElementById('lvlAudioFile');
                 if(audioFileInput.files && audioFileInput.files[0] && githubToken && githubUser) {
                     finalAudioUrl = await uploadFileToGitHubContent(audioFileInput.files[0], 'assets/audio', audioFileInput.files[0].name);
-                }
-
-                const audioDeluxeFileInput = document.getElementById('lvlAudioFileDeluxe');
-                if(audioDeluxeFileInput?.files && audioDeluxeFileInput.files[0] && githubToken && githubUser) {
-                    finalAudioDeluxeUrl = await uploadFileToGitHubContent(audioDeluxeFileInput.files[0], 'assets/audio', audioDeluxeFileInput.files[0].name);
                 }
 
                 const videoFileInput = document.getElementById('lvlVideoFile');
@@ -3340,14 +3369,10 @@
                 // ARCHIVOS SIN CENSURA SI EL TOGGLE ESTA ACTIVO
                 const hasExplicit = document.getElementById('lvlHasExplicit').checked;
                 if(hasExplicit) {
+                    // AUDIO PREVIEW UNIFICADO (EXPLICIT)
                     const audioExpIn = document.getElementById('lvlAudioFileExplicit');
                     if(audioExpIn?.files && audioExpIn.files[0] && githubToken && githubUser) {
                         finalAudioExplicit = await uploadFileToGitHubContent(audioExpIn.files[0], 'assets/audio', audioExpIn.files[0].name);
-                    }
-
-                    const audioDlxExpIn = document.getElementById('lvlAudioFileDeluxeExplicit');
-                    if(audioDlxExpIn?.files && audioDlxExpIn.files[0] && githubToken && githubUser) {
-                        finalAudioDeluxeExplicit = await uploadFileToGitHubContent(audioDlxExpIn.files[0], 'assets/audio', audioDlxExpIn.files[0].name);
                     }
 
                     const vidExpIn = document.getElementById('lvlVideoFileExplicit');
@@ -3384,12 +3409,14 @@
                     editionMode: selectedEditionMode,
                     edition: (selectedEditionMode === 'Deluxe') ? 'Deluxe' : 'Standard',
 
+                    // Preview Unificado Normal
+                    audioDirectUrl: finalAudioUrl, 
+
                     // Standard Data & Links
                     diff: document.getElementById('lvlDiff').value,
                     notes: document.getElementById('lvlNotes').value.trim(),
                     duration: document.getElementById('lvlDuration').value.trim(),
                     date: document.getElementById('lvlDate').value,
-                    audioDirectUrl: finalAudioUrl, 
                     video: finalVideoUrl,
                     chartDirectUrl: finalChartDirectUrl,
                     dl1: document.getElementById('lvlDl1').value.trim(), 
@@ -3401,19 +3428,18 @@
                     notesDeluxe: document.getElementById('lvlNotesDeluxe').value.trim(),
                     durationDeluxe: document.getElementById('lvlDurationDeluxe').value.trim(),
                     dateDeluxe: document.getElementById('lvlDateDeluxe').value,
-                    audioDirectUrlDeluxe: finalAudioDeluxeUrl,
                     videoDeluxe: finalVideoDeluxeUrl,
                     chartDirectUrlDeluxe: finalChartDirectUrlDeluxe,
                     dl1Deluxe: document.getElementById('lvlDl1Deluxe').value.trim(),
                     dl2Deluxe: document.getElementById('lvlDl2Deluxe').value.trim(),
                     dl3Deluxe: document.getElementById('lvlDl3Deluxe').value.trim(),
 
-                    // Datos Explícitos Independientes
+                    // Datos Explícitos Independientes (con Preview Unificado Explicit)
                     hasExplicit: hasExplicit,
+                    audioExplicit: finalAudioExplicit,
                     notesExplicit: document.getElementById('lvlNotesExplicit').value.trim(),
                     durationExplicit: document.getElementById('lvlDurationExplicit').value.trim(),
                     dateExplicit: document.getElementById('lvlDateExplicit').value,
-                    audioExplicit: finalAudioExplicit,
                     videoExplicit: finalVideoExplicit,
                     zipExplicit: finalZipExplicit,
                     dl1Explicit: document.getElementById('lvlDl1Explicit').value.trim(),
@@ -3423,7 +3449,6 @@
                     notesDeluxeExplicit: document.getElementById('lvlNotesDeluxeExplicit').value.trim(),
                     durationDeluxeExplicit: document.getElementById('lvlDurationDeluxeExplicit').value.trim(),
                     dateDeluxeExplicit: document.getElementById('lvlDateDeluxeExplicit').value,
-                    audioDeluxeExplicit: finalAudioDeluxeExplicit,
                     videoDeluxeExplicit: finalVideoDeluxeExplicit,
                     zipDeluxeExplicit: finalZipDeluxeExplicit,
                     dl1DeluxeExplicit: document.getElementById('lvlDl1DeluxeExplicit').value.trim(),
