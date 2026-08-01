@@ -1508,6 +1508,7 @@
         });
 
         document.getElementById('btn-lang-toggle').addEventListener('click', () => {
+            stopAllMedia();
             currentLanguage = currentLanguage === 'es' ? 'en' : 'es';
             localStorage.setItem('nexus_lang', currentLanguage);
             applyLanguagePack();
@@ -2493,6 +2494,7 @@
 
         // DESPLIEGUE DEL VISUALIZADOR EN EL MODAL DE EDICIÓN CON COLOR SEGÚN SELECCIÓN Y BUCLE INFINITO
         function openBeatstarEditionSelector(lvl, outerArtBox) {
+            stopAllMedia();
             activeModalBeatstarChart = lvl;
 
             const modal = document.getElementById('beatstar-edition-modal');
@@ -2822,8 +2824,8 @@
                 const explicitBtn = tr.querySelector('.btn-toggle-explicit-trigger');
                 explicitBtn?.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    stopAllMedia(); // Detención completa al desactivar/cambiar estado sin censura
                     if (activeChartExplicitStates[lvl.id]) {
+                        stopAllMedia(); // Detención completa al volver a la versión censurada
                         activeChartExplicitStates[lvl.id] = false;
                         renderLevelsTable();
                     } else {
