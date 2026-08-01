@@ -693,7 +693,10 @@
                                 <input type="text" id="lvlDurationDeluxe" placeholder="ej. 2:40" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-100">
                             </div>
                             <div>
-                                <label class="block font-bold text-yellow-500/80 mb-1" data-i18n="lblDeluxeRelease">Lanzamiento Deluxe</label>
+                                <div class="flex items-center justify-between mb-1 gap-1">
+                                    <label class="block font-bold text-yellow-500/80" data-i18n="lblDeluxeRelease">Lanzamiento Deluxe</label>
+                                    <button type="button" id="btn-picker-lvl-deluxe" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar fecha</button>
+                                </div>
                                 <input type="date" id="lvlDateDeluxe" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-100">
                             </div>
                             <div>
@@ -748,7 +751,13 @@
                                     <input type="number" id="lvlNotesExplicit" placeholder="Notas" data-i18n-ph="formNotes" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
                                     <input type="text" id="lvlDurationExplicit" placeholder="Duración" data-i18n-ph="formDuration" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
                                 </div>
-                                <input type="date" id="lvlDateExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                <div>
+                                    <div class="flex items-center justify-between mb-1 gap-1">
+                                        <label class="text-[10px] font-bold text-red-400" data-i18n="formRelease">Lanzamiento Explicit</label>
+                                        <button type="button" id="btn-picker-lvl-explicit" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar fecha</button>
+                                    </div>
+                                    <input type="date" id="lvlDateExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                </div>
 
                                 <div>
                                     <div class="flex items-center justify-between mb-0.5">
@@ -784,7 +793,13 @@
                                     <input type="number" id="lvlNotesDeluxeExplicit" placeholder="Notas" data-i18n-ph="formNotes" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
                                     <input type="text" id="lvlDurationDeluxeExplicit" placeholder="Duración" data-i18n-ph="formDuration" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
                                 </div>
-                                <input type="date" id="lvlDateDeluxeExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                <div>
+                                    <div class="flex items-center justify-between mb-1 gap-1">
+                                        <label class="text-[10px] font-bold text-yellow-500" data-i18n="lblDeluxeRelease">Lanzamiento Deluxe Explicit</label>
+                                        <button type="button" id="btn-picker-lvl-deluxe-explicit" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar fecha</button>
+                                    </div>
+                                    <input type="date" id="lvlDateDeluxeExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                </div>
 
                                 <div>
                                     <div class="flex items-center justify-between mb-0.5">
@@ -956,10 +971,7 @@
                         <div>
                             <div class="flex items-center justify-between mb-1 gap-1">
                                 <label class="font-bold text-zinc-400 uppercase tracking-wider"><span data-i18n="formRelease">Lanzamiento</span> (<span data-i18n="labelOptional">Opcional</span>)</label>
-                                <div class="flex items-center gap-1">
-                                    <button type="button" id="btn-picker-cos" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar Fecha</button>
-                                    <button type="button" id="btn-cos-coming-soon" class="px-2 py-0.5 bg-fuchsia-950 border border-fuchsia-700 text-fuchsia-300 font-extrabold rounded text-[10px] hover:bg-fuchsia-900 transition" data-i18n="btnComingSoon">Próximamente</button>
-                                </div>
+                                <button type="button" id="btn-picker-cos" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar Fecha</button>
                             </div>
                             <input type="date" id="cosDate" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
                             <input type="hidden" id="cosIsComingSoon" value="false">
@@ -1198,7 +1210,7 @@
                 labelVid1: "Video 1 (Archivo MP4)", labelVid2: "Video 2 (Archivo MP4)", labelVid3: "Video 3 (Archivo MP4)",
                 btnSaveThanksVideos: "Subir y Guardar Videos",
                 formUploadVideo: "Subir Video (MP4)", labelOptional: "Opcional",
-                btnComingSoon: "Próximamente", textComingSoon: "Próximamente",
+                btnComingSoon: "Próximamente", textComingSoon: "Próximamente...",
                 selectGenreError: "Por favor selecciona al menos un género para la Skin.",
                 requiredFieldMsg: "Por favor completa este campo.",
                 labelMaxVideoSize: "Máx. 100 MB",
@@ -1935,46 +1947,45 @@
         });
 
         function stopGlobalAudioPreview() {
-    if(canvasAnimationId) {
-        cancelAnimationFrame(canvasAnimationId);
-        canvasAnimationId = null;
-    }
-    if(activeAudioElement) {
-        activeAudioElement.pause();
-        activeAudioElement.src = "";
-        activeAudioElement.load();
-        activeAudioElement = null;
-    }
-    if(audioCtx && audioCtx.state === 'running') {
-        audioCtx.suspend();
-    }
-    if(activeAudioButton) {
-        activeAudioButton.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
-        activeAudioButton = null;
-    }
-    if(activeAudioImg) {
-        activeAudioImg.classList.add('bg-zinc-900');
-        activeAudioImg = null;
-    }
-    if(activeArtContainer) {
-        activeArtContainer.classList.remove('art-container-circular');
-        activeArtContainer.classList.remove('art-circle-shape');
-        activeArtContainer = null;
-    }
-    
-    // CORRECCIÓN AQUÍ: Se remueven ambas clases de todos los contenedores de arte
-    document.querySelectorAll('.target-art-outer-container').forEach(box => {
-        box.classList.remove('art-circle-shape');
-        box.classList.remove('art-container-circular');
-    });
-    
-    if(activeCanvas) {
-        const ctx = activeCanvas.getContext('2d');
-        ctx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
-        activeCanvas = null;
-    }
-    currentRotationAngle = 0;
-}
+            if(canvasAnimationId) {
+                cancelAnimationFrame(canvasAnimationId);
+                canvasAnimationId = null;
+            }
+            if(activeAudioElement) {
+                activeAudioElement.pause();
+                activeAudioElement.src = "";
+                activeAudioElement.load();
+                activeAudioElement = null;
+            }
+            if(audioCtx && audioCtx.state === 'running') {
+                audioCtx.suspend();
+            }
+            if(activeAudioButton) {
+                activeAudioButton.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
+                activeAudioButton = null;
+            }
+            if(activeAudioImg) {
+                activeAudioImg.classList.add('bg-zinc-900');
+                activeAudioImg = null;
+            }
+            if(activeArtContainer) {
+                activeArtContainer.classList.remove('art-container-circular');
+                activeArtContainer.classList.remove('art-circle-shape');
+                activeArtContainer = null;
+            }
+            
+            document.querySelectorAll('.target-art-outer-container').forEach(box => {
+                box.classList.remove('art-circle-shape');
+                box.classList.remove('art-container-circular');
+            });
+            
+            if(activeCanvas) {
+                const ctx = activeCanvas.getContext('2d');
+                ctx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
+                activeCanvas = null;
+            }
+            currentRotationAngle = 0;
+        }
 
         // VISUALIZADOR DE AUDIO - RECALCULADO PARA AJUSTARSE DINÁMICAMENTE EN CADA DRAW
         function startRadialCanvasVisualizer(canvas, analyser, containerElement, themeColor = "#d946ef") {
@@ -2042,7 +2053,6 @@
 
         // MOTOR DE AUDIO CON BOTÓN DE "ALTO" (STOP) TOTALMENTE FUNCIONAL
         function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement, containerElement, isModalOpen = false, themeColor = "#d946ef", keepPlayingIfSame = false) {
-            // Si el mismo audio está sonando
             if(activeAudioElement && activeAudioElement.dataset.url === audioUrl && !activeAudioElement.paused) {
                 if (keepPlayingIfSame) {
                     activeAudioElement.loop = isModalOpen;
@@ -2119,7 +2129,7 @@
         }
 
         function formatStringToDMY(rawDate) {
-            if (!rawDate) return translations[currentLanguage].textComingSoon;
+            if (!rawDate || rawDate.trim() === "") return translations[currentLanguage].textComingSoon;
             if (rawDate.includes('/')) return rawDate; 
             const parts = rawDate.split('-');
             if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
@@ -2824,7 +2834,6 @@
                 const isAudioPlayingThis = activeAudioElement && activeAudioElement.dataset.url === currentAudioUrl && !activeAudioElement.paused;
                 const playBtnIconClass = isAudioPlayingThis ? "fa-stop" : "fa-play";
 
-                // SOLO aplica forma circular si la canción de este chart se está reproduciendo actualmente
                 const isCircleShapeActive = isAudioPlayingThis ? 'art-circle-shape art-container-circular' : '';
 
                 tr.innerHTML = `
@@ -3636,8 +3645,7 @@
                     if(checkedCb) finalSkinGenre = checkedCb.value;
                 }
 
-                const isComingSoonFlag = document.getElementById('cosIsComingSoon').value === "true";
-                const dateVal = isComingSoonFlag ? "" : document.getElementById('cosDate').value;
+                const dateVal = document.getElementById('cosDate').value;
                 const isExclusive = document.getElementById('cosIsExclusive').checked;
 
                 const data = {
@@ -3719,6 +3727,9 @@
         }
 
         document.getElementById('btn-picker-lvl').addEventListener('click', () => document.getElementById('lvlDate').showPicker?.() || document.getElementById('lvlDate').focus());
+        document.getElementById('btn-picker-lvl-deluxe')?.addEventListener('click', () => document.getElementById('lvlDateDeluxe').showPicker?.() || document.getElementById('lvlDateDeluxe').focus());
+        document.getElementById('btn-picker-lvl-explicit')?.addEventListener('click', () => document.getElementById('lvlDateExplicit').showPicker?.() || document.getElementById('lvlDateExplicit').focus());
+        document.getElementById('btn-picker-lvl-deluxe-explicit')?.addEventListener('click', () => document.getElementById('lvlDateDeluxeExplicit').showPicker?.() || document.getElementById('lvlDateDeluxeExplicit').focus());
         document.getElementById('btn-picker-cos').addEventListener('click', () => document.getElementById('cosDate').showPicker?.() || document.getElementById('cosDate').focus());
 
         buildGenresSelector();
