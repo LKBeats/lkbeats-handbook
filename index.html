@@ -2211,7 +2211,13 @@
             audio.load();
 
             audio.onended = () => { 
-                if(!audio.loop) stopGlobalAudioPreview(); 
+                if(!audio.loop) {
+                    if (activeAudioButton) {
+                        activeAudioButton.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
+                    }
+                    stopGlobalAudioPreview(); 
+                    renderLevelsTable();
+                }
             };
         }
 
