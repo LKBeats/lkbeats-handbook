@@ -2820,6 +2820,7 @@
                 const isAudioPlayingThis = activeAudioElement && activeAudioElement.dataset.url === currentAudioUrl && !activeAudioElement.paused;
                 const playBtnIconClass = isAudioPlayingThis ? "fa-stop" : "fa-play";
 
+                // SOLO aplica forma circular si la canción de este chart se está reproduciendo actualmente
                 const isCircleShapeActive = isAudioPlayingThis ? 'art-circle-shape art-container-circular' : '';
 
                 tr.innerHTML = `
@@ -2946,13 +2947,8 @@
                     const canvas = tr.querySelector('canvas');
                     const containerBox = tr.querySelector('.target-art-outer-container');
                     
-                    if (activeAudioElement && activeAudioElement.dataset.url === currentAudioUrl) {
-                        if (activeAudioElement.readyState < 3) {
-                            if (canvas) {
-                                const ctx = canvas.getContext('2d');
-                                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                            }
-                        } else {
+                    if (isAudioPlayingThis) {
+                        if (activeAudioElement.readyState >= 3) {
                             toggleAudioPreviewEngine(currentAudioUrl, btn, img, canvas, containerBox, false, targetAudioThemeColor, true);
                         }
                     }
