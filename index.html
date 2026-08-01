@@ -1034,7 +1034,7 @@
         </div>
     </footer>
 
-    <script type="module">
+   <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
@@ -1378,74 +1378,73 @@
             else navigateTo('home', false);
         });
 
-        document.getElementById('submenu-card-beatstar').addEventListener('click', () => openCosmeticsSubmenuPlatform('Beatstar'));
-        document.getElementById('submenu-card-tapwave').addEventListener('click', () => openCosmeticsSubmenuPlatform('TapWave'));
-        document.getElementById('btn-toggle-to-tapwave').addEventListener('click', () => openCosmeticsSubmenuPlatform('TapWave'));
-        document.getElementById('btn-toggle-to-beatstar').addEventListener('click', () => openCosmeticsSubmenuPlatform('Beatstar'));
+        document.getElementById('submenu-card-beatstar')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('Beatstar'));
+        document.getElementById('submenu-card-tapwave')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('TapWave'));
+        document.getElementById('btn-toggle-to-tapwave')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('TapWave'));
+        document.getElementById('btn-toggle-to-beatstar')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('Beatstar'));
 
-        document.getElementById('nav-logo').addEventListener('click', () => navigateTo('home'));
-        document.getElementById('btn-nav-levels').addEventListener('click', () => navigateTo('levels'));
-        document.getElementById('btn-nav-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
-        document.getElementById('card-to-levels').addEventListener('click', () => navigateTo('levels'));
-        document.getElementById('card-to-cosmetics').addEventListener('click', () => navigateTo('cosmetics'));
+        document.getElementById('nav-logo')?.addEventListener('click', () => navigateTo('home'));
+        document.getElementById('btn-nav-levels')?.addEventListener('click', () => navigateTo('levels'));
+        document.getElementById('btn-nav-cosmetics')?.addEventListener('click', () => navigateTo('cosmetics'));
+        document.getElementById('card-to-levels')?.addEventListener('click', () => navigateTo('levels'));
+        document.getElementById('card-to-cosmetics')?.addEventListener('click', () => navigateTo('cosmetics'));
         
         const btnBoogieTrigger = document.getElementById('btn-boogie-admin-trigger');
         const modalBoogie = document.getElementById('boogie-auth-modal');
         const modalBoogieExit = document.getElementById('boogie-exit-modal');
         
-        btnBoogieTrigger.addEventListener('click', () => {
+        btnBoogieTrigger?.addEventListener('click', () => {
             if(isCreatorMode) {
-                modalBoogieExit.classList.remove('hidden');
+                modalBoogieExit?.classList.remove('hidden');
             } else {
-                modalBoogie.classList.remove('hidden');
+                modalBoogie?.classList.remove('hidden');
             }
         });
 
-        document.getElementById('btn-cancel-exit-creator').addEventListener('click', () => modalBoogieExit.classList.add('hidden'));
-        document.getElementById('btn-confirm-exit-creator').addEventListener('click', () => {
+        document.getElementById('btn-cancel-exit-creator')?.addEventListener('click', () => modalBoogieExit?.classList.add('hidden'));
+        document.getElementById('btn-confirm-exit-creator')?.addEventListener('click', () => {
             isCreatorMode = false;
             githubToken = "";
             githubUser = "";
-            btnBoogieTrigger.classList.remove('glow-green');
-            modalBoogieExit.classList.add('hidden');
+            btnBoogieTrigger?.classList.remove('glow-green');
+            modalBoogieExit?.classList.add('hidden');
             applyRoleUIVisibility();
         });
 
-        const closeModalBoogie = () => modalBoogie.classList.add('hidden');
-        document.getElementById('btn-close-boogie-modal').addEventListener('click', closeModalBoogie);
-        document.getElementById('btn-close-boogie-modal-x').addEventListener('click', closeModalBoogie);
+        const closeModalBoogie = () => modalBoogie?.classList.add('hidden');
+        document.getElementById('btn-close-boogie-modal')?.addEventListener('click', closeModalBoogie);
+        document.getElementById('btn-close-boogie-modal-x')?.addEventListener('click', closeModalBoogie);
 
         const modalConfirmDelete = document.getElementById('confirm-delete-modal');
         function requestUserDeleteConfirmation(onConfirm) {
             pendingDeleteActionCallback = onConfirm;
-            modalConfirmDelete.classList.remove('hidden');
+            modalConfirmDelete?.classList.remove('hidden');
         }
 
-        document.getElementById('btn-cancel-delete').addEventListener('click', () => {
+        document.getElementById('btn-cancel-delete')?.addEventListener('click', () => {
             pendingDeleteActionCallback = null;
-            modalConfirmDelete.classList.add('hidden');
+            modalConfirmDelete?.classList.add('hidden');
         });
 
-        document.getElementById('btn-action-delete').addEventListener('click', () => {
+        document.getElementById('btn-action-delete')?.addEventListener('click', () => {
             if(pendingDeleteActionCallback) pendingDeleteActionCallback();
             pendingDeleteActionCallback = null;
-            modalConfirmDelete.classList.add('hidden');
+            modalConfirmDelete?.classList.add('hidden');
         });
 
-        // MODAL ADVERTENCIA CONTENIDO EXPLÍCITO
         const modalExplicit = document.getElementById('explicit-warning-modal');
-        document.getElementById('btn-cancel-explicit').addEventListener('click', () => {
+        document.getElementById('btn-cancel-explicit')?.addEventListener('click', () => {
             pendingExplicitActivationChartId = null;
-            modalExplicit.classList.add('hidden');
+            modalExplicit?.classList.add('hidden');
         });
 
-        document.getElementById('btn-confirm-explicit').addEventListener('click', () => {
+        document.getElementById('btn-confirm-explicit')?.addEventListener('click', () => {
             if (pendingExplicitActivationChartId) {
                 activeChartExplicitStates[pendingExplicitActivationChartId] = true;
                 pendingExplicitActivationChartId = null;
                 renderLevelsTable();
             }
-            modalExplicit.classList.add('hidden');
+            modalExplicit?.classList.add('hidden');
         });
 
         document.querySelectorAll('.toggle-password-btn').forEach(btn => {
@@ -1453,24 +1452,24 @@
                 const targetId = btn.getAttribute('data-target');
                 const input = document.getElementById(targetId);
                 const icon = btn.querySelector('i');
-                if(input.type === 'password') {
+                if(input && input.type === 'password') {
                     input.type = 'text';
-                    icon.className = 'fa-solid fa-eye-slash';
-                } else {
+                    if(icon) icon.className = 'fa-solid fa-eye-slash';
+                } else if(input) {
                     input.type = 'password';
-                    icon.className = 'fa-solid fa-eye';
+                    if(icon) icon.className = 'fa-solid fa-eye';
                 }
             });
         });
 
-        document.getElementById('boogie-auth-form').addEventListener('submit', (e) => {
+        document.getElementById('boogie-auth-form')?.addEventListener('submit', (e) => {
             e.preventDefault();
             const inputs = ['boogieCred1', 'boogieCred2', 'boogieCred3'];
             let emptyInput = null;
 
             for (let id of inputs) {
                 const el = document.getElementById(id);
-                if (!el.value.trim()) {
+                if (el && !el.value.trim()) {
                     emptyInput = el;
                     break;
                 }
@@ -1482,18 +1481,18 @@
                 return;
             }
 
-            const pass = document.getElementById('boogieCred1').value;
-            const user = document.getElementById('boogieCred2').value.trim();
-            const token = document.getElementById('boogieCred3').value.trim();
+            const pass = document.getElementById('boogieCred1')?.value || '';
+            const user = document.getElementById('boogieCred2')?.value.trim() || '';
+            const token = document.getElementById('boogieCred3')?.value.trim() || '';
 
             if(pass === "BeatstarTest" && user !== "" && token !== "") {
                 isCreatorMode = true;
                 githubUser = user;
                 githubToken = token;
-                btnBoogieTrigger.classList.add('glow-green');
+                btnBoogieTrigger?.classList.add('glow-green');
                 applyRoleUIVisibility();
                 closeModalBoogie();
-                document.getElementById('boogie-auth-form').reset();
+                document.getElementById('boogie-auth-form')?.reset();
             } else {
                 alert(currentLanguage === 'es' ? "Credenciales incorrectas o incompletas." : "Incorrect or incomplete credentials.");
             }
@@ -1505,13 +1504,14 @@
             });
         });
 
-        document.getElementById('btn-lang-toggle').addEventListener('click', () => {
+        document.getElementById('btn-lang-toggle')?.addEventListener('click', () => {
             currentLanguage = currentLanguage === 'es' ? 'en' : 'es';
             localStorage.setItem('nexus_lang', currentLanguage);
             applyLanguagePack();
         });
+
         document.querySelectorAll('.btn-back-to-home').forEach(btn => btn.addEventListener('click', () => {
-            if (currentViewName === 'cosmetics' && !document.getElementById('cosmetics-active-workspace').classList.contains('hidden')) {
+            if (currentViewName === 'cosmetics' && !document.getElementById('cosmetics-active-workspace')?.classList.contains('hidden')) {
                 resetCosmeticsSubmenuWorkspace();
             } else {
                 navigateTo('home');
@@ -1544,8 +1544,8 @@
         });
 
         function resetLevelFormState() {
-            document.getElementById('level-form').reset();
-            document.getElementById('editingLvlId').value = '';
+            document.getElementById('level-form')?.reset();
+            if(document.getElementById('editingLvlId')) document.getElementById('editingLvlId').value = '';
             
             const submitBtn = document.getElementById('lvlSubmitBtn');
             if (submitBtn) {
@@ -1569,12 +1569,12 @@
 
             badgesToHide.forEach(id => document.getElementById(id)?.classList.add('hidden'));
 
-            document.getElementById('lvlArtPreviewBox').classList.add('hidden');
-            document.getElementById('lvlIsComingSoon').value = "false";
-            document.getElementById('lvlIsExclusive').checked = false;
-            document.getElementById('lvlHasExplicit').checked = false;
+            document.getElementById('lvlArtPreviewBox')?.classList.add('hidden');
+            if(document.getElementById('lvlIsComingSoon')) document.getElementById('lvlIsComingSoon').value = "false";
+            if(document.getElementById('lvlIsExclusive')) document.getElementById('lvlIsExclusive').checked = false;
+            if(document.getElementById('lvlHasExplicit')) document.getElementById('lvlHasExplicit').checked = false;
             
-            editionModeSelect.value = "Standard";
+            if(editionModeSelect) editionModeSelect.value = "Standard";
             sectionDeluxe?.classList.add('hidden');
             sectionExplicit?.classList.add('hidden');
 
@@ -1582,14 +1582,11 @@
             levelZipDeluxeToRemove = false;
             levelZipExplicitToRemove = false;
             levelZipDeluxeExplicitToRemove = false;
-
             levelArtToRemove = false;
-
             levelVideoToRemove = false;
             levelVideoDeluxeToRemove = false;
             levelVideoExplicitToRemove = false;
             levelVideoDeluxeExplicitToRemove = false;
-
             levelAudioToRemove = false;
             levelAudioExplicitToRemove = false;
             
@@ -1598,8 +1595,8 @@
         }
 
         function resetCosmeticFormState() {
-            document.getElementById('cosmetic-form').reset();
-            document.getElementById('editingCosId').value = '';
+            document.getElementById('cosmetic-form')?.reset();
+            if(document.getElementById('editingCosId')) document.getElementById('editingCosId').value = '';
             
             const submitBtn = document.getElementById('cosSubmitBtn');
             if (submitBtn) {
@@ -1608,16 +1605,16 @@
                 else submitBtn.innerText = translations[currentLanguage].btnRegister;
             }
 
-            document.getElementById('cosBrandManagementList').classList.add('hidden');
-            document.getElementById('current-skin-zip-badge').classList.add('hidden');
-            document.getElementById('btn-remove-skin-zip').classList.add('hidden');
-            document.getElementById('current-cos-video-badge').classList.add('hidden');
-            document.getElementById('btn-remove-cos-video').classList.add('hidden');
-            document.getElementById('cosIconPreviewBox').classList.add('hidden');
-            document.getElementById('cosIsComingSoon').value = "false";
-            document.getElementById('cosIsExclusive').checked = false;
+            document.getElementById('cosBrandManagementList')?.classList.add('hidden');
+            document.getElementById('current-skin-zip-badge')?.classList.add('hidden');
+            document.getElementById('btn-remove-skin-zip')?.classList.add('hidden');
+            document.getElementById('current-cos-video-badge')?.classList.add('hidden');
+            document.getElementById('btn-remove-cos-video')?.classList.add('hidden');
+            document.getElementById('cosIconPreviewBox')?.classList.add('hidden');
+            if(document.getElementById('cosIsComingSoon')) document.getElementById('cosIsComingSoon').value = "false";
+            if(document.getElementById('cosIsExclusive')) document.getElementById('cosIsExclusive').checked = false;
             
-            document.getElementById('cosSelectedGenreMode').value = 'single';
+            if(document.getElementById('cosSelectedGenreMode')) document.getElementById('cosSelectedGenreMode').value = 'single';
             const btnU = document.getElementById('btn-skin-universal-genre');
             if (btnU) btnU.classList.replace('bg-emerald-600', 'bg-fuchsia-600');
             
@@ -1632,23 +1629,22 @@
         document.getElementById('btn-cancel-lvl-form')?.addEventListener('click', resetLevelFormState);
         document.getElementById('btn-cancel-cos-form')?.addEventListener('click', resetCosmeticFormState);
 
-        // EVENTOS DE BORRADO INDIVIDUAL EN CMS
-        document.getElementById('btn-remove-lvl-audio')?.addEventListener('click', () => { levelAudioToRemove = true; document.getElementById('current-lvl-audio-badge').classList.add('hidden'); document.getElementById('btn-remove-lvl-audio').classList.add('hidden'); });
-        document.getElementById('btn-remove-lvl-video')?.addEventListener('click', () => { levelVideoToRemove = true; document.getElementById('current-lvl-video-badge').classList.add('hidden'); document.getElementById('btn-remove-lvl-video').classList.add('hidden'); });
-        document.getElementById('btn-remove-chart-zip')?.addEventListener('click', () => { levelZipToRemove = true; document.getElementById('current-chart-zip-badge').classList.add('hidden'); document.getElementById('btn-remove-chart-zip').classList.add('hidden'); });
+        document.getElementById('btn-remove-lvl-audio')?.addEventListener('click', () => { levelAudioToRemove = true; document.getElementById('current-lvl-audio-badge')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-audio')?.classList.add('hidden'); });
+        document.getElementById('btn-remove-lvl-video')?.addEventListener('click', () => { levelVideoToRemove = true; document.getElementById('current-lvl-video-badge')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-video')?.classList.add('hidden'); });
+        document.getElementById('btn-remove-chart-zip')?.addEventListener('click', () => { levelZipToRemove = true; document.getElementById('current-chart-zip-badge')?.classList.add('hidden'); document.getElementById('btn-remove-chart-zip')?.classList.add('hidden'); });
 
-        document.getElementById('btn-remove-lvl-video-deluxe')?.addEventListener('click', () => { levelVideoDeluxeToRemove = true; document.getElementById('current-lvl-video-deluxe-badge').classList.add('hidden'); document.getElementById('btn-remove-lvl-video-deluxe').classList.add('hidden'); });
-        document.getElementById('btn-remove-chart-deluxe-zip')?.addEventListener('click', () => { levelZipDeluxeToRemove = true; document.getElementById('current-chart-deluxe-zip-badge').classList.add('hidden'); document.getElementById('btn-remove-chart-deluxe-zip').classList.add('hidden'); });
+        document.getElementById('btn-remove-lvl-video-deluxe')?.addEventListener('click', () => { levelVideoDeluxeToRemove = true; document.getElementById('current-lvl-video-deluxe-badge')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-video-deluxe')?.classList.add('hidden'); });
+        document.getElementById('btn-remove-chart-deluxe-zip')?.addEventListener('click', () => { levelZipDeluxeToRemove = true; document.getElementById('current-chart-deluxe-zip-badge')?.classList.add('hidden'); document.getElementById('btn-remove-chart-deluxe-zip')?.classList.add('hidden'); });
 
-        document.getElementById('btn-remove-lvl-audio-explicit')?.addEventListener('click', () => { levelAudioExplicitToRemove = true; document.getElementById('badge-lvl-audio-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-audio-explicit').classList.add('hidden'); });
-        document.getElementById('btn-remove-lvl-video-explicit')?.addEventListener('click', () => { levelVideoExplicitToRemove = true; document.getElementById('badge-lvl-video-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-video-explicit').classList.add('hidden'); });
-        document.getElementById('btn-remove-lvl-zip-explicit')?.addEventListener('click', () => { levelZipExplicitToRemove = true; document.getElementById('badge-lvl-zip-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-zip-explicit').classList.add('hidden'); });
+        document.getElementById('btn-remove-lvl-audio-explicit')?.addEventListener('click', () => { levelAudioExplicitToRemove = true; document.getElementById('badge-lvl-audio-explicit')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-audio-explicit')?.classList.add('hidden'); });
+        document.getElementById('btn-remove-lvl-video-explicit')?.addEventListener('click', () => { levelVideoExplicitToRemove = true; document.getElementById('badge-lvl-video-explicit')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-video-explicit')?.classList.add('hidden'); });
+        document.getElementById('btn-remove-lvl-zip-explicit')?.addEventListener('click', () => { levelZipExplicitToRemove = true; document.getElementById('badge-lvl-zip-explicit')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-zip-explicit')?.classList.add('hidden'); });
 
-        document.getElementById('btn-remove-lvl-video-dlx-explicit')?.addEventListener('click', () => { levelVideoDeluxeExplicitToRemove = true; document.getElementById('badge-lvl-video-dlx-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-video-dlx-explicit').classList.add('hidden'); });
-        document.getElementById('btn-remove-lvl-zip-dlx-explicit')?.addEventListener('click', () => { levelZipDeluxeExplicitToRemove = true; document.getElementById('badge-lvl-zip-dlx-explicit').classList.add('hidden'); document.getElementById('btn-remove-lvl-zip-dlx-explicit').classList.add('hidden'); });
+        document.getElementById('btn-remove-lvl-video-dlx-explicit')?.addEventListener('click', () => { levelVideoDeluxeExplicitToRemove = true; document.getElementById('badge-lvl-video-dlx-explicit')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-video-dlx-explicit')?.classList.add('hidden'); });
+        document.getElementById('btn-remove-lvl-zip-dlx-explicit')?.addEventListener('click', () => { levelZipDeluxeExplicitToRemove = true; document.getElementById('badge-lvl-zip-dlx-explicit')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-zip-dlx-explicit')?.classList.add('hidden'); });
 
-        document.getElementById('btn-remove-cos-video')?.addEventListener('click', () => { cosmeticVideoToRemove = true; document.getElementById('current-cos-video-badge').classList.add('hidden'); document.getElementById('btn-remove-cos-video').classList.add('hidden'); });
-        document.getElementById('btn-remove-skin-zip')?.addEventListener('click', () => { cosmeticZipToRemove = true; document.getElementById('current-skin-zip-badge').classList.add('hidden'); document.getElementById('btn-remove-skin-zip').classList.add('hidden'); });
+        document.getElementById('btn-remove-cos-video')?.addEventListener('click', () => { cosmeticVideoToRemove = true; document.getElementById('current-cos-video-badge')?.classList.add('hidden'); document.getElementById('btn-remove-cos-video')?.classList.add('hidden'); });
+        document.getElementById('btn-remove-skin-zip')?.addEventListener('click', () => { cosmeticZipToRemove = true; document.getElementById('current-skin-zip-badge')?.classList.add('hidden'); document.getElementById('btn-remove-skin-zip')?.classList.add('hidden'); });
 
         let db = null;
         try {
@@ -1688,8 +1684,13 @@
                     if(document.getElementById('download-modal-btn-beatclone')) document.getElementById('download-modal-btn-beatclone').href = globalFooterLinks.beatclone || '#';
                 } 
             });
-            onValue(ref(db, 'last_update_date'), (snap) => { if (snap.val()) document.getElementById('dynamic-update-date').innerText = formatStringToDMY(snap.val()); });
-        } catch (e) { console.error(e); hideLoadingOverlay(); }
+            onValue(ref(db, 'last_update_date'), (snap) => { 
+                if (snap.val()) {
+                    const el = document.getElementById('dynamic-update-date');
+                    if(el) el.innerText = formatStringToDMY(snap.val());
+                } 
+            });
+        } catch (e) { console.error("Firebase init error:", e); hideLoadingOverlay(); }
 
         function showLoadingOverlay() {
             const overlay = document.getElementById('global-loading-overlay');
@@ -1746,7 +1747,6 @@
                     return data.secure_url; 
                 } else {
                     const errData = await response.json();
-                    console.error("Error en subida a Cloudinary:", errData);
                     alert("Error al subir video a Cloudinary: " + (errData.error?.message || "Revisa la consola"));
                     return "";
                 }
@@ -1784,11 +1784,9 @@
                             const rawUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/main/${targetPath}`;
                             resolve(rawUrl);
                         } else {
-                            console.error("Error al subir a GitHub API:", await response.text());
                             resolve("");
                         }
                     } catch(err) {
-                        console.error("Excepción en subida:", err);
                         resolve("");
                     }
                 };
@@ -1798,20 +1796,22 @@
 
         function triggerDownloadAlert(url) {
             currentActiveDownloadUrl = url;
-            document.getElementById('download-modal-msg').innerText = translations[currentLanguage].beatcloneNotice;
+            const msgBox = document.getElementById('download-modal-msg');
+            if(msgBox) msgBox.innerText = translations[currentLanguage].beatcloneNotice;
 
             const thanksVideo = document.getElementById('download-thanks-video');
-            thanksVideo.pause();
-            thanksVideo.src = "";
-            document.getElementById('thanks-custom-modal').classList.add('hidden');
-
-            document.getElementById('download-custom-modal').classList.remove('hidden');
+            if(thanksVideo) {
+                thanksVideo.pause();
+                thanksVideo.src = "";
+            }
+            document.getElementById('thanks-custom-modal')?.classList.add('hidden');
+            document.getElementById('download-custom-modal')?.classList.remove('hidden');
         }
 
-        document.getElementById('download-modal-btn-confirm').addEventListener('click', () => {
+        document.getElementById('download-modal-btn-confirm')?.addEventListener('click', () => {
             if(currentActiveDownloadUrl) {
                 window.open(currentActiveDownloadUrl, '_blank');
-                document.getElementById('download-custom-modal').classList.add('hidden');
+                document.getElementById('download-custom-modal')?.classList.add('hidden');
                 
                 const validVideos = globalThanksVideos.filter(v => v && v.trim() !== "");
                 if(validVideos.length > 0) {
@@ -1819,30 +1819,35 @@
                     const randomVideoUrl = validVideos[Math.floor(Math.random() * validVideos.length)];
                     const videoElement = document.getElementById('download-thanks-video');
                     
-                    const handleCanPlay = () => {
-                        hideLoadingOverlay();
-                        document.getElementById('thanks-custom-modal').classList.remove('hidden');
-                        videoElement.play().catch(err => console.log("Video auto-play blocked: ", err));
-                        videoElement.removeEventListener('canplaythrough', handleCanPlay);
-                    };
+                    if(videoElement) {
+                        const handleCanPlay = () => {
+                            hideLoadingOverlay();
+                            document.getElementById('thanks-custom-modal')?.classList.remove('hidden');
+                            videoElement.play().catch(err => console.log("Video auto-play blocked: ", err));
+                            videoElement.removeEventListener('canplaythrough', handleCanPlay);
+                        };
 
-                    videoElement.addEventListener('canplaythrough', handleCanPlay);
-                    
-                    videoElement.src = randomVideoUrl;
-                    videoElement.load();
+                        videoElement.addEventListener('canplaythrough', handleCanPlay);
+                        videoElement.src = randomVideoUrl;
+                        videoElement.load();
+                    } else {
+                        hideLoadingOverlay();
+                    }
                 }
             }
         });
 
-        document.getElementById('download-modal-btn-close').addEventListener('click', () => {
-            document.getElementById('download-custom-modal').classList.add('hidden');
+        document.getElementById('download-modal-btn-close')?.addEventListener('click', () => {
+            document.getElementById('download-custom-modal')?.classList.add('hidden');
         });
 
-        document.getElementById('thanks-modal-btn-close').addEventListener('click', () => {
+        document.getElementById('thanks-modal-btn-close')?.addEventListener('click', () => {
             const videoElement = document.getElementById('download-thanks-video');
-            videoElement.pause();
-            videoElement.src = "";
-            document.getElementById('thanks-custom-modal').classList.add('hidden');
+            if(videoElement) {
+                videoElement.pause();
+                videoElement.src = "";
+            }
+            document.getElementById('thanks-custom-modal')?.classList.add('hidden');
         });
 
         function stopGlobalAudioPreview() {
@@ -1879,15 +1884,15 @@
             currentRotationAngle = 0;
         }
 
-        // VISUALIZADOR CON SENSIBILIDAD UNIFORME EN TODO EL ESPECTRO DE FRECUENCIAS
         function startRadialCanvasVisualizer(canvas, analyser, containerElement, themeColor = "#d946ef") {
+            if(!canvas) return;
             const ctx = canvas.getContext('2d');
             const bufferLength = analyser.frequencyBinCount;
             if(!audioDataArray || audioDataArray.length !== bufferLength) {
                 audioDataArray = new Uint8Array(bufferLength);
             }
             
-            const rect = containerElement.getBoundingClientRect();
+            const rect = containerElement ? containerElement.getBoundingClientRect() : { width: 144, height: 144 };
             const displaySize = Math.max(rect.width, rect.height) || 144;
             
             canvas.width = displaySize + 32; 
@@ -1912,7 +1917,6 @@
                     const dataIndex = Math.floor((targetIndex / (barCount / 2)) * bufferLength * 0.5);
                     const rawValue = audioDataArray[dataIndex] || 0;
                     
-                    // SENSIBILIDAD UNIFORME Y DINÁMICA IGUAL PARA BASS, MEDIOS Y AGUDOS
                     const barHeight = (rawValue / 255) * 16;
                     
                     const startX = centerX + Math.cos(angle) * radius;
@@ -1933,9 +1937,7 @@
             draw();
         }
 
-        // CONTROL CONTINUO Y REUTILIZACIÓN DE INSTANCIA DE AUDIO ACTIVA
         function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement, containerElement, isModalOpen = false, themeColor = "#d946ef") {
-            // Si el audio que intenta sonar ya es la instancia activa, solo reconectamos su destino de dibujo
             if(activeAudioElement && activeAudioElement.dataset.url === audioUrl) {
                 if(btnElement && btnElement !== activeAudioButton) {
                     if(activeAudioButton) activeAudioButton.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
@@ -1952,13 +1954,12 @@
                     activeAudioElement.play();
                 }
 
-                if(audioAnalyser) {
+                if(audioAnalyser && canvasElement) {
                     startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement, themeColor);
                 }
                 return;
             }
 
-            // Si es un audio totalmente nuevo, detenemos el anterior y cargamos la nueva canción
             stopGlobalAudioPreview();
             if(btnElement) btnElement.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-[10px]"></i>`;
 
@@ -1991,9 +1992,8 @@
                 } catch(e) {}
 
                 audio.play().then(() => {
-                    startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement, themeColor);
+                    if(canvasElement) startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement, themeColor);
                 }).catch(err => {
-                    console.error("Audio playback error:", err);
                     stopGlobalAudioPreview();
                 });
 
@@ -2048,6 +2048,7 @@
         }
 
         function sortAscendingByDate(arr) {
+            if(!Array.isArray(arr)) return [];
             return [...arr].sort((a, b) => {
                 if (!a.date && !b.date) return 0;
                 if (!a.date) return 1;  
@@ -2106,7 +2107,6 @@
                     videoEl.play().then(() => {
                         if (controlsOverlay) controlsOverlay.classList.add('hidden');
                     }).catch(err => {
-                        console.log("Error al reproducir video:", err);
                         if (loaderEl) loaderEl.classList.add('hidden');
                     });
                 } else {
@@ -2136,11 +2136,14 @@
                 cosGrid?.classList.add('flex-col');
             }
 
-            renderLevelsTable(); renderCosmeticsTables();
+            renderLevelsTable(); 
+            renderCosmeticsTables();
         }
 
         function applyLanguagePack() {
-            document.getElementById('lang-label').innerText = currentLanguage.toUpperCase();
+            const langLabel = document.getElementById('lang-label');
+            if(langLabel) langLabel.innerText = currentLanguage.toUpperCase();
+
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[currentLanguage][key]) el.innerText = translations[currentLanguage][key];
@@ -2151,7 +2154,7 @@
                 if (translations[currentLanguage][key]) el.placeholder = translations[currentLanguage][key];
             });
 
-            const lvlIsEditing = !!document.getElementById('editingLvlId').value;
+            const lvlIsEditing = !!document.getElementById('editingLvlId')?.value;
             const lvlSubmitBtn = document.getElementById('lvlSubmitBtn');
             if (lvlSubmitBtn) {
                 const span = lvlSubmitBtn.querySelector('span');
@@ -2159,7 +2162,7 @@
                 if (span) span.innerText = targetText; else lvlSubmitBtn.innerText = targetText;
             }
 
-            const cosIsEditing = !!document.getElementById('editingCosId').value;
+            const cosIsEditing = !!document.getElementById('editingCosId')?.value;
             const cosSubmitBtn = document.getElementById('cosSubmitBtn');
             if (cosSubmitBtn) {
                 const span = cosSubmitBtn.querySelector('span');
@@ -2187,7 +2190,7 @@
                     <span class="w-3.5 h-3.5 rounded-full inline-block shrink-0 shadow" style="background-color: ${g.color}"></span>
                     <span class="font-extrabold text-sm text-zinc-200">${g.label}</span>
                 `;
-                item.querySelector('input').addEventListener('change', (e) => {
+                item.querySelector('input')?.addEventListener('change', (e) => {
                     const checked = document.querySelectorAll('.genre-checkbox:checked');
                     if (checked.length > 2) e.target.checked = false;
                 });
@@ -2206,8 +2209,8 @@
                     <span class="w-3.5 h-3.5 rounded-full inline-block shrink-0 shadow" style="background-color: ${g.color}"></span>
                     <span class="font-extrabold text-sm text-zinc-200">${g.label}</span>
                 `;
-                item.querySelector('input').addEventListener('change', (e) => {
-                    if(document.getElementById('cosSelectedGenreMode').value === 'universal') return;
+                item.querySelector('input')?.addEventListener('change', (e) => {
+                    if(document.getElementById('cosSelectedGenreMode')?.value === 'universal') return;
                     if(e.target.checked) {
                         document.querySelectorAll('.skin-genre-checkbox').forEach(cb => { if(cb !== e.target) cb.checked = false; });
                     }
@@ -2216,19 +2219,19 @@
             });
         }
 
-        document.getElementById('btn-skin-universal-genre').addEventListener('click', () => {
+        document.getElementById('btn-skin-universal-genre')?.addEventListener('click', () => {
             const modeInput = document.getElementById('cosSelectedGenreMode');
             const checkboxes = document.querySelectorAll('.skin-genre-checkbox');
             const btn = document.getElementById('btn-skin-universal-genre');
 
-            if(modeInput.value === 'single') {
+            if(modeInput && modeInput.value === 'single') {
                 modeInput.value = 'universal';
                 checkboxes.forEach(cb => { cb.checked = true; cb.disabled = true; });
-                btn.classList.replace('bg-fuchsia-600', 'bg-emerald-600');
-            } else {
+                btn?.classList.replace('bg-fuchsia-600', 'bg-emerald-600');
+            } else if(modeInput) {
                 modeInput.value = 'single';
                 checkboxes.forEach(cb => { cb.checked = false; cb.disabled = false; });
-                btn.classList.replace('bg-emerald-600', 'bg-fuchsia-600');
+                btn?.classList.replace('bg-emerald-600', 'bg-fuchsia-600');
             }
         });
 
@@ -2322,22 +2325,22 @@
                     if(type === 'lvlGenre') {
                         activeLvlGenreFilter = val;
                         updateCustomDropdownButtonUI('btn-custom-lvl-genre', 'label-custom-lvl-genre', val, 'genre');
-                        document.getElementById('dropdown-custom-lvl-genre').classList.add('hidden');
+                        document.getElementById('dropdown-custom-lvl-genre')?.classList.add('hidden');
                         renderLevelsTable();
                     } else if(type === 'lvlDiff') {
                         activeLvlDiffFilter = val;
                         updateCustomDropdownButtonUI('btn-custom-lvl-diff', 'label-custom-lvl-diff', val, 'diff');
-                        document.getElementById('dropdown-custom-lvl-diff').classList.add('hidden');
+                        document.getElementById('dropdown-custom-lvl-diff')?.classList.add('hidden');
                         renderLevelsTable();
                     } else if(type === 'lvlEdition') {
                         activeLvlEditionFilter = val;
                         updateCustomDropdownButtonUI('btn-custom-lvl-edition', 'label-custom-lvl-edition', val, 'edition');
-                        document.getElementById('dropdown-custom-lvl-edition').classList.add('hidden');
+                        document.getElementById('dropdown-custom-lvl-edition')?.classList.add('hidden');
                         renderLevelsTable();
                     } else if(type === 'skinGenre') {
                         activeSkinGenreFilter = val;
                         updateCustomDropdownButtonUI('btn-custom-skin-genre', 'label-custom-skin-genre', val, 'genre');
-                        document.getElementById('dropdown-custom-skin-genre').classList.add('hidden');
+                        document.getElementById('dropdown-custom-skin-genre')?.classList.add('hidden');
                         renderCosmeticsTables();
                     }
                 });
@@ -2403,25 +2406,25 @@
         document.getElementById('btn-custom-lvl-genre')?.addEventListener('click', (e) => {
             e.stopPropagation();
             closeAllCustomDropdowns();
-            document.getElementById('dropdown-custom-lvl-genre').classList.toggle('hidden');
+            document.getElementById('dropdown-custom-lvl-genre')?.classList.toggle('hidden');
         });
 
         document.getElementById('btn-custom-lvl-diff')?.addEventListener('click', (e) => {
             e.stopPropagation();
             closeAllCustomDropdowns();
-            document.getElementById('dropdown-custom-lvl-diff').classList.toggle('hidden');
+            document.getElementById('dropdown-custom-lvl-diff')?.classList.toggle('hidden');
         });
 
         document.getElementById('btn-custom-lvl-edition')?.addEventListener('click', (e) => {
             e.stopPropagation();
             closeAllCustomDropdowns();
-            document.getElementById('dropdown-custom-lvl-edition').classList.toggle('hidden');
+            document.getElementById('dropdown-custom-lvl-edition')?.classList.toggle('hidden');
         });
 
         document.getElementById('btn-custom-skin-genre')?.addEventListener('click', (e) => {
             e.stopPropagation();
             closeAllCustomDropdowns();
-            document.getElementById('dropdown-custom-skin-genre').classList.toggle('hidden');
+            document.getElementById('dropdown-custom-skin-genre')?.classList.toggle('hidden');
         });
 
         function closeAllCustomDropdowns() {
@@ -2478,7 +2481,6 @@
             return `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${styleClass} font-black uppercase text-[10px]">${graphicMarkup} <span>${label}</span></div>`;
         }
 
-        // APERTURA DE MODAL CON CONTINUIDAD Y TRANSICIÓN DE VISUALIZADOR
         function openBeatstarEditionSelector(lvl, outerArtBox) {
             activeModalBeatstarChart = lvl;
 
@@ -2491,12 +2493,15 @@
             const standardBadge = document.getElementById('modal-edition-standard-badge');
             const canvas = document.getElementById('modal-edition-canvas');
 
-            img.src = lvl.art || 'free_song_Image.png';
-            songLbl.innerText = lvl.song;
-            artistLbl.innerText = lvl.artist;
+            if(img) img.src = lvl.art || 'free_song_Image.png';
+            if(songLbl) songLbl.innerText = lvl.song;
+            if(artistLbl) artistLbl.innerText = lvl.artist;
 
-            document.getElementById('modal-opt-standard-diff-tag').innerHTML = renderDifficultyTagMarkup(lvl.diff || 'Normal');
-            document.getElementById('modal-opt-deluxe-diff-tag').innerHTML = renderDifficultyTagMarkup(lvl.diffDeluxe || 'Extreme');
+            const optStdTag = document.getElementById('modal-opt-standard-diff-tag');
+            if(optStdTag) optStdTag.innerHTML = renderDifficultyTagMarkup(lvl.diff || 'Normal');
+            
+            const optDlxTag = document.getElementById('modal-opt-deluxe-diff-tag');
+            if(optDlxTag) optDlxTag.innerHTML = renderDifficultyTagMarkup(lvl.diffDeluxe || 'Extreme');
 
             const currentActive = activeChartSelectedEditions[lvl.id] || 'Standard';
             const isExplicit = !!activeChartExplicitStates[lvl.id];
@@ -2505,27 +2510,26 @@
 
             function updateModalEditionUI(selectedEd) {
                 if(selectedEd === 'Deluxe') {
-                    artContainer.classList.add('glow-gold');
-                    deluxeBadge.classList.remove('hidden');
-                    standardBadge.classList.add('hidden');
-                    document.getElementById('modal-check-deluxe').classList.remove('opacity-0');
-                    document.getElementById('modal-check-standard').classList.add('opacity-0');
+                    artContainer?.classList.add('glow-gold');
+                    deluxeBadge?.classList.remove('hidden');
+                    standardBadge?.classList.add('hidden');
+                    document.getElementById('modal-check-deluxe')?.classList.remove('opacity-0');
+                    document.getElementById('modal-check-standard')?.classList.add('opacity-0');
                 } else {
-                    artContainer.classList.remove('glow-gold');
-                    standardBadge.classList.remove('hidden');
-                    deluxeBadge.classList.add('hidden');
-                    document.getElementById('modal-check-standard').classList.remove('opacity-0');
-                    document.getElementById('modal-check-deluxe').classList.add('opacity-0');
+                    artContainer?.classList.remove('glow-gold');
+                    standardBadge?.classList.remove('hidden');
+                    deluxeBadge?.classList.add('hidden');
+                    document.getElementById('modal-check-standard')?.classList.remove('opacity-0');
+                    document.getElementById('modal-check-deluxe')?.classList.add('opacity-0');
                 }
 
                 if(audioUrl) {
                     const themeColor = (selectedEd === 'Deluxe') ? "#facc15" : "#d946ef";
                     
-                    // Si ya estaba sonando la canción, traslada el visualizador al canvas del modal sin pausar
                     if(activeAudioElement && activeAudioElement.dataset.url === audioUrl) {
                         activeAudioElement.loop = true;
                         activeVisualizerColor = themeColor;
-                        if(audioAnalyser) {
+                        if(audioAnalyser && canvas) {
                             startRadialCanvasVisualizer(canvas, audioAnalyser, artContainer, themeColor);
                         }
                     } else {
@@ -2538,10 +2542,9 @@
 
             if(outerArtBox) outerArtBox.classList.add('art-circle-shape');
 
-            modal.classList.remove('hidden');
+            modal?.classList.remove('hidden');
         }
 
-        // CIERRE DE MODAL Y RETORNO DE CONTINUIDAD A LA PORTADA
         function closeBeatstarEditionSelector(selectedEdition) {
             const modal = document.getElementById('beatstar-edition-modal');
             if (activeModalBeatstarChart && selectedEdition) {
@@ -2553,11 +2556,11 @@
             });
 
             if(activeAudioElement) {
-                activeAudioElement.loop = false; // Desactivar bucle al salir del modal
+                activeAudioElement.loop = false;
             }
 
-            modal.classList.add('hidden');
-            renderLevelsTable(); // Re-renderizar la tabla trasladando el visualizador sin cortar audio
+            modal?.classList.add('hidden');
+            renderLevelsTable();
         }
 
         document.getElementById('btn-close-beatstar-modal')?.addEventListener('click', () => closeBeatstarEditionSelector(null));
@@ -2718,7 +2721,6 @@
                 ` : '';
 
                 const targetAudioThemeColor = isDeluxeActive ? "#facc15" : "#d946ef";
-
                 const isCurrentlyPlayingThis = (activeAudioElement && activeAudioElement.dataset.url === currentAudioUrl);
 
                 tr.innerHTML = `
@@ -2727,7 +2729,7 @@
                             <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
                                 <canvas class="absolute -inset-4 w-[calc(100%+2rem)] h-[calc(100%+2rem)] pointer-events-none z-0"></canvas>
                                 <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} ${isCurrentlyPlayingThis ? 'art-container-circular' : ''} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
-                                    <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
+                                    <img src="${lvl.art || 'free_song_Image.png'}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
                                     ${artOverlayBadgeDesktop}
                                 </div>
 
@@ -2747,8 +2749,8 @@
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].formSong} / ${translations[currentLanguage].formArtist}:</span> 
                                 <div class="inline-block flex-1">
-                                    <span class="text-white font-black tracking-wide text-base sm:text-lg">${lvl.song}</span> 
-                                    <span class="text-zinc-400 text-xs sm:text-sm font-medium"> - ${lvl.artist}</span>
+                                    <span class="text-white font-black tracking-wide text-base sm:text-lg">${lvl.song || ''}</span> 
+                                    <span class="text-zinc-400 text-xs sm:text-sm font-medium"> - ${lvl.artist || ''}</span>
                                     ${exclusiveBadge}
                                 </div>
                             </li>
@@ -2803,7 +2805,6 @@
                 const canvasEl = tr.querySelector('canvas');
                 const containerBox = tr.querySelector('.target-art-outer-container');
 
-                // Si esta canción era la que estaba sonando antes de re-renderizar la tabla, reenganchamos el visualizador a este canvas
                 if(isCurrentlyPlayingThis && audioAnalyser && canvasEl && containerBox) {
                     activeAudioButton = btnAudio;
                     activeAudioImg = imgArt;
@@ -2827,7 +2828,7 @@
                         renderLevelsTable();
                     } else {
                         pendingExplicitActivationChartId = lvl.id;
-                        modalExplicit.classList.remove('hidden');
+                        modalExplicit?.classList.remove('hidden');
                     }
                 });
 
@@ -2839,14 +2840,15 @@
                 const toggleIcon = toggleBtn?.querySelector('i');
 
                 toggleBtn?.addEventListener('click', () => {
+                    if(!extraBox) return;
                     const isHidden = extraBox.classList.contains('hidden');
                     if (isHidden) {
                         extraBox.classList.remove('hidden');
-                        toggleLabel.innerText = translations[currentLanguage].btnShowLess;
+                        if(toggleLabel) toggleLabel.innerText = translations[currentLanguage].btnShowLess;
                         if (toggleIcon) toggleIcon.style.transform = 'rotate(180deg)';
                     } else {
                         extraBox.classList.add('hidden');
-                        toggleLabel.innerText = translations[currentLanguage].btnMoreInfo;
+                        if(toggleLabel) toggleLabel.innerText = translations[currentLanguage].btnMoreInfo;
                         if (toggleIcon) toggleIcon.style.transform = 'rotate(0deg)';
                     }
                 });
@@ -2860,11 +2862,11 @@
                 }
 
                 tr.querySelector('.btn-edit-lvl')?.addEventListener('click', () => {
-                    document.getElementById('editingLvlId').value = lvl.id;
-                    document.getElementById('lvlSong').value = lvl.song;
-                    document.getElementById('lvlArtist').value = lvl.artist;
+                    if(document.getElementById('editingLvlId')) document.getElementById('editingLvlId').value = lvl.id;
+                    if(document.getElementById('lvlSong')) document.getElementById('lvlSong').value = lvl.song || '';
+                    if(document.getElementById('lvlArtist')) document.getElementById('lvlArtist').value = lvl.artist || '';
                     
-                    document.getElementById('lvlEditionMode').value = lvl.editionMode || (lvl.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
+                    if(editionModeSelect) editionModeSelect.value = lvl.editionMode || (lvl.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
                     if(lvl.editionMode === 'Both' || lvl.editionMode === 'Deluxe') {
                         sectionDeluxe?.classList.remove('hidden');
                         subSectionExplicitDeluxe?.classList.remove('hidden');
@@ -2873,56 +2875,56 @@
                         subSectionExplicitDeluxe?.classList.add('hidden');
                     }
 
-                    document.getElementById('lvlDiff').value = lvl.diff || 'Hard';
-                    document.getElementById('lvlNotes').value = lvl.notes || '';
-                    document.getElementById('lvlDuration').value = lvl.duration || '';
-                    document.getElementById('lvlDate').value = lvl.date || '';
+                    if(document.getElementById('lvlDiff')) document.getElementById('lvlDiff').value = lvl.diff || 'Hard';
+                    if(document.getElementById('lvlNotes')) document.getElementById('lvlNotes').value = lvl.notes || '';
+                    if(document.getElementById('lvlDuration')) document.getElementById('lvlDuration').value = lvl.duration || '';
+                    if(document.getElementById('lvlDate')) document.getElementById('lvlDate').value = lvl.date || '';
 
-                    document.getElementById('lvlDl1').value = lvl.dl1 || '';
-                    document.getElementById('lvlDl2').value = lvl.dl2 || '';
-                    document.getElementById('lvlDl3').value = lvl.dl3 || '';
+                    if(document.getElementById('lvlDl1')) document.getElementById('lvlDl1').value = lvl.dl1 || '';
+                    if(document.getElementById('lvlDl2')) document.getElementById('lvlDl2').value = lvl.dl2 || '';
+                    if(document.getElementById('lvlDl3')) document.getElementById('lvlDl3').value = lvl.dl3 || '';
 
-                    if(lvl.audioDirectUrl) { document.getElementById('current-lvl-audio-badge').classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio').classList.remove('hidden'); }
-                    if(lvl.video) { document.getElementById('current-lvl-video-badge').classList.remove('hidden'); document.getElementById('btn-remove-lvl-video').classList.remove('hidden'); }
-                    if(lvl.chartDirectUrl) { document.getElementById('current-chart-zip-badge').classList.remove('hidden'); document.getElementById('btn-remove-chart-zip').classList.remove('hidden'); }
+                    if(lvl.audioDirectUrl) { document.getElementById('current-lvl-audio-badge')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio')?.classList.remove('hidden'); }
+                    if(lvl.video) { document.getElementById('current-lvl-video-badge')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-video')?.classList.remove('hidden'); }
+                    if(lvl.chartDirectUrl) { document.getElementById('current-chart-zip-badge')?.classList.remove('hidden'); document.getElementById('btn-remove-chart-zip')?.classList.remove('hidden'); }
 
-                    document.getElementById('lvlDiffDeluxe').value = lvl.diffDeluxe || 'Extreme';
-                    document.getElementById('lvlNotesDeluxe').value = lvl.notesDeluxe || '';
-                    document.getElementById('lvlDurationDeluxe').value = lvl.durationDeluxe || '';
-                    document.getElementById('lvlDateDeluxe').value = lvl.dateDeluxe || '';
+                    if(document.getElementById('lvlDiffDeluxe')) document.getElementById('lvlDiffDeluxe').value = lvl.diffDeluxe || 'Extreme';
+                    if(document.getElementById('lvlNotesDeluxe')) document.getElementById('lvlNotesDeluxe').value = lvl.notesDeluxe || '';
+                    if(document.getElementById('lvlDurationDeluxe')) document.getElementById('lvlDurationDeluxe').value = lvl.durationDeluxe || '';
+                    if(document.getElementById('lvlDateDeluxe')) document.getElementById('lvlDateDeluxe').value = lvl.dateDeluxe || '';
 
-                    document.getElementById('lvlDl1Deluxe').value = lvl.dl1Deluxe || '';
-                    document.getElementById('lvlDl2Deluxe').value = lvl.dl2Deluxe || '';
-                    document.getElementById('lvlDl3Deluxe').value = lvl.dl3Deluxe || '';
+                    if(document.getElementById('lvlDl1Deluxe')) document.getElementById('lvlDl1Deluxe').value = lvl.dl1Deluxe || '';
+                    if(document.getElementById('lvlDl2Deluxe')) document.getElementById('lvlDl2Deluxe').value = lvl.dl2Deluxe || '';
+                    if(document.getElementById('lvlDl3Deluxe')) document.getElementById('lvlDl3Deluxe').value = lvl.dl3Deluxe || '';
 
-                    if(lvl.videoDeluxe) { document.getElementById('current-lvl-video-deluxe-badge').classList.remove('hidden'); document.getElementById('btn-remove-lvl-video-deluxe').classList.remove('hidden'); }
-                    if(lvl.chartDirectUrlDeluxe) { document.getElementById('current-chart-deluxe-zip-badge').classList.remove('hidden'); document.getElementById('btn-remove-chart-deluxe-zip').classList.remove('hidden'); }
+                    if(lvl.videoDeluxe) { document.getElementById('current-lvl-video-deluxe-badge')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-video-deluxe')?.classList.remove('hidden'); }
+                    if(lvl.chartDirectUrlDeluxe) { document.getElementById('current-chart-deluxe-zip-badge')?.classList.remove('hidden'); document.getElementById('btn-remove-chart-deluxe-zip')?.classList.remove('hidden'); }
 
-                    document.getElementById('lvlIsExclusive').checked = !!lvl.isExclusive;
-                    document.getElementById('lvlHasExplicit').checked = !!lvl.hasExplicit;
+                    if(document.getElementById('lvlIsExclusive')) document.getElementById('lvlIsExclusive').checked = !!lvl.isExclusive;
+                    if(document.getElementById('lvlHasExplicit')) document.getElementById('lvlHasExplicit').checked = !!lvl.hasExplicit;
                     
                     if(lvl.hasExplicit) {
                         sectionExplicit?.classList.remove('hidden');
-                        document.getElementById('lvlNotesExplicit').value = lvl.notesExplicit || '';
-                        document.getElementById('lvlDurationExplicit').value = lvl.durationExplicit || '';
-                        document.getElementById('lvlDateExplicit').value = lvl.dateExplicit || '';
-                        document.getElementById('lvlDl1Explicit').value = lvl.dl1Explicit || '';
-                        document.getElementById('lvlDl2Explicit').value = lvl.dl2Explicit || '';
-                        document.getElementById('lvlDl3Explicit').value = lvl.dl3Explicit || '';
+                        if(document.getElementById('lvlNotesExplicit')) document.getElementById('lvlNotesExplicit').value = lvl.notesExplicit || '';
+                        if(document.getElementById('lvlDurationExplicit')) document.getElementById('lvlDurationExplicit').value = lvl.durationExplicit || '';
+                        if(document.getElementById('lvlDateExplicit')) document.getElementById('lvlDateExplicit').value = lvl.dateExplicit || '';
+                        if(document.getElementById('lvlDl1Explicit')) document.getElementById('lvlDl1Explicit').value = lvl.dl1Explicit || '';
+                        if(document.getElementById('lvlDl2Explicit')) document.getElementById('lvlDl2Explicit').value = lvl.dl2Explicit || '';
+                        if(document.getElementById('lvlDl3Explicit')) document.getElementById('lvlDl3Explicit').value = lvl.dl3Explicit || '';
 
-                        document.getElementById('lvlNotesDeluxeExplicit').value = lvl.notesDeluxeExplicit || '';
-                        document.getElementById('lvlDurationDeluxeExplicit').value = lvl.durationDeluxeExplicit || '';
-                        document.getElementById('lvlDateDeluxeExplicit').value = lvl.dateDeluxeExplicit || '';
-                        document.getElementById('lvlDl1DeluxeExplicit').value = lvl.dl1DeluxeExplicit || '';
-                        document.getElementById('lvlDl2DeluxeExplicit').value = lvl.dl2DeluxeExplicit || '';
-                        document.getElementById('lvlDl3DeluxeExplicit').value = lvl.dl3DeluxeExplicit || '';
+                        if(document.getElementById('lvlNotesDeluxeExplicit')) document.getElementById('lvlNotesDeluxeExplicit').value = lvl.notesDeluxeExplicit || '';
+                        if(document.getElementById('lvlDurationDeluxeExplicit')) document.getElementById('lvlDurationDeluxeExplicit').value = lvl.durationDeluxeExplicit || '';
+                        if(document.getElementById('lvlDateDeluxeExplicit')) document.getElementById('lvlDateDeluxeExplicit').value = lvl.dateDeluxeExplicit || '';
+                        if(document.getElementById('lvlDl1DeluxeExplicit')) document.getElementById('lvlDl1DeluxeExplicit').value = lvl.dl1DeluxeExplicit || '';
+                        if(document.getElementById('lvlDl2DeluxeExplicit')) document.getElementById('lvlDl2DeluxeExplicit').value = lvl.dl2DeluxeExplicit || '';
+                        if(document.getElementById('lvlDl3DeluxeExplicit')) document.getElementById('lvlDl3DeluxeExplicit').value = lvl.dl3DeluxeExplicit || '';
 
-                        if(lvl.audioExplicit) { document.getElementById('badge-lvl-audio-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio-explicit').classList.remove('hidden'); }
-                        if(lvl.videoExplicit) { document.getElementById('badge-lvl-video-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-video-explicit').classList.remove('hidden'); }
-                        if(lvl.zipExplicit) { document.getElementById('badge-lvl-zip-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-zip-explicit').classList.remove('hidden'); }
+                        if(lvl.audioExplicit) { document.getElementById('badge-lvl-audio-explicit')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio-explicit')?.classList.remove('hidden'); }
+                        if(lvl.videoExplicit) { document.getElementById('badge-lvl-video-explicit')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-video-explicit')?.classList.remove('hidden'); }
+                        if(lvl.zipExplicit) { document.getElementById('badge-lvl-zip-explicit')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-zip-explicit')?.classList.remove('hidden'); }
 
-                        if(lvl.videoDeluxeExplicit) { document.getElementById('badge-lvl-video-dlx-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-video-dlx-explicit').classList.remove('hidden'); }
-                        if(lvl.zipDeluxeExplicit) { document.getElementById('badge-lvl-zip-dlx-explicit').classList.remove('hidden'); document.getElementById('btn-remove-lvl-zip-dlx-explicit').classList.remove('hidden'); }
+                        if(lvl.videoDeluxeExplicit) { document.getElementById('badge-lvl-video-dlx-explicit')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-video-dlx-explicit')?.classList.remove('hidden'); }
+                        if(lvl.zipDeluxeExplicit) { document.getElementById('badge-lvl-zip-dlx-explicit')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-zip-dlx-explicit')?.classList.remove('hidden'); }
                     } else {
                         sectionExplicit?.classList.add('hidden');
                     }
@@ -2936,10 +2938,10 @@
                     
                     const pBox = document.getElementById('lvlArtPreviewBox');
                     const pImg = document.getElementById('lvlArtPreviewImg');
-                    if(lvl.art) {
+                    if(lvl.art && pBox && pImg) {
                         pImg.src = lvl.art;
                         pBox.classList.remove('hidden');
-                    } else { pBox.classList.add('hidden'); }
+                    } else if(pBox) { pBox.classList.add('hidden'); }
 
                     const currentGenresArray = lvl.genre ? lvl.genre.split(' / ').map(g => g.trim().toLowerCase()) : [];
                     document.querySelectorAll('.genre-checkbox').forEach(cb => {
@@ -3015,16 +3017,18 @@
                 let inspMarkup = '';
                 if (cos.insp) {
                     const urls = cos.insp.split(/[\s,]+/).filter(url => url.trim() !== "");
-                    let imagesHtml = urls.map((url) => `
-                        <div class="relative group h-20 w-32 sm:h-24 sm:w-36 p-1 flex items-center justify-center bg-[#05020a]/60 border border-zinc-800/40 rounded-lg shrink-0">
-                            <img src="${url.trim()}" class="max-h-full max-w-full object-contain rounded">
-                        </div>
-                    `).join('');
+                    if(urls.length > 0) {
+                        let imagesHtml = urls.map((url) => `
+                            <div class="relative group h-20 w-32 sm:h-24 sm:w-36 p-1 flex items-center justify-center bg-[#05020a]/60 border border-zinc-800/40 rounded-lg shrink-0">
+                                <img src="${url.trim()}" class="max-h-full max-w-full object-contain rounded">
+                            </div>
+                        `).join('');
 
-                    inspMarkup = `
-                        <div class="flex flex-col md:flex-row flex-wrap gap-2 mt-1 bg-black/40 p-1.5 rounded-xl border border-fuchsia-950/30 w-max max-w-full shadow-lg">
-                            ${imagesHtml}
-                        </div>`;
+                        inspMarkup = `
+                            <div class="flex flex-col md:flex-row flex-wrap gap-2 mt-1 bg-black/40 p-1.5 rounded-xl border border-fuchsia-950/30 w-max max-w-full shadow-lg">
+                                ${imagesHtml}
+                            </div>`;
+                    }
                 }
 
                 const hasAnyLinks = cos.skinDirectUrl || cos.dl1 || cos.dl2;
@@ -3049,7 +3053,7 @@
                 tr.innerHTML = `
                     <td class="p-2 sm:p-4 text-center align-middle">
                         <div class="w-20 h-20 sm:w-36 sm:h-36 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1 shrink-0 mx-auto">
-                            <img src="${cos.icon}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'">
+                            <img src="${cos.icon || 'BoxSprite_MerchSkin2.png'}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'">
                         </div>
                     </td>
                     <td class="p-2 sm:p-4 min-w-[200px] sm:min-w-[320px] flex-1 align-middle">
@@ -3057,13 +3061,13 @@
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listName}:</span> 
                                 <div class="inline-block flex-1">
-                                    <h4 class="text-white font-black tracking-wide text-base sm:text-xl inline-block">${cos.name}</h4>
+                                    <h4 class="text-white font-black tracking-wide text-base sm:text-xl inline-block">${cos.name || ''}</h4>
                                     ${exclusiveBadge}
                                 </div>
                             </li>
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listArtist}:</span> 
-                                <span class="text-zinc-200 font-bold inline-block">${cos.artist}</span>
+                                <span class="text-zinc-200 font-bold inline-block">${cos.artist || ''}</span>
                             </li>
                             <li class="flex flex-col sm:flex-row sm:items-baseline">
                                 <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[currentLanguage].listRelease}:</span> 
@@ -3093,16 +3097,16 @@
                 }
 
                 tr.querySelector('.btn-edit-cos')?.addEventListener('click', () => {
-                    document.getElementById('editingCosId').value = cos.id;
-                    document.getElementById('cosName').value = cos.name;
-                    document.getElementById('cosArtist').value = cos.artist; 
-                    document.getElementById('cosDate').value = cos.date || '';
-                    document.getElementById('cosDl1').value = cos.dl1 || '';
-                    document.getElementById('cosDl2').value = cos.dl2 || '';
-                    document.getElementById('cosIsExclusive').checked = !!cos.isExclusive;
+                    if(document.getElementById('editingCosId')) document.getElementById('editingCosId').value = cos.id;
+                    if(document.getElementById('cosName')) document.getElementById('cosName').value = cos.name || '';
+                    if(document.getElementById('cosArtist')) document.getElementById('cosArtist').value = cos.artist || ''; 
+                    if(document.getElementById('cosDate')) document.getElementById('cosDate').value = cos.date || '';
+                    if(document.getElementById('cosDl1')) document.getElementById('cosDl1').value = cos.dl1 || '';
+                    if(document.getElementById('cosDl2')) document.getElementById('cosDl2').value = cos.dl2 || '';
+                    if(document.getElementById('cosIsExclusive')) document.getElementById('cosIsExclusive').checked = !!cos.isExclusive;
                     
-                    if(cos.video) { document.getElementById('current-cos-video-badge').classList.remove('hidden'); document.getElementById('btn-remove-cos-video').classList.remove('hidden'); }
-                    if(cos.skinDirectUrl) { document.getElementById('current-skin-zip-badge').classList.remove('hidden'); document.getElementById('btn-remove-skin-zip').classList.remove('hidden'); }
+                    if(cos.video) { document.getElementById('current-cos-video-badge')?.classList.remove('hidden'); document.getElementById('btn-remove-cos-video')?.classList.remove('hidden'); }
+                    if(cos.skinDirectUrl) { document.getElementById('current-skin-zip-badge')?.classList.remove('hidden'); document.getElementById('btn-remove-skin-zip')?.classList.remove('hidden'); }
 
                     const submitBtn = document.getElementById('cosSubmitBtn');
                     if (submitBtn) {
@@ -3113,10 +3117,10 @@
                     
                     const pBox = document.getElementById('cosIconPreviewBox');
                     const pImg = document.getElementById('cosIconPreviewImg');
-                    if(cos.icon) {
+                    if(cos.icon && pBox && pImg) {
                         pImg.src = cos.icon;
                         pBox.classList.remove('hidden');
-                    } else { pBox.classList.add('hidden'); }
+                    } else if(pBox) { pBox.classList.add('hidden'); }
 
                     editingCosBrandUrlsList = cos.insp ? cos.insp.split(/[\s,]+/).filter(url => url.trim() !== "") : [];
                     renderBrandManagementFormInterface();
@@ -3186,7 +3190,7 @@
                     </div>
                 `;
                 
-                item.querySelector('.btn-move-brand-up').addEventListener('click', () => {
+                item.querySelector('.btn-move-brand-up')?.addEventListener('click', () => {
                     if(index > 0) {
                         const temp = editingCosBrandUrlsList[index];
                         editingCosBrandUrlsList[index] = editingCosBrandUrlsList[index - 1];
@@ -3195,7 +3199,7 @@
                     }
                 });
                 
-                item.querySelector('.btn-move-brand-down').addEventListener('click', () => {
+                item.querySelector('.btn-move-brand-down')?.addEventListener('click', () => {
                     if(index < editingCosBrandUrlsList.length - 1) {
                         const temp = editingCosBrandUrlsList[index];
                         editingCosBrandUrlsList[index] = editingCosBrandUrlsList[index + 1];
@@ -3204,7 +3208,7 @@
                     }
                 });
                 
-                item.querySelector('.btn-delete-brand-single').addEventListener('click', () => {
+                item.querySelector('.btn-delete-brand-single')?.addEventListener('click', () => {
                     requestUserDeleteConfirmation(() => {
                         editingCosBrandUrlsList.splice(index, 1);
                         renderBrandManagementFormInterface();
@@ -3293,20 +3297,20 @@
         document.getElementById('btn-delete-lvl-art-preview')?.addEventListener('click', () => {
             requestUserDeleteConfirmation(() => {
                 levelArtToRemove = true;
-                document.getElementById('lvlArtPreviewBox').classList.add('hidden');
-                document.getElementById('lvlArtFile').value = "";
+                document.getElementById('lvlArtPreviewBox')?.classList.add('hidden');
+                if(document.getElementById('lvlArtFile')) document.getElementById('lvlArtFile').value = "";
             });
         });
 
         document.getElementById('btn-delete-cos-icon-preview')?.addEventListener('click', () => {
             requestUserDeleteConfirmation(() => {
                 cosmeticIconToRemove = true;
-                document.getElementById('cosIconPreviewBox').classList.add('hidden');
-                document.getElementById('cosIconFile').value = "";
+                document.getElementById('cosIconPreviewBox')?.classList.add('hidden');
+                if(document.getElementById('cosIconFile')) document.getElementById('cosIconFile').value = "";
             });
         });
 
-        document.getElementById('cosBrandFile').addEventListener('change', async (e) => {
+        document.getElementById('cosBrandFile')?.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if(file) {
                 if(!githubToken || !githubUser) {
@@ -3327,14 +3331,13 @@
             }
         });
 
-        // REGISTRO DE CHARTS CON SOPORTE DE UNIFICACIÓN DE AUDIOS PREVIEW
-        document.getElementById('level-form').addEventListener('submit', async (e) => {
+        document.getElementById('level-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             showLoadingOverlay();
 
             try {
                 const checked = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
-                let id = document.getElementById('editingLvlId').value || Date.now().toString();
+                let id = document.getElementById('editingLvlId')?.value || Date.now().toString();
                 
                 let existingLvl = levels.find(l => l.id === id);
                 let finalArtUrl = levelArtToRemove ? "free_song_Image.png" : (existingLvl?.art || "free_song_Image.png");
@@ -3354,17 +3357,17 @@
                 let finalZipDeluxeExplicit = levelZipDeluxeExplicitToRemove ? "" : (existingLvl?.zipDeluxeExplicit || "");
 
                 const artFileInput = document.getElementById('lvlArtFile');
-                if(artFileInput.files && artFileInput.files[0] && githubToken && githubUser) {
+                if(artFileInput?.files && artFileInput.files[0] && githubToken && githubUser) {
                     finalArtUrl = await uploadFileToGitHubContent(artFileInput.files[0], 'assets/charts', artFileInput.files[0].name);
                 }
                 
                 const audioFileInput = document.getElementById('lvlAudioFile');
-                if(audioFileInput.files && audioFileInput.files[0] && githubToken && githubUser) {
+                if(audioFileInput?.files && audioFileInput.files[0] && githubToken && githubUser) {
                     finalAudioUrl = await uploadFileToGitHubContent(audioFileInput.files[0], 'assets/audio', audioFileInput.files[0].name);
                 }
 
                 const videoFileInput = document.getElementById('lvlVideoFile');
-                if(videoFileInput.files && videoFileInput.files[0]) {
+                if(videoFileInput?.files && videoFileInput.files[0]) {
                     finalVideoUrl = await uploadVideoToCloudinary(videoFileInput.files[0], 'prevchart');
                 }
 
@@ -3374,7 +3377,7 @@
                 }
 
                 const chartFileInput = document.getElementById('lvlChartZipFile');
-                if(chartFileInput.files && chartFileInput.files[0] && githubToken && githubUser) {
+                if(chartFileInput?.files && chartFileInput.files[0] && githubToken && githubUser) {
                     finalChartDirectUrl = await uploadFileToGitHubContent(chartFileInput.files[0], 'charts', chartFileInput.files[0].name);
                 }
 
@@ -3383,7 +3386,7 @@
                     finalChartDirectUrlDeluxe = await uploadFileToGitHubContent(chartDeluxeFileInput.files[0], 'charts', chartDeluxeFileInput.files[0].name);
                 }
 
-                const hasExplicit = document.getElementById('lvlHasExplicit').checked;
+                const hasExplicit = document.getElementById('lvlHasExplicit')?.checked || false;
                 if(hasExplicit) {
                     const audioExpIn = document.getElementById('lvlAudioFileExplicit');
                     if(audioExpIn?.files && audioExpIn.files[0] && githubToken && githubUser) {
@@ -3411,13 +3414,13 @@
                     }
                 }
 
-                const selectedEditionMode = document.getElementById('lvlEditionMode').value;
-                const isExclusive = document.getElementById('lvlIsExclusive').checked;
+                const selectedEditionMode = document.getElementById('lvlEditionMode')?.value || 'Standard';
+                const isExclusive = document.getElementById('lvlIsExclusive')?.checked || false;
 
                 const data = {
                     id: id, 
-                    song: document.getElementById('lvlSong').value.trim(), 
-                    artist: document.getElementById('lvlArtist').value.trim(),
+                    song: document.getElementById('lvlSong')?.value.trim() || '', 
+                    artist: document.getElementById('lvlArtist')?.value.trim() || '',
                     art: finalArtUrl, 
                     genre: checked.join(' / ') || 'General', 
                     
@@ -3426,45 +3429,45 @@
 
                     audioDirectUrl: finalAudioUrl, 
 
-                    diff: document.getElementById('lvlDiff').value,
-                    notes: document.getElementById('lvlNotes').value.trim(),
-                    duration: document.getElementById('lvlDuration').value.trim(),
-                    date: document.getElementById('lvlDate').value,
+                    diff: document.getElementById('lvlDiff')?.value || 'Hard',
+                    notes: document.getElementById('lvlNotes')?.value.trim() || '',
+                    duration: document.getElementById('lvlDuration')?.value.trim() || '',
+                    date: document.getElementById('lvlDate')?.value || '',
                     video: finalVideoUrl,
                     chartDirectUrl: finalChartDirectUrl,
-                    dl1: document.getElementById('lvlDl1').value.trim(), 
-                    dl2: document.getElementById('lvlDl2').value.trim(), 
-                    dl3: document.getElementById('lvlDl3').value.trim(),
+                    dl1: document.getElementById('lvlDl1')?.value.trim() || '', 
+                    dl2: document.getElementById('lvlDl2')?.value.trim() || '', 
+                    dl3: document.getElementById('lvlDl3')?.value.trim() || '',
 
-                    diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
-                    notesDeluxe: document.getElementById('lvlNotesDeluxe').value.trim(),
-                    durationDeluxe: document.getElementById('lvlDurationDeluxe').value.trim(),
-                    dateDeluxe: document.getElementById('lvlDateDeluxe').value,
+                    diffDeluxe: document.getElementById('lvlDiffDeluxe')?.value || 'Extreme',
+                    notesDeluxe: document.getElementById('lvlNotesDeluxe')?.value.trim() || '',
+                    durationDeluxe: document.getElementById('lvlDurationDeluxe')?.value.trim() || '',
+                    dateDeluxe: document.getElementById('lvlDateDeluxe')?.value || '',
                     videoDeluxe: finalVideoDeluxeUrl,
                     chartDirectUrlDeluxe: finalChartDirectUrlDeluxe,
-                    dl1Deluxe: document.getElementById('lvlDl1Deluxe').value.trim(),
-                    dl2Deluxe: document.getElementById('lvlDl2Deluxe').value.trim(),
-                    dl3Deluxe: document.getElementById('lvlDl3Deluxe').value.trim(),
+                    dl1Deluxe: document.getElementById('lvlDl1Deluxe')?.value.trim() || '',
+                    dl2Deluxe: document.getElementById('lvlDl2Deluxe')?.value.trim() || '',
+                    dl3Deluxe: document.getElementById('lvlDl3Deluxe')?.value.trim() || '',
 
                     hasExplicit: hasExplicit,
                     audioExplicit: finalAudioExplicit,
-                    notesExplicit: document.getElementById('lvlNotesExplicit').value.trim(),
-                    durationExplicit: document.getElementById('lvlDurationExplicit').value.trim(),
-                    dateExplicit: document.getElementById('lvlDateExplicit').value,
+                    notesExplicit: document.getElementById('lvlNotesExplicit')?.value.trim() || '',
+                    durationExplicit: document.getElementById('lvlDurationExplicit')?.value.trim() || '',
+                    dateExplicit: document.getElementById('lvlDateExplicit')?.value || '',
                     videoExplicit: finalVideoExplicit,
                     zipExplicit: finalZipExplicit,
-                    dl1Explicit: document.getElementById('lvlDl1Explicit').value.trim(),
-                    dl2Explicit: document.getElementById('lvlDl2Explicit').value.trim(),
-                    dl3Explicit: document.getElementById('lvlDl3Explicit').value.trim(),
+                    dl1Explicit: document.getElementById('lvlDl1Explicit')?.value.trim() || '',
+                    dl2Explicit: document.getElementById('lvlDl2Explicit')?.value.trim() || '',
+                    dl3Explicit: document.getElementById('lvlDl3Explicit')?.value.trim() || '',
 
-                    notesDeluxeExplicit: document.getElementById('lvlNotesDeluxeExplicit').value.trim(),
-                    durationDeluxeExplicit: document.getElementById('lvlDurationDeluxeExplicit').value.trim(),
-                    dateDeluxeExplicit: document.getElementById('lvlDateDeluxeExplicit').value,
+                    notesDeluxeExplicit: document.getElementById('lvlNotesDeluxeExplicit')?.value.trim() || '',
+                    durationDeluxeExplicit: document.getElementById('lvlDurationDeluxeExplicit')?.value.trim() || '',
+                    dateDeluxeExplicit: document.getElementById('lvlDateDeluxeExplicit')?.value || '',
                     videoDeluxeExplicit: finalVideoDeluxeExplicit,
                     zipDeluxeExplicit: finalZipDeluxeExplicit,
-                    dl1DeluxeExplicit: document.getElementById('lvlDl1DeluxeExplicit').value.trim(),
-                    dl2DeluxeExplicit: document.getElementById('lvlDl2DeluxeExplicit').value.trim(),
-                    dl3DeluxeExplicit: document.getElementById('lvlDl3DeluxeExplicit').value.trim(),
+                    dl1DeluxeExplicit: document.getElementById('lvlDl1DeluxeExplicit')?.value.trim() || '',
+                    dl2DeluxeExplicit: document.getElementById('lvlDl2DeluxeExplicit')?.value.trim() || '',
+                    dl3DeluxeExplicit: document.getElementById('lvlDl3DeluxeExplicit')?.value.trim() || '',
 
                     isExclusive: isExclusive
                 };
@@ -3481,11 +3484,10 @@
             }
         });
 
-        // REGISTRO DE SKINS
-        document.getElementById('cosmetic-form').addEventListener('submit', async (e) => {
+        document.getElementById('cosmetic-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const isUniversal = document.getElementById('cosSelectedGenreMode').value === 'universal';
+            const isUniversal = document.getElementById('cosSelectedGenreMode')?.value === 'universal';
             const checkedGenres = document.querySelectorAll('.skin-genre-checkbox:checked');
             if (!isUniversal && checkedGenres.length === 0) {
                 alert(translations[currentLanguage].selectGenreError);
@@ -3495,24 +3497,24 @@
             showLoadingOverlay();
 
             try {
-                let id = document.getElementById('editingCosId').value || Date.now().toString();
+                let id = document.getElementById('editingCosId')?.value || Date.now().toString();
                 let existingCos = cosmetics.find(c => c.id === id);
                 let finalIconUrl = cosmeticIconToRemove ? "BoxSprite_MerchSkin2.png" : (existingCos?.icon || "BoxSprite_MerchSkin2.png");
                 let finalVideoUrl = cosmeticVideoToRemove ? "" : (existingCos?.video || "");
                 let finalSkinDirectUrl = cosmeticZipToRemove ? "" : (existingCos?.skinDirectUrl || "");
 
                 const iconFileInput = document.getElementById('cosIconFile');
-                if(iconFileInput.files && iconFileInput.files[0] && githubToken && githubUser) {
+                if(iconFileInput?.files && iconFileInput.files[0] && githubToken && githubUser) {
                     finalIconUrl = await uploadFileToGitHubContent(iconFileInput.files[0], 'assets/skins', iconFileInput.files[0].name);
                 }
 
                 const videoFileInput = document.getElementById('cosVideoFile');
-                if(videoFileInput.files && videoFileInput.files[0]) {
+                if(videoFileInput?.files && videoFileInput.files[0]) {
                     finalVideoUrl = await uploadVideoToCloudinary(videoFileInput.files[0], 'prevskins');
                 }
 
                 const skinZipFileInput = document.getElementById('cosSkinZipFile');
-                if(skinZipFileInput.files && skinZipFileInput.files[0] && githubToken && githubUser) {
+                if(skinZipFileInput?.files && skinZipFileInput.files[0] && githubToken && githubUser) {
                     finalSkinDirectUrl = await uploadFileToGitHubContent(skinZipFileInput.files[0], 'skins', skinZipFileInput.files[0].name);
                 }
 
@@ -3526,14 +3528,14 @@
                     if(checkedCb) finalSkinGenre = checkedCb.value;
                 }
 
-                const isComingSoonFlag = document.getElementById('cosIsComingSoon').value === "true";
-                const dateVal = isComingSoonFlag ? "" : document.getElementById('cosDate').value;
-                const isExclusive = document.getElementById('cosIsExclusive').checked;
+                const isComingSoonFlag = document.getElementById('cosIsComingSoon')?.value === "true";
+                const dateVal = isComingSoonFlag ? "" : (document.getElementById('cosDate')?.value || '');
+                const isExclusive = document.getElementById('cosIsExclusive')?.checked || false;
 
                 const data = {
                     id: id, 
-                    name: document.getElementById('cosName').value.trim(), 
-                    artist: document.getElementById('cosArtist').value.trim(),
+                    name: document.getElementById('cosName')?.value.trim() || '', 
+                    artist: document.getElementById('cosArtist')?.value.trim() || '',
                     icon: finalIconUrl, 
                     video: finalVideoUrl,
                     date: dateVal, 
@@ -3542,8 +3544,8 @@
                     skinDirectUrl: finalSkinDirectUrl,
                     platform: currentSelectedSkinSubPlatform, 
                     isExclusive: isExclusive,
-                    dl1: document.getElementById('cosDl1').value.trim(), 
-                    dl2: document.getElementById('cosDl2').value.trim()
+                    dl1: document.getElementById('cosDl1')?.value.trim() || '', 
+                    dl2: document.getElementById('cosDl2')?.value.trim() || ''
                 };
 
                 if(db) {
@@ -3558,14 +3560,14 @@
             }
         });
 
-        document.getElementById('btn-save-thanks-videos').addEventListener('click', async () => {
+        document.getElementById('btn-save-thanks-videos')?.addEventListener('click', async () => {
             showLoadingOverlay();
             try {
                 let urlsDict = { ...globalThanksVideos };
 
-                const f1 = document.getElementById('thanks-vid1-file').files[0];
-                const f2 = document.getElementById('thanks-vid2-file').files[0];
-                const f3 = document.getElementById('thanks-vid3-file').files[0];
+                const f1 = document.getElementById('thanks-vid1-file')?.files[0];
+                const f2 = document.getElementById('thanks-vid2-file')?.files[0];
+                const f3 = document.getElementById('thanks-vid3-file')?.files[0];
 
                 if(f1) urlsDict[0] = await uploadVideoToCloudinary(f1, 'videos');
                 if(f2) urlsDict[1] = await uploadVideoToCloudinary(f2, 'videos');
@@ -3574,9 +3576,9 @@
                 if(db) {
                     await set(ref(db, 'thanks_videos'), urlsDict);
                     alert("¡Videos subidos y guardados con éxito en Cloudinary!");
-                    document.getElementById('thanks-vid1-file').value = "";
-                    document.getElementById('thanks-vid2-file').value = "";
-                    document.getElementById('thanks-vid3-file').value = "";
+                    if(document.getElementById('thanks-vid1-file')) document.getElementById('thanks-vid1-file').value = "";
+                    if(document.getElementById('thanks-vid2-file')) document.getElementById('thanks-vid2-file').value = "";
+                    if(document.getElementById('thanks-vid3-file')) document.getElementById('thanks-vid3-file').value = "";
                 }
             } catch(e) { 
                 alert("Ocurrió un error al subir los archivos."); 
@@ -3585,11 +3587,11 @@
             }
         });
 
-        document.getElementById('btn-save-footer-links').addEventListener('click', () => {
+        document.getElementById('btn-save-footer-links')?.addEventListener('click', () => {
             const data = {
-                beatclone: document.getElementById('setupUrlBeatclone').value.trim(),
-                bscm: document.getElementById('setupUrlBscm').value.trim(),
-                beatcharts: document.getElementById('setupUrlBeatcharts').value.trim()
+                beatclone: document.getElementById('setupUrlBeatclone')?.value.trim() || '',
+                bscm: document.getElementById('setupUrlBscm')?.value.trim() || '',
+                beatcharts: document.getElementById('setupUrlBeatcharts')?.value.trim() || ''
             };
             if(db) {
                 showLoadingOverlay();
@@ -3604,12 +3606,22 @@
         }
 
         function updateDashboardCounts() {
-            if(document.getElementById('home-levels-count')) document.getElementById('home-levels-count').innerText = levels.length;
-            if(document.getElementById('home-cosmetics-count')) document.getElementById('home-cosmetics-count').innerText = cosmetics.length;
+            const hL = document.getElementById('home-levels-count');
+            if(hL) hL.innerText = levels.length;
+            
+            const hC = document.getElementById('home-cosmetics-count');
+            if(hC) hC.innerText = cosmetics.length;
         }
 
-        document.getElementById('btn-picker-lvl').addEventListener('click', () => document.getElementById('lvlDate').showPicker?.() || document.getElementById('lvlDate').focus());
-        document.getElementById('btn-picker-cos').addEventListener('click', () => document.getElementById('cosDate').showPicker?.() || document.getElementById('cosDate').focus());
+        document.getElementById('btn-picker-lvl')?.addEventListener('click', () => {
+            const input = document.getElementById('lvlDate');
+            if(input) { input.showPicker ? input.showPicker() : input.focus(); }
+        });
+
+        document.getElementById('btn-picker-cos')?.addEventListener('click', () => {
+            const input = document.getElementById('cosDate');
+            if(input) { input.showPicker ? input.showPicker() : input.focus(); }
+        });
 
         buildGenresSelector();
         buildSkinGenresSelector();
