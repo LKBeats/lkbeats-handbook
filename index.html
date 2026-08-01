@@ -1935,42 +1935,46 @@
         });
 
         function stopGlobalAudioPreview() {
-            if(canvasAnimationId) {
-                cancelAnimationFrame(canvasAnimationId);
-                canvasAnimationId = null;
-            }
-            if(activeAudioElement) {
-                activeAudioElement.pause();
-                activeAudioElement.src = "";
-                activeAudioElement.load();
-                activeAudioElement = null;
-            }
-            if(audioCtx && audioCtx.state === 'running') {
-                audioCtx.suspend();
-            }
-            if(activeAudioButton) {
-                activeAudioButton.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
-                activeAudioButton = null;
-            }
-            if(activeAudioImg) {
-                activeAudioImg.classList.add('bg-zinc-900');
-                activeAudioImg = null;
-            }
-            if(activeArtContainer) {
-                activeArtContainer.classList.remove('art-container-circular');
-                activeArtContainer.classList.remove('art-circle-shape');
-                activeArtContainer = null;
-            }
-            document.querySelectorAll('.target-art-outer-container').forEach(box => {
-                box.classList.remove('art-circle-shape');
-            });
-            if(activeCanvas) {
-                const ctx = activeCanvas.getContext('2d');
-                ctx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
-                activeCanvas = null;
-            }
-            currentRotationAngle = 0;
-        }
+    if(canvasAnimationId) {
+        cancelAnimationFrame(canvasAnimationId);
+        canvasAnimationId = null;
+    }
+    if(activeAudioElement) {
+        activeAudioElement.pause();
+        activeAudioElement.src = "";
+        activeAudioElement.load();
+        activeAudioElement = null;
+    }
+    if(audioCtx && audioCtx.state === 'running') {
+        audioCtx.suspend();
+    }
+    if(activeAudioButton) {
+        activeAudioButton.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
+        activeAudioButton = null;
+    }
+    if(activeAudioImg) {
+        activeAudioImg.classList.add('bg-zinc-900');
+        activeAudioImg = null;
+    }
+    if(activeArtContainer) {
+        activeArtContainer.classList.remove('art-container-circular');
+        activeArtContainer.classList.remove('art-circle-shape');
+        activeArtContainer = null;
+    }
+    
+    // CORRECCIÓN AQUÍ: Se remueven ambas clases de todos los contenedores de arte
+    document.querySelectorAll('.target-art-outer-container').forEach(box => {
+        box.classList.remove('art-circle-shape');
+        box.classList.remove('art-container-circular');
+    });
+    
+    if(activeCanvas) {
+        const ctx = activeCanvas.getContext('2d');
+        ctx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
+        activeCanvas = null;
+    }
+    currentRotationAngle = 0;
+}
 
         // VISUALIZADOR DE AUDIO - RECALCULADO PARA AJUSTARSE DINÁMICAMENTE EN CADA DRAW
         function startRadialCanvasVisualizer(canvas, analyser, containerElement, themeColor = "#d946ef") {
