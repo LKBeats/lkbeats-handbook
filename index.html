@@ -98,17 +98,75 @@
                 max-width: 620px !important;
             }
 
-            /* Fix 1: Modal Menú de Ediciones (evita desbordamiento horizontal) */
+            /* Fix 1: Modal Menú de Selección de Ediciones Optimizado */
             #beatstar-edition-modal .bg-\[\#11091c\]\/95 {
-                gap: 1rem !important;
-                padding: 0.75rem 1rem !important;
+                gap: 1.25rem !important;
+                padding: 0.75rem 1.25rem !important;
+                max-width: 580px !important;
             }
-            #beatstar-edition-modal .relative.w-36.h-36 {
-                width: 5rem !important;
-                height: 5rem !important;
+            #beatstar-edition-modal .landscape-pc-edition-layout {
+                align-items: center !important;
+            }
+            #beatstar-edition-modal .landscape-shift-right {
+                transform: translateX(0) !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 170px !important;
             }
 
-            /* Fix 2: Modal de Video de Agradecimiento (se ajusta la altura para no cortarse) */
+            /* Imagen del arte agrandada y centrada */
+            #beatstar-edition-modal .relative.w-36.h-36 {
+                width: 6.8rem !important;
+                height: 6.8rem !important;
+                margin: 0 auto !important;
+            }
+
+            /* Tags de edición corregidos para no cortarse con el visualizador */
+            #modal-edition-deluxe-badge,
+            #modal-edition-standard-badge {
+                bottom: 0.25rem !important;
+                font-size: 7.5px !important;
+                padding: 0.1rem 0.4rem !important;
+            }
+
+            /* Nombre de la canción y artista desplazados hacia abajo y centrados */
+            #modal-edition-song-title {
+                font-size: 0.9rem !important;
+                margin-top: 0.6rem !important;
+                text-align: center !important;
+                width: 100% !important;
+                line-height: 1.1 !important;
+            }
+            #modal-edition-artist-title {
+                font-size: 0.7rem !important;
+                text-align: center !important;
+                width: 100% !important;
+                margin-top: 0.15rem !important;
+            }
+
+            /* Compactación de botones (Standard, Deluxe y Cerrar) */
+            #beatstar-edition-modal .space-y-3 {
+                margin-top: 0.25rem !important;
+            }
+            #beatstar-edition-modal .space-y-3 > button {
+                padding: 0.5rem 0.75rem !important;
+                border-radius: 0.85rem !important;
+            }
+            #modal-opt-standard-diff-tag,
+            #modal-opt-deluxe-diff-tag {
+                margin-top: 0.15rem !important;
+            }
+            #btn-close-beatstar-modal {
+                margin-top: 0.5rem !important;
+                padding-top: 0.45rem !important;
+                padding-bottom: 0.45rem !important;
+                font-size: 0.7rem !important;
+                border-radius: 0.75rem !important;
+            }
+
+            /* Fix 2: Modal de Video de Agradecimiento */
             #thanks-custom-modal h4 {
                 font-size: 0.95rem !important;
                 margin-bottom: 0.35rem !important;
@@ -119,7 +177,7 @@
                 margin: 0 auto !important;
             }
 
-            /* Fix 3: Modal Aviso de Descarga (Imagen más prominente, textos y botones compactos) */
+            /* Fix 3: Modal Aviso de Descarga */
             #download-custom-modal #download-modal-msg {
                 font-size: 0.75rem !important;
                 line-height: 1.2 !important;
@@ -169,7 +227,7 @@
                 text-align: left !important;
             }
 
-            /* Agranda el visualizador de video exclusivamente para las preview de los charts en móvil horizontal */
+            /* Visualizador de video de los charts */
             #levels-tbody .custom-native-video-wrapper {
                 width: 220px !important;
                 max-width: 220px !important;
