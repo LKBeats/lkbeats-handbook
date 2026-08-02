@@ -2178,6 +2178,9 @@
         }
 
         document.getElementById('download-modal-btn-confirm').addEventListener('click', () => {
+            // Detener todos los audios y videos reproduciéndose antes de continuar
+            stopAllMedia();
+
             if(currentActiveDownloadUrl) {
                 window.open(currentActiveDownloadUrl, '_blank');
                 document.getElementById('download-custom-modal').classList.add('hidden');
