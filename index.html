@@ -11,6 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1500.0.min.js"></script>
+
     <script>
         window.tailwind.config = {
             theme: {
@@ -1392,23 +1394,45 @@
     <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-    // ESM Client de AWS S3 para Cloudflare R2
-    import { S3Client, PutObjectCommand } from "https://esm.sh/@aws-sdk/client-s3";
 
     // ==================== CONFIGURACIÓN DE CLOUDFLARE R2 ====================
-    // Reemplaza con los valores que guardaste de Cloudflare:
-    const R2_PUBLIC_DOMAIN = "https://pub-4fdb8147f49d431e8ee7060936e6e3ee.r2.dev"; // Tu URL pública del Paso 2
-    const R2_BUCKET_NAME = "lkbeats-media";             // Nombre de tu bucket
-    const R2_ENDPOINT = "https://a9904a6a17cc7246ea1e407774e25aeb.r2.cloudflarestorage.com"; // Endpoint de la API S3
+    const R2_PUBLIC_DOMAIN = "https://pub-4fdb8147f49d431e8ee7060936e6e3ee.r2.dev";
+    const R2_BUCKET_NAME = "lkbeats-media";
+    const R2_ENDPOINT = "https://a9904a6a17cc7246ea1e407774e25aeb.r2.cloudflarestorage.com";
 
-    const s3Client = new S3Client({
-        region: "auto",
+    const s3 = new AWS.S3({
         endpoint: R2_ENDPOINT,
-        credentials: {
-            accessKeyId: "41f4c4233d58713c80ce7a5af929c0b4",        // Coloca tu Access Key ID
-            secretAccessKey: "1844d769d83b70306c08a08b8d31d28589c496ed7cc0f308da2414c2804adaeb" // Coloca tu Secret Access Key
-        }
+        accessKeyId: "41f4c4233d58713c80ce7a5af929c0b4",
+        secretAccessKey: "1844d769d83b70306c08a08b8d31d28589c496ed7cc0f308da2414c2804adaeb",
+        signatureVersion: 'v4',
+        region: 'auto'
     });
+
+    async function uploadFileToCloudflareR2(fileObject, subfolderName) {
+        if (!fileObject) return "";
+
+        const rawFileName = fileObject.name.substring(0, fileObject.name.lastIndexOf('.')) || fileObject.name;
+        const cleanFileName = rawFileName.replace(/[^a-zA-Z0-9_\-]/g, "_");
+        const extension = fileObject.name.split('.').pop();
+        
+        const fileKey = `lkbeats/${subfolderName}/${cleanFileName}_${Date.now()}.${extension}`;
+
+        const params = {
+            Bucket: R2_BUCKET_NAME,
+            Key: fileKey,
+            Body: fileObject,
+            ContentType: fileObject.type || "application/octet-stream"
+        };
+
+        try {
+            await s3.upload(params).promise();
+            return `${R2_PUBLIC_DOMAIN}/${fileKey}`;
+        } catch (e) {
+            console.error("Error al subir archivo a Cloudflare R2:", e);
+            alert("Error al subir el archivo a Cloudflare R2. Revisa la consola.");
+            return "";
+        }
+    }
 
     const firebaseConfig = {
           apiKey: "AIzaSyBmYQjQiHBH6pLqKNpjc3gNUsrF0fdYJsU",
@@ -2131,35 +2155,7 @@
                     : `<i class="fa-solid fa-star text-yellow-400"></i>`;
             }
         }
-
-        async function uploadFileToCloudflareR2(fileObject, subfolderName) {
-            if (!fileObject) return "";
-
-            // Conservar el nombre original sanitizado
-            const rawFileName = fileObject.name.substring(0, fileObject.name.lastIndexOf('.')) || fileObject.name;
-            const cleanFileName = rawFileName.replace(/[^a-zA-Z0-9_\-]/g, "_");
-            const extension = fileObject.name.split('.').pop();
-            
-            // Ruta destino dentro del bucket
-            const fileKey = `lkbeats/${subfolderName}/${cleanFileName}_${Date.now()}.${extension}`;
-
-            try {
-                const command = new PutObjectCommand({
-                    Bucket: R2_BUCKET_NAME,
-                    Key: fileKey,
-                    Body: fileObject,
-                    ContentType: fileObject.type || "application/octet-stream"
-                });
-
-                await s3Client.send(command);
-                return `${R2_PUBLIC_DOMAIN}/${fileKey}`;
-            } catch (e) {
-                console.error("Error al subir archivo a Cloudflare R2:", e);
-                alert("Error al subir el archivo a Cloudflare R2. Revisa la consola.");
-                return "";
-            }
-        }
-
+        
         function triggerDownloadAlert(url) {
             currentActiveDownloadUrl = url;
             document.getElementById('download-modal-msg').innerText = translations[currentLanguage].beatcloneNotice;
