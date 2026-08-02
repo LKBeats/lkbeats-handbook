@@ -2192,13 +2192,13 @@
                     const videoElement = document.getElementById('download-thanks-video');
                     
                     const handleCanPlay = () => {
-                        hideLoadingOverlay();
-                        document.getElementById('thanks-custom-modal').classList.remove('hidden');
-                        videoElement.play().catch(err => console.log("Video auto-play blocked: ", err));
-                        videoElement.removeEventListener('canplaythrough', handleCanPlay);
-                    };
+    hideLoadingOverlay();
+    document.getElementById('thanks-custom-modal').classList.remove('hidden');
+    videoElement.play().catch(err => console.log("Video auto-play blocked: ", err));
+    videoElement.removeEventListener('canplay', handleCanPlay);
+};
 
-                    videoElement.addEventListener('canplaythrough', handleCanPlay);
+videoElement.addEventListener('canplay', handleCanPlay);
                     
                     videoElement.src = randomVideoUrl;
                     videoElement.load();
