@@ -1421,7 +1421,8 @@
             Bucket: R2_BUCKET_NAME,
             Key: fileKey,
             Body: fileObject,
-            ContentType: fileObject.type || "application/octet-stream"
+            ContentType: fileObject.type || "application/octet-stream",
+            ContentDisposition: `attachment; filename="${fileObject.name}"`
         };
 
         try {
