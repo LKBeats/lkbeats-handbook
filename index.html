@@ -2210,11 +2210,26 @@
 
             audio.onended = () => { 
                 if(!audio.loop) {
+                    // 1. Remueve la clase de forma circular de inmediato para disparar la animación CSS de regreso
+                    if (activeArtContainer) {
+                        activeArtContainer.classList.remove('art-circle-shape');
+                        activeArtContainer.classList.remove('art-container-circular');
+                    }
+                    document.querySelectorAll('.target-art-outer-container, #modal-edition-art-container').forEach(box => {
+                        box.classList.remove('art-circle-shape');
+                        box.classList.remove('art-container-circular');
+                    });
+
+                    // 2. Restablece el icono del botón
                     if (activeAudioButton) {
                         activeAudioButton.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
                     }
-                    stopGlobalAudioPreview(); 
-                    renderLevelsTable();
+
+                    // 3. Espera a que termine la animación CSS (400ms) antes de limpiar y re-renderizar
+                    setTimeout(() => {
+                        stopGlobalAudioPreview(); 
+                        renderLevelsTable();
+                    }, 400);
                 }
             };
         }
