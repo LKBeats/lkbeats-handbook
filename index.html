@@ -238,6 +238,51 @@
             .pc-shift-right {
                 transform: translateX(0.75rem) !important;
             }
+
+            /* Corrección visual para PC: Tamaño de texto y alineación de la 'X' en modales de aviso */
+            #download-custom-modal #download-modal-msg {
+                font-size: 1.125rem !important; /* 18px */
+                line-height: 1.6 !important;
+                margin-bottom: 1.5rem !important;
+                padding-right: 2rem !important;
+                text-align: center !important;
+            }
+
+            #download-custom-modal #download-modal-btn-close,
+            #thanks-custom-modal #thanks-modal-btn-close {
+                top: 1rem !important;
+                right: 1rem !important;
+                font-size: 1.25rem !important;
+            }
+
+            /* Corrección visual para PC: Modal de selección de ediciones agrandado */
+            #beatstar-edition-modal > div {
+                max-width: 48rem !important; /* max-w-3xl (768px de ancho) */
+                padding: 2.5rem 3rem !important;
+                gap: 2.5rem !important;
+            }
+
+            #beatstar-edition-modal .relative.w-36.h-36 {
+                width: 12rem !important; /* Agrandado en PC */
+                height: 12rem !important;
+            }
+
+            #modal-edition-song-title {
+                font-size: 1.35rem !important;
+                margin-top: 1rem !important;
+            }
+
+            #modal-edition-artist-title {
+                font-size: 0.95rem !important;
+            }
+
+            #beatstar-edition-modal .space-y-3 > button {
+                padding: 1.25rem 1.5rem !important;
+            }
+
+            #beatstar-edition-modal .space-y-3 .text-xs.sm\:text-sm {
+                font-size: 1.05rem !important;
+            }
         }
     </style>
 </head>
