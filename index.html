@@ -2055,17 +2055,15 @@
                 activeAudioImg.classList.add('bg-zinc-900');
                 activeAudioImg = null;
             }
-            if(activeArtContainer) {
-                activeArtContainer.classList.remove('art-container-circular');
-                activeArtContainer.classList.remove('art-circle-shape');
-                activeArtContainer = null;
-            }
-            
-            document.querySelectorAll('.target-art-outer-container').forEach(box => {
+
+            // Remueve las clases dinámicas de todos los elementos de carátula en el DOM
+            document.querySelectorAll('.target-art-outer-container, #modal-edition-art-container').forEach(box => {
                 box.classList.remove('art-circle-shape');
                 box.classList.remove('art-container-circular');
             });
-            
+
+            activeArtContainer = null;
+
             if(activeCanvas) {
                 const ctx = activeCanvas.getContext('2d');
                 ctx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
