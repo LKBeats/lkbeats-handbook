@@ -3367,7 +3367,7 @@
 
                     const currentGenresArray = lvl.genre ? lvl.genre.split(' / ').map(g => g.trim().toLowerCase()) : [];
                     document.querySelectorAll('.genre-checkbox').forEach(cb => {
-                        cb.checked = currentGenresArray.includes(cb.value.toLowerCase());
+                     cb.checked = currentGenresArray.includes(cb.value.trim().toLowerCase());
                     });
                 });
 
@@ -3544,6 +3544,28 @@
 
                     editingCosBrandUrlsList = cos.insp ? cos.insp.split(/[\s,]+/).filter(url => url.trim() !== "") : [];
                     renderBrandManagementFormInterface();
+
+                    // RECORDAR Y SELECCIONAR GÉNERO O MODO UNIVERSAL EN EDICIÓN
+                    const skinGenresArray = cos.genre ? cos.genre.split(' / ').map(g => g.trim().toLowerCase()) : [];
+                    const modeInput = document.getElementById('cosSelectedGenreMode');
+                    const btnUniversal = document.getElementById('btn-skin-universal-genre');
+                    const skinCheckboxes = document.querySelectorAll('.skin-genre-checkbox');
+
+                    // Verificar si incluye todos los géneros universales
+                    const isUniversalGenre = skinUniversalGenreList.every(g => skinGenresArray.includes(g.label.toLowerCase()));
+
+                    if (isUniversalGenre) {
+                        modeInput.value = 'universal';
+                        skinCheckboxes.forEach(cb => { cb.checked = true; cb.disabled = true; });
+                        if (btnUniversal) btnUniversal.classList.replace('bg-fuchsia-600', 'bg-emerald-600');
+                    } else {
+                        modeInput.value = 'single';
+                        skinCheckboxes.forEach(cb => {
+                            cb.disabled = false;
+                            cb.checked = skinGenresArray.includes(cb.value.trim().toLowerCase());
+                        });
+                        if (btnUniversal) btnUniversal.classList.replace('bg-emerald-600', 'bg-fuchsia-600');
+                    }
                 });
 
                 tr.querySelector('.btn-del-cos')?.addEventListener('click', () => {
