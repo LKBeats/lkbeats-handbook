@@ -2045,6 +2045,23 @@
         document.getElementById('btn-remove-cos-video')?.addEventListener('click', () => { cosmeticVideoToRemove = true; document.getElementById('current-cos-video-badge').classList.add('hidden'); document.getElementById('btn-remove-cos-video').classList.add('hidden'); });
         document.getElementById('btn-remove-skin-zip')?.addEventListener('click', () => { cosmeticZipToRemove = true; document.getElementById('current-skin-zip-badge').classList.add('hidden'); document.getElementById('btn-remove-skin-zip').classList.add('hidden'); });
 
+let preloadedVideoElements = [];
+
+        function preloadThanksVideos(videoUrls) {
+            if (!videoUrls || videoUrls.length === 0) return;
+
+            preloadedVideoElements = videoUrls.map(url => {
+                if (!url || url.trim() === "") return null;
+                
+                const tempVideo = document.createElement('video');
+                tempVideo.src = url;
+                tempVideo.preload = "auto";
+                tempVideo.muted = true; // Carga fluida en segundo plano
+                tempVideo.load();
+                return tempVideo;
+            }).filter(Boolean);
+        }
+
         let db = null;
         try {
             const app = initializeApp(firebaseConfig);
@@ -2071,8 +2088,9 @@
                 renderLevelsTable(); 
             });
             onValue(ref(db, 'thanks_videos'), (snap) => { 
-                globalThanksVideos = snap.val() ? Object.values(snap.val()) : [];
-            });
+    globalThanksVideos = snap.val() ? Object.values(snap.val()) : [];
+    preloadThanksVideos(globalThanksVideos); // <--- Inicia la descarga en segundo plano desde el inicio
+});
             onValue(ref(db, 'footer_links'), (snap) => { 
                 if (snap.val()) { 
                     globalFooterLinks = snap.val(); 
@@ -2178,33 +2196,25 @@
         }
 
         document.getElementById('download-modal-btn-confirm').addEventListener('click', () => {
-            // Detener todos los audios y videos reproduciéndose antes de continuar
-            stopAllMedia();
+    stopAllMedia();
 
-            if(currentActiveDownloadUrl) {
-                window.open(currentActiveDownloadUrl, '_blank');
-                document.getElementById('download-custom-modal').classList.add('hidden');
-                
-                const validVideos = globalThanksVideos.filter(v => v && v.trim() !== "");
-                if(validVideos.length > 0) {
-                    showLoadingOverlay();
-                    const randomVideoUrl = validVideos[Math.floor(Math.random() * validVideos.length)];
-                    const videoElement = document.getElementById('download-thanks-video');
-                    
-                    const handleCanPlay = () => {
-    hideLoadingOverlay();
-    document.getElementById('thanks-custom-modal').classList.remove('hidden');
-    videoElement.play().catch(err => console.log("Video auto-play blocked: ", err));
-    videoElement.removeEventListener('canplay', handleCanPlay);
-};
-
-videoElement.addEventListener('canplay', handleCanPlay);
-                    
-                    videoElement.src = randomVideoUrl;
-                    videoElement.load();
-                }
-            }
-        });
+    if (currentActiveDownloadUrl) {
+        window.open(currentActiveDownloadUrl, '_blank');
+        document.getElementById('download-custom-modal').classList.add('hidden');
+        
+        const validVideos = globalThanksVideos.filter(v => v && v.trim() !== "");
+        if (validVideos.length > 0) {
+            const randomVideoUrl = validVideos[Math.floor(Math.random() * validVideos.length)];
+            const videoElement = document.getElementById('download-thanks-video');
+            
+            // Asigna el video desde la caché y abre el modal al instante
+            videoElement.src = randomVideoUrl;
+            document.getElementById('thanks-custom-modal').classList.remove('hidden');
+            
+            videoElement.play().catch(err => console.log("Video auto-play blocked: ", err));
+        }
+    }
+});
 
         document.getElementById('download-modal-btn-close').addEventListener('click', () => {
             document.getElementById('download-custom-modal').classList.add('hidden');
