@@ -239,49 +239,116 @@
                 transform: translateX(0.75rem) !important;
             }
 
-            /* Corrección visual para PC: Tamaño de texto y alineación de la 'X' en modales de aviso */
+            /* --- 1. BOTONES DE CIERRE (X) DEFINIDOS Y VISIBLES EN TODOS LOS MODALES --- */
+            #download-custom-modal #download-modal-btn-close,
+            #thanks-custom-modal #thanks-modal-btn-close,
+            #boogie-auth-modal #btn-close-boogie-modal-x {
+                top: 1.25rem !important;
+                right: 1.25rem !important;
+                width: 2.25rem !important;
+                height: 2.25rem !important;
+                display: flex !important;
+                items-center: center !important;
+                justify-content: center !important;
+                background-color: rgba(39, 39, 42, 0.8) !important; /* bg-zinc-800/80 */
+                border: 1px solid rgba(113, 113, 122, 0.5) !important; /* border-zinc-500 */
+                border-radius: 9999px !important;
+                color: #e4e4e7 !important; /* text-zinc-200 */
+                font-size: 1.125rem !important;
+                transition: all 0.2s ease !important;
+                z-index: 50 !important;
+            }
+
+            #download-custom-modal #download-modal-btn-close:hover,
+            #thanks-custom-modal #thanks-modal-btn-close:hover,
+            #boogie-auth-modal #btn-close-boogie-modal-x:hover {
+                background-color: #d946ef !important;
+                border-color: #f5d0fe !important;
+                color: #ffffff !important;
+                transform: scale(1.1) !important;
+            }
+
+            /* --- 2. MODAL SELECCIÓN DE EDICIONES (AGRANDADO Y DISTRIBUIDO) --- */
+            #beatstar-edition-modal > div {
+                max-width: 56rem !important; /* max-w-4xl */
+                padding: 3rem 3.5rem !important;
+                gap: 3.5rem !important;
+            }
+
+            /* Contenedor de Arte e Imagen Círculo */
+            #beatstar-edition-modal .relative.w-36.h-36 {
+                width: 14rem !important; /* 224px */
+                height: 14rem !important;
+            }
+
+            #modal-edition-song-title {
+                font-size: 1.5rem !important; /* 24px */
+                margin-top: 1.25rem !important;
+                letter-spacing: 0.05em !important;
+            }
+
+            #modal-edition-artist-title {
+                font-size: 1.05rem !important; /* 16.8px */
+                margin-top: 0.25rem !important;
+            }
+
+            /* Espaciado del panel de opciones */
+            #beatstar-edition-modal .space-y-3 {
+                margin-top: 0.75rem !important;
+                gap: 1rem !important;
+            }
+
+            #beatstar-edition-modal .space-y-3 > button {
+                padding: 1.25rem 1.75rem !important;
+                border-radius: 1rem !important;
+            }
+
+            #beatstar-edition-modal .space-y-3 .text-xs.sm\:text-sm {
+                font-size: 1.15rem !important;
+            }
+
+            /* --- 3. POP-UPS: AVISO DE DESCARGA Y AGRADECIMIENTO AGRANDADOS --- */
+            #download-custom-modal > div {
+                max-width: 54rem !important; /* max-w-4xl */
+                padding: 3rem 3.5rem !important;
+            }
+
             #download-custom-modal #download-modal-msg {
-                font-size: 1.125rem !important; /* 18px */
+                font-size: 1.25rem !important; /* 20px */
                 line-height: 1.6 !important;
-                margin-bottom: 1.5rem !important;
+                margin-bottom: 1.75rem !important;
+                padding-left: 2rem !important;
                 padding-right: 2rem !important;
                 text-align: center !important;
             }
 
-            #download-custom-modal #download-modal-btn-close,
-            #thanks-custom-modal #thanks-modal-btn-close {
-                top: 1rem !important;
-                right: 1rem !important;
-                font-size: 1.25rem !important;
+            #download-custom-modal .w-full.max-h-80 {
+                max-height: 22rem !important;
+                margin-bottom: 2rem !important;
+                padding: 0.5rem !important;
             }
 
-            /* Corrección visual para PC: Modal de selección de ediciones agrandado */
-            #beatstar-edition-modal > div {
-                max-width: 48rem !important; /* max-w-3xl (768px de ancho) */
-                padding: 2.5rem 3rem !important;
-                gap: 2.5rem !important;
+            #download-custom-modal img {
+                max-height: 20rem !important;
             }
 
-            #beatstar-edition-modal .relative.w-36.h-36 {
-                width: 12rem !important; /* Agrandado en PC */
-                height: 12rem !important;
+            #download-custom-modal a, 
+            #download-custom-modal button {
+                padding-top: 1rem !important;
+                padding-bottom: 1rem !important;
+                font-size: 0.875rem !important;
             }
 
-            #modal-edition-song-title {
-                font-size: 1.35rem !important;
-                margin-top: 1rem !important;
+            /* Modal de Agradecimiento */
+            #thanks-custom-modal > div {
+                max-width: 60rem !important; /* max-w-5xl */
+                padding: 3rem 3.5rem !important;
             }
 
-            #modal-edition-artist-title {
-                font-size: 0.95rem !important;
-            }
-
-            #beatstar-edition-modal .space-y-3 > button {
-                padding: 1.25rem 1.5rem !important;
-            }
-
-            #beatstar-edition-modal .space-y-3 .text-xs.sm\:text-sm {
-                font-size: 1.05rem !important;
+            #thanks-custom-modal h4 {
+                font-size: 1.5rem !important; /* 24px */
+                margin-bottom: 1.75rem !important;
+                text-align: center !important;
             }
         }
     </style>
