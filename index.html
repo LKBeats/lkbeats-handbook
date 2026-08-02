@@ -2169,14 +2169,42 @@
             document.getElementById('download-custom-modal').classList.remove('hidden');
         }
 
-        document.getElementById('download-modal-btn-confirm').addEventListener('click', () => {
-            // Detener todos los audios y videos reproduciéndose antes de continuar
+        document.getElementById('download-modal-btn-confirm').addEventListener('click', async () => {
             stopAllMedia();
 
             if(currentActiveDownloadUrl) {
-                window.open(currentActiveDownloadUrl, '_blank');
                 document.getElementById('download-custom-modal').classList.add('hidden');
-                
+                showLoadingOverlay();
+
+                try {
+                    // 1. Obtener el archivo como Blob desde R2
+                    const response = await fetch(currentActiveDownloadUrl);
+                    const blob = await response.blob();
+                    
+                    // 2. Extraer el nombre del archivo limpiando el timestamp (_123456789)
+                    let urlFileName = currentActiveDownloadUrl.split('/').pop() || "chart.zip";
+                    // Quita el timestamp del final: _1718812345678.zip -> .zip
+                    let cleanDownloadName = urlFileName.replace(/_\d+(\.[a-zA-Z0-9]+)$/, '$1');
+
+                    // 3. Crear enlace de descarga forzado con el nombre limpio
+                    const blobUrl = URL.createObjectURL(blob);
+                    const tempLink = document.createElement('a');
+                    tempLink.href = blobUrl;
+                    tempLink.download = cleanDownloadName;
+                    document.body.appendChild(tempLink);
+                    tempLink.click();
+                    document.body.removeChild(tempLink);
+                    URL.revokeObjectURL(blobUrl);
+
+                } catch (err) {
+                    console.error("Error al descargar archivo directamente:", err);
+                    // Fallback directo por si hay restricciones de CORS
+                    window.open(currentActiveDownloadUrl, '_blank');
+                } finally {
+                    hideLoadingOverlay();
+                }
+
+                // 4. Mostrar video de agradecimiento si existe
                 const validVideos = globalThanksVideos.filter(v => v && v.trim() !== "");
                 if(validVideos.length > 0) {
                     showLoadingOverlay();
@@ -2184,14 +2212,13 @@
                     const videoElement = document.getElementById('download-thanks-video');
                     
                     const handleCanPlay = () => {
-    hideLoadingOverlay();
-    document.getElementById('thanks-custom-modal').classList.remove('hidden');
-    videoElement.play().catch(err => console.log("Video auto-play blocked: ", err));
-    videoElement.removeEventListener('canplay', handleCanPlay);
-};
+                        hideLoadingOverlay();
+                        document.getElementById('thanks-custom-modal').classList.remove('hidden');
+                        videoElement.play().catch(err => console.log("Video auto-play blocked: ", err));
+                        videoElement.removeEventListener('canplay', handleCanPlay);
+                    };
 
-videoElement.addEventListener('canplay', handleCanPlay);
-                    
+                    videoElement.addEventListener('canplay', handleCanPlay);
                     videoElement.src = randomVideoUrl;
                     videoElement.load();
                 }
