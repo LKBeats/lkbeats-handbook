@@ -1390,13 +1390,27 @@
     </footer>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    // ESM Client de AWS S3 para Cloudflare R2
+    import { S3Client, PutObjectCommand } from "https://esm.sh/@aws-sdk/client-s3";
 
-        const CLOUDINARY_CLOUD_NAME = "hdmx7anb";
-        const CLOUDINARY_UPLOAD_PRESET = "lkbeats_preset"; 
+    // ==================== CONFIGURACIÓN DE CLOUDFLARE R2 ====================
+    // Reemplaza con los valores que guardaste de Cloudflare:
+    const R2_PUBLIC_DOMAIN = "https://pub-4fdb8147f49d431e8ee7060936e6e3ee.r2.dev"; // Tu URL pública del Paso 2
+    const R2_BUCKET_NAME = "lkbeats-media";             // Nombre de tu bucket
+    const R2_ENDPOINT = "https://a9904a6a17cc7246ea1e407774e25aeb.r2.cloudflarestorage.com"; // Endpoint de la API S3
 
-        const firebaseConfig = {
+    const s3Client = new S3Client({
+        region: "auto",
+        endpoint: R2_ENDPOINT,
+        credentials: {
+            accessKeyId: "41f4c4233d58713c80ce7a5af929c0b4",        // Coloca tu Access Key ID
+            secretAccessKey: "1844d769d83b70306c08a08b8d31d28589c496ed7cc0f308da2414c2804adaeb" // Coloca tu Secret Access Key
+        }
+    });
+
+    const firebaseConfig = {
           apiKey: "AIzaSyBmYQjQiHBH6pLqKNpjc3gNUsrF0fdYJsU",
           authDomain: "lkbeats-handbook.firebaseapp.com",
           databaseURL: "https://lkbeats-handbook-default-rtdb.firebaseio.com?auth=BeatstarTest",
@@ -2118,49 +2132,30 @@
             }
         }
 
-        async function uploadFileToCloudinary(fileObject, subfolderName, resourceType = 'auto') {
-            if(!fileObject) return "";
-            if(!CLOUDINARY_CLOUD_NAME) {
-                alert("Por favor configura tu CLOUDINARY_CLOUD_NAME en el código JavaScript.");
-                return "";
-            }
+        async function uploadFileToCloudflareR2(fileObject, subfolderName) {
+            if (!fileObject) return "";
 
-            let typePath = resourceType;
-            if (resourceType === 'auto') {
-                if (fileObject.type.startsWith('video/')) typePath = 'video';
-                else if (fileObject.type.startsWith('image/')) typePath = 'image';
-                else typePath = 'raw';
-            }
-
-            // Sanitizar y obtener el nombre original sin la extensión
+            // Conservar el nombre original sanitizado
             const rawFileName = fileObject.name.substring(0, fileObject.name.lastIndexOf('.')) || fileObject.name;
-            const cleanPublicId = rawFileName.replace(/[^a-zA-Z0-9_\-]/g, "_");
-
-            const formData = new FormData();
-            formData.append("file", fileObject);
-            formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-            formData.append("folder", `lkbeats/${subfolderName}`);
+            const cleanFileName = rawFileName.replace(/[^a-zA-Z0-9_\-]/g, "_");
+            const extension = fileObject.name.split('.').pop();
             
-            // Asignar el nombre del archivo limpio mediante public_id
-            formData.append("public_id", cleanPublicId);
+            // Ruta destino dentro del bucket
+            const fileKey = `lkbeats/${subfolderName}/${cleanFileName}_${Date.now()}.${extension}`;
 
             try {
-                const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${typePath}/upload`, {
-                    method: "POST",
-                    body: formData
+                const command = new PutObjectCommand({
+                    Bucket: R2_BUCKET_NAME,
+                    Key: fileKey,
+                    Body: fileObject,
+                    ContentType: fileObject.type || "application/octet-stream"
                 });
 
-                if(response.ok) {
-                    const data = await response.json();
-                    return data.secure_url; 
-                } else {
-                    const errData = await response.json();
-                    console.error("Error en subida a Cloudinary:", errData);
-                    alert("Error al subir archivo a Cloudinary: " + (errData.error?.message || "Revisa la consola"));
-                    return "";
-                }
-            } catch(e) {
-                console.error("Excepción en Cloudinary upload:", e);
+                await s3Client.send(command);
+                return `${R2_PUBLIC_DOMAIN}/${fileKey}`;
+            } catch (e) {
+                console.error("Error al subir archivo a Cloudflare R2:", e);
+                alert("Error al subir el archivo a Cloudflare R2. Revisa la consola.");
                 return "";
             }
         }
@@ -3710,13 +3705,13 @@ videoElement.addEventListener('canplay', handleCanPlay);
             });
         });
 
-        // SUBIDA DE IMÁGENES DE MARCAS Y INSPIRACIÓN A CLOUDINARY
+        // SUBIDA DE IMÁGENES DE MARCAS E INSPIRACIÓN A CLOUDFLARE R2
         document.getElementById('cosBrandFile').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if(file) {
                 showLoadingOverlay();
                 try {
-                    const uploadedUrl = await uploadFileToCloudinary(file, 'brands', 'image');
+                    const uploadedUrl = await uploadFileToCloudflareR2(file, 'brands');
                     if(uploadedUrl) {
                         editingCosBrandUrlsList.push(uploadedUrl);
                         renderBrandManagementFormInterface();
@@ -3727,7 +3722,7 @@ videoElement.addEventListener('canplay', handleCanPlay);
             }
         });
 
-        // REGISTRO DE CHARTS CON MIGRACIÓN COMPLETA DE ASSETS A CLOUDINARY
+        // REGISTRO DE CHARTS CON MIGRACIÓN COMPLETA DE ASSETS A CLOUDFLARE R2
         document.getElementById('level-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             showLoadingOverlay();
@@ -3754,66 +3749,66 @@ videoElement.addEventListener('canplay', handleCanPlay);
                 let finalZipExplicit = levelZipExplicitToRemove ? "" : (existingLvl?.zipExplicit || "");
                 let finalZipDeluxeExplicit = levelZipDeluxeExplicitToRemove ? "" : (existingLvl?.zipDeluxeExplicit || "");
 
-                // SUBIDA DE ARTE DE CANCIÓN A CLOUDINARY (IMAGEN)
+                // SUBIDA DE ARTE DE CANCIÓN A CLOUDFLARE R2
                 const artFileInput = document.getElementById('lvlArtFile');
                 if(artFileInput.files && artFileInput.files[0]) {
-                    finalArtUrl = await uploadFileToCloudinary(artFileInput.files[0], 'charts_art', 'image');
+                    finalArtUrl = await uploadFileToCloudflareR2(artFileInput.files[0], 'charts_art');
                 }
                 
-                // SUBIDA DE AUDIO PREVIEW A CLOUDINARY
+                // SUBIDA DE AUDIO PREVIEW A CLOUDFLARE R2
                 const audioFileInput = document.getElementById('lvlAudioFile');
                 if(audioFileInput.files && audioFileInput.files[0]) {
-                    finalAudioUrl = await uploadFileToCloudinary(audioFileInput.files[0], 'audio', 'auto');
+                    finalAudioUrl = await uploadFileToCloudflareR2(audioFileInput.files[0], 'audio');
                 }
 
-                // SUBIDA DE VIDEOS DE PREVIEW A CLOUDINARY
+                // SUBIDA DE VIDEOS DE PREVIEW A CLOUDFLARE R2
                 const videoFileInput = document.getElementById('lvlVideoFile');
                 if(videoFileInput.files && videoFileInput.files[0]) {
-                    finalVideoUrl = await uploadFileToCloudinary(videoFileInput.files[0], 'prevchart', 'video');
+                    finalVideoUrl = await uploadFileToCloudflareR2(videoFileInput.files[0], 'prevchart');
                 }
 
                 const videoDeluxeFileInput = document.getElementById('lvlVideoFileDeluxe');
                 if(videoDeluxeFileInput?.files && videoDeluxeFileInput.files[0]) {
-                    finalVideoDeluxeUrl = await uploadFileToCloudinary(videoDeluxeFileInput.files[0], 'prevchart', 'video');
+                    finalVideoDeluxeUrl = await uploadFileToCloudflareR2(videoDeluxeFileInput.files[0], 'prevchart');
                 }
 
-                // SUBIDA DE ARCHIVOS ZIP A CLOUDINARY (RAW)
+                // SUBIDA DE ARCHIVOS ZIP A CLOUDFLARE R2
                 const chartFileInput = document.getElementById('lvlChartZipFile');
                 if(chartFileInput.files && chartFileInput.files[0]) {
-                    finalChartDirectUrl = await uploadFileToCloudinary(chartFileInput.files[0], 'charts_zip', 'raw');
+                    finalChartDirectUrl = await uploadFileToCloudflareR2(chartFileInput.files[0], 'charts_zip');
                 }
 
                 const chartDeluxeFileInput = document.getElementById('lvlChartZipFileDeluxe');
                 if(chartDeluxeFileInput?.files && chartDeluxeFileInput.files[0]) {
-                    finalChartDirectUrlDeluxe = await uploadFileToCloudinary(chartDeluxeFileInput.files[0], 'charts_zip', 'raw');
+                    finalChartDirectUrlDeluxe = await uploadFileToCloudflareR2(chartDeluxeFileInput.files[0], 'charts_zip');
                 }
 
-                // ARCHIVOS SIN CENSURA SI EL TOGGLE ESTÁ ACTIVO (MIGRADO A CLOUDINARY)
+                // ARCHIVOS SIN CENSURA SI EL TOGGLE ESTÁ ACTIVO (MIGRADO A CLOUDFLARE R2)
                 const hasExplicit = document.getElementById('lvlHasExplicit').checked;
                 if(hasExplicit) {
                     const audioExpIn = document.getElementById('lvlAudioFileExplicit');
                     if(audioExpIn?.files && audioExpIn.files[0]) {
-                        finalAudioExplicit = await uploadFileToCloudinary(audioExpIn.files[0], 'audio', 'auto');
+                        finalAudioExplicit = await uploadFileToCloudflareR2(audioExpIn.files[0], 'audio');
                     }
 
                     const vidExpIn = document.getElementById('lvlVideoFileExplicit');
                     if(vidExpIn?.files && vidExpIn.files[0]) {
-                        finalVideoExplicit = await uploadFileToCloudinary(vidExpIn.files[0], 'prevchart', 'video');
+                        finalVideoExplicit = await uploadFileToCloudflareR2(vidExpIn.files[0], 'prevchart');
                     }
 
                     const vidDlxExpIn = document.getElementById('lvlVideoFileDeluxeExplicit');
                     if(vidDlxExpIn?.files && vidDlxExpIn.files[0]) {
-                        finalVideoDeluxeExplicit = await uploadFileToCloudinary(vidDlxExpIn.files[0], 'prevchart', 'video');
+                        finalVideoDeluxeExplicit = await uploadFileToCloudflareR2(vidDlxExpIn.files[0], 'prevchart');
                     }
 
                     const zipExpIn = document.getElementById('lvlChartZipFileExplicit');
                     if(zipExpIn?.files && zipExpIn.files[0]) {
-                        finalZipExplicit = await uploadFileToCloudinary(zipExpIn.files[0], 'charts_zip', 'raw');
+                        finalZipExplicit = await uploadFileToCloudflareR2(zipExpIn.files[0], 'charts_zip');
                     }
 
                     const zipDlxExpIn = document.getElementById('lvlChartZipFileDeluxeExplicit');
                     if(zipDlxExpIn?.files && zipDlxExpIn.files[0]) {
-                        finalZipDeluxeExplicit = await uploadFileToCloudinary(zipDlxExpIn.files[0], 'charts_zip', 'raw');
+                        finalZipDeluxeExplicit = await uploadFileToCloudflareR2(zipDlxExpIn.files[0], 'charts_zip');
                     }
                 }
 
@@ -3887,7 +3882,7 @@ videoElement.addEventListener('canplay', handleCanPlay);
             }
         });
 
-        // REGISTRO DE SKINS MIGRADO A CLOUDINARY
+        // REGISTRO DE SKINS MIGRADO A CLOUDFLARE R2
         document.getElementById('cosmetic-form').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -3907,22 +3902,22 @@ videoElement.addEventListener('canplay', handleCanPlay);
                 let finalVideoUrl = cosmeticVideoToRemove ? "" : (existingCos?.video || "");
                 let finalSkinDirectUrl = cosmeticZipToRemove ? "" : (existingCos?.skinDirectUrl || "");
 
-                // SUBIDA DE ICONO DE SKIN A CLOUDINARY
+                // SUBIDA DE ICONO DE SKIN A CLOUDFLARE R2
                 const iconFileInput = document.getElementById('cosIconFile');
                 if(iconFileInput.files && iconFileInput.files[0]) {
-                    finalIconUrl = await uploadFileToCloudinary(iconFileInput.files[0], 'skins_icon', 'image');
+                    finalIconUrl = await uploadFileToCloudflareR2(iconFileInput.files[0], 'skins_icon');
                 }
 
-                // SUBIDA DE VIDEO A CLOUDINARY
+                // SUBIDA DE VIDEO A CLOUDFLARE R2
                 const videoFileInput = document.getElementById('cosVideoFile');
                 if(videoFileInput.files && videoFileInput.files[0]) {
-                    finalVideoUrl = await uploadFileToCloudinary(videoFileInput.files[0], 'prevskins', 'video');
+                    finalVideoUrl = await uploadFileToCloudflareR2(videoFileInput.files[0], 'prevskins');
                 }
 
-                // SUBIDA DE ZIP DE SKIN A CLOUDINARY (RAW)
+                // SUBIDA DE ZIP DE SKIN A CLOUDFLARE R2
                 const skinZipFileInput = document.getElementById('cosSkinZipFile');
                 if(skinZipFileInput.files && skinZipFileInput.files[0]) {
-                    finalSkinDirectUrl = await uploadFileToCloudinary(skinZipFileInput.files[0], 'skins_zip', 'raw');
+                    finalSkinDirectUrl = await uploadFileToCloudflareR2(skinZipFileInput.files[0], 'skins_zip');
                 }
 
                 let finalInspString = editingCosBrandUrlsList.join(', ');
@@ -3975,13 +3970,13 @@ videoElement.addEventListener('canplay', handleCanPlay);
                 const f2 = document.getElementById('thanks-vid2-file').files[0];
                 const f3 = document.getElementById('thanks-vid3-file').files[0];
 
-                if(f1) urlsDict[0] = await uploadFileToCloudinary(f1, 'videos', 'video');
-                if(f2) urlsDict[1] = await uploadFileToCloudinary(f2, 'videos', 'video');
-                if(f3) urlsDict[2] = await uploadFileToCloudinary(f3, 'videos', 'video');
+                if(f1) urlsDict[0] = await uploadFileToCloudflareR2(f1, 'videos');
+                if(f2) urlsDict[1] = await uploadFileToCloudflareR2(f2, 'videos');
+                if(f3) urlsDict[2] = await uploadFileToCloudflareR2(f3, 'videos');
 
                 if(db) {
                     await set(ref(db, 'thanks_videos'), urlsDict);
-                    alert("¡Videos subidos y guardados con éxito en Cloudinary!");
+                    alert("¡Videos subidos y guardados con éxito en Cloudflare R2!");
                     document.getElementById('thanks-vid1-file').value = "";
                     document.getElementById('thanks-vid2-file').value = "";
                     document.getElementById('thanks-vid3-file').value = "";
