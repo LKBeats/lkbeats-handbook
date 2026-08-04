@@ -1423,7 +1423,8 @@
             Key: fileKey,
             Body: fileObject,
             ContentType: fileObject.type || "application/octet-stream",
-            ContentDisposition: `attachment; filename="${fileObject.name}"`
+            ContentDisposition: `attachment; filename="${fileObject.name}"`,
+            CacheControl: "public, max-age=31536000, immutable" // <--- LÍNEA NUEVA
         };
 
         try {
@@ -2455,7 +2456,7 @@
 
             return `
                 <div class="${containerClass} custom-native-video-wrapper">
-                    <video class="w-full h-full object-cover pointer-events-none" playsinline preload="auto" disablePictureInPicture>
+                    <video class="w-full h-full object-cover pointer-events-none" playsinline preload="metadata" disablePictureInPicture>
                         <source src="${videoUrl}" type="video/mp4">
                     </video>
                     
