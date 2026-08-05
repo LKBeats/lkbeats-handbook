@@ -1258,11 +1258,6 @@
 
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadBrand">Subir Marca / Inspiración</label>
-
-                            <!-- Campo para asignar o cambiar el nombre personalizado -->
-                            <div class="mb-2">
-                                <input type="text" id="cosBrandNameInput" placeholder="Nombre personalizado (opcional)" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100 text-xs">
-                            </div>
                             
                             <!-- Submenú de selección de modo -->
                             <div class="flex gap-2 mb-2">
@@ -1277,9 +1272,15 @@
                                 </select>
                             </div>
 
-                            <!-- Input para subir archivo nuevo -->
-                            <div id="box-brand-upload-new">
+                            <!-- Input para subir archivo nuevo a la página localmente -->
+                            <div id="box-brand-upload-new" class="mb-2">
                                 <input type="file" id="cosBrandFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                            </div>
+
+                            <!-- Campo para asignar el nombre obligatorio tras seleccionar una nueva imagen -->
+                            <div id="box-brand-name-field" class="hidden mb-2">
+                                <label class="block font-bold text-fuchsia-400 text-[10px] mb-1 uppercase" data-i18n="brandNameLabel">Nombre de la marca</label>
+                                <input type="text" id="cosBrandNameInput" placeholder="Nombre de la marca" data-i18n-ph="brandNamePlaceholder" class="w-full bg-[#05020a] border border-fuchsia-500 p-2 rounded-lg text-zinc-100 text-xs">
                             </div>
 
                             <!-- Lista de marcas asignadas a la skin actual -->
@@ -1520,6 +1521,8 @@
                 formUploadBrand: "Subir Marca / Inspiración", formUploadSkinFile: "Subir Archivo (.zip)",
                 selectExistingBrand: "Elegir existente", uploadNewBrand: "Subir nueva",
                 noExistingBrands: "No hay marcas registradas previamente.",
+                brandNameLabel: "Nombre de la marca", brandNamePlaceholder: "Nombre de la marca",
+                brandNameRequiredError: "El nombre de la marca es obligatorio para poder registrar o guardar los cambios.",
                 beatcloneNotice: "Es necesario tener instalada la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la página oficial de Beatclone",
                 savingChanges: "Por favor espera un momento...",
                 visualAssetsMenuTitle: "Panel de Assets Visuales Dinámicos",
@@ -1606,6 +1609,8 @@
                 formUploadBrand: "Upload Brand / Inspiration", formUploadSkinFile: "Upload File (.zip)",
                 selectExistingBrand: "Choose existing", uploadNewBrand: "Upload new",
                 noExistingBrands: "No previously registered brands.",
+                brandNameLabel: "Brand name", brandNamePlaceholder: "Brand name",
+                brandNameRequiredError: "The brand name is required to register or save changes.",
                 beatcloneNotice: "It is necessary to have the Beatstar application installed to use this content. Download it from the official Beatclone page.",
                 savingChanges: "Please wait a moment...",
                 visualAssetsMenuTitle: "Dynamic Visual Assets Panel",
@@ -2092,14 +2097,13 @@
             cosmeticIconToRemove = false;
             cosmeticVideoToRemove = false;
             pendingBrandFileToUpload = null;
+            tempPreviewBrandUrl = null;
             editingCosBrandUrlsList = [];
             
-            // Limpiar e visibilizar input de nombre personalizado de marca
+            // Limpiar u ocultar input del nombre de la marca
             const nameInput = document.getElementById('cosBrandNameInput');
-            if(nameInput) {
-                nameInput.value = "";
-                nameInput.parentElement?.classList.remove('hidden');
-            }
+            if(nameInput) nameInput.value = "";
+            document.getElementById('box-brand-name-field')?.classList.add('hidden');
 
             // Restablecer vista del submenú de marcas
             document.getElementById('box-brand-upload-new')?.classList.remove('hidden');
@@ -3857,7 +3861,6 @@
         document.getElementById('btn-brand-mode-upload')?.addEventListener('click', () => {
             document.getElementById('box-brand-upload-new').classList.remove('hidden');
             document.getElementById('box-brand-select-existing').classList.add('hidden');
-            document.getElementById('cosBrandNameInput')?.parentElement?.classList.remove('hidden');
             document.getElementById('btn-brand-mode-upload').classList.replace('bg-zinc-900', 'bg-fuchsia-950/60');
             document.getElementById('btn-brand-mode-existing').classList.replace('bg-fuchsia-950/60', 'bg-zinc-900');
         });
@@ -3866,7 +3869,7 @@
             populateExistingBrandsDropdown();
             document.getElementById('box-brand-select-existing').classList.remove('hidden');
             document.getElementById('box-brand-upload-new').classList.add('hidden');
-            document.getElementById('cosBrandNameInput')?.parentElement?.classList.add('hidden');
+            document.getElementById('box-brand-name-field').classList.add('hidden');
             document.getElementById('btn-brand-mode-existing').classList.replace('bg-zinc-900', 'bg-fuchsia-950/60');
             document.getElementById('btn-brand-mode-upload').classList.replace('bg-fuchsia-950/60', 'bg-zinc-900');
         });
@@ -3885,31 +3888,31 @@
 
         // Variable temporal para mantener la referencia del archivo de marca local seleccionado
         let pendingBrandFileToUpload = null;
+        let tempPreviewBrandUrl = null;
 
-        // SELECCIÓN DE IMAGEN DE MARCA (CON NOMBRE OBLIGATORIO Y PREPARACIÓN DIFERIDA)
+        // SELECCIÓN DE IMAGEN DE MARCA LOCAL (VISTA PREVIA EN PÁGINA)
         document.getElementById('cosBrandFile')?.addEventListener('change', (e) => {
             const file = e.target.files[0];
-            const customNameInput = document.getElementById('cosBrandNameInput');
-            const brandName = customNameInput ? customNameInput.value.trim() : "";
+            const nameBox = document.getElementById('box-brand-name-field');
+            const nameInput = document.getElementById('cosBrandNameInput');
 
             if (file) {
-                if (!brandName) {
-                    alert(currentLanguage === 'es' 
-                        ? "Por favor escribe el nombre de la marca antes de seleccionar la imagen." 
-                        : "Please enter the brand name before selecting the image.");
-                    e.target.value = "";
-                    customNameInput?.focus();
-                    return;
-                }
-
                 pendingBrandFileToUpload = file;
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                    const tempPreviewUrl = event.target.result;
-                    brandCustomNamesMap[tempPreviewUrl] = brandName;
-                    editingCosBrandUrlsList.push(tempPreviewUrl);
+                    // Si existía una previa temporal no guardada, la quitamos
+                    if (tempPreviewBrandUrl) {
+                        const idx = editingCosBrandUrlsList.indexOf(tempPreviewBrandUrl);
+                        if (idx !== -1) editingCosBrandUrlsList.splice(idx, 1);
+                    }
+
+                    tempPreviewBrandUrl = event.target.result;
+                    editingCosBrandUrlsList.push(tempPreviewBrandUrl);
                     renderBrandManagementFormInterface();
-                    if (customNameInput) customNameInput.value = "";
+
+                    // Hacer visible el input del nombre de la marca
+                    if (nameBox) nameBox.classList.remove('hidden');
+                    if (nameInput) nameInput.focus();
                 };
                 reader.readAsDataURL(file);
                 e.target.value = "";
@@ -4076,7 +4079,7 @@
             }
         });
 
-        // REGISTRO DE SKINS A CLOUDFLARE R2 (CON SUBIDA DIFERIDA DE MARCAS)
+       // REGISTRO DE SKINS A CLOUDFLARE R2 (CON SUBIDA DIFERIDA DE MARCAS Y NOMBRE OBLIGATORIO)
         document.getElementById('cosmetic-form').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -4084,6 +4087,16 @@
             const checkedGenres = document.querySelectorAll('.skin-genre-checkbox:checked');
             if (!isUniversal && checkedGenres.length === 0) {
                 alert(translations[currentLanguage].selectGenreError);
+                return;
+            }
+
+            // Validación obligatoria de nombre si se adjuntó un archivo de marca nuevo
+            const customNameInput = document.getElementById('cosBrandNameInput');
+            const brandNameValue = customNameInput ? customNameInput.value.trim() : "";
+            
+            if (pendingBrandFileToUpload && !brandNameValue) {
+                alert(translations[currentLanguage].brandNameRequiredError || "El nombre de la marca es obligatorio.");
+                customNameInput?.focus();
                 return;
             }
 
@@ -4114,23 +4127,18 @@
                     finalSkinDirectUrl = await uploadFileToCloudflareR2(skinZipFileInput.files[0], 'skins_zip');
                 }
 
-                // PROCESAMIENTO Y SUBIDA DIFERIDA DE LA NUEVA IMAGEN DE MARCA A CLOUDFLARE R2
+                // SUBIDA A CLOUDFLARE R2 DE LA NUEVA MARCA Y VÍNCULO DE NOMBRE
                 let finalBrandUrlsList = [...editingCosBrandUrlsList];
                 if (pendingBrandFileToUpload) {
                     const uploadedBrandUrl = await uploadFileToCloudflareR2(pendingBrandFileToUpload, 'brands');
                     if (uploadedBrandUrl) {
                         const tempIndex = finalBrandUrlsList.findIndex(url => url.startsWith('data:image'));
                         if (tempIndex !== -1) {
-                            const tempPreviewUrl = finalBrandUrlsList[tempIndex];
-                            const assignedName = brandCustomNamesMap[tempPreviewUrl];
-                            if (assignedName) {
-                                brandCustomNamesMap[uploadedBrandUrl] = assignedName;
-                                delete brandCustomNamesMap[tempPreviewUrl];
-                            }
                             finalBrandUrlsList[tempIndex] = uploadedBrandUrl;
                         } else {
                             finalBrandUrlsList.push(uploadedBrandUrl);
                         }
+                        brandCustomNamesMap[uploadedBrandUrl] = brandNameValue;
                         await saveBrandCustomNamesToDatabase();
                     }
                 }
