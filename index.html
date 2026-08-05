@@ -2094,9 +2094,12 @@
             pendingBrandFileToUpload = null;
             editingCosBrandUrlsList = [];
             
-            // Limpiar input de nombre personalizado de marca
+            // Limpiar e visibilizar input de nombre personalizado de marca
             const nameInput = document.getElementById('cosBrandNameInput');
-            if(nameInput) nameInput.value = "";
+            if(nameInput) {
+                nameInput.value = "";
+                nameInput.parentElement?.classList.remove('hidden');
+            }
 
             // Restablecer vista del submenú de marcas
             document.getElementById('box-brand-upload-new')?.classList.remove('hidden');
@@ -3854,6 +3857,7 @@
         document.getElementById('btn-brand-mode-upload')?.addEventListener('click', () => {
             document.getElementById('box-brand-upload-new').classList.remove('hidden');
             document.getElementById('box-brand-select-existing').classList.add('hidden');
+            document.getElementById('cosBrandNameInput')?.parentElement?.classList.remove('hidden');
             document.getElementById('btn-brand-mode-upload').classList.replace('bg-zinc-900', 'bg-fuchsia-950/60');
             document.getElementById('btn-brand-mode-existing').classList.replace('bg-fuchsia-950/60', 'bg-zinc-900');
         });
@@ -3862,6 +3866,7 @@
             populateExistingBrandsDropdown();
             document.getElementById('box-brand-select-existing').classList.remove('hidden');
             document.getElementById('box-brand-upload-new').classList.add('hidden');
+            document.getElementById('cosBrandNameInput')?.parentElement?.classList.add('hidden');
             document.getElementById('btn-brand-mode-existing').classList.replace('bg-zinc-900', 'bg-fuchsia-950/60');
             document.getElementById('btn-brand-mode-upload').classList.replace('bg-fuchsia-950/60', 'bg-zinc-900');
         });
@@ -3869,15 +3874,7 @@
         // Evento al seleccionar una marca existente del menú desplegable
         document.getElementById('selectExistingBrandUrl')?.addEventListener('change', (e) => {
             const selectedUrl = e.target.value;
-            const customNameInput = document.getElementById('cosBrandNameInput');
-            
             if (selectedUrl) {
-                if (customNameInput && customNameInput.value.trim() !== "") {
-                    brandCustomNamesMap[selectedUrl] = customNameInput.value.trim();
-                    saveBrandCustomNamesToDatabase();
-                    customNameInput.value = "";
-                }
-
                 if (!editingCosBrandUrlsList.includes(selectedUrl)) {
                     editingCosBrandUrlsList.push(selectedUrl);
                     renderBrandManagementFormInterface();
@@ -3889,21 +3886,30 @@
         // Variable temporal para mantener la referencia del archivo de marca local seleccionado
         let pendingBrandFileToUpload = null;
 
-        // SELECCIÓN DE IMAGEN DE MARCA (PREPARACIÓN PARA SUBIDA DIFERIDA AL GUARDAR)
+        // SELECCIÓN DE IMAGEN DE MARCA (CON NOMBRE OBLIGATORIO Y PREPARACIÓN DIFERIDA)
         document.getElementById('cosBrandFile')?.addEventListener('change', (e) => {
             const file = e.target.files[0];
             const customNameInput = document.getElementById('cosBrandNameInput');
+            const brandName = customNameInput ? customNameInput.value.trim() : "";
 
             if (file) {
+                if (!brandName) {
+                    alert(currentLanguage === 'es' 
+                        ? "Por favor escribe el nombre de la marca antes de seleccionar la imagen." 
+                        : "Please enter the brand name before selecting the image.");
+                    e.target.value = "";
+                    customNameInput?.focus();
+                    return;
+                }
+
                 pendingBrandFileToUpload = file;
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     const tempPreviewUrl = event.target.result;
-                    if (customNameInput && customNameInput.value.trim() !== "") {
-                        brandCustomNamesMap[tempPreviewUrl] = customNameInput.value.trim();
-                    }
+                    brandCustomNamesMap[tempPreviewUrl] = brandName;
                     editingCosBrandUrlsList.push(tempPreviewUrl);
                     renderBrandManagementFormInterface();
+                    if (customNameInput) customNameInput.value = "";
                 };
                 reader.readAsDataURL(file);
                 e.target.value = "";
@@ -4116,15 +4122,16 @@
                         const tempIndex = finalBrandUrlsList.findIndex(url => url.startsWith('data:image'));
                         if (tempIndex !== -1) {
                             const tempPreviewUrl = finalBrandUrlsList[tempIndex];
-                            if (brandCustomNamesMap[tempPreviewUrl]) {
-                                brandCustomNamesMap[uploadedBrandUrl] = brandCustomNamesMap[tempPreviewUrl];
+                            const assignedName = brandCustomNamesMap[tempPreviewUrl];
+                            if (assignedName) {
+                                brandCustomNamesMap[uploadedBrandUrl] = assignedName;
                                 delete brandCustomNamesMap[tempPreviewUrl];
                             }
                             finalBrandUrlsList[tempIndex] = uploadedBrandUrl;
                         } else {
                             finalBrandUrlsList.push(uploadedBrandUrl);
                         }
-                        saveBrandCustomNamesToDatabase();
+                        await saveBrandCustomNamesToDatabase();
                     }
                 }
 
