@@ -3921,163 +3921,172 @@
 
         // REGISTRO DE CHARTS A CLOUDFLARE R2
         document.getElementById('level-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            showLoadingOverlay();
+    e.preventDefault();
+    showLoadingOverlay();
 
-            try {
-                const checked = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
-                let id = document.getElementById('editingLvlId').value || Date.now().toString();
-                
-                let existingLvl = levels.find(l => l.id === id);
-                let finalArtUrl = levelArtToRemove ? "free_song_Image.png" : (existingLvl?.art || "free_song_Image.png");
-                
-                let finalAudioUrl = levelAudioToRemove ? "" : (existingLvl?.audioDirectUrl || "");
-                
-                let finalVideoUrl = levelVideoToRemove ? "" : (existingLvl?.video || "");
-                let finalVideoDeluxeUrl = levelVideoDeluxeToRemove ? "" : (existingLvl?.videoDeluxe || "");
+    try {
+        const checked = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
+        let id = document.getElementById('editingLvlId').value || Date.now().toString();
+        
+        let existingLvl = levels.find(l => l.id === id);
 
-                let finalChartDirectUrl = levelZipToRemove ? "" : (existingLvl?.chartDirectUrl || "");
-                let finalChartDirectUrlDeluxe = levelZipDeluxeToRemove ? "" : (existingLvl?.chartDirectUrlDeluxe || "");
+        // 1. Asignación inicial de valores
+        let finalArtUrl = levelArtToRemove ? "free_song_Image.png" : (existingLvl?.art || "free_song_Image.png");
+        let finalAudioUrl = levelAudioToRemove ? "" : (existingLvl?.audioDirectUrl || "");
+        let finalVideoUrl = levelVideoToRemove ? "" : (existingLvl?.video || "");
+        let finalVideoDeluxeUrl = levelVideoDeluxeToRemove ? "" : (existingLvl?.videoDeluxe || "");
+        let finalChartDirectUrl = levelZipToRemove ? "" : (existingLvl?.chartDirectUrl || "");
+        let finalChartDirectUrlDeluxe = levelZipDeluxeToRemove ? "" : (existingLvl?.chartDirectUrlDeluxe || "");
 
-                // ASSETS EXPLICIT
-                let finalAudioExplicit = levelAudioExplicitToRemove ? "" : (existingLvl?.audioExplicit || "");
-                let finalVideoExplicit = levelVideoExplicitToRemove ? "" : (existingLvl?.videoExplicit || "");
-                let finalVideoDeluxeExplicit = levelVideoDeluxeExplicitToRemove ? "" : (existingLvl?.videoDeluxeExplicit || "");
-                let finalZipExplicit = levelZipExplicitToRemove ? "" : (existingLvl?.zipExplicit || "");
-                let finalZipDeluxeExplicit = levelZipDeluxeExplicitToRemove ? "" : (existingLvl?.zipDeluxeExplicit || "");
+        // Assets Explicit
+        let finalAudioExplicit = levelAudioExplicitToRemove ? "" : (existingLvl?.audioExplicit || "");
+        let finalVideoExplicit = levelVideoExplicitToRemove ? "" : (existingLvl?.videoExplicit || "");
+        let finalVideoDeluxeExplicit = levelVideoDeluxeExplicitToRemove ? "" : (existingLvl?.videoDeluxeExplicit || "");
+        let finalZipExplicit = levelZipExplicitToRemove ? "" : (existingLvl?.zipExplicit || "");
+        let finalZipDeluxeExplicit = levelZipDeluxeExplicitToRemove ? "" : (existingLvl?.zipDeluxeExplicit || "");
 
-                // SUBIDA DE ARTE DE CANCIÓN A CLOUDFLARE R2
-                const artFileInput = document.getElementById('lvlArtFile');
-                if(artFileInput.files && artFileInput.files[0]) {
-                    finalArtUrl = await uploadFileToCloudflareR2(artFileInput.files[0], 'charts_art');
-                }
-                
-                // SUBIDA DE AUDIO PREVIEW A CLOUDFLARE R2
-                const audioFileInput = document.getElementById('lvlAudioFile');
-                if(audioFileInput.files && audioFileInput.files[0]) {
-                    finalAudioUrl = await uploadFileToCloudflareR2(audioFileInput.files[0], 'audio');
-                }
+        // 2. Subida de archivos y captura del valor devuelto por R2
+        const artFileInput = document.getElementById('lvlArtFile');
+        if (artFileInput.files && artFileInput.files[0]) {
+            const uploadedArt = await uploadFileToCloudflareR2(artFileInput.files[0], 'charts_art');
+            if (uploadedArt) finalArtUrl = uploadedArt;
+        }
 
-                // SUBIDA DE VIDEOS DE PREVIEW A CLOUDFLARE R2
-                const videoFileInput = document.getElementById('lvlVideoFile');
-                if(videoFileInput.files && videoFileInput.files[0]) {
-                    finalVideoUrl = await uploadFileToCloudflareR2(videoFileInput.files[0], 'prevchart');
-                }
+        const audioFileInput = document.getElementById('lvlAudioFile');
+        if (audioFileInput.files && audioFileInput.files[0]) {
+            const uploadedAudio = await uploadFileToCloudflareR2(audioFileInput.files[0], 'audio');
+            if (uploadedAudio) finalAudioUrl = uploadedAudio;
+        }
 
-                const videoDeluxeFileInput = document.getElementById('lvlVideoFileDeluxe');
-                if(videoDeluxeFileInput?.files && videoDeluxeFileInput.files[0]) {
-                    finalVideoDeluxeUrl = await uploadFileToCloudflareR2(videoDeluxeFileInput.files[0], 'prevchart');
-                }
+        const videoFileInput = document.getElementById('lvlVideoFile');
+        if (videoFileInput.files && videoFileInput.files[0]) {
+            const uploadedVideo = await uploadFileToCloudflareR2(videoFileInput.files[0], 'prevchart');
+            if (uploadedVideo) finalVideoUrl = uploadedVideo;
+        }
 
-                // SUBIDA DE ARCHIVOS ZIP A CLOUDFLARE R2
-                const chartFileInput = document.getElementById('lvlChartZipFile');
-                if(chartFileInput.files && chartFileInput.files[0]) {
-                    finalChartDirectUrl = await uploadFileToCloudflareR2(chartFileInput.files[0], 'charts_zip');
-                }
+        const videoDeluxeFileInput = document.getElementById('lvlVideoFileDeluxe');
+        if (videoDeluxeFileInput?.files && videoDeluxeFileInput.files[0]) {
+            const uploadedVideoDeluxe = await uploadFileToCloudflareR2(videoDeluxeFileInput.files[0], 'prevchart');
+            if (uploadedVideoDeluxe) finalVideoDeluxeUrl = uploadedVideoDeluxe;
+        }
 
-                const chartDeluxeFileInput = document.getElementById('lvlChartZipFileDeluxe');
-                if(chartDeluxeFileInput?.files && chartDeluxeFileInput.files[0]) {
-                    finalChartDirectUrlDeluxe = await uploadFileToCloudflareR2(chartDeluxeFileInput.files[0], 'charts_zip');
-                }
+        const chartFileInput = document.getElementById('lvlChartZipFile');
+        if (chartFileInput.files && chartFileInput.files[0]) {
+            const uploadedZip = await uploadFileToCloudflareR2(chartFileInput.files[0], 'charts_zip');
+            if (uploadedZip) finalChartDirectUrl = uploadedZip;
+        }
 
-                // ARCHIVOS SIN CENSURA SI EL TOGGLE ESTÁ ACTIVO (CLOUDFLARE R2)
-                const hasExplicit = document.getElementById('lvlHasExplicit').checked;
-                if(hasExplicit) {
-                    const audioExpIn = document.getElementById('lvlAudioFileExplicit');
-                    if(audioExpIn?.files && audioExpIn.files[0]) {
-                        finalAudioExplicit = await uploadFileToCloudflareR2(audioExpIn.files[0], 'audio');
-                    }
+        const chartDeluxeFileInput = document.getElementById('lvlChartZipFileDeluxe');
+        if (chartDeluxeFileInput?.files && chartDeluxeFileInput.files[0]) {
+            const uploadedZipDeluxe = await uploadFileToCloudflareR2(chartDeluxeFileInput.files[0], 'charts_zip');
+            if (uploadedZipDeluxe) finalChartDirectUrlDeluxe = uploadedZipDeluxe;
+        }
 
-                    const vidExpIn = document.getElementById('lvlVideoFileExplicit');
-                    if(vidExpIn?.files && vidExpIn.files[0]) {
-                        finalVideoExplicit = await uploadFileToCloudflareR2(vidExpIn.files[0], 'prevchart');
-                    }
-
-                    const vidDlxExpIn = document.getElementById('lvlVideoFileDeluxeExplicit');
-                    if(vidDlxExpIn?.files && vidDlxExpIn.files[0]) {
-                        finalVideoDeluxeExplicit = await uploadFileToCloudflareR2(vidDlxExpIn.files[0], 'prevchart');
-                    }
-
-                    const zipExpIn = document.getElementById('lvlChartZipFileExplicit');
-                    if(zipExpIn?.files && zipExpIn.files[0]) {
-                        finalZipExplicit = await uploadFileToCloudflareR2(zipExpIn.files[0], 'charts_zip');
-                    }
-
-                    const zipDlxExpIn = document.getElementById('lvlChartZipFileDeluxeExplicit');
-                    if(zipDlxExpIn?.files && zipDlxExpIn.files[0]) {
-                        finalZipDeluxeExplicit = await uploadFileToCloudflareR2(zipDlxExpIn.files[0], 'charts_zip');
-                    }
-                }
-
-                const selectedEditionMode = document.getElementById('lvlEditionMode').value;
-                const isExclusive = document.getElementById('lvlIsExclusive').checked;
-
-                const data = {
-                    id: id, 
-                    song: document.getElementById('lvlSong').value.trim(), 
-                    artist: document.getElementById('lvlArtist').value.trim(),
-                    art: finalArtUrl, 
-                    genre: checked.join(' / ') || 'General', 
-                    
-                    editionMode: selectedEditionMode,
-                    edition: (selectedEditionMode === 'Deluxe') ? 'Deluxe' : 'Standard',
-
-                    audioDirectUrl: finalAudioUrl, 
-
-                    diff: document.getElementById('lvlDiff').value,
-                    notes: document.getElementById('lvlNotes').value.trim(),
-                    duration: document.getElementById('lvlDuration').value.trim(),
-                    date: document.getElementById('lvlDate').value,
-                    video: finalVideoUrl,
-                    chartDirectUrl: finalChartDirectUrl,
-                    dl1: document.getElementById('lvlDl1').value.trim(), 
-                    dl2: document.getElementById('lvlDl2').value.trim(), 
-                    dl3: document.getElementById('lvlDl3').value.trim(),
-
-                    diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
-                    notesDeluxe: document.getElementById('lvlNotesDeluxe').value.trim(),
-                    durationDeluxe: document.getElementById('lvlDurationDeluxe').value.trim(),
-                    dateDeluxe: document.getElementById('lvlDateDeluxe').value,
-                    videoDeluxe: finalVideoDeluxeUrl,
-                    chartDirectUrlDeluxe: finalChartDirectUrlDeluxe,
-                    dl1Deluxe: document.getElementById('lvlDl1Deluxe').value.trim(),
-                    dl2Deluxe: document.getElementById('lvlDl2Deluxe').value.trim(),
-                    dl3Deluxe: document.getElementById('lvlDl3Deluxe').value.trim(),
-
-                    hasExplicit: hasExplicit,
-                    audioExplicit: finalAudioExplicit,
-                    notesExplicit: document.getElementById('lvlNotesExplicit').value.trim(),
-                    durationExplicit: document.getElementById('lvlDurationExplicit').value.trim(),
-                    dateExplicit: document.getElementById('lvlDateExplicit').value,
-                    videoExplicit: finalVideoExplicit,
-                    zipExplicit: finalZipExplicit,
-                    dl1Explicit: document.getElementById('lvlDl1Explicit').value.trim(),
-                    dl2Explicit: document.getElementById('lvlDl2Explicit').value.trim(),
-                    dl3Explicit: document.getElementById('lvlDl3Explicit').value.trim(),
-
-                    notesDeluxeExplicit: document.getElementById('lvlNotesDeluxeExplicit').value.trim(),
-                    durationDeluxeExplicit: document.getElementById('lvlDurationDeluxeExplicit').value.trim(),
-                    dateDeluxeExplicit: document.getElementById('lvlDateDeluxeExplicit').value,
-                    videoDeluxeExplicit: finalVideoDeluxeExplicit,
-                    zipDeluxeExplicit: finalZipDeluxeExplicit,
-                    dl1DeluxeExplicit: document.getElementById('lvlDl1DeluxeExplicit').value.trim(),
-                    dl2DeluxeExplicit: document.getElementById('lvlDl2DeluxeExplicit').value.trim(),
-                    dl3DeluxeExplicit: document.getElementById('lvlDl3DeluxeExplicit').value.trim(),
-
-                    isExclusive: isExclusive
-                };
-
-                if(db) {
-                    await set(ref(db, 'levels/' + id), data);
-                    await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
-                    resetLevelFormState();
-                }
-            } catch(err) {
-                console.error("Error al guardar chart: ", err);
-            } finally {
-                hideLoadingOverlay();
+        // Archivos sin censura (Explicit)
+        const hasExplicit = document.getElementById('lvlHasExplicit').checked;
+        if (hasExplicit) {
+            const audioExpIn = document.getElementById('lvlAudioFileExplicit');
+            if (audioExpIn?.files && audioExpIn.files[0]) {
+                const uploadedAudioExp = await uploadFileToCloudflareR2(audioExpIn.files[0], 'audio');
+                if (uploadedAudioExp) finalAudioExplicit = uploadedAudioExp;
             }
-        });
+
+            const vidExpIn = document.getElementById('lvlVideoFileExplicit');
+            if (vidExpIn?.files && vidExpIn.files[0]) {
+                const uploadedVidExp = await uploadFileToCloudflareR2(vidExpIn.files[0], 'prevchart');
+                if (uploadedVidExp) finalVideoExplicit = uploadedVidExp;
+            }
+
+            const vidDlxExpIn = document.getElementById('lvlVideoFileDeluxeExplicit');
+            if (vidDlxExpIn?.files && vidDlxExpIn.files[0]) {
+                const uploadedVidDlxExp = await uploadFileToCloudflareR2(vidDlxExpIn.files[0], 'prevchart');
+                if (uploadedVidDlxExp) finalVideoDeluxeExplicit = uploadedVidDlxExp;
+            }
+
+            const zipExpIn = document.getElementById('lvlChartZipFileExplicit');
+            if (zipExpIn?.files && zipExpIn.files[0]) {
+                const uploadedZipExp = await uploadFileToCloudflareR2(zipExpIn.files[0], 'charts_zip');
+                if (uploadedZipExp) finalZipExplicit = uploadedZipExp;
+            }
+
+            const zipDlxExpIn = document.getElementById('lvlChartZipFileDeluxeExplicit');
+            if (zipDlxExpIn?.files && zipDlxExpIn.files[0]) {
+                const uploadedZipDlxExp = await uploadFileToCloudflareR2(zipDlxExpIn.files[0], 'charts_zip');
+                if (uploadedZipDlxExp) finalZipDeluxeExplicit = uploadedZipDlxExp;
+            }
+        }
+
+        const selectedEditionMode = document.getElementById('lvlEditionMode').value;
+        const isExclusive = document.getElementById('lvlIsExclusive').checked;
+
+        // 3. Envío a Firebase
+        const data = {
+            id: id, 
+            song: document.getElementById('lvlSong').value.trim(), 
+            artist: document.getElementById('lvlArtist').value.trim(),
+            art: finalArtUrl, 
+            genre: checked.join(' / ') || 'General', 
+            
+            editionMode: selectedEditionMode,
+            edition: (selectedEditionMode === 'Deluxe') ? 'Deluxe' : 'Standard',
+
+            audioDirectUrl: finalAudioUrl, 
+
+            diff: document.getElementById('lvlDiff').value,
+            notes: document.getElementById('lvlNotes').value.trim(),
+            duration: document.getElementById('lvlDuration').value.trim(),
+            date: document.getElementById('lvlDate').value,
+            video: finalVideoUrl,
+            chartDirectUrl: finalChartDirectUrl,
+            dl1: document.getElementById('lvlDl1').value.trim(), 
+            dl2: document.getElementById('lvlDl2').value.trim(), 
+            dl3: document.getElementById('lvlDl3').value.trim(),
+
+            diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
+            notesDeluxe: document.getElementById('lvlNotesDeluxe').value.trim(),
+            durationDeluxe: document.getElementById('lvlDurationDeluxe').value.trim(),
+            dateDeluxe: document.getElementById('lvlDateDeluxe').value,
+            videoDeluxe: finalVideoDeluxeUrl,
+            chartDirectUrlDeluxe: finalChartDirectUrlDeluxe,
+            dl1Deluxe: document.getElementById('lvlDl1Deluxe').value.trim(),
+            dl2Deluxe: document.getElementById('lvlDl2Deluxe').value.trim(),
+            dl3Deluxe: document.getElementById('lvlDl3Deluxe').value.trim(),
+
+            hasExplicit: hasExplicit,
+            audioExplicit: finalAudioExplicit,
+            notesExplicit: document.getElementById('lvlNotesExplicit').value.trim(),
+            durationExplicit: document.getElementById('lvlDurationExplicit').value.trim(),
+            dateExplicit: document.getElementById('lvlDateExplicit').value,
+            videoExplicit: finalVideoExplicit,
+            zipExplicit: finalZipExplicit,
+            dl1Explicit: document.getElementById('lvlDl1Explicit').value.trim(),
+            dl2Explicit: document.getElementById('lvlDl2Explicit').value.trim(),
+            dl3Explicit: document.getElementById('lvlDl3Explicit').value.trim(),
+
+            notesDeluxeExplicit: document.getElementById('lvlNotesDeluxeExplicit').value.trim(),
+            durationDeluxeExplicit: document.getElementById('lvlDurationDeluxeExplicit').value.trim(),
+            dateDeluxeExplicit: document.getElementById('lvlDateDeluxeExplicit').value,
+            videoDeluxeExplicit: finalVideoDeluxeExplicit,
+            zipDeluxeExplicit: finalZipDeluxeExplicit,
+            dl1DeluxeExplicit: document.getElementById('lvlDl1DeluxeExplicit').value.trim(),
+            dl2DeluxeExplicit: document.getElementById('lvlDl2DeluxeExplicit').value.trim(),
+            dl3DeluxeExplicit: document.getElementById('lvlDl3DeluxeExplicit').value.trim(),
+
+            isExclusive: isExclusive
+        };
+
+        if (db) {
+            await set(ref(db, 'levels/' + id), data);
+            await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
+            resetLevelFormState();
+        }
+
+    } catch(err) {
+        console.error("Error al guardar chart: ", err);
+    } finally {
+        hideLoadingOverlay();
+    }
+});
 
        // REGISTRO DE SKINS A CLOUDFLARE R2 (CON SUBIDA DIFERIDA DE MARCAS Y NOMBRE OBLIGATORIO)
         document.getElementById('cosmetic-form').addEventListener('submit', async (e) => {
