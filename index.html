@@ -302,6 +302,19 @@
                 width: 220px !important;
                 max-width: 220px !important;
             }
+            /* Mover la imagen del título arriba del botón "Volver" únicamente en móvil horizontal */
+            #view-cosmetics {
+                display: flex !important;
+                flex-direction: column !important;
+            }
+            #cosmetics-submenu {
+                display: flex !important;
+                flex-direction: column !important;
+                order: -1 !important;
+            }
+            #cosmetics-submenu > div.text-center {
+                order: -1 !important;
+            }
         }
 
         @media (min-width: 768px) {
