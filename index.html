@@ -2091,6 +2091,7 @@
             cosmeticZipToRemove = false;
             cosmeticIconToRemove = false;
             cosmeticVideoToRemove = false;
+            pendingBrandFileToUpload = null;
             editingCosBrandUrlsList = [];
             
             // Limpiar input de nombre personalizado de marca
@@ -3885,28 +3886,26 @@
             e.target.value = "";
         });
 
-        // SUBIDA DE IMÁGENES DE MARCAS E INSPIRACIÓN NUEVAS A CLOUDFLARE R2
-        document.getElementById('cosBrandFile')?.addEventListener('change', async (e) => {
+        // Variable temporal para mantener la referencia del archivo de marca local seleccionado
+        let pendingBrandFileToUpload = null;
+
+        // SELECCIÓN DE IMAGEN DE MARCA (PREPARACIÓN PARA SUBIDA DIFERIDA AL GUARDAR)
+        document.getElementById('cosBrandFile')?.addEventListener('change', (e) => {
             const file = e.target.files[0];
             const customNameInput = document.getElementById('cosBrandNameInput');
 
-            if(file) {
-                showLoadingOverlay();
-                try {
-                    const uploadedUrl = await uploadFileToCloudflareR2(file, 'brands');
-                    if(uploadedUrl) {
-                        if (customNameInput && customNameInput.value.trim() !== "") {
-                            brandCustomNamesMap[uploadedUrl] = customNameInput.value.trim();
-                            saveBrandCustomNamesToDatabase();
-                            customNameInput.value = "";
-                        }
-
-                        editingCosBrandUrlsList.push(uploadedUrl);
-                        renderBrandManagementFormInterface();
-                        populateExistingBrandsDropdown(); // Actualización inmediata en tiempo real
+            if (file) {
+                pendingBrandFileToUpload = file;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const tempPreviewUrl = event.target.result;
+                    if (customNameInput && customNameInput.value.trim() !== "") {
+                        brandCustomNamesMap[tempPreviewUrl] = customNameInput.value.trim();
                     }
-                } catch(err) { console.error(err); }
-                hideLoadingOverlay();
+                    editingCosBrandUrlsList.push(tempPreviewUrl);
+                    renderBrandManagementFormInterface();
+                };
+                reader.readAsDataURL(file);
                 e.target.value = "";
             }
         });
@@ -4071,7 +4070,7 @@
             }
         });
 
-        // REGISTRO DE SKINS A CLOUDFLARE R2
+        // REGISTRO DE SKINS A CLOUDFLARE R2 (CON SUBIDA DIFERIDA DE MARCAS)
         document.getElementById('cosmetic-form').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -4109,7 +4108,27 @@
                     finalSkinDirectUrl = await uploadFileToCloudflareR2(skinZipFileInput.files[0], 'skins_zip');
                 }
 
-                let finalInspString = editingCosBrandUrlsList.join(', ');
+                // PROCESAMIENTO Y SUBIDA DIFERIDA DE LA NUEVA IMAGEN DE MARCA A CLOUDFLARE R2
+                let finalBrandUrlsList = [...editingCosBrandUrlsList];
+                if (pendingBrandFileToUpload) {
+                    const uploadedBrandUrl = await uploadFileToCloudflareR2(pendingBrandFileToUpload, 'brands');
+                    if (uploadedBrandUrl) {
+                        const tempIndex = finalBrandUrlsList.findIndex(url => url.startsWith('data:image'));
+                        if (tempIndex !== -1) {
+                            const tempPreviewUrl = finalBrandUrlsList[tempIndex];
+                            if (brandCustomNamesMap[tempPreviewUrl]) {
+                                brandCustomNamesMap[uploadedBrandUrl] = brandCustomNamesMap[tempPreviewUrl];
+                                delete brandCustomNamesMap[tempPreviewUrl];
+                            }
+                            finalBrandUrlsList[tempIndex] = uploadedBrandUrl;
+                        } else {
+                            finalBrandUrlsList.push(uploadedBrandUrl);
+                        }
+                        saveBrandCustomNamesToDatabase();
+                    }
+                }
+
+                let finalInspString = finalBrandUrlsList.join(', ');
 
                 let finalSkinGenre = "General";
                 if(isUniversal) {
