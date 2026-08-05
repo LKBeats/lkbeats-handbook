@@ -302,6 +302,31 @@
                 width: 220px !important;
                 max-width: 220px !important;
             }
+            /* Reordenamiento EXCLUSIVO para pantalla horizontal móvil en submenú de Skins */
+    #cosmetics-submenu {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    #cosmetics-submenu > button.btn-back-to-home {
+        order: 1 !important;
+        margin-bottom: 0.5rem !important;
+    }
+    #cosmetics-submenu > div.text-center {
+        order: 0 !important;
+        margin-bottom: 0.5rem !important;
+    }
+    #cosmetics-submenu > div.text-center img {
+        max-width: 220px !important;
+    }
+    #cosmetics-submenu > h2 {
+        order: 2 !important;
+        margin-bottom: 0.75rem !important;
+        font-size: 1.1rem !important;
+    }
+    #cosmetics-submenu > div.grid {
+        order: 3 !important;
+        gap: 1rem !important;
+    }
         }
 
         @media (min-width: 768px) {
