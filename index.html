@@ -1258,6 +1258,11 @@
 
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadBrand">Subir Marca / Inspiración</label>
+
+                            <!-- Campo para asignar o cambiar el nombre personalizado -->
+                            <div class="mb-2">
+                                <input type="text" id="cosBrandNameInput" placeholder="Nombre personalizado (opcional)" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100 text-xs">
+                            </div>
                             
                             <!-- Submenú de selección de modo -->
                             <div class="flex gap-2 mb-2">
@@ -2088,6 +2093,10 @@
             cosmeticVideoToRemove = false;
             editingCosBrandUrlsList = [];
             
+            // Limpiar input de nombre personalizado de marca
+            const nameInput = document.getElementById('cosBrandNameInput');
+            if(nameInput) nameInput.value = "";
+
             // Restablecer vista del submenú de marcas
             document.getElementById('box-brand-upload-new')?.classList.remove('hidden');
             document.getElementById('box-brand-select-existing')?.classList.add('hidden');
@@ -3782,7 +3791,10 @@
             });
         });
 
-        // Obtiene todas las URLs de marcas e inspiración registradas en la base de datos sin duplicados
+        // Diccionario local para vincular URLs de marcas con sus nombres personalizados asignados
+        const brandCustomNamesMap = {};
+
+        // Obtiene todas las URLs de marcas e inspiración registradas sin duplicados
         function getUniqueRegisteredBrandUrls() {
             const urlsSet = new Set();
             cosmetics.forEach(cos => {
@@ -3796,7 +3808,7 @@
             return Array.from(urlsSet);
         }
 
-        // Llena el selector con las marcas disponibles en el sistema
+        // Llena el selector desplegable usando nombres personalizados si existen
         function populateExistingBrandsDropdown() {
             const selectEl = document.getElementById('selectExistingBrandUrl');
             if (!selectEl) return;
@@ -3812,7 +3824,8 @@
             uniqueUrls.forEach((url, idx) => {
                 const opt = document.createElement('option');
                 opt.value = url;
-                opt.innerText = `Marca / Inspiración #${idx + 1}`;
+                const displayName = brandCustomNamesMap[url] || `Marca / Inspiración #${idx + 1}`;
+                opt.innerText = displayName;
                 selectEl.appendChild(opt);
             });
         }
@@ -3836,9 +3849,18 @@
         // Evento al seleccionar una marca existente del menú desplegable
         document.getElementById('selectExistingBrandUrl')?.addEventListener('change', (e) => {
             const selectedUrl = e.target.value;
-            if (selectedUrl && !editingCosBrandUrlsList.includes(selectedUrl)) {
-                editingCosBrandUrlsList.push(selectedUrl);
-                renderBrandManagementFormInterface();
+            const customNameInput = document.getElementById('cosBrandNameInput');
+            
+            if (selectedUrl) {
+                if (customNameInput && customNameInput.value.trim() !== "") {
+                    brandCustomNamesMap[selectedUrl] = customNameInput.value.trim();
+                    customNameInput.value = "";
+                }
+
+                if (!editingCosBrandUrlsList.includes(selectedUrl)) {
+                    editingCosBrandUrlsList.push(selectedUrl);
+                    renderBrandManagementFormInterface();
+                }
             }
             e.target.value = "";
         });
@@ -3846,11 +3868,18 @@
         // SUBIDA DE IMÁGENES DE MARCAS E INSPIRACIÓN NUEVAS A CLOUDFLARE R2
         document.getElementById('cosBrandFile')?.addEventListener('change', async (e) => {
             const file = e.target.files[0];
+            const customNameInput = document.getElementById('cosBrandNameInput');
+
             if(file) {
                 showLoadingOverlay();
                 try {
                     const uploadedUrl = await uploadFileToCloudflareR2(file, 'brands');
                     if(uploadedUrl) {
+                        if (customNameInput && customNameInput.value.trim() !== "") {
+                            brandCustomNamesMap[uploadedUrl] = customNameInput.value.trim();
+                            customNameInput.value = "";
+                        }
+
                         editingCosBrandUrlsList.push(uploadedUrl);
                         renderBrandManagementFormInterface();
                     }
