@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initlet inspMarkup = '';al-scale=1.0">
     <title>LKBeats Handbook</title>
     <link class="favicon-node" rel="icon" type="image/png" href="LKB.png">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -3497,25 +3497,23 @@
                 let pMarkup = renderVideoPlayerMarkup(cos.video, true);
                 
                 let inspMarkup = '';
-                if (cos.insp) {
-                    const urls = cos.insp.split(/[\s,]+/).filter(url => url.trim() !== "");
-                    let imagesHtml = urls.map((url) => {
-                        const cleanUrl = url.trim();
-                        const customTitle = brandCustomNamesMap[cleanUrl];
-                        return `
-                        <div class="flex flex-col items-center gap-1 bg-[#05020a]/60 border border-zinc-800/40 rounded-lg p-1 shrink-0">
-                            <div class="relative group h-20 w-32 sm:h-24 sm:w-36 flex items-center justify-center">
-                                <img src="${cleanUrl}" class="max-h-full max-w-full object-contain rounded">
-                            </div>
-                            ${customTitle ? `<span class="text-[10px] font-bold text-fuchsia-300 truncate max-w-[128px] sm:max-w-[144px]">${customTitle}</span>` : ''}
-                        </div>
-                    `;}).join('');
+if (cos.insp) {
+    const urls = cos.insp.split(/[\s,]+/).filter(url => url.trim() !== "");
+    let imagesHtml = urls.map((url) => {
+        const cleanUrl = url.trim();
+        return `
+        <div class="flex flex-col items-center gap-1 bg-[#05020a]/60 border border-zinc-800/40 rounded-lg p-1 shrink-0">
+            <div class="relative group h-20 w-32 sm:h-24 sm:w-36 flex items-center justify-center">
+                <img src="${cleanUrl}" class="max-h-full max-w-full object-contain rounded">
+            </div>
+        </div>
+    `;}).join('');
 
-                    inspMarkup = `
-                        <div class="flex flex-col md:flex-row flex-wrap gap-2 mt-1 bg-black/40 p-1.5 rounded-xl border border-fuchsia-950/30 w-max max-w-full shadow-lg">
-                            ${imagesHtml}
-                        </div>`;
-                }
+    inspMarkup = `
+        <div class="flex flex-col md:flex-row flex-wrap gap-2 mt-1 bg-black/40 p-1.5 rounded-xl border border-fuchsia-950/30 w-max max-w-full shadow-lg">
+            ${imagesHtml}
+        </div>`;
+}
 
                 const hasAnyLinks = cos.skinDirectUrl || cos.dl1 || cos.dl2;
                 let linksLayout = `<div class="flex flex-col gap-1 sm:gap-1.5 max-w-[150px] sm:max-w-[240px] mx-auto">`;
