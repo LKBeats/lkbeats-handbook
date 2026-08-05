@@ -1258,8 +1258,27 @@
 
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadBrand">Subir Marca / Inspiración</label>
+                            
+                            <!-- Submenú de selección de modo -->
+                            <div class="flex gap-2 mb-2">
+                                <button type="button" id="btn-brand-mode-existing" class="flex-1 py-1.5 bg-fuchsia-950/60 border border-fuchsia-800/40 text-fuchsia-300 font-extrabold rounded-lg text-[10px] uppercase transition hover:bg-fuchsia-900/60" data-i18n="selectExistingBrand">Elegir existente</button>
+                                <button type="button" id="btn-brand-mode-upload" class="flex-1 py-1.5 bg-zinc-900 border border-zinc-800 text-zinc-400 font-extrabold rounded-lg text-[10px] uppercase transition hover:bg-zinc-800 hover:text-white" data-i18n="uploadNewBrand">Subir nueva</button>
+                            </div>
+
+                            <!-- Selector de marcas existentes (Desplegable) -->
+                            <div id="box-brand-select-existing" class="hidden mb-2">
+                                <select id="selectExistingBrandUrl" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100 font-bold text-xs">
+                                    <option value="" disabled selected data-i18n="selectExistingBrand">Elegir existente...</option>
+                                </select>
+                            </div>
+
+                            <!-- Input para subir archivo nuevo -->
+                            <div id="box-brand-upload-new">
+                                <input type="file" id="cosBrandFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                            </div>
+
+                            <!-- Lista de marcas asignadas a la skin actual -->
                             <div id="cosBrandManagementList" class="flex flex-col gap-1.5 my-2 max-h-40 overflow-y-auto bg-black/40 p-2 rounded border border-zinc-800 hidden"></div>
-                            <input type="file" id="cosBrandFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div>
                             <div class="flex items-center justify-between mb-1">
@@ -1477,7 +1496,7 @@
                 cardLevelsTitle: "Charts", cardLevelsDesc: "Encuentra todos los charts que he realizado para Beaclone / BSCM / beatcharts",
                 cardCosmeticsTitle: "Skins", cardCosmeticsDesc: "Encuentra todas las skins que he realizado para Beaclone / TapWave",
                 disclaimerTitle: "DISCLAIMER", 
-                disclaimerContent: "Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, canciones, logos, e imágenes pertenecen a sus respectivos propietarios y desarrolladores.",
+                disclaimerContent: "Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas, canciones, logos, e imágenes pertenecen a sus respectivos propietarios y desarrolladores.",
                 navLevels: "Charts", navCosmetics: "Skins", backHome: "Volver", levelsPageTitle: "Charts", cosmeticsPageTitle: "Skins",
                 addLevelTitle: "Nuevo Chart", addCosmeticTitle: "Nueva Skin", btnRegister: "Registrar", emptyDatabase: "No hay registros.",
                 formSong: "Canción", formArtist: "Artista", formGenre: "Género", formDifficulty: "Dificultad", formEdition: "Edición",
@@ -1494,6 +1513,8 @@
                 formUploadArt: "Subir Arte", formUploadAudio: "Upload Audio Preview (Censored)",
                 formUploadChartFile: "Subir Archivo (.zip)", formUploadIcon: "Subir Icono",
                 formUploadBrand: "Subir Marca / Inspiración", formUploadSkinFile: "Subir Archivo (.zip)",
+                selectExistingBrand: "Elegir existente", uploadNewBrand: "Subir nueva",
+                noExistingBrands: "No hay marcas registradas previamente.",
                 beatcloneNotice: "Es necesario tener instalada la aplicación de Beatstar para poder usar este contenido. Descárgalo desde la página oficial de Beatclone",
                 savingChanges: "Por favor espera un momento...",
                 visualAssetsMenuTitle: "Panel de Assets Visuales Dinámicos",
@@ -1578,6 +1599,8 @@
                 formUploadArt: "Upload Art", formUploadAudio: "Upload Audio Preview (Censored)",
                 formUploadChartFile: "Upload File (.zip)", formUploadIcon: "Upload Icon",
                 formUploadBrand: "Upload Brand / Inspiration", formUploadSkinFile: "Upload File (.zip)",
+                selectExistingBrand: "Choose existing", uploadNewBrand: "Upload new",
+                noExistingBrands: "No previously registered brands.",
                 beatcloneNotice: "It is necessary to have the Beatstar application installed to use this content. Download it from the official Beatclone page.",
                 savingChanges: "Please wait a moment...",
                 visualAssetsMenuTitle: "Dynamic Visual Assets Panel",
@@ -2064,6 +2087,12 @@
             cosmeticIconToRemove = false;
             cosmeticVideoToRemove = false;
             editingCosBrandUrlsList = [];
+            
+            // Restablecer vista del submenú de marcas
+            document.getElementById('box-brand-upload-new')?.classList.remove('hidden');
+            document.getElementById('box-brand-select-existing')?.classList.add('hidden');
+            document.getElementById('btn-brand-mode-upload')?.classList.replace('bg-zinc-900', 'bg-fuchsia-950/60');
+            document.getElementById('btn-brand-mode-existing')?.classList.replace('bg-fuchsia-950/60', 'bg-zinc-900');
         }
 
         document.getElementById('btn-cancel-lvl-form')?.addEventListener('click', resetLevelFormState);
@@ -3753,8 +3782,69 @@
             });
         });
 
-        // SUBIDA DE IMÁGENES DE MARCAS E INSPIRACIÓN A CLOUDFLARE R2
-        document.getElementById('cosBrandFile').addEventListener('change', async (e) => {
+        // Obtiene todas las URLs de marcas e inspiración registradas en la base de datos sin duplicados
+        function getUniqueRegisteredBrandUrls() {
+            const urlsSet = new Set();
+            cosmetics.forEach(cos => {
+                if (cos.insp) {
+                    cos.insp.split(/[\s,]+/).forEach(u => {
+                        const cleanUrl = u.trim();
+                        if (cleanUrl) urlsSet.add(cleanUrl);
+                    });
+                }
+            });
+            return Array.from(urlsSet);
+        }
+
+        // Llena el selector con las marcas disponibles en el sistema
+        function populateExistingBrandsDropdown() {
+            const selectEl = document.getElementById('selectExistingBrandUrl');
+            if (!selectEl) return;
+            
+            const uniqueUrls = getUniqueRegisteredBrandUrls();
+            selectEl.innerHTML = `<option value="" disabled selected>${translations[currentLanguage].selectExistingBrand}...</option>`;
+
+            if (uniqueUrls.length === 0) {
+                selectEl.innerHTML += `<option value="" disabled>${translations[currentLanguage].noExistingBrands}</option>`;
+                return;
+            }
+
+            uniqueUrls.forEach((url, idx) => {
+                const opt = document.createElement('option');
+                opt.value = url;
+                opt.innerText = `Marca / Inspiración #${idx + 1}`;
+                selectEl.appendChild(opt);
+            });
+        }
+
+        // Eventos para conmutar el submenú entre "Subir nueva" y "Elegir existente"
+        document.getElementById('btn-brand-mode-upload')?.addEventListener('click', () => {
+            document.getElementById('box-brand-upload-new').classList.remove('hidden');
+            document.getElementById('box-brand-select-existing').classList.add('hidden');
+            document.getElementById('btn-brand-mode-upload').classList.replace('bg-zinc-900', 'bg-fuchsia-950/60');
+            document.getElementById('btn-brand-mode-existing').classList.replace('bg-fuchsia-950/60', 'bg-zinc-900');
+        });
+
+        document.getElementById('btn-brand-mode-existing')?.addEventListener('click', () => {
+            populateExistingBrandsDropdown();
+            document.getElementById('box-brand-select-existing').classList.remove('hidden');
+            document.getElementById('box-brand-upload-new').classList.add('hidden');
+            document.getElementById('btn-brand-mode-existing').classList.replace('bg-zinc-900', 'bg-fuchsia-950/60');
+            document.getElementById('btn-brand-mode-upload').classList.replace('bg-fuchsia-950/60', 'bg-zinc-900');
+        });
+
+        // Evento al seleccionar una marca existente del menú desplegable
+        document.getElementById('selectExistingBrandUrl')?.addEventListener('change', (e) => {
+            const selectedUrl = e.target.value;
+            if (selectedUrl && !editingCosBrandUrlsList.includes(selectedUrl)) {
+                editingCosBrandUrlsList.push(selectedUrl);
+                renderBrandManagementFormInterface();
+            }
+            e.target.value = "";
+        });
+
+        // SUBIDA DE IMÁGENES DE MARCAS E INSPIRACIÓN NUEVAS A CLOUDFLARE R2
+        document.getElementById('cosBrandFile')?.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if(file) {
                 showLoadingOverlay();
@@ -3770,7 +3860,7 @@
             }
         });
 
-        // REGISTRO DE CHARTS CON MIGRACIÓN COMPLETA DE ASSETS A CLOUDFLARE R2
+        // REGISTRO DE CHARTS A CLOUDFLARE R2
         document.getElementById('level-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             showLoadingOverlay();
@@ -3831,7 +3921,7 @@
                     finalChartDirectUrlDeluxe = await uploadFileToCloudflareR2(chartDeluxeFileInput.files[0], 'charts_zip');
                 }
 
-                // ARCHIVOS SIN CENSURA SI EL TOGGLE ESTÁ ACTIVO (MIGRADO A CLOUDFLARE R2)
+                // ARCHIVOS SIN CENSURA SI EL TOGGLE ESTÁ ACTIVO (CLOUDFLARE R2)
                 const hasExplicit = document.getElementById('lvlHasExplicit').checked;
                 if(hasExplicit) {
                     const audioExpIn = document.getElementById('lvlAudioFileExplicit');
@@ -3930,7 +4020,7 @@
             }
         });
 
-        // REGISTRO DE SKINS MIGRADO A CLOUDFLARE R2
+        // REGISTRO DE SKINS A CLOUDFLARE R2
         document.getElementById('cosmetic-form').addEventListener('submit', async (e) => {
             e.preventDefault();
 
