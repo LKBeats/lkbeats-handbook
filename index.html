@@ -107,36 +107,7 @@
         }
 
         /* Ajustes específicos para vista móvil horizontal (landscape) */
-        @media (orientation: landscape) and (max-height: 600px)
-
-        /* Recolocación del título en móvil horizontal para eliminar espacio muerto */
-        #cosmetics-submenu {
-        padding-top: 0 !important;
-    }
-    #cosmetics-submenu .submenu-header-landscape-wrapper {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        width: 100% !important;
-        margin-bottom: 1rem !important;
-    }
-    #cosmetics-submenu .submenu-header-landscape-wrapper .btn-back-to-home {
-        margin-bottom: 0 !important;
-    }
-    #cosmetics-submenu .submenu-logo-landscape-box {
-        margin-bottom: 0 !important;
-        width: 180px !important;
-        max-width: 180px !important;
-    }
-    #cosmetics-submenu h2 {
-        font-size: 1.1rem !important;
-        margin-bottom: 1rem !important;
-    }
-    #cosmetics-submenu .grid {
-        gap: 1rem !important;
-    }
-            {
+        @media (orientation: landscape) and (max-height: 600px) {
             #beatstar-edition-modal .bg-\[\#11091c\]\/95,
             #download-custom-modal .bg-\[\#11091c\],
             #explicit-warning-modal .bg-\[\#11091c\],
@@ -1228,33 +1199,28 @@
             </button>
 
             <div id="cosmetics-submenu" class="w-full max-w-4xl mx-auto py-6 flex flex-col items-center">
-             <!-- CONTENEDOR FLEX HEADER (BOTÓN VOLVER + LOGO EN MOVIL HORIZONTAL) -->
-             <div class="submenu-header-landscape-wrapper flex flex-col items-center w-full">
-        <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-fuchsia-500/30 rounded-2xl mb-6 self-start">
-            <i class="fa-solid fa-chevron-left text-fuchsia-500"></i> <span data-i18n="backHome">Volver</span>
-        </button>
+                <div class="text-center mb-8 flex flex-col items-center w-full">
+                    <div class="mb-4 max-w-full w-[450px]">
+                        <img src="Agregar un título (1).png" alt="Handbook Main Title" class="w-full object-contain mx-auto">
+                    </div>
+                </div>
 
-        <div class="submenu-logo-landscape-box mb-6 max-w-full w-[450px]">
-            <img src="Agregar un título (1).png" alt="Handbook Main Title" class="w-full object-contain mx-auto">
-        </div>
-    </div>
-
-    <h2 class="font-display font-black text-2xl uppercase tracking-wider mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500" data-i18n="selectSubmenuSkin">Selecciona una Plataforma</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 landscape-grid-cols-2 gap-8 w-full">
-        <div id="submenu-card-beatstar" class="cursor-pointer border border-fuchsia-950/80 bg-[#11091c] rounded-2xl p-8 flex flex-col items-center justify-center text-center transform hover:-translate-y-1 transition shadow-xl glow-fuchsia">
-            <div class="h-16 mb-4 flex items-center justify-center">
-                <img src="BeatstarWhiteLogo.png" alt="Beatstar" class="h-full object-contain">
+                <h2 class="font-display font-black text-2xl uppercase tracking-wider mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500" data-i18n="selectSubmenuSkin">Selecciona una Plataforma</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 landscape-grid-cols-2 gap-8 w-full">
+                    <div id="submenu-card-beatstar" class="cursor-pointer border border-fuchsia-950/80 bg-[#11091c] rounded-2xl p-8 flex flex-col items-center justify-center text-center transform hover:-translate-y-1 transition shadow-xl glow-fuchsia">
+                        <div class="h-16 mb-4 flex items-center justify-center">
+                            <img src="BeatstarWhiteLogo.png" alt="Beatstar" class="h-full object-contain">
+                        </div>
+                        <span class="text-xs font-bold text-fuchsia-400 uppercase tracking-widest" data-i18n="navCosmetics">Skins</span>
+                    </div>
+                    <div id="submenu-card-tapwave" class="cursor-pointer border border-fuchsia-950/80 bg-[#11091c] rounded-2xl p-8 flex flex-col items-center justify-center text-center transform hover:-translate-y-1 transition shadow-xl glow-orange">
+                        <div class="h-16 mb-4 flex items-center justify-center">
+                            <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full object-contain">
+                        </div>
+                        <span class="text-xs font-bold text-orange-400 uppercase tracking-widest" data-i18n="navCosmetics">Skins</span>
+                    </div>
+                </div>
             </div>
-            <span class="text-xs font-bold text-fuchsia-400 uppercase tracking-widest" data-i18n="navCosmetics">Skins</span>
-        </div>
-        <div id="submenu-card-tapwave" class="cursor-pointer border border-fuchsia-950/80 bg-[#11091c] rounded-2xl p-8 flex flex-col items-center justify-center text-center transform hover:-translate-y-1 transition shadow-xl glow-orange">
-            <div class="h-16 mb-4 flex items-center justify-center">
-                <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full object-contain">
-            </div>
-            <span class="text-xs font-bold text-orange-400 uppercase tracking-widest" data-i18n="navCosmetics">Skins</span>
-        </div>
-    </div>
-</div>
 
             <div id="cosmetics-active-workspace" class="hidden flex-col gap-6 items-start w-full relative">
                 <div id="cosmetic-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto z-30">
