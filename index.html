@@ -39,7 +39,28 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #05020a; }
         ::-webkit-scrollbar-thumb { background: #d946ef; border-radius: 3px; }
-        
+        /* Animación y estilos para la imagen de fondo giratoria */
+        @keyframes spin-clockwise {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .bg-spinning-swirl {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 120vmax;
+            height: 120vmax;
+            object-fit: contain;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 0;
+            animation: spin-clockwise 25s linear infinite;
+        }
         .glow-orange { box-shadow: 0 0 20px rgba(249, 115, 22, 0.2); }
         .glow-fuchsia { box-shadow: 0 0 20px rgba(217, 70, 239, 0.2); }
         .glow-gold { box-shadow: 0 0 10px rgba(250, 204, 21, 0.25); border-color: rgba(250, 204, 21, 0.5) !important; }
@@ -419,9 +440,11 @@
 </head>
 <body class="bg-[#05020a] text-zinc-100 min-h-screen font-sans flex flex-col relative overflow-x-hidden">
 
+    <!-- IMAGEN DE FONDO EN GIRATORIO PERSISTENTE -->
+    <img src="hud_swirl.png" alt="Background Swirl" class="bg-spinning-swirl">
+
     <!-- OVERLAY DE CARGA CON BOOGIE -->
-    <div id="global-loading-overlay" class="hidden fixed inset-0 bg-black/85 z-[100] flex flex-col items-center justify-center gap-4">
-        <img src="1455064703448645786.gif" alt="Boogie Loading..." class="w-[150px] h-auto mb-2">
+    <div id="global-loading-overlay" class="hidden fixed inset-0 bg-black/85 z-[100] flex flex-col items-center justify-center gap-4">        <img src="1455064703448645786.gif" alt="Boogie Loading..." class="w-[150px] h-auto mb-2">
         <p id="loading-overlay-text" class="text-base font-bold text-white text-center px-4 font-sans" data-i18n="savingChanges">Por favor espera un momento...</p>
     </div>
 
