@@ -2153,10 +2153,17 @@
                 hideLoadingOverlay();
             });
             onValue(ref(db, 'brand_custom_names'), (snap) => {
-                brandCustomNamesMap = snap.val() || {};
-                populateExistingBrandsDropdown();
-                renderCosmeticsTables();
-            });
+    const rawData = snap.val() || {};
+    brandCustomNamesMap = {};
+    
+    Object.keys(rawData).forEach(safeKey => {
+        const originalUrl = desanitizeFirebaseKey(safeKey);
+        brandCustomNamesMap[originalUrl] = rawData[safeKey];
+    });
+
+    populateExistingBrandsDropdown();
+    renderCosmeticsTables();
+});
             onValue(ref(db, 'visual_assets'), (snap) => { 
                 globalVisualAssets = snap.val() || {}; 
                 buildCustomDropdownMenus();
@@ -3814,12 +3821,31 @@
         // Diccionario global para sincronizar los nombres personalizados de las marcas por su URL
         let brandCustomNamesMap = {};
 
-        // Función para guardar los nombres personalizados en la base de datos de Firebase
-        function saveBrandCustomNamesToDatabase() {
-            if (db) {
-                set(ref(db, 'brand_custom_names'), brandCustomNamesMap);
-            }
-        }
+        // Funciones para sanear URLs y cumplir con la sintaxis de claves en Firebase
+function sanitizeFirebaseKey(key) {
+    return btoa(key).replace(/=/g, '').replace(/\//g, '_').replace(/\+/g, '-');
+}
+
+function desanitizeFirebaseKey(safeKey) {
+    try {
+        let base64 = safeKey.replace(/_/g, '/').replace(/-/g, '+');
+        while (base64.length % 4) base64 += '=';
+        return atob(base64);
+    } catch(e) {
+        return safeKey;
+    }
+}
+
+function saveBrandCustomNamesToDatabase() {
+    if (db) {
+        const safeMap = {};
+        Object.keys(brandCustomNamesMap).forEach(rawUrl => {
+            const safeKey = sanitizeFirebaseKey(rawUrl);
+            safeMap[safeKey] = brandCustomNamesMap[rawUrl];
+        });
+        set(ref(db, 'brand_custom_names'), safeMap);
+    }
+}
 
         // Obtiene todas las URLs de marcas e inspiración registradas sin duplicados
         function getUniqueRegisteredBrandUrls() {
