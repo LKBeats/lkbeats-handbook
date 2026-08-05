@@ -2141,7 +2141,13 @@
                 cosmetics = snap.val() ? Object.values(snap.val()) : []; 
                 renderCosmeticsTables(); 
                 updateDashboardCounts(); 
+                populateExistingBrandsDropdown(); // Actualiza las marcas disponibles en el selector
                 hideLoadingOverlay();
+            });
+            onValue(ref(db, 'brand_custom_names'), (snap) => {
+                brandCustomNamesMap = snap.val() || {};
+                populateExistingBrandsDropdown();
+                renderCosmeticsTables();
             });
             onValue(ref(db, 'visual_assets'), (snap) => { 
                 globalVisualAssets = snap.val() || {}; 
@@ -3478,11 +3484,17 @@
                 let inspMarkup = '';
                 if (cos.insp) {
                     const urls = cos.insp.split(/[\s,]+/).filter(url => url.trim() !== "");
-                    let imagesHtml = urls.map((url) => `
-                        <div class="relative group h-20 w-32 sm:h-24 sm:w-36 p-1 flex items-center justify-center bg-[#05020a]/60 border border-zinc-800/40 rounded-lg shrink-0">
-                            <img src="${url.trim()}" class="max-h-full max-w-full object-contain rounded">
+                    let imagesHtml = urls.map((url) => {
+                        const cleanUrl = url.trim();
+                        const customTitle = brandCustomNamesMap[cleanUrl];
+                        return `
+                        <div class="flex flex-col items-center gap-1 bg-[#05020a]/60 border border-zinc-800/40 rounded-lg p-1 shrink-0">
+                            <div class="relative group h-20 w-32 sm:h-24 sm:w-36 flex items-center justify-center">
+                                <img src="${cleanUrl}" class="max-h-full max-w-full object-contain rounded">
+                            </div>
+                            ${customTitle ? `<span class="text-[10px] font-bold text-fuchsia-300 truncate max-w-[128px] sm:max-w-[144px]">${customTitle}</span>` : ''}
                         </div>
-                    `).join('');
+                    `;}).join('');
 
                     inspMarkup = `
                         <div class="flex flex-col md:flex-row flex-wrap gap-2 mt-1 bg-black/40 p-1.5 rounded-xl border border-fuchsia-950/30 w-max max-w-full shadow-lg">
@@ -3791,8 +3803,15 @@
             });
         });
 
-        // Diccionario local para vincular URLs de marcas con sus nombres personalizados asignados
-        const brandCustomNamesMap = {};
+        // Diccionario global para sincronizar los nombres personalizados de las marcas por su URL
+        let brandCustomNamesMap = {};
+
+        // Función para guardar los nombres personalizados en la base de datos de Firebase
+        function saveBrandCustomNamesToDatabase() {
+            if (db) {
+                set(ref(db, 'brand_custom_names'), brandCustomNamesMap);
+            }
+        }
 
         // Obtiene todas las URLs de marcas e inspiración registradas sin duplicados
         function getUniqueRegisteredBrandUrls() {
@@ -3808,7 +3827,7 @@
             return Array.from(urlsSet);
         }
 
-        // Llena el selector desplegable usando nombres personalizados si existen
+        // Llena y actualiza en tiempo real el selector desplegable usando nombres personalizados
         function populateExistingBrandsDropdown() {
             const selectEl = document.getElementById('selectExistingBrandUrl');
             if (!selectEl) return;
@@ -3854,6 +3873,7 @@
             if (selectedUrl) {
                 if (customNameInput && customNameInput.value.trim() !== "") {
                     brandCustomNamesMap[selectedUrl] = customNameInput.value.trim();
+                    saveBrandCustomNamesToDatabase();
                     customNameInput.value = "";
                 }
 
@@ -3877,11 +3897,13 @@
                     if(uploadedUrl) {
                         if (customNameInput && customNameInput.value.trim() !== "") {
                             brandCustomNamesMap[uploadedUrl] = customNameInput.value.trim();
+                            saveBrandCustomNamesToDatabase();
                             customNameInput.value = "";
                         }
 
                         editingCosBrandUrlsList.push(uploadedUrl);
                         renderBrandManagementFormInterface();
+                        populateExistingBrandsDropdown(); // Actualización inmediata en tiempo real
                     }
                 } catch(err) { console.error(err); }
                 hideLoadingOverlay();
