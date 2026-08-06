@@ -292,9 +292,9 @@ function openBeatstarEditionSelectionModal(lvl) {
     if (titleEl) titleEl.innerText = lvl.song || '';
     if (artistEl) artistEl.innerText = lvl.artist || '';
 
-    // Renderizar dificultades correspondientes dentro del modal
-    const stdDiffContainer = document.getElementById('modal-diff-std-container');
-    const dlxDiffContainer = document.getElementById('modal-diff-dlx-container');
+    // Renderizar tags de dificultad
+    const stdDiffContainer = document.getElementById('modal-opt-standard-diff-tag');
+    const dlxDiffContainer = document.getElementById('modal-opt-deluxe-diff-tag');
 
     if (stdDiffContainer) {
         const stdDiffVal = lvl.diff || 'Normal';
@@ -320,6 +320,7 @@ function openBeatstarEditionSelectionModal(lvl) {
         checkDlx?.classList.add('opacity-0');
     }
 
+    // Mostramos el modal SIN llamar a stopAllMedia() para preservar la música en bucle
     modal.classList.remove('hidden');
 }
 
