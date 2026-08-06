@@ -1400,7 +1400,7 @@
                     </div>
 
                     <div id="container-workspace-tapwave" class="hidden flex-col space-y-3 w-full">
-                        <!-- AVISO DISCORD TAPWAVE -->
+                        <!-- AVISO DISCORD TAPWAVE (ARRIBA) -->
                         <div id="tapwave-discord-notice-box" class="hidden w-full bg-[#11091c] border border-orange-500/40 rounded-2xl p-4 sm:p-5 flex-col sm:flex-row items-center justify-between gap-4 shadow-xl glow-orange">
                             <div class="text-center sm:text-left text-xs sm:text-sm font-semibold text-zinc-200 leading-relaxed" data-i18n="tapwaveDiscordNotice">
                                 Para poder usar este contenido es necesario unirse al servidor de Discord de TapWave.
@@ -1409,6 +1409,19 @@
                                 <span data-i18n="tapwaveJoinPrefix">Unirse a</span>
                                 <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-4 w-auto object-contain">
                             </a>
+                        </div>
+
+                        <!-- TITULAR TAPWAVE SKINS Y BOTONES (ABAJO DEL AVISO) -->
+                        <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
+                            <div class="h-12 max-w-[50%] sm:max-w-[340px] flex-grow sm:flex-initial flex items-center">
+                                <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full w-full sm:w-auto object-contain object-left scale-110 sm:scale-110 origin-left">
+                            </div>
+                            <div class="flex items-center gap-3 shrink-0">
+                                <div class="text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400 hidden sm:block"><span id="counter-tapwave">Total: 0 Skins</span></div>
+                                <button id="btn-toggle-to-beatstar" class="px-3 py-1.5 bg-zinc-900 border border-fuchsia-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
+                                    <span data-i18n="jumpToTxt">Ir a</span> <img src="BeatstarWhiteLogo.png" class="h-3 w-auto object-contain">
+                                </button>
+                            </div>
                         </div>
 
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
