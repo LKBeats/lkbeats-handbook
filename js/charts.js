@@ -16,7 +16,6 @@ export function initChartsModule(state) {
         hideLoadingOverlay,
         stopAllMedia,
         triggerDownloadAlert,
-        openBeatstarEditionSelectionModal,
         formatStringToDMY,
         renderVideoPlayerMarkup,
         setupNativeVideoBehavior,
@@ -43,6 +42,7 @@ export function initChartsModule(state) {
 
     let pendingExplicitActivationChartId = null;
 
+    // --- CONSTRUCCIÓN DEL SELECTOR DE GÉNEROS ---
     function buildGenresSelector() {
         const container = document.getElementById('genres-container');
         if (!container) return;
@@ -64,6 +64,7 @@ export function initChartsModule(state) {
         });
     }
 
+    // --- REINICIAR FORMULARIO DE CHARTS ---
     function resetLevelFormState() {
         const form = document.getElementById('level-form');
         if (form) form.reset();
@@ -122,6 +123,7 @@ export function initChartsModule(state) {
         buildGenresSelector();
     }
 
+    // --- HELPERS DE RENDERIZADO EN TABLA ---
     function renderGenresBadgesHtml(raw) {
         if (!raw) return '';
         const globalVisualAssets = getGlobalVisualAssets();
@@ -180,6 +182,7 @@ export function initChartsModule(state) {
         });
     }
 
+    // --- RENDERIZADO DE TABLA DE CHARTS ---
     function renderLevelsTable() {
         const tbody = document.getElementById('levels-tbody');
         if (!tbody) return; 
@@ -420,12 +423,6 @@ export function initChartsModule(state) {
                 </td>
             `;
 
-            // Evento Clic en Arte (para cambiar edición si tiene ambas)
-            if (isDual) {
-                const artBox = tr.querySelector('.target-art-outer-container');
-                artBox?.addEventListener('click', () => openBeatstarEditionSelectionModal(lvl));
-            }
-
             const explicitBtn = tr.querySelector('.btn-toggle-explicit-trigger');
             explicitBtn?.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -581,31 +578,202 @@ export function initChartsModule(state) {
         tbody.appendChild(fragment);
     }
 
-    // Listener para campos del formulario según modo de edición elegido
-    document.getElementById('lvlEditionMode')?.addEventListener('change', (e) => {
-        const val = e.target.value;
-        const sectionDeluxe = document.getElementById('section-deluxe-fields');
-        const subSectionExplicitDeluxe = document.getElementById('sub-section-explicit-deluxe');
+    // --- ESCUCHADORES Y SUBMIT DEL FORMULARIO ---
+    document.getElementById('btn-cancel-lvl-form')?.addEventListener('click', resetLevelFormState);
 
-        if (val === 'Both' || val === 'Deluxe') {
-            sectionDeluxe?.classList.remove('hidden');
-            subSectionExplicitDeluxe?.classList.remove('hidden');
-        } else {
-            sectionDeluxe?.classList.add('hidden');
-            subSectionExplicitDeluxe?.classList.add('hidden');
-        }
+    document.getElementById('btn-remove-lvl-audio')?.addEventListener('click', () => { levelAudioToRemove = true; document.getElementById('current-lvl-audio-badge')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-audio')?.classList.add('hidden'); });
+    document.getElementById('btn-remove-lvl-video')?.addEventListener('click', () => { levelVideoToRemove = true; document.getElementById('current-lvl-video-badge')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-video')?.classList.add('hidden'); });
+    document.getElementById('btn-remove-chart-zip')?.addEventListener('click', () => { levelZipToRemove = true; document.getElementById('current-chart-zip-badge')?.classList.add('hidden'); document.getElementById('btn-remove-chart-zip')?.classList.add('hidden'); });
+
+    document.getElementById('btn-remove-lvl-video-deluxe')?.addEventListener('click', () => { levelVideoDeluxeToRemove = true; document.getElementById('current-lvl-video-deluxe-badge')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-video-deluxe')?.classList.add('hidden'); });
+    document.getElementById('btn-remove-chart-deluxe-zip')?.addEventListener('click', () => { levelZipDeluxeToRemove = true; document.getElementById('current-chart-deluxe-zip-badge')?.classList.add('hidden'); document.getElementById('btn-remove-chart-deluxe-zip')?.classList.add('hidden'); });
+
+    document.getElementById('btn-remove-lvl-audio-explicit')?.addEventListener('click', () => { levelAudioExplicitToRemove = true; document.getElementById('badge-lvl-audio-explicit')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-audio-explicit')?.classList.add('hidden'); });
+    document.getElementById('btn-remove-lvl-video-explicit')?.addEventListener('click', () => { levelVideoExplicitToRemove = true; document.getElementById('badge-lvl-video-explicit')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-video-explicit')?.classList.add('hidden'); });
+    document.getElementById('btn-remove-lvl-zip-explicit')?.addEventListener('click', () => { levelZipExplicitToRemove = true; document.getElementById('badge-lvl-zip-explicit')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-zip-explicit')?.classList.add('hidden'); });
+
+    document.getElementById('btn-remove-lvl-video-dlx-explicit')?.addEventListener('click', () => { levelVideoDeluxeExplicitToRemove = true; document.getElementById('badge-lvl-video-dlx-explicit')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-video-dlx-explicit')?.classList.add('hidden'); });
+    document.getElementById('btn-remove-lvl-zip-dlx-explicit')?.addEventListener('click', () => { levelZipDeluxeExplicitToRemove = true; document.getElementById('badge-lvl-zip-dlx-explicit')?.classList.add('hidden'); document.getElementById('btn-remove-lvl-zip-dlx-explicit')?.classList.add('hidden'); });
+
+    document.getElementById('btn-delete-lvl-art-preview')?.addEventListener('click', () => {
+        requestUserDeleteConfirmation(() => {
+            levelArtToRemove = true;
+            document.getElementById('lvlArtPreviewBox')?.classList.add('hidden');
+            const fileIn = document.getElementById('lvlArtFile');
+            if (fileIn) fileIn.value = "";
+        });
     });
 
-    document.getElementById('lvlHasExplicit')?.addEventListener('change', (e) => {
-        const sectionExplicit = document.getElementById('section-explicit-fields');
-        if (e.target.checked) sectionExplicit?.classList.remove('hidden');
-        else sectionExplicit?.classList.add('hidden');
+    document.getElementById('level-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        showLoadingOverlay();
+
+        try {
+            const checked = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
+            let id = document.getElementById('editingLvlId').value.trim() || Date.now().toString();
+            
+            const levels = getLevels();
+            let existingLvl = levels.find(l => l.id === id);
+
+            let finalArtUrl = levelArtToRemove ? "free_song_Image.png" : (existingLvl?.art || "free_song_Image.png");
+            let finalAudioUrl = levelAudioToRemove ? "" : (existingLvl?.audioDirectUrl || "");
+            let finalVideoUrl = levelVideoToRemove ? "" : (existingLvl?.video || "");
+            let finalVideoDeluxeUrl = levelVideoDeluxeToRemove ? "" : (existingLvl?.videoDeluxe || "");
+            let finalChartDirectUrl = levelZipToRemove ? "" : (existingLvl?.chartDirectUrl || "");
+            let finalChartDirectUrlDeluxe = levelZipDeluxeToRemove ? "" : (existingLvl?.chartDirectUrlDeluxe || "");
+
+            let finalAudioExplicit = levelAudioExplicitToRemove ? "" : (existingLvl?.audioExplicit || "");
+            let finalVideoExplicit = levelVideoExplicitToRemove ? "" : (existingLvl?.videoExplicit || "");
+            let finalVideoDeluxeExplicit = levelVideoDeluxeExplicitToRemove ? "" : (existingLvl?.videoDeluxeExplicit || "");
+            let finalZipExplicit = levelZipExplicitToRemove ? "" : (existingLvl?.zipExplicit || "");
+            let finalZipDeluxeExplicit = levelZipDeluxeExplicitToRemove ? "" : (existingLvl?.zipDeluxeExplicit || "");
+
+            const artFileInput = document.getElementById('lvlArtFile');
+            if (artFileInput && artFileInput.files && artFileInput.files[0]) {
+                const uploadedArt = await uploadFileToCloudflareR2(artFileInput.files[0], 'charts_art');
+                if (uploadedArt) finalArtUrl = uploadedArt;
+            }
+
+            const audioFileInput = document.getElementById('lvlAudioFile');
+            if (audioFileInput && audioFileInput.files && audioFileInput.files[0]) {
+                const uploadedAudio = await uploadFileToCloudflareR2(audioFileInput.files[0], 'audio');
+                if (uploadedAudio) finalAudioUrl = uploadedAudio;
+            }
+
+            const videoFileInput = document.getElementById('lvlVideoFile');
+            if (videoFileInput && videoFileInput.files && videoFileInput.files[0]) {
+                const uploadedVideo = await uploadFileToCloudflareR2(videoFileInput.files[0], 'prevchart');
+                if (uploadedVideo) finalVideoUrl = uploadedVideo;
+            }
+
+            const videoDeluxeFileInput = document.getElementById('lvlVideoFileDeluxe');
+            if (videoDeluxeFileInput && videoDeluxeFileInput.files && videoDeluxeFileInput.files[0]) {
+                const uploadedVideoDeluxe = await uploadFileToCloudflareR2(videoDeluxeFileInput.files[0], 'prevchart');
+                if (uploadedVideoDeluxe) finalVideoDeluxeUrl = uploadedVideoDeluxe;
+            }
+
+            const chartFileInput = document.getElementById('lvlChartZipFile');
+            if (chartFileInput && chartFileInput.files && chartFileInput.files[0]) {
+                const uploadedZip = await uploadFileToCloudflareR2(chartFileInput.files[0], 'charts_zip');
+                if (uploadedZip) finalChartDirectUrl = uploadedZip;
+            }
+
+            const chartDeluxeFileInput = document.getElementById('lvlChartZipFileDeluxe');
+            if (chartDeluxeFileInput && chartDeluxeFileInput.files && chartDeluxeFileInput.files[0]) {
+                const uploadedZipDeluxe = await uploadFileToCloudflareR2(chartDeluxeFileInput.files[0], 'charts_zip');
+                if (uploadedZipDeluxe) finalChartDirectUrlDeluxe = uploadedZipDeluxe;
+            }
+
+            const hasExplicit = document.getElementById('lvlHasExplicit')?.checked || false;
+            if (hasExplicit) {
+                const audioExpIn = document.getElementById('lvlAudioFileExplicit');
+                if (audioExpIn && audioExpIn.files && audioExpIn.files[0]) {
+                    const uploadedAudioExp = await uploadFileToCloudflareR2(audioExpIn.files[0], 'audio');
+                    if (uploadedAudioExp) finalAudioExplicit = uploadedAudioExp;
+                }
+
+                const vidExpIn = document.getElementById('lvlVideoFileExplicit');
+                if (vidExpIn && vidExpIn.files && vidExpIn.files[0]) {
+                    const uploadedVidExp = await uploadFileToCloudflareR2(vidExpIn.files[0], 'prevchart');
+                    if (uploadedVidExp) finalVideoExplicit = uploadedVidExp;
+                }
+
+                const vidDlxExpIn = document.getElementById('lvlVideoFileDeluxeExplicit');
+                if (vidDlxExpIn && vidDlxExpIn.files && vidDlxExpIn.files[0]) {
+                    const uploadedVidDlxExp = await uploadFileToCloudflareR2(vidDlxExpIn.files[0], 'prevchart');
+                    if (uploadedVidDlxExp) finalVideoDeluxeExplicit = uploadedVidDlxExp;
+                }
+
+                const zipExpIn = document.getElementById('lvlChartZipFileExplicit');
+                if (zipExpIn && zipExpIn.files && zipExpIn.files[0]) {
+                    const uploadedZipExp = await uploadFileToCloudflareR2(zipExpIn.files[0], 'charts_zip');
+                    if (uploadedZipExp) finalZipExplicit = uploadedZipExp;
+                }
+
+                const zipDlxExpIn = document.getElementById('lvlChartZipFileDeluxeExplicit');
+                if (zipDlxExpIn && zipDlxExpIn.files && zipDlxExpIn.files[0]) {
+                    const uploadedZipDlxExp = await uploadFileToCloudflareR2(zipDlxExpIn.files[0], 'charts_zip');
+                    if (uploadedZipDlxExp) finalZipDeluxeExplicit = uploadedZipDlxExp;
+                }
+            }
+
+            const selectedEditionMode = document.getElementById('lvlEditionMode')?.value || 'Standard';
+            const isExclusive = document.getElementById('lvlIsExclusive')?.checked || false;
+
+            const data = {
+                id: id, 
+                song: (document.getElementById('lvlSong')?.value || '').trim(), 
+                artist: (document.getElementById('lvlArtist')?.value || '').trim(),
+                art: finalArtUrl, 
+                genre: checked.join(' / ') || 'General', 
+                
+                editionMode: selectedEditionMode,
+                edition: (selectedEditionMode === 'Deluxe') ? 'Deluxe' : 'Standard',
+
+                audioDirectUrl: finalAudioUrl, 
+
+                diff: document.getElementById('lvlDiff')?.value || 'Normal',
+                notes: (document.getElementById('lvlNotes')?.value || '').trim(),
+                duration: (document.getElementById('lvlDuration')?.value || '').trim(),
+                date: document.getElementById('lvlDate')?.value || '',
+                video: finalVideoUrl,
+                chartDirectUrl: finalChartDirectUrl,
+                dl1: (document.getElementById('lvlDl1')?.value || '').trim(), 
+                dl2: (document.getElementById('lvlDl2')?.value || '').trim(), 
+                dl3: (document.getElementById('lvlDl3')?.value || '').trim(),
+
+                diffDeluxe: document.getElementById('lvlDiffDeluxe')?.value || 'Extreme',
+                notesDeluxe: (document.getElementById('lvlNotesDeluxe')?.value || '').trim(),
+                durationDeluxe: (document.getElementById('lvlDurationDeluxe')?.value || '').trim(),
+                dateDeluxe: document.getElementById('lvlDateDeluxe')?.value || '',
+                videoDeluxe: finalVideoDeluxeUrl,
+                chartDirectUrlDeluxe: finalChartDirectUrlDeluxe,
+                dl1Deluxe: (document.getElementById('lvlDl1Deluxe')?.value || '').trim(),
+                dl2Deluxe: (document.getElementById('lvlDl2Deluxe')?.value || '').trim(),
+                dl3Deluxe: (document.getElementById('lvlDl3Deluxe')?.value || '').trim(),
+
+                hasExplicit: hasExplicit,
+                audioExplicit: finalAudioExplicit,
+                notesExplicit: (document.getElementById('lvlNotesExplicit')?.value || '').trim(),
+                durationExplicit: (document.getElementById('lvlDurationExplicit')?.value || '').trim(),
+                dateExplicit: document.getElementById('lvlDateExplicit')?.value || '',
+                videoExplicit: finalVideoExplicit,
+                zipExplicit: finalZipExplicit,
+                dl1Explicit: (document.getElementById('lvlDl1Explicit')?.value || '').trim(),
+                dl2Explicit: (document.getElementById('lvlDl2Explicit')?.value || '').trim(),
+                dl3Explicit: (document.getElementById('lvlDl3Explicit')?.value || '').trim(),
+
+                notesDeluxeExplicit: (document.getElementById('lvlNotesDeluxeExplicit')?.value || '').trim(),
+                durationDeluxeExplicit: (document.getElementById('lvlDurationDeluxeExplicit')?.value || '').trim(),
+                dateDeluxeExplicit: document.getElementById('lvlDateDeluxeExplicit')?.value || '',
+                videoDeluxeExplicit: finalVideoDeluxeExplicit,
+                zipDeluxeExplicit: finalZipDeluxeExplicit,
+                dl1DeluxeExplicit: (document.getElementById('lvlDl1DeluxeExplicit')?.value || '').trim(),
+                dl2DeluxeExplicit: (document.getElementById('lvlDl2DeluxeExplicit')?.value || '').trim(),
+                dl3DeluxeExplicit: (document.getElementById('lvlDl3DeluxeExplicit')?.value || '').trim(),
+
+                isExclusive: isExclusive
+            };
+
+            if (db) {
+                await set(ref(db, 'levels/' + id), data);
+                await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
+                resetLevelFormState();
+            }
+        } catch(err) {
+            console.error("Error al guardar chart en Firebase:", err);
+            alert("Ocurrió un error al guardar el registro. Revisa la consola.");
+        } finally {
+            hideLoadingOverlay();
+        }
     });
 
     return {
         buildGenresSelector,
         resetLevelFormState,
         renderLevelsTable,
+        renderDifficultyTagMarkup,
+        openBeatstarEditionSelectionModal, // <--- Agregar esta línea aquí
         getPendingExplicitActivationChartId: () => pendingExplicitActivationChartId,
         setPendingExplicitActivationChartId: (val) => { pendingExplicitActivationChartId = val; },
         setLvlGenreFilter: (val) => { activeLvlGenreFilter = val; },
