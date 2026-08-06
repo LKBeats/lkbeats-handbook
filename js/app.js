@@ -661,7 +661,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. Idioma
     document.getElementById('btn-lang-toggle')?.addEventListener('click', () => {
-        stopAllMedia();
+        stopAllMedia(); // <--- Detiene audios/videos antes de reconstruir las tablas
         currentLanguage = currentLanguage === 'es' ? 'en' : 'es';
         localStorage.setItem('nexus_lang', currentLanguage);
         applyLanguagePack();
@@ -707,6 +707,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 6. Modal Sin Censura (Explicit)
     document.getElementById('btn-confirm-explicit')?.addEventListener('click', () => {
+        stopAllMedia(); // <--- Detiene cualquier audio/video que estuviera corriendo
         const pendingId = chartsModule.getPendingExplicitActivationChartId();
         if (pendingId) {
             activeChartExplicitStates[pendingId] = true;
