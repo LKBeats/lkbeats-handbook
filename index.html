@@ -797,7 +797,7 @@
             <div id="footer-links-management-box" class="hidden bg-[#11091c] border border-orange-500/30 rounded-2xl p-6 shadow-xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-yellow-500"></div>
                 <h2 class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="footerMenuTitle">Links del Menú Inferior</h2>
-                <form id="footer-links-form" autocomplete="off" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs mb-4">
+                <form id="footer-links-form" autocomplete="off" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs mb-4">
                     <div class="space-y-1">
                         <div class="flex justify-between items-center">
                             <label class="font-bold text-zinc-400 uppercase tracking-wider">Beatclone URL</label>
@@ -818,6 +818,13 @@
                             <button type="button" class="btn-clear-footer-link text-red-400 hover:text-red-300 font-bold text-[10px]" data-link-target="Beatcharts" data-i18n="btnDelete">Eliminar</button>
                         </div>
                         <input type="url" id="setupUrlBeatcharts" placeholder="https://..." class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 rounded-lg text-zinc-100">
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center">
+                            <label class="font-bold text-orange-400 uppercase tracking-wider">TapWave Discord URL</label>
+                            <button type="button" class="btn-clear-footer-link text-red-400 hover:text-red-300 font-bold text-[10px]" data-link-target="Tapwave" data-i18n="btnDelete">Eliminar</button>
+                        </div>
+                        <input type="url" id="setupUrlTapwave" placeholder="https://discord.gg/..." class="w-full bg-[#05020a] border border-orange-950 p-2.5 rounded-lg text-zinc-100">
                     </div>
                 </form>
                 <button type="button" id="btn-save-footer-links" class="w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-black uppercase rounded-lg text-xs tracking-wider transition hover:opacity-90">
@@ -1385,6 +1392,17 @@
                     </div>
 
                     <div id="container-workspace-tapwave" class="hidden flex-col space-y-3 w-full">
+                        <!-- AVISO DISCORD TAPWAVE -->
+                        <div id="tapwave-discord-notice-box" class="hidden w-full bg-[#11091c] border border-orange-500/40 rounded-2xl p-4 sm:p-5 flex-col sm:flex-row items-center justify-between gap-4 shadow-xl glow-orange">
+                            <div class="text-center sm:text-left text-xs sm:text-sm font-semibold text-zinc-200 leading-relaxed" data-i18n="tapwaveDiscordNotice">
+                                Para poder usar este contenido es necesario unirse al servidor de Discord de TapWave.
+                            </div>
+                            <a id="btn-join-tapwave-discord" href="#" target="_blank" class="shrink-0 px-4 py-2.5 bg-orange-600 hover:bg-orange-500 text-black font-black rounded-xl text-xs uppercase tracking-wider shadow-lg transition flex items-center gap-2">
+                                <span data-i18n="tapwaveJoinPrefix">Unirse a</span>
+                                <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-4 w-auto object-contain">
+                            </a>
+                        </div>
+
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
                             <div class="h-12 max-w-[50%] sm:max-w-[340px] flex-grow sm:flex-initial flex items-center">
                                 <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full w-full sm:w-auto object-contain object-left scale-110 sm:scale-110 origin-left">
@@ -1603,7 +1621,9 @@
                 formUploadZipStd: "Standard ZIP (.zip)",
                 optStandard: "Standard",
                 optDeluxe: "Deluxe",
-                optBoth: "Standard + Deluxe"
+                optBoth: "Standard + Deluxe",
+                tapwaveDiscordNotice: "Para poder usar este contenido es necesario unirse al servidor de Discord de TapWave.",
+                tapwaveJoinPrefix: "Unirse a"
             },
             en: {
                 tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -1691,7 +1711,9 @@
                 formUploadZipStd: "Standard ZIP (.zip)",
                 optStandard: "Standard",
                 optDeluxe: "Deluxe",
-                optBoth: "Standard + Deluxe"
+                optBoth: "Standard + Deluxe",
+                tapwaveDiscordNotice: "To use this content, you must join the TapWave Discord server.",
+                tapwaveJoinPrefix: "Join"
             }
         };
 
@@ -1700,7 +1722,7 @@
         let currentViewName = 'home';
         let levels = [];
         let cosmetics = [];
-        let globalFooterLinks = { beatclone: '', bscm: '', beatcharts: '' };
+        let globalFooterLinks = { beatclone: '', bscm: '', beatcharts: '', tapwave: '' };
         let currentSelectedSkinSubPlatform = 'Beatstar'; 
         let globalVisualAssets = {}; 
         let globalThanksVideos = [];
@@ -2203,6 +2225,7 @@
                     if(document.getElementById('setupUrlBeatclone')) document.getElementById('setupUrlBeatclone').value = globalFooterLinks.beatclone || '';
                     if(document.getElementById('setupUrlBscm')) document.getElementById('setupUrlBscm').value = globalFooterLinks.bscm || '';
                     if(document.getElementById('setupUrlBeatcharts')) document.getElementById('setupUrlBeatcharts').value = globalFooterLinks.beatcharts || '';
+                    if(document.getElementById('setupUrlTapwave')) document.getElementById('setupUrlTapwave').value = globalFooterLinks.tapwave || '';
                     if(document.getElementById('download-modal-btn-beatclone')) document.getElementById('download-modal-btn-beatclone').href = globalFooterLinks.beatclone || '#';
                 } 
             });
@@ -4274,7 +4297,8 @@ document.getElementById('cosmetic-form').addEventListener('submit', async (e) =>
             const data = {
                 beatclone: document.getElementById('setupUrlBeatclone').value.trim(),
                 bscm: document.getElementById('setupUrlBscm').value.trim(),
-                beatcharts: document.getElementById('setupUrlBeatcharts').value.trim()
+                beatcharts: document.getElementById('setupUrlBeatcharts').value.trim(),
+                tapwave: document.getElementById('setupUrlTapwave').value.trim()
             };
             if(db) {
                 showLoadingOverlay();
@@ -4286,6 +4310,19 @@ document.getElementById('cosmetic-form').addEventListener('submit', async (e) =>
             const aB = document.getElementById('footer-link-beatclone'); if(aB) aB.href = globalFooterLinks.beatclone || '#';
             const aS = document.getElementById('footer-link-bscm'); if(aS) aS.href = globalFooterLinks.bscm || '#';
             const aC = document.getElementById('footer-link-beatcharts'); if(aC) aC.href = globalFooterLinks.beatcharts || '#';
+
+            const tapNoticeBox = document.getElementById('tapwave-discord-notice-box');
+            const tapJoinBtn = document.getElementById('btn-join-tapwave-discord');
+            if (tapNoticeBox && tapJoinBtn) {
+                if (globalFooterLinks.tapwave && globalFooterLinks.tapwave.trim() !== "") {
+                    tapJoinBtn.href = globalFooterLinks.tapwave.trim();
+                    tapNoticeBox.classList.remove('hidden');
+                    tapNoticeBox.classList.add('flex');
+                } else {
+                    tapNoticeBox.classList.add('hidden');
+                    tapNoticeBox.classList.remove('flex');
+                }
+            }
         }
 
         function updateDashboardCounts() {
