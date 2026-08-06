@@ -645,34 +645,6 @@
         </div>
     </header>
 
-<!-- BANNER SUPERIOR DE NOTIFICACIONES DINÁMICAS -->
-    <div id="top-notification-banner" class="hidden w-full bg-[#11091c]/95 border-b border-fuchsia-500/40 py-2.5 px-4 backdrop-blur-md relative z-40 transition-all duration-300">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
-            <!-- Contenido principal de la notificación -->
-            <div class="flex items-center gap-3.5 overflow-hidden">
-                <!-- Imagen (Arte para Chart / Icono para Skin) -->
-                <div class="relative w-11 h-11 shrink-0 rounded-lg overflow-hidden border border-fuchsia-500/40 bg-black shadow-md">
-                    <img id="notif-img" src="" alt="Notificación" class="w-full h-full object-cover">
-                </div>
-                
-                <!-- Texto de la notificación -->
-                <div class="flex flex-col justify-center min-w-0">
-                    <span id="notif-type-label" class="text-[11px] font-black uppercase tracking-wider text-fuchsia-400"></span>
-                    <div class="truncate text-xs sm:text-sm font-bold text-white">
-                        <span id="notif-primary-text" class="font-black"></span> 
-                        <span id="notif-secondary-text" class="text-zinc-400 font-medium"></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Botón de eliminación (Exclusivo Menú de Creador) -->
-            <button id="btn-delete-active-notif" class="hidden shrink-0 px-2.5 py-1 bg-red-950/60 border border-red-800/60 text-red-400 hover:bg-red-900 hover:text-white rounded-lg text-[10px] font-black uppercase transition flex items-center gap-1.5">
-                <i class="fa-solid fa-trash-can"></i>
-                <span data-i18n="btnDelete">Eliminar</span>
-            </button>
-        </div>
-    </div>
-
     <main class="flex-grow flex flex-col relative">
         
         <!-- ================= VIEW 1: HOME ================= -->
@@ -1748,10 +1720,6 @@
             }
         };
 
-        let notificationList = [];
-        let activeNotifIndex = 0;
-        let notifRotationInterval = null;
-        const NOTIF_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // Límite de 7 días (en ms);
         let isCreatorMode = false;
         let currentLanguage = localStorage.getItem('nexus_lang') || 'es';
         let currentViewName = 'home';
@@ -1893,14 +1861,6 @@
             const shortcuts = document.getElementById('nav-shortcuts');
             const sep = document.getElementById('nav-separator');
             const footerBoogieBox = document.getElementById('footer-boogie-admin-box');
-
-            if (viewName === 'home') {
-                processAndRenderNotifications();
-            } else {
-                const banner = document.getElementById('top-notification-banner');
-            if (banner) banner.classList.add('hidden');
-            }
-        }
 
             if (view === 'home') { 
                 shortcuts?.classList.add('hidden'); 
@@ -2227,14 +2187,6 @@
 
             showLoadingOverlay();
 
-            onValue(ref(db, 'notifications'), (snap) => {
-                notificationList = snap.val() ? Object.values(snap.val()) : [];
-    
-           // Procesa las notificaciones cada vez que cambien en Firebase
-                if (typeof processAndRenderNotifications === 'function') {
-                 processAndRenderNotifications();
-             }
-});
             onValue(ref(db, 'levels'), (snap) => { 
                 levels = snap.val() ? Object.values(snap.val()) : []; 
                 renderLevelsTable(); 
@@ -2248,113 +2200,6 @@
                 populateExistingBrandsDropdown(); // Actualiza las marcas disponibles en el selector
                 hideLoadingOverlay();
             });
-
-            // REGISTRAR NOTIFICACIÓN AL CREAR/PUBLICAR
-            function registerItemNotification(item, type) {
-                if (!db) return;
-
-            // Verificar si el elemento cuenta con archivo ZIP adjunto de descarga
-                let hasZip = false;
-                if (type === 'chart') {
-                hasZip = !!(item.chartDirectUrl || item.chartDirectUrlDeluxe || item.zipExplicit || item.zipDeluxeExplicit);
-            } else if (type === 'skin') {
-                hasZip = !!item.skinDirectUrl;
-          }
-
-    // Definir la etiqueta según la presencia de archivo ZIP
-    let titleType = "";
-    if (type === 'chart') {
-        titleType = hasZip ? "Chart disponible:" : "Nuevo chart:";
-    } else {
-        titleType = hasZip ? "Skin disponible:" : "Nueva skin:";
-    }
-
-    const notifData = {
-        id: item.id,
-        itemType: type, // 'chart' o 'skin'
-        titleType: titleType,
-        img: type === 'chart' ? (item.art || 'free_song_Image.png') : (item.icon || 'BoxSprite_MerchSkin2.png'),
-        primaryText: type === 'chart' ? item.song : item.name,
-        secondaryText: ` - ${item.artist}`,
-        createdAt: Date.now()
-    };
-
-    // Guarda o reemplaza la notificación usando el ID del ítem
-    set(ref(db, `notifications/${item.id}`), notifData);
-}
-
-function processAndRenderNotifications() {
-    if (notifRotationInterval) {
-        clearInterval(notifRotationInterval);
-        notifRotationInterval = null;
-    }
-
-    const banner = document.getElementById('top-notification-banner');
-    if (!banner) return;
-
-    // Solo se muestra en la página/vista de inicio (Home)
-    if (currentViewName !== 'home') {
-        banner.classList.add('hidden');
-        return;
-    }
-
-    const now = Date.now();
-    
-    // Filtrar notificaciones con antigüedad menor o igual a 7 días
-    const validNotifs = notificationList.filter(n => n && (now - n.createdAt) <= NOTIF_MAX_AGE_MS);
-
-    if (validNotifs.length === 0) {
-        banner.classList.add('hidden');
-        return;
-    }
-
-    // Alternar notificaciones entre Charts y Skins si existen ambos
-    const chartNotifs = validNotifs.filter(n => n.itemType === 'chart');
-    const skinNotifs = validNotifs.filter(n => n.itemType === 'skin');
-    let displaySequence = [];
-
-    if (chartNotifs.length > 0 && skinNotifs.length > 0) {
-        const maxLen = Math.max(chartNotifs.length, skinNotifs.length);
-        for (let i = 0; i < maxLen; i++) {
-            if (chartNotifs[i]) displaySequence.push(chartNotifs[i]);
-            if (skinNotifs[i]) displaySequence.push(skinNotifs[i]);
-        }
-    } else {
-        displaySequence = validNotifs;
-    }
-
-    activeNotifIndex = 0;
-    renderSingleNotification(displaySequence[activeNotifIndex]);
-    banner.classList.remove('hidden');
-
-    // Rotación automática cada 15 segundos
-    if (displaySequence.length > 1) {
-        notifRotationInterval = setInterval(() => {
-            activeNotifIndex = (activeNotifIndex + 1) % displaySequence.length;
-            renderSingleNotification(displaySequence[activeNotifIndex]);
-        }, 15000);
-    }
-}
-
-function renderSingleNotification(notif) {
-    if (!notif) return;
-
-    document.getElementById('notif-img').src = notif.img;
-    document.getElementById('notif-type-label').innerText = notif.titleType;
-    document.getElementById('notif-primary-text').innerText = notif.primaryText;
-    document.getElementById('notif-secondary-text').innerText = notif.secondaryText;
-
-    const btnDelete = document.getElementById('btn-delete-active-notif');
-    if (btnDelete) {
-        // Mostrar botón de borrar solo en Modo Creador
-        btnDelete.classList.toggle('hidden', !isCreatorMode);
-        btnDelete.onclick = () => {
-            if (db) {
-                remove(ref(db, `notifications/${notif.id}`));
-            }
-        };
-    }
-}
             onValue(ref(db, 'brand_custom_names'), (snap) => {
     const rawData = snap.val() || {};
     brandCustomNamesMap = {};
