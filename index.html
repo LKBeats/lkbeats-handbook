@@ -82,17 +82,17 @@
                 <div class="text-xs font-black uppercase tracking-widest text-zinc-400 text-center md:text-left mb-3" data-i18n="selectEditionPrompt">EDITIONS</div>
                 <div class="space-y-3 w-full">
                     <button id="modal-opt-standard" type="button" class="w-full p-3.5 rounded-2xl border-2 border-zinc-800 bg-zinc-950/80 hover:border-fuchsia-500 transition flex items-center justify-between group">
-                        <div class="text-left">
-                            <div class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Standard</div>
-                            <div id="modal-opt-standard-diff-tag" class="mt-1"></div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Standard</span>
+                            <div id="modal-diff-std-container"></div>
                         </div>
                         <i id="modal-check-standard" class="fa-solid fa-circle-check text-fuchsia-400 text-lg opacity-0 transition-opacity"></i>
                     </button>
 
                     <button id="modal-opt-deluxe" type="button" class="w-full p-3.5 rounded-2xl border-2 border-yellow-500/40 bg-zinc-950/80 hover:border-yellow-400 transition flex items-center justify-between group glow-gold">
-                        <div class="text-left">
-                            <div class="text-xs sm:text-sm font-black text-yellow-400 uppercase tracking-wider">Deluxe</div>
-                            <div id="modal-opt-deluxe-diff-tag" class="mt-1"></div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs sm:text-sm font-black text-yellow-400 uppercase tracking-wider">Deluxe</span>
+                            <div id="modal-diff-dlx-container"></div>
                         </div>
                         <i id="modal-check-deluxe" class="fa-solid fa-circle-check text-yellow-400 text-lg opacity-0 transition-opacity"></i>
                     </button>
