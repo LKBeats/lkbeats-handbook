@@ -438,6 +438,11 @@
                 margin-bottom: 1.5rem !important;
                 text-align: center !important;
             }
+
+            /* Forzar visibilidad del botón de creador solo en PC */
+            #footer-boogie-admin-box {
+                display: flex !important;
+            }
         }
     </style>
 </head>
@@ -1440,7 +1445,7 @@
     <!-- FOOTER -->
     <footer class="border-t border-fuchsia-950/20 bg-[#05020a] py-6 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div id="footer-boogie-admin-box" class="hidden md:flex items-center">
+            <div id="footer-boogie-admin-box" class="hidden md:flex items-center z-10">
                 <button id="btn-boogie-admin-trigger" class="p-2.5 bg-zinc-950/40 hover:bg-zinc-900/80 border border-zinc-800/60 rounded-full text-zinc-400 hover:text-white transition shadow-xl flex items-center justify-center opacity-70 hover:opacity-100" title="Acceso Creador">
                     <i class="fa-solid fa-wrench text-sm"></i>
                 </button>
