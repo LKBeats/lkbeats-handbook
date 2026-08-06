@@ -1,0 +1,401 @@
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #05020a; }
+::-webkit-scrollbar-thumb { background: #d946ef; border-radius: 3px; }
+
+/* Animación y estilos para la imagen de fondo giratoria */
+@keyframes spin-clockwise {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+.bg-spinning-swirl {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 120vmax;
+    height: 120vmax;
+    object-fit: contain;
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 0;
+    animation: spin-clockwise 50s linear infinite;
+}
+.glow-orange { box-shadow: 0 0 20px rgba(249, 115, 22, 0.2); }
+.glow-fuchsia { box-shadow: 0 0 20px rgba(217, 70, 239, 0.2); }
+.glow-gold { box-shadow: 0 0 10px rgba(250, 204, 21, 0.25); border-color: rgba(250, 204, 21, 0.5) !important; }
+.glow-red { box-shadow: 0 0 15px rgba(239, 68, 68, 0.8); border-color: #ef4444 !important; background-color: #ef4444 !important; color: #000000 !important; }
+.glow-green { box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); border-color: #10b981 !important; color: #10b981 !important; }
+
+.force-white-icon { filter: brightness(0) invert(1); object-fit: contain; }
+.art-container-circular { border-radius: 50% !important; overflow: hidden; }
+
+#global-loading-overlay {
+    backdrop-filter: blur(8px);
+    transition: opacity 0.3s ease-in-out;
+}
+
+.dynamic-color-mask {
+    display: inline-block;
+    background-color: currentColor;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+}
+
+.art-beatstar-transform {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-radius 0.4s ease, box-shadow 0.4s ease;
+}
+.art-circle-shape {
+    border-radius: 50% !important;
+    transform: scale(1.08);
+}
+
+/* Modales ajustados para evitar cubrir toda la pantalla y espacio muerto */
+#beatstar-edition-modal > div,
+#download-custom-modal > div,
+#explicit-warning-modal > div,
+#thanks-custom-modal > div,
+#confirm-delete-modal > div,
+#boogie-auth-modal > div,
+#boogie-exit-modal > div {
+    max-height: 88vh !important;
+    overflow-y: auto !important;
+}
+
+/* Ajustes específicos para vista móvil horizontal (landscape) */
+@media (orientation: landscape) and (max-height: 600px) {
+    #footer-boogie-admin-box {
+        display: none !important;
+    }
+    #beatstar-edition-modal .bg-\[\#11091c\]\/95,
+    #download-custom-modal .bg-\[\#11091c\],
+    #explicit-warning-modal .bg-\[\#11091c\],
+    #thanks-custom-modal .bg-\[\#11091c\],
+    #confirm-delete-modal .bg-\[\#11091c\],
+    #boogie-auth-modal .bg-\[\#11091c\] {
+        max-height: 94vh !important;
+        overflow-y: auto !important;
+        padding: 0.75rem 1.25rem !important;
+        width: 95% !important;
+        max-width: 620px !important;
+    }
+
+    /* Fix 1: Modal Menú de Selección de Ediciones Optimizado */
+    #beatstar-edition-modal .bg-\[\#11091c\]\/95 {
+        gap: 1.25rem !important;
+        padding: 0.75rem 1.25rem !important;
+        max-width: 580px !important;
+    }
+    #beatstar-edition-modal .landscape-pc-edition-layout {
+        align-items: center !important;
+    }
+    #beatstar-edition-modal .landscape-shift-right {
+        transform: translateX(0) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 170px !important;
+    }
+
+    /* Imagen del arte agrandada y centrada */
+    #beatstar-edition-modal .relative.w-36.h-36 {
+        width: 6.8rem !important;
+        height: 6.8rem !important;
+        margin: 0 auto !important;
+    }
+
+    /* Tags de edición corregidos para no cortarse con el visualizador */
+    #modal-edition-deluxe-badge,
+    #modal-edition-standard-badge {
+        bottom: 0.25rem !important;
+        font-size: 7.5px !important;
+        padding: 0.1rem 0.4rem !important;
+    }
+
+    /* Nombre de la canción y artista desplazados hacia abajo y centrados */
+    #modal-edition-song-title {
+        font-size: 0.9rem !important;
+        margin-top: 0.6rem !important;
+        text-align: center !important;
+        width: 100% !important;
+        line-height: 1.1 !important;
+    }
+    #modal-edition-artist-title {
+        font-size: 0.7rem !important;
+        text-align: center !important;
+        width: 100% !important;
+        margin-top: 0.15rem !important;
+    }
+
+    /* Compactación de botones (Standard, Deluxe y Cerrar) */
+    #beatstar-edition-modal .space-y-3 {
+        margin-top: 0.25rem !important;
+    }
+    #beatstar-edition-modal .space-y-3 > button {
+        padding: 0.5rem 0.75rem !important;
+        border-radius: 0.85rem !important;
+    }
+    #modal-opt-standard-diff-tag,
+    #modal-opt-deluxe-diff-tag {
+        margin-top: 0.15rem !important;
+    }
+    #btn-close-beatstar-modal {
+        margin-top: 0.5rem !important;
+        padding-top: 0.45rem !important;
+        padding-bottom: 0.45rem !important;
+        font-size: 0.7rem !important;
+        border-radius: 0.75rem !important;
+    }
+
+    /* Fix 2: Modal de Video de Agradecimiento (Alineado y Botón X Agrandado) */
+    #thanks-custom-modal h4 {
+        font-size: 0.95rem !important;
+        margin-top: 0.25rem !important;
+        margin-bottom: 0.5rem !important;
+        text-align: center !important;
+        width: 100% !important;
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+    }
+    #thanks-custom-modal .aspect-video {
+        max-height: 68vh !important;
+        width: auto !important;
+        margin: 0 auto !important;
+    }
+    #thanks-custom-modal #thanks-modal-btn-close {
+        top: 0.65rem !important;
+        right: 0.75rem !important;
+        width: 2rem !important;
+        height: 2rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 1.25rem !important;
+        padding: 0 !important;
+    }
+    #thanks-custom-modal #thanks-modal-btn-close i {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+    }
+
+    /* Fix 3: Modal Aviso de Descarga (Texto Centrado y Botón X Agrandado) */
+    #download-custom-modal #download-modal-msg {
+        font-size: 0.75rem !important;
+        line-height: 1.25 !important;
+        margin-top: 0.25rem !important;
+        margin-bottom: 0.5rem !important;
+        text-align: center !important;
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+        width: 100% !important;
+    }
+    #download-custom-modal #download-modal-btn-close {
+        top: 0.65rem !important;
+        right: 0.75rem !important;
+        width: 2rem !important;
+        height: 2rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 1.25rem !important;
+        padding: 0 !important;
+    }
+    #download-custom-modal #download-modal-btn-close i {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+    }
+    #download-custom-modal .w-full.max-h-80 {
+        max-height: 48vh !important;
+        margin-bottom: 0.5rem !important;
+        padding: 0.25rem !important;
+    }
+    #download-custom-modal img {
+        max-height: 44vh !important;
+        object-fit: contain !important;
+    }
+    #download-custom-modal a, 
+    #download-custom-modal button {
+        padding-top: 0.4rem !important;
+        padding-bottom: 0.4rem !important;
+        font-size: 0.7rem !important;
+    }
+
+    #nav-shortcuts {
+        display: flex !important;
+    }
+    #nav-separator {
+        display: block !important;
+    }
+    .landscape-grid-cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+    .landscape-shift-right {
+        transform: translateX(0.75rem) !important;
+    }
+
+    /* Forzar comportamiento idéntico a la versión de PC en móvil horizontal */
+    .landscape-pc-table {
+        min-width: 700px !important;
+    }
+    .landscape-pc-flex-row {
+        flex-direction: row !important;
+    }
+    .landscape-pc-edition-layout {
+        flex-direction: row !important;
+    }
+    .landscape-pc-edition-layout .text-left {
+        text-align: left !important;
+    }
+
+    /* Visualizador de video de los charts */
+    #levels-tbody .custom-native-video-wrapper {
+        width: 220px !important;
+        max-width: 220px !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .pc-shift-right {
+        transform: translateX(0.75rem) !important;
+    }
+
+    /* --- 1. BOTONES DE CIERRE (X) Y POSICIONAMIENTO EN MODALES --- */
+    #download-custom-modal #download-modal-btn-close {
+        top: 1.25rem !important;
+        right: 1.25rem !important;
+        width: 2.25rem !important;
+        height: 2.25rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: rgba(39, 39, 42, 0.8) !important;
+        border: 1px solid rgba(113, 113, 122, 0.5) !important;
+        border-radius: 9999px !important;
+        color: #e4e4e7 !important;
+        font-size: 1.125rem !important;
+        line-height: 1 !important;
+        padding: 0 !important;
+        transition: all 0.2s ease !important;
+        z-index: 50 !important;
+    }
+
+    #download-custom-modal #download-modal-btn-close i {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+    }
+
+    #download-custom-modal #download-modal-btn-close:hover {
+        background-color: #d946ef !important;
+        border-color: #f5d0fe !important;
+        color: #ffffff !important;
+        transform: scale(1.1) !important;
+    }
+
+    #thanks-custom-modal #thanks-modal-btn-close {
+        top: 1.25rem !important;
+        right: 1.25rem !important;
+    }
+
+    /* --- 2. MODAL SELECCIÓN DE EDICIONES --- */
+    #beatstar-edition-modal > div {
+        max-width: 58rem !important;
+        padding: 2.5rem 3rem !important;
+        gap: 3rem !important;
+    }
+
+    #beatstar-edition-modal .relative.w-36.h-36 {
+        width: 8.5rem !important;
+        height: 8.5rem !important;
+    }
+
+    #modal-edition-canvas {
+        width: calc(100% + 3.25rem) !important;
+        height: calc(100% + 3.25rem) !important;
+        top: -1.625rem !important;
+        left: -1.625rem !important;
+    }
+
+    #modal-edition-song-title {
+        font-size: 1.1rem !important;
+        margin-top: 0.65rem !important;
+        letter-spacing: 0.05em !important;
+    }
+
+    #modal-edition-artist-title {
+        font-size: 0.85rem !important;
+        margin-top: 0.15rem !important;
+    }
+
+    #beatstar-edition-modal .space-y-3 {
+        margin-top: 0.5rem !important;
+        gap: 0.85rem !important;
+    }
+
+    #beatstar-edition-modal .space-y-3 > button {
+        padding: 1rem 1.25rem !important;
+        border-radius: 1rem !important;
+    }
+
+    /* --- 3. AVISO DE DESCARGA BEATSTAR --- */
+    #download-custom-modal > div {
+        max-width: 52rem !important;
+        padding: 2.5rem 3rem !important;
+    }
+
+    #download-custom-modal #download-modal-msg {
+        font-size: 1.15rem !important;
+        line-height: 1.5 !important;
+        margin-top: 1.5rem !important;
+        margin-bottom: 1.5rem !important;
+        padding-left: 2.5rem !important;
+        padding-right: 2.5rem !important;
+        text-align: center !important;
+    }
+
+    #download-custom-modal .w-full.max-h-80 {
+        max-height: 20rem !important;
+        margin-bottom: 1.75rem !important;
+        padding: 0.5rem !important;
+    }
+
+    #download-custom-modal img {
+        max-height: 18rem !important;
+    }
+
+    /* --- 4. AVISO DE AGRADECIMIENTO --- */
+    #thanks-custom-modal > div {
+        max-width: 56rem !important;
+        padding: 2.5rem 3rem !important;
+    }
+
+    #thanks-custom-modal h4 {
+        font-size: 1.35rem !important;
+        margin-top: 1.25rem !important;
+        margin-bottom: 1.5rem !important;
+        text-align: center !important;
+    }
+
+    #footer-boogie-admin-box {
+        display: flex !important;
+    }
+}
