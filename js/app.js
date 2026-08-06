@@ -479,24 +479,39 @@ function buildCustomDropdownMenus() {
         });
     }
 
-    // 2. Dropdown Dificultad Charts
+    // Helper interno para generar el icono dinámico o fallback
+    const getDynamicIconMarkup = (assetKey, color, fallbackIconClass) => {
+        const imgAsset = globalVisualAssets[assetKey];
+        return imgAsset
+            ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0 inline-block align-middle" style="color: ${color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
+            : `<i class="${fallbackIconClass} text-[10px]"></i>`;
+    };
+
+    // 2. Dropdown Dificultad Charts (Normal, Hard, Extreme)
     const dLvlDiff = document.getElementById('dropdown-custom-lvl-diff');
     if (dLvlDiff) {
+        const iconNormal = getDynamicIconMarkup('diff_Normal', '#71717a', 'fa-solid fa-layer-group');
+        const iconHard = getDynamicIconMarkup('diff_Hard', '#f97316', 'fa-solid fa-layer-group');
+        const iconExtreme = getDynamicIconMarkup('diff_Extreme', '#ef4444', 'fa-solid fa-layer-group');
+
         dLvlDiff.innerHTML = `
             <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value=""><span>${allTxt}</span></div>
-            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-400 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value="Normal"><i class="fa-solid fa-layer-group text-[10px]"></i> <span>Normal</span></div>
-            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-orange-400 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value="Hard"><i class="fa-solid fa-layer-group text-[10px]"></i> <span>Hard</span></div>
-            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-red-500 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value="Extreme"><i class="fa-solid fa-layer-group text-[10px]"></i> <span>Extreme</span></div>
+            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-400 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value="Normal">${iconNormal} <span>Normal</span></div>
+            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-orange-400 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value="Hard">${iconHard} <span>Hard</span></div>
+            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-red-500 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value="Extreme">${iconExtreme} <span>Extreme</span></div>
         `;
     }
 
-    // 3. Dropdown Edición Charts
+    // 3. Dropdown Edición Charts (Standard, Deluxe)
     const dLvlEdition = document.getElementById('dropdown-custom-lvl-edition');
     if (dLvlEdition) {
+        const iconStandard = getDynamicIconMarkup('edit_Standard', '#71717a', 'fa-solid fa-star');
+        const iconDeluxe = getDynamicIconMarkup('edit_Deluxe', '#facc15', 'fa-solid fa-star');
+
         dLvlEdition.innerHTML = `
             <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlEdition" data-value=""><span>${allTxt}</span></div>
-            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-400 font-extrabold flex items-center gap-2" data-type="lvlEdition" data-value="Standard"><i class="fa-solid fa-star text-[10px]"></i> <span>Standard</span></div>
-            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-yellow-400 font-extrabold flex items-center gap-2" data-type="lvlEdition" data-value="Deluxe"><i class="fa-solid fa-star text-[10px]"></i> <span>Deluxe</span></div>
+            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-400 font-extrabold flex items-center gap-2" data-type="lvlEdition" data-value="Standard">${iconStandard} <span>Standard</span></div>
+            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-yellow-400 font-extrabold flex items-center gap-2" data-type="lvlEdition" data-value="Deluxe">${iconDeluxe} <span>Deluxe</span></div>
         `;
     }
 
