@@ -276,7 +276,6 @@ function triggerDownloadAlert(url) {
 
 function openBeatstarEditionSelectionModal(lvl) {
     activeModalBeatstarChart = lvl;
-    stopAllMedia();
 
     const modal = document.getElementById('beatstar-edition-modal');
     if (!modal) return;
@@ -292,6 +291,20 @@ function openBeatstarEditionSelectionModal(lvl) {
     if (imgEl) imgEl.src = lvl.art || 'free_song_Image.png';
     if (titleEl) titleEl.innerText = lvl.song || '';
     if (artistEl) artistEl.innerText = lvl.artist || '';
+
+    // Renderizar dificultades correspondientes dentro del modal
+    const stdDiffContainer = document.getElementById('modal-diff-std-container');
+    const dlxDiffContainer = document.getElementById('modal-diff-dlx-container');
+
+    if (stdDiffContainer) {
+        const stdDiffVal = lvl.diff || 'Normal';
+        stdDiffContainer.innerHTML = chartsModule.renderDifficultyTagMarkup(stdDiffVal);
+    }
+
+    if (dlxDiffContainer) {
+        const dlxDiffVal = lvl.diffDeluxe || 'Extreme';
+        dlxDiffContainer.innerHTML = chartsModule.renderDifficultyTagMarkup(dlxDiffVal);
+    }
 
     const currentSelected = activeChartSelectedEditions[lvl.id] || 'Standard';
 
