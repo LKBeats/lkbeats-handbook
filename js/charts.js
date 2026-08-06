@@ -422,14 +422,27 @@ export function initChartsModule(state) {
 
             if (isDual) {
                 const artBox = tr.querySelector('.target-art-outer-container');
-                artBox?.addEventListener('click', () => openBeatstarEditionSelectionModal(lvl));
+                artBox?.addEventListener('click', () => {
+                    openBeatstarEditionSelectionModal(lvl);
+                    
+                    // Si el chart tiene preview de audio, se dispara usando el canvas del modal
+                    if (currentAudioUrl) {
+                        const modalCanvas = document.getElementById('modal-edition-canvas');
+                        const modalImg = document.getElementById('modal-edition-art-img');
+                        const modalContainer = document.getElementById('modal-edition-art-container');
+                        const targetColor = isDeluxeActive ? "#facc15" : "#d946ef";
+
+                        toggleAudioPreviewEngine(currentAudioUrl, null, modalImg, modalCanvas, modalContainer, false, targetColor, false);
+                    }
+                });
             }
 
             const explicitBtn = tr.querySelector('.btn-toggle-explicit-trigger');
             explicitBtn?.addEventListener('click', (e) => {
                 e.stopPropagation();
+                stopAllMedia(); // <--- Detiene audios y videos activos para evitar sobreposición
+                
                 if (activeChartExplicitStates[lvl.id]) {
-                    stopAllMedia();
                     activeChartExplicitStates[lvl.id] = false;
                     renderLevelsTable();
                 } else {
