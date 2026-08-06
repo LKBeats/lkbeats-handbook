@@ -47,7 +47,7 @@ let activeVideoElement = null;
 let pendingDeleteActionCallback = null;
 let activeModalBeatstarChart = null;
 
-// --- DICCIONARIO PARA NOMBRES DE MARCAS (FIREBASE KEY SANITIZATION) ---
+// --- SANITIZACIÓN KEY FIREBASE ---
 function sanitizeFirebaseKey(key) {
     return btoa(key).replace(/=/g, '').replace(/\//g, '_').replace(/\+/g, '-');
 }
@@ -139,7 +139,7 @@ function stopAllMedia() {
     activeVideoElement = null;
 }
 
-// --- NAVEGACIÓN DE VISTAS ---
+// --- NAVEGACIÓN ---
 function navigateTo(view, pushState = true) {
     stopAllMedia();
     closeAllActiveModalsAndMenus();
@@ -261,17 +261,56 @@ function setupNativeVideoBehavior(vidWrapper) {
     });
 }
 
+// --- DESCARGAS Y MODALES DE AGRADECIMIENTO ---
 function triggerDownloadAlert(url) {
     currentActiveDownloadUrl = url;
     document.getElementById('download-modal-msg').innerText = translations[currentLanguage].beatcloneNotice;
     const thanksVideo = document.getElementById('download-thanks-video');
-    thanksVideo.pause();
-    thanksVideo.src = "";
-    document.getElementById('thanks-custom-modal').classList.add('hidden');
-    document.getElementById('download-custom-modal').classList.remove('hidden');
+    if (thanksVideo) {
+        thanksVideo.pause();
+        thanksVideo.src = "";
+    }
+    document.getElementById('thanks-custom-modal')?.classList.add('hidden');
+    document.getElementById('download-custom-modal')?.classList.remove('hidden');
 }
 
-// --- INICIALIZACIÓN DE MÓDULOS HIJOS ---
+function openBeatstarEditionSelectionModal(lvl) {
+    activeModalBeatstarChart = lvl;
+    stopAllMedia();
+
+    const modal = document.getElementById('beatstar-edition-modal');
+    if (!modal) return;
+
+    const imgEl = document.getElementById('modal-edition-art-img');
+    const titleEl = document.getElementById('modal-edition-song-title');
+    const artistEl = document.getElementById('modal-edition-artist-title');
+    const badgeStd = document.getElementById('modal-edition-standard-badge');
+    const badgeDlx = document.getElementById('modal-edition-deluxe-badge');
+    const checkStd = document.getElementById('modal-check-standard');
+    const checkDlx = document.getElementById('modal-check-deluxe');
+
+    if (imgEl) imgEl.src = lvl.art || 'free_song_Image.png';
+    if (titleEl) titleEl.innerText = lvl.song || '';
+    if (artistEl) artistEl.innerText = lvl.artist || '';
+
+    const currentSelected = activeChartSelectedEditions[lvl.id] || 'Standard';
+
+    if (currentSelected === 'Deluxe') {
+        badgeDlx?.classList.remove('hidden');
+        badgeStd?.classList.add('hidden');
+        checkDlx?.classList.remove('opacity-0');
+        checkStd?.classList.add('opacity-0');
+    } else {
+        badgeStd?.classList.remove('hidden');
+        badgeDlx?.classList.add('hidden');
+        checkStd?.classList.remove('opacity-0');
+        checkDlx?.classList.add('opacity-0');
+    }
+
+    modal.classList.remove('hidden');
+}
+
+// --- INICIALIZACIÓN MÓDULOS HIJOS ---
 const stateForModules = {
     genreList,
     skinUniversalGenreList,
@@ -288,6 +327,7 @@ const stateForModules = {
     hideLoadingOverlay,
     stopAllMedia,
     triggerDownloadAlert,
+    openBeatstarEditionSelectionModal,
     formatStringToDMY,
     renderVideoPlayerMarkup,
     setupNativeVideoBehavior,
@@ -365,7 +405,7 @@ function syncFooterLinks() {
     }
 }
 
-// --- DROPDOWNS Y FILTROS ---
+// --- FILTROS Y DROPDOWNS ---
 function updateCustomDropdownButtonUI(btnId, labelId, val, categoryType) {
     const btn = document.getElementById(btnId);
     const label = document.getElementById(labelId);
@@ -423,8 +463,9 @@ function updateCustomDropdownButtonUI(btnId, labelId, val, categoryType) {
 
 function buildCustomDropdownMenus() {
     const allTxt = translations[currentLanguage].filterAll;
+    
+    // 1. Dropdown Género Charts
     const dLvlGenre = document.getElementById('dropdown-custom-lvl-genre');
-
     if (dLvlGenre) {
         dLvlGenre.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlGenre" data-value=""><span>${allTxt}</span></div>`;
         genreList.forEach(g => {
@@ -435,6 +476,42 @@ function buildCustomDropdownMenus() {
                 : `<span class="w-2.5 h-2.5 rounded-full inline-block shrink-0" style="background-color:${g.color}"></span>`;
 
             dLvlGenre.innerHTML += `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer font-extrabold flex items-center gap-2" style="color:${g.color}" data-type="lvlGenre" data-value="${g.label}">${graphicEl} <span>${g.label}</span></div>`;
+        });
+    }
+
+    // 2. Dropdown Dificultad Charts
+    const dLvlDiff = document.getElementById('dropdown-custom-lvl-diff');
+    if (dLvlDiff) {
+        dLvlDiff.innerHTML = `
+            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value=""><span>${allTxt}</span></div>
+            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-400 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value="Normal"><i class="fa-solid fa-layer-group text-[10px]"></i> <span>Normal</span></div>
+            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-orange-400 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value="Hard"><i class="fa-solid fa-layer-group text-[10px]"></i> <span>Hard</span></div>
+            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-red-500 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value="Extreme"><i class="fa-solid fa-layer-group text-[10px]"></i> <span>Extreme</span></div>
+        `;
+    }
+
+    // 3. Dropdown Edición Charts
+    const dLvlEdition = document.getElementById('dropdown-custom-lvl-edition');
+    if (dLvlEdition) {
+        dLvlEdition.innerHTML = `
+            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlEdition" data-value=""><span>${allTxt}</span></div>
+            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-400 font-extrabold flex items-center gap-2" data-type="lvlEdition" data-value="Standard"><i class="fa-solid fa-star text-[10px]"></i> <span>Standard</span></div>
+            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-yellow-400 font-extrabold flex items-center gap-2" data-type="lvlEdition" data-value="Deluxe"><i class="fa-solid fa-star text-[10px]"></i> <span>Deluxe</span></div>
+        `;
+    }
+
+    // 4. Dropdown Género Skins
+    const dSkinGenre = document.getElementById('dropdown-custom-skin-genre');
+    if (dSkinGenre) {
+        dSkinGenre.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="skinGenre" data-value=""><span>${allTxt}</span></div>`;
+        skinUniversalGenreList.forEach(g => {
+            const safeKey = g.label.replace('/', '');
+            const imgAsset = globalVisualAssets[`genre_${safeKey}`];
+            const graphicEl = imgAsset
+                ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${g.color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
+                : `<span class="w-2.5 h-2.5 rounded-full inline-block shrink-0" style="background-color:${g.color}"></span>`;
+
+            dSkinGenre.innerHTML += `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer font-extrabold flex items-center gap-2" style="color:${g.color}" data-type="skinGenre" data-value="${g.label}">${graphicEl} <span>${g.label}</span></div>`;
         });
     }
 
@@ -534,55 +611,156 @@ try {
     hideLoadingOverlay();
 }
 
-// --- SUSCRIPCIÓN DE EVENTOS DOM ---
-document.getElementById('submenu-card-beatstar')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('Beatstar'));
-document.getElementById('submenu-card-tapwave')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('TapWave'));
-document.getElementById('btn-toggle-to-tapwave')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('TapWave'));
-document.getElementById('btn-toggle-to-beatstar')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('TapWave'));
+// --- REGISTRO DE EVENTOS DOM ---
+document.addEventListener('DOMContentLoaded', () => {
 
-document.getElementById('nav-logo')?.addEventListener('click', () => navigateTo('home'));
-document.getElementById('btn-nav-levels')?.addEventListener('click', () => navigateTo('levels'));
-document.getElementById('btn-nav-cosmetics')?.addEventListener('click', () => navigateTo('cosmetics'));
-document.getElementById('card-to-levels')?.addEventListener('click', () => navigateTo('levels'));
-document.getElementById('card-to-cosmetics')?.addEventListener('click', () => navigateTo('cosmetics'));
+    // 1. Navegación Principal y Botones "Volver"
+    document.getElementById('nav-logo')?.addEventListener('click', () => navigateTo('home'));
+    document.getElementById('btn-nav-levels')?.addEventListener('click', () => navigateTo('levels'));
+    document.getElementById('btn-nav-cosmetics')?.addEventListener('click', () => navigateTo('cosmetics'));
+    document.getElementById('card-to-levels')?.addEventListener('click', () => navigateTo('levels'));
+    document.getElementById('card-to-cosmetics')?.addEventListener('click', () => navigateTo('cosmetics'));
 
-document.getElementById('btn-lang-toggle')?.addEventListener('click', () => {
-    stopAllMedia();
-    currentLanguage = currentLanguage === 'es' ? 'en' : 'es';
-    localStorage.setItem('nexus_lang', currentLanguage);
+    document.querySelectorAll('.btn-back-to-home').forEach(btn => {
+        btn.addEventListener('click', () => navigateTo('home'));
+    });
+
+    // 2. Submenú e Intercambio de Plataformas Skins (Ir a Beatstar / Ir a TapWave)
+    document.getElementById('submenu-card-beatstar')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('Beatstar'));
+    document.getElementById('submenu-card-tapwave')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('TapWave'));
+    document.getElementById('btn-toggle-to-tapwave')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('TapWave'));
+    document.getElementById('btn-toggle-to-beatstar')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('Beatstar'));
+
+    // 3. Idioma
+    document.getElementById('btn-lang-toggle')?.addEventListener('click', () => {
+        stopAllMedia();
+        currentLanguage = currentLanguage === 'es' ? 'en' : 'es';
+        localStorage.setItem('nexus_lang', currentLanguage);
+        applyLanguagePack();
+    });
+
+    // 4. Modo Creador
+    const btnBoogieTrigger = document.getElementById('btn-boogie-admin-trigger');
+    btnBoogieTrigger?.addEventListener('click', () => {
+        if (isCreatorMode) document.getElementById('boogie-exit-modal')?.classList.remove('hidden');
+        else document.getElementById('boogie-auth-modal')?.classList.remove('hidden');
+    });
+
+    document.getElementById('btn-confirm-exit-creator')?.addEventListener('click', () => {
+        isCreatorMode = false;
+        btnBoogieTrigger?.classList.remove('glow-green');
+        document.getElementById('boogie-exit-modal')?.classList.add('hidden');
+        applyRoleUIVisibility();
+    });
+
+    document.getElementById('boogie-auth-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (document.getElementById('boogieCred1').value === "BeatstarTest") {
+            isCreatorMode = true;
+            btnBoogieTrigger?.classList.add('glow-green');
+            applyRoleUIVisibility();
+            document.getElementById('boogie-auth-modal')?.classList.add('hidden');
+        }
+    });
+
+    // 5. Botones "X" y Cierre de Modales
+    document.getElementById('download-modal-btn-close')?.addEventListener('click', () => document.getElementById('download-custom-modal')?.classList.add('hidden'));
+    document.getElementById('thanks-modal-btn-close')?.addEventListener('click', () => {
+        const thanksVid = document.getElementById('download-thanks-video');
+        if (thanksVid) { thanksVid.pause(); thanksVid.src = ""; }
+        document.getElementById('thanks-custom-modal')?.classList.add('hidden');
+    });
+    document.getElementById('btn-close-boogie-modal')?.addEventListener('click', () => document.getElementById('boogie-auth-modal')?.classList.add('hidden'));
+    document.getElementById('btn-close-boogie-modal-x')?.addEventListener('click', () => document.getElementById('boogie-auth-modal')?.classList.add('hidden'));
+    document.getElementById('btn-cancel-exit-creator')?.addEventListener('click', () => document.getElementById('boogie-exit-modal')?.classList.add('hidden'));
+    document.getElementById('btn-cancel-delete')?.addEventListener('click', () => document.getElementById('confirm-delete-modal')?.classList.add('hidden'));
+    document.getElementById('btn-cancel-explicit')?.addEventListener('click', () => document.getElementById('explicit-warning-modal')?.classList.add('hidden'));
+    document.getElementById('btn-close-beatstar-modal')?.addEventListener('click', () => document.getElementById('beatstar-edition-modal')?.classList.add('hidden'));
+
+    // 6. Modal Sin Censura (Explicit)
+    document.getElementById('btn-confirm-explicit')?.addEventListener('click', () => {
+        const pendingId = chartsModule.getPendingExplicitActivationChartId();
+        if (pendingId) {
+            activeChartExplicitStates[pendingId] = true;
+            chartsModule.setPendingExplicitActivationChartId(null);
+            chartsModule.renderLevelsTable();
+        }
+        document.getElementById('explicit-warning-modal')?.classList.add('hidden');
+    });
+
+    // 7. Modal de Descargas Directas
+    document.getElementById('download-modal-btn-confirm')?.addEventListener('click', () => {
+        if (currentActiveDownloadUrl) {
+            window.open(currentActiveDownloadUrl, '_blank');
+        }
+        document.getElementById('download-custom-modal')?.classList.add('hidden');
+
+        if (globalThanksVideos && globalThanksVideos.length > 0) {
+            const randomVid = globalThanksVideos[Math.floor(Math.random() * globalThanksVideos.length)];
+            const thanksVid = document.getElementById('download-thanks-video');
+            if (thanksVid && randomVid) {
+                thanksVid.src = randomVid;
+                thanksVid.play().catch(() => {});
+                document.getElementById('thanks-custom-modal')?.classList.remove('hidden');
+            }
+        }
+    });
+
+    // 8. Opciones dentro del Modal de Selección de Edición (Beatstar)
+    document.getElementById('modal-opt-standard')?.addEventListener('click', () => {
+        if (activeModalBeatstarChart) {
+            activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Standard';
+            chartsModule.renderLevelsTable();
+            document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
+        }
+    });
+
+    document.getElementById('modal-opt-deluxe')?.addEventListener('click', () => {
+        if (activeModalBeatstarChart) {
+            activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Deluxe';
+            chartsModule.renderLevelsTable();
+            document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
+        }
+    });
+
+    // 9. Alternadores de Botones Desplegables de Filtro
+    document.getElementById('btn-custom-lvl-genre')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('dropdown-custom-lvl-genre')?.classList.toggle('hidden'); });
+    document.getElementById('btn-custom-lvl-diff')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('dropdown-custom-lvl-diff')?.classList.toggle('hidden'); });
+    document.getElementById('btn-custom-lvl-edition')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('dropdown-custom-lvl-edition')?.classList.toggle('hidden'); });
+    document.getElementById('btn-custom-skin-genre')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('dropdown-custom-skin-genre')?.classList.toggle('hidden'); });
+
+    // 10. Limpieza de Filtros
+    document.getElementById('btn-clear-lvl-filters')?.addEventListener('click', () => {
+        chartsModule.setLvlGenreFilter("");
+        chartsModule.setLvlDiffFilter("");
+        chartsModule.setLvlEditionFilter("");
+        updateCustomDropdownButtonUI('btn-custom-lvl-genre', 'label-custom-lvl-genre', "", 'genre');
+        updateCustomDropdownButtonUI('btn-custom-lvl-diff', 'label-custom-lvl-diff', "", 'diff');
+        updateCustomDropdownButtonUI('btn-custom-lvl-edition', 'label-custom-lvl-edition', "", 'edition');
+        chartsModule.renderLevelsTable();
+    });
+
+    document.getElementById('btn-clear-skin-filters')?.addEventListener('click', () => {
+        skinsModule.setSkinGenreFilter("");
+        updateCustomDropdownButtonUI('btn-custom-skin-genre', 'label-custom-skin-genre', "", 'genre');
+        skinsModule.renderCosmeticsTables();
+    });
+
+    // Cerrar desplegables al hacer clic fuera
+    document.addEventListener('click', () => {
+        ['dropdown-custom-lvl-genre', 'dropdown-custom-lvl-diff', 'dropdown-custom-lvl-edition', 'dropdown-custom-skin-genre'].forEach(id => {
+            document.getElementById(id)?.classList.add('hidden');
+        });
+    });
+
+    document.getElementById('btn-action-delete')?.addEventListener('click', () => {
+        if (pendingDeleteActionCallback) pendingDeleteActionCallback();
+        pendingDeleteActionCallback = null;
+        document.getElementById('confirm-delete-modal')?.classList.add('hidden');
+    });
+
+    // Inicializaciones del sistema
+    chartsModule.buildGenresSelector();
+    skinsModule.buildSkinGenresSelector();
     applyLanguagePack();
 });
-
-const btnBoogieTrigger = document.getElementById('btn-boogie-admin-trigger');
-btnBoogieTrigger?.addEventListener('click', () => {
-    if (isCreatorMode) document.getElementById('boogie-exit-modal')?.classList.remove('hidden');
-    else document.getElementById('boogie-auth-modal')?.classList.remove('hidden');
-});
-
-document.getElementById('btn-confirm-exit-creator')?.addEventListener('click', () => {
-    isCreatorMode = false;
-    btnBoogieTrigger?.classList.remove('glow-green');
-    document.getElementById('boogie-exit-modal')?.classList.add('hidden');
-    applyRoleUIVisibility();
-});
-
-document.getElementById('boogie-auth-form')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (document.getElementById('boogieCred1').value === "BeatstarTest") {
-        isCreatorMode = true;
-        btnBoogieTrigger?.classList.add('glow-green');
-        applyRoleUIVisibility();
-        document.getElementById('boogie-auth-modal')?.classList.add('hidden');
-    }
-});
-
-document.getElementById('btn-action-delete')?.addEventListener('click', () => {
-    if (pendingDeleteActionCallback) pendingDeleteActionCallback();
-    pendingDeleteActionCallback = null;
-    document.getElementById('confirm-delete-modal')?.classList.add('hidden');
-});
-
-// Inicialización básica
-chartsModule.buildGenresSelector();
-skinsModule.buildSkinGenresSelector();
-applyLanguagePack();
