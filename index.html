@@ -236,6 +236,39 @@
     <main class="flex-grow flex flex-col relative">
         
         <section id="view-home" class="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col justify-center flex-grow w-full relative z-10">
+
+         <!-- BANNER DE NOTIFICACIÓN EN LA PÁGINA DE INICIO -->
+<div id="home-notification-banner" class="hidden w-full max-w-5xl mx-auto mb-6 relative overflow-hidden rounded-2xl bg-[#11091c] border border-fuchsia-500/40 p-4 shadow-2xl transition-all duration-500">
+    <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 via-fuchsia-500 to-yellow-500"></div>
+    <div id="notif-banner-content" class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <!-- El contenido dinámico se inyectará mediante JS -->
+    </div>
+</div>
+
+<!-- CONTROL DE NOTIFICACIONES (MODO CREADOR) -->
+<div id="notifications-management-box" class="hidden bg-[#11091c] border border-fuchsia-500/40 rounded-2xl p-6 shadow-xl relative w-full mb-10">
+    <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-fuchsia-500 to-orange-500"></div>
+    <h2 class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60">Gestión de Notificaciones Activas</h2>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div class="bg-black/30 p-3 rounded-xl border border-zinc-800 flex items-center justify-between">
+            <div>
+                <div class="font-extrabold text-orange-400 uppercase">Notificación Chart</div>
+                <div id="creator-notif-chart-status" class="text-zinc-400 text-[11px]">Sin notificación activa</div>
+            </div>
+            <button id="btn-delete-notif-chart" class="hidden px-3 py-1.5 bg-red-950 border border-red-800 text-red-400 hover:bg-red-900 hover:text-white rounded-lg font-black uppercase transition">Eliminar</button>
+        </div>
+
+        <div class="bg-black/30 p-3 rounded-xl border border-zinc-800 flex items-center justify-between">
+            <div>
+                <div class="font-extrabold text-fuchsia-400 uppercase">Notificación Skin</div>
+                <div id="creator-notif-skin-status" class="text-zinc-400 text-[11px]">Sin notificación activa</div>
+            </div>
+            <button id="btn-delete-notif-skin" class="hidden px-3 py-1.5 bg-red-950 border border-red-800 text-red-400 hover:bg-red-900 hover:text-white rounded-lg font-black uppercase transition">Eliminar</button>
+        </div>
+    </div>
+</div>
+
             <div class="text-center mb-12 flex flex-col items-center">
                 <span class="px-4 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-xs font-black tracking-widest uppercase mb-6 inline-block">
                     <span data-i18n="tagUpdate">ÚLTIMA ACTUALIZACIÓN</span>: <span id="dynamic-update-date">19/06/2026</span>
