@@ -6,8 +6,7 @@ import {
     toggleAudioPreviewEngine, 
     getActiveAudioElement, 
     getAudioAnalyser, 
-    startRadialCanvasVisualizer,
-    setAudioLoopState,
+    startRadialCanvasVisualizer 
 } from "./audio-player.js";
 
 import { initChartsModule } from "./charts.js";
