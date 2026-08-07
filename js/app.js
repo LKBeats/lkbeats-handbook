@@ -1,6 +1,6 @@
 import { ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 import { translations } from "./i18n.js";
-import { db, uploadFileToCloudflareR2 } from "./services.js";
+import { db, uploadFileToCloudflareR2, deleteFileFromCloudflareR2 } from "./services.js";
 import { 
     stopGlobalAudioPreview, 
     toggleAudioPreviewEngine, 
@@ -22,11 +22,11 @@ function renderNotifGenresBadgesHtml(rawGenre) {
         const color = matched ? matched.color : '#f97316';
         
         const safeKey = trimmed.replace('/', '');
-        const dynamicAssetSrc = globalVisualAssets[`genre_${safeKey}`];
+        const dynamicAssetSrc = globalVisualAssets[`genre_${safeKey}`] || globalVisualAssets[`genre_${trimmed}`];
         
         const graphicElement = dynamicAssetSrc 
             ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
-            : `<span class="w-2 h-2 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
+            : `<span class="w-2.5 h-2.5 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
 
         return `
             <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
@@ -455,6 +455,68 @@ function openBeatstarEditionSelectionModal(lvl) {
     modal.classList.remove('hidden');
 }
 
+function buildVisualAssetsGenresList() {
+    const container = document.getElementById('asset-upload-genres-list');
+    if (!container) return;
+
+    container.innerHTML = '';
+    genreList.forEach(g => {
+        const safeKey = g.label.replace('/', '');
+        const currentAsset = globalVisualAssets[`genre_${safeKey}`] || '';
+
+        const item = document.createElement('div');
+        item.className = 'bg-[#05020a] p-2 rounded border border-fuchsia-950/60 flex flex-col gap-1';
+        item.innerHTML = `
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full shrink-0" style="background-color: ${g.color}"></span>
+                    <span class="font-bold text-zinc-300 text-xs">${g.label}</span>
+                </div>
+                <button type="button" class="btn-clear-visual-asset text-red-400 hover:text-red-300 font-bold text-[10px]" data-asset-key="genre_${safeKey}">Eliminar</button>
+            </div>
+            <input type="file" data-asset-key="genre_${safeKey}" accept="image/*" class="visual-asset-file-uploader w-full bg-[#11091c] border border-fuchsia-950 p-1 rounded text-zinc-400 text-[11px]">
+        `;
+        container.appendChild(item);
+    });
+
+    container.querySelectorAll('.visual-asset-file-uploader').forEach(input => {
+        input.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            const assetKey = e.target.getAttribute('data-asset-key');
+            if (file && assetKey) {
+                showLoadingOverlay();
+                try {
+                    const uploadedUrl = await uploadFileToCloudflareR2(file, 'visual_assets');
+                    if (uploadedUrl) {
+                        await set(ref(db, `visual_assets/${assetKey}`), uploadedUrl);
+                    }
+                } catch (err) {
+                    console.error("Error al subir asset:", err);
+                } finally {
+                    hideLoadingOverlay();
+                }
+            }
+        });
+    });
+
+    container.querySelectorAll('.btn-clear-visual-asset').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const assetKey = btn.getAttribute('data-asset-key');
+            if (assetKey && globalVisualAssets[assetKey]) {
+                showLoadingOverlay();
+                try {
+                    await deleteFileFromCloudflareR2(globalVisualAssets[assetKey]);
+                    await remove(ref(db, `visual_assets/${assetKey}`));
+                } catch (err) {
+                    console.error("Error al eliminar asset:", err);
+                } finally {
+                    hideLoadingOverlay();
+                }
+            }
+        });
+    });
+}
+
 const stateForModules = {
     genreList,
     skinUniversalGenreList,
@@ -746,6 +808,7 @@ try {
     onValue(ref(db, 'visual_assets'), (snap) => {
         globalVisualAssets = snap.val() || {};
         buildCustomDropdownMenus();
+        buildVisualAssetsGenresList();
         updateCMSHeaderIcons();
         chartsModule.renderLevelsTable();
     });
@@ -942,6 +1005,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     chartsModule.buildGenresSelector();
     skinsModule.buildSkinGenresSelector();
+    buildVisualAssetsGenresList();
     applyLanguagePack();
 });
 
