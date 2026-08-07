@@ -1,7 +1,7 @@
 import { ref, set, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 import { db, uploadFileToCloudflareR2 } from "./services.js";
 import { translations } from "./i18n.js";
-import { toggleAudioPreviewEngine, startRadialCanvasVisualizer, getActiveAudioElement, getAudioAnalyser } from "./audio-player.js";
+import { toggleAudioPreviewEngine } from "./audio-player.js";
 
 export function initChartsModule(state) {
     const {
@@ -12,6 +12,9 @@ export function initChartsModule(state) {
         getGlobalVisualAssets,
         getActiveChartSelectedEditions,
         getActiveChartExplicitStates,
+        getActiveAudioElement,
+        getAudioAnalyser,
+        startRadialCanvasVisualizer,
         showLoadingOverlay,
         hideLoadingOverlay,
         stopAllMedia,
