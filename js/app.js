@@ -9,6 +9,7 @@ import {
     getAudioAnalyser, 
     startRadialCanvasVisualizer 
 } from "./audio-player.js";
+
 import { initChartsModule } from "./charts.js";
 import { initSkinsModule } from "./skins.js";
 
