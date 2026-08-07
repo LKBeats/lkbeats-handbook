@@ -40,16 +40,13 @@
 </head>
 <body class="bg-[#05020a] text-zinc-100 min-h-screen font-sans flex flex-col relative overflow-x-hidden">
 
-    <!-- IMAGEN DE FONDO EN GIRATORIO PERSISTENTE -->
     <img src="hud_swirl.png" alt="Background Swirl" class="bg-spinning-swirl">
 
-    <!-- OVERLAY DE CARGA CON BOOGIE -->
     <div id="global-loading-overlay" class="hidden fixed inset-0 bg-black/85 z-[100] flex flex-col items-center justify-center gap-4">
         <img src="1455064703448645786.gif" alt="Boogie Loading..." class="w-[150px] h-auto mb-2">
         <p id="loading-overlay-text" class="text-base font-bold text-white text-center px-4 font-sans" data-i18n="savingChanges">Por favor espera un momento...</p>
     </div>
 
-    <!-- MODAL DE ADVERTENCIA PARA CONTENIDO EXPLÍCITO -->
     <div id="explicit-warning-modal" class="hidden fixed inset-0 bg-black/90 z-[160] flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#11091c] border border-red-500/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center max-h-[88vh] overflow-y-auto">
             <div class="w-12 h-12 rounded-full bg-red-500/20 border border-red-500 flex items-center justify-center text-red-500 font-black text-xl mb-3 shadow-lg glow-red">E</div>
@@ -62,7 +59,6 @@
         </div>
     </div>
 
-    <!-- MODAL SELECCIÓN DE EDICIONES ESTILO BEATSTAR -->
     <div id="beatstar-edition-modal" class="hidden fixed inset-0 bg-black/90 z-[150] flex items-center justify-center p-4 backdrop-blur-md transition-all duration-300">
         <div class="bg-[#11091c]/95 border border-fuchsia-500/40 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative flex flex-col md:flex-row landscape-pc-edition-layout items-center justify-center gap-6 sm:gap-8 border-t-2 border-t-fuchsia-500 max-h-[88vh] overflow-y-auto">
             <div class="flex flex-col items-center justify-center shrink-0 pc-shift-right landscape-shift-right relative z-20">
@@ -81,29 +77,28 @@
             <div class="flex-1 w-full flex flex-col justify-center">
                 <div class="text-xs font-black uppercase tracking-widest text-zinc-400 text-center md:text-left mb-3" data-i18n="selectEditionPrompt">EDITIONS</div>
                 <div class="space-y-3 w-full">
-    <button id="modal-opt-standard" type="button" class="w-full p-3.5 rounded-2xl border-2 border-zinc-800 bg-zinc-950/80 hover:border-fuchsia-500 transition flex items-center justify-between group">
-        <div class="flex flex-col items-start gap-1">
-            <span class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Standard</span>
-            <div id="modal-opt-standard-diff-tag"></div>
-        </div>
-        <i id="modal-check-standard" class="fa-solid fa-circle-check text-fuchsia-400 text-lg opacity-0 transition-opacity"></i>
-    </button>
+                    <button id="modal-opt-standard" type="button" class="w-full p-3.5 rounded-2xl border-2 border-zinc-800 bg-zinc-950/80 hover:border-fuchsia-500 transition flex items-center justify-between group">
+                        <div class="flex flex-col items-start gap-1">
+                            <span class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Standard</span>
+                            <div id="modal-opt-standard-diff-tag"></div>
+                        </div>
+                        <i id="modal-check-standard" class="fa-solid fa-circle-check text-fuchsia-400 text-lg opacity-0 transition-opacity"></i>
+                    </button>
 
-    <button id="modal-opt-deluxe" type="button" class="w-full p-3.5 rounded-2xl border-2 border-yellow-500/40 bg-zinc-950/80 hover:border-yellow-400 transition flex items-center justify-between group glow-gold">
-        <div class="flex flex-col items-start gap-1">
-            <span class="text-xs sm:text-sm font-black text-yellow-400 uppercase tracking-wider">Deluxe</span>
-            <div id="modal-opt-deluxe-diff-tag"></div>
-        </div>
-        <i id="modal-check-deluxe" class="fa-solid fa-circle-check text-yellow-400 text-lg opacity-0 transition-opacity"></i>
-    </button>
-</div>
+                    <button id="modal-opt-deluxe" type="button" class="w-full p-3.5 rounded-2xl border-2 border-yellow-500/40 bg-zinc-950/80 hover:border-yellow-400 transition flex items-center justify-between group glow-gold">
+                        <div class="flex flex-col items-start gap-1">
+                            <span class="text-xs sm:text-sm font-black text-yellow-400 uppercase tracking-wider">Deluxe</span>
+                            <div id="modal-opt-deluxe-diff-tag"></div>
+                        </div>
+                        <i id="modal-check-deluxe" class="fa-solid fa-circle-check text-yellow-400 text-lg opacity-0 transition-opacity"></i>
+                    </button>
+                </div>
 
                 <button id="btn-close-beatstar-modal" type="button" class="mt-5 w-full py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-400 hover:text-white transition" data-i18n="btnClose">CLOSE</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL DE CONFIRMACIÓN DE ELIMINACIÓN GENERAL -->
     <div id="confirm-delete-modal" class="hidden fixed inset-0 bg-black/90 z-[140] flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#11091c] border border-red-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center max-h-[88vh] overflow-y-auto">
             <i class="fa-solid fa-triangle-exclamation text-red-500 text-3xl mb-3"></i>
@@ -115,7 +110,6 @@
         </div>
     </div>
 
-    <!-- MODAL BOOGIE ADM / CREDENCIALES -->
     <div id="boogie-auth-modal" class="hidden fixed inset-0 bg-black/90 z-[130] flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#11091c] border border-fuchsia-500/40 rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative text-center flex flex-col items-center max-h-[88vh] overflow-y-auto">
             <img src="1455064703448645786.gif" alt="Boogie" class="w-24 h-auto mb-3">
@@ -125,32 +119,32 @@
 
             <form id="boogie-auth-form" class="w-full space-y-4 text-left" autocomplete="off" novalidate>
                 <div>
-    <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred1">Credencial 1</label>
-    <div class="relative flex items-center">
-        <input type="password" id="boogieCred1" autocomplete="off" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 pr-10 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
-        <button type="button" onclick="toggleBoogiePassword('boogieCred1', this)" class="absolute right-3 text-zinc-500 hover:text-white p-1">
-            <i class="fa-solid fa-eye pointer-events-none"></i>
-        </button>
-    </div>
-</div>
-<div>
-    <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred2">Credencial 2</label>
-    <div class="relative flex items-center">
-        <input type="password" id="boogieCred2" autocomplete="off" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 pr-10 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
-        <button type="button" onclick="toggleBoogiePassword('boogieCred2', this)" class="absolute right-3 text-zinc-500 hover:text-white p-1">
-            <i class="fa-solid fa-eye pointer-events-none"></i>
-        </button>
-    </div>
-</div>
-<div>
-    <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred3">Credencial 3</label>
-    <div class="relative flex items-center">
-        <input type="password" id="boogieCred3" autocomplete="off" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 pr-10 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
-        <button type="button" onclick="toggleBoogiePassword('boogieCred3', this)" class="absolute right-3 text-zinc-500 hover:text-white p-1">
-            <i class="fa-solid fa-eye pointer-events-none"></i>
-        </button>
-    </div>
-</div>
+                    <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred1">Credencial 1</label>
+                    <div class="relative flex items-center">
+                        <input type="password" id="boogieCred1" autocomplete="off" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 pr-10 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
+                        <button type="button" onclick="toggleBoogiePassword('boogieCred1', this)" class="absolute right-3 text-zinc-500 hover:text-white p-1">
+                            <i class="fa-solid fa-eye pointer-events-none"></i>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred2">Credencial 2</label>
+                    <div class="relative flex items-center">
+                        <input type="password" id="boogieCred2" autocomplete="off" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 pr-10 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
+                        <button type="button" onclick="toggleBoogiePassword('boogieCred2', this)" class="absolute right-3 text-zinc-500 hover:text-white p-1">
+                            <i class="fa-solid fa-eye pointer-events-none"></i>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="labelCred3">Credencial 3</label>
+                    <div class="relative flex items-center">
+                        <input type="password" id="boogieCred3" autocomplete="off" class="w-full bg-[#05020a] border border-fuchsia-950 p-2.5 pr-10 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-fuchsia-500">
+                        <button type="button" onclick="toggleBoogiePassword('boogieCred3', this)" class="absolute right-3 text-zinc-500 hover:text-white p-1">
+                            <i class="fa-solid fa-eye pointer-events-none"></i>
+                        </button>
+                    </div>
+                </div>
 
                 <div class="pt-2 flex gap-3">
                     <button type="button" id="btn-close-boogie-modal" class="flex-1 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-400 hover:text-white transition" data-i18n="btnClose">Cerrar</button>
@@ -164,7 +158,6 @@
         </div>
     </div>
 
-    <!-- MODAL CONFIRMACIÓN SALIR MODO CREADOR -->
     <div id="boogie-exit-modal" class="hidden fixed inset-0 bg-black/90 z-[135] flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#11091c] border border-red-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center flex flex-col items-center max-h-[88vh] overflow-y-auto">
             <i class="fa-solid fa-right-from-bracket text-red-400 text-3xl mb-3"></i>
@@ -176,7 +169,6 @@
         </div>
     </div>
 
-    <!-- MODAL 1: ADVERTENCIA DE DESCARGA -->
     <div id="download-custom-modal" class="hidden fixed inset-0 bg-black/90 z-[110] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-[#11091c] border border-fuchsia-500/30 rounded-2xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl relative text-center flex flex-col items-center max-h-[88vh] overflow-y-auto">
             <p id="download-modal-msg" class="text-base sm:text-lg font-bold text-zinc-200 mb-4 sm:mb-6 leading-relaxed">
@@ -202,7 +194,6 @@
         </div>
     </div>
 
-    <!-- MODAL 2: POP-UP AGRADECIMIENTO EN BUCLE -->
     <div id="thanks-custom-modal" class="hidden fixed inset-0 bg-black/95 z-[120] flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#11091c] border border-orange-500/30 rounded-2xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl relative text-center flex flex-col items-center max-h-[88vh] overflow-y-auto">
             <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-fuchsia-400 font-display font-black text-xl sm:text-2xl uppercase tracking-wider mb-4 sm:mb-6" data-i18n="thanksTitle">Gracias por jugar a Beatclone</h4>
@@ -215,7 +206,6 @@
         </div>
     </div>
 
-    <!-- TOP HEADER / NAV -->
     <header class="border-b border-fuchsia-950/40 bg-[#11091c] backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
             <div class="max-w-[33%] w-1/3 md:max-w-none md:w-auto shrink-0 cursor-pointer" id="nav-logo">
@@ -245,7 +235,6 @@
 
     <main class="flex-grow flex flex-col relative">
         
-        <!-- ================= VIEW 1: HOME ================= -->
         <section id="view-home" class="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col justify-center flex-grow w-full relative z-10">
             <div class="text-center mb-12 flex flex-col items-center">
                 <span class="px-4 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-xs font-black tracking-widest uppercase mb-6 inline-block">
@@ -298,13 +287,11 @@
                 </div>
             </div>
 
-            <!-- DISCLAIMER -->
             <div class="bg-[#11091c] border border-red-500/30 rounded-2xl p-6 mb-10 text-center max-w-4xl mx-auto w-full">
                 <h2 class="text-red-500 font-display font-black text-3xl tracking-widest uppercase mb-4" data-i18n="disclaimerTitle">DISCLAIMER</h2>
                 <p class="text-zinc-300 text-sm leading-relaxed font-medium" data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, canciones, logos, e imágenes pertenecen a sus respectivos propietarios y desarrolladores.</p>
             </div>
 
-            <!-- VIDEOS DE AGRADECIMIENTO CMS -->
             <div id="thanks-videos-panel-box" class="hidden bg-[#11091c] border border-orange-500/40 rounded-2xl p-6 shadow-2xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-fuchsia-500"></div>
                 <h2 class="font-display font-black text-base text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="thanksUploadMenuTitle">Subir Videos de Agradecimiento</h2>
@@ -336,7 +323,6 @@
                 </button>
             </div>
 
-            <!-- ASSETS VISUALES DINÁMICOS -->
             <div id="visual-assets-panel-box" class="hidden bg-[#11091c] border border-fuchsia-500/40 rounded-2xl p-6 shadow-2xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-fuchsia-500 to-orange-500"></div>
                 <h2 class="font-display font-black text-base text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="visualAssetsMenuTitle">Panel de Assets Visuales Dinámicos</h2>
@@ -394,7 +380,6 @@
                 </div>
             </div>
 
-            <!-- FOOTER LINKS MANAGER -->
             <div id="footer-links-management-box" class="hidden bg-[#11091c] border border-orange-500/30 rounded-2xl p-6 shadow-xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-yellow-500"></div>
                 <h2 class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="footerMenuTitle">Links del Menú Inferior</h2>
@@ -441,7 +426,6 @@
             </button>
             
             <div id="levels-layout-grid" class="flex flex-col gap-6 items-start w-full relative">
-                <!-- FORMULARIO CREAR/EDITAR CHART -->
                 <div id="level-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto z-30">
                     <h2 class="font-display font-black text-sm text-zinc-100 uppercase mb-4" data-i18n="addLevelTitle">Nuevo Chart</h2>
                     <form id="level-form" autocomplete="off" class="space-y-3 text-xs">
@@ -458,28 +442,23 @@
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadArt">Subir Arte</label>
                             <div id="lvlArtPreviewBox" class="hidden relative w-20 h-20 mb-2 rounded-lg overflow-hidden border border-fuchsia-500/40 bg-black">
                                 <img id="lvlArtPreviewImg" class="w-full h-full object-cover">
-                                <button type="button" id="btn-delete-lvl-art-preview" class="absolute top-1 right-1 bg-red-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shadow"><i class="fa-solid fa-xmark"></i></button>
                             </div>
-                            <input type="file" id="lvlArtFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                            <div id="slot-lvl-art">
+                                <input type="file" id="lvlArtFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                            </div>
                         </div>
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formGenre">Género</label>
                             <div id="genres-container" class="grid grid-cols-1 gap-1 max-h-36 overflow-y-auto border border-fuchsia-950 p-2 rounded-lg bg-[#05020a]"></div>
                         </div>
 
-                        <!-- AUDIO PREVIEW UNIFICADO (NORMAL) -->
                         <div class="bg-black/30 p-2.5 rounded-xl border border-fuchsia-950/60 space-y-2">
-                            <div class="flex items-center justify-between">
-                                <label class="font-bold text-fuchsia-400" data-i18n="formUploadAudio">Upload Audio Preview (Censored)</label>
-                                <button type="button" id="btn-remove-lvl-audio" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                    <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                </button>
+                            <label class="font-bold text-fuchsia-400 block" data-i18n="formUploadAudio">Upload Audio Preview (Censored)</label>
+                            <div id="slot-lvl-audio">
+                                <input type="file" id="lvlAudioFile" accept="audio/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                             </div>
-                            <div id="current-lvl-audio-badge" class="hidden px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate" data-i18n="lblAttachedAudioStd">Audio Preview Adjunto</div>
-                            <input type="file" id="lvlAudioFile" accept="audio/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
 
-                        <!-- SELECTOR MODALIDAD DE EDICIONES -->
                         <div class="bg-black/40 p-2.5 rounded-xl border border-fuchsia-950/60 space-y-2">
                             <label class="block font-black text-fuchsia-400 uppercase tracking-wider" data-i18n="formEdition">Edición Registrada</label>
                             <select id="lvlEditionMode" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100 font-bold">
@@ -489,7 +468,6 @@
                             </select>
                         </div>
 
-                        <!-- CHECKBOXES DE EXCLUSIVO Y CONTENIDO EXPLICITO -->
                         <div class="pt-1 space-y-2">
                             <label class="flex items-center gap-2 cursor-pointer bg-[#05020a] p-2 rounded-lg border border-fuchsia-950">
                                 <input type="checkbox" id="lvlIsExclusive" class="accent-fuchsia-500 w-4 h-4">
@@ -506,7 +484,6 @@
                             <input type="hidden" id="lvlIsComingSoon" value="false">
                         </div>
 
-                        <!-- SECCIÓN STANDARD -->
                         <div id="section-standard-fields" class="space-y-3 bg-black/20 p-2.5 rounded-xl border border-zinc-800">
                             <div class="font-black text-zinc-300 uppercase tracking-wider text-[11px] pb-1 border-b border-zinc-800 flex items-center gap-1.5">
                                 <span id="cms-icon-standard" class="inline-block"></span> Standard
@@ -534,27 +511,21 @@
                                     <label class="font-bold text-zinc-400 uppercase tracking-wider"><span data-i18n="formRelease">Lanzamiento</span></label>
                                     <button type="button" id="btn-picker-lvl" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Fecha</button>
                                 </div>
-                                <input type="date" id="lvlDate" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                                <div id="slot-lvl-date-std">
+                                    <input type="date" id="lvlDate" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                                </div>
                             </div>
                             <div>
-                                <div class="flex items-center justify-between mb-0.5">
-                                    <label class="font-bold text-zinc-400" data-i18n="formUploadVideo">Video Standard (MP4)</label>
-                                    <button type="button" id="btn-remove-lvl-video" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                        <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                    </button>
+                                <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadVideo">Video Standard (MP4)</label>
+                                <div id="slot-lvl-video-std">
+                                    <input type="file" id="lvlVideoFile" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                                 </div>
-                                <div id="current-lvl-video-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate" data-i18n="lblAttachedVideoStd">Video Standard Adjunto</div>
-                                <input type="file" id="lvlVideoFile" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                             </div>
                             <div>
-                                <div class="flex items-center justify-between mb-1">
-                                    <label class="block font-bold text-zinc-400" data-i18n="formUploadZipStd">Standard ZIP (.zip)</label>
-                                    <button type="button" id="btn-remove-chart-zip" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                        <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                    </button>
+                                <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadZipStd">Standard ZIP (.zip)</label>
+                                <div id="slot-lvl-zip-std">
+                                    <input type="file" id="lvlChartZipFile" accept=".zip" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                                 </div>
-                                <div id="current-chart-zip-badge" class="hidden mb-1 px-2 py-1 bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 rounded text-[10px] font-mono truncate" data-i18n="lblAttachedZipStd">ZIP Standard Adjunto</div>
-                                <input type="file" id="lvlChartZipFile" accept=".zip" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                             </div>
                             <div class="space-y-1.5 pt-1">
                                 <input type="url" id="lvlDl1" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="Discord Standard URL">
@@ -563,7 +534,6 @@
                             </div>
                         </div>
 
-                        <!-- SECCIÓN DELUXE -->
                         <div id="section-deluxe-fields" class="hidden space-y-3 bg-yellow-950/10 p-2.5 rounded-xl border border-yellow-500/30">
                             <div class="font-black text-yellow-400 uppercase tracking-wider text-[11px] pb-1 border-b border-yellow-500/30 flex items-center gap-1.5">
                                 <span id="cms-icon-deluxe" class="inline-block"></span> Deluxe
@@ -591,27 +561,21 @@
                                     <label class="block font-bold text-yellow-500/80" data-i18n="lblDeluxeRelease">Lanzamiento Deluxe</label>
                                     <button type="button" id="btn-picker-lvl-deluxe" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar fecha</button>
                                 </div>
-                                <input type="date" id="lvlDateDeluxe" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-100">
+                                <div id="slot-lvl-date-dlx">
+                                    <input type="date" id="lvlDateDeluxe" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-100">
+                                </div>
                             </div>
                             <div>
-                                <div class="flex items-center justify-between mb-0.5">
-                                    <label class="font-bold text-yellow-500/80" data-i18n="lblDeluxeVideo">Video Deluxe (MP4)</label>
-                                    <button type="button" id="btn-remove-lvl-video-deluxe" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                        <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                    </button>
+                                <label class="font-bold text-yellow-500/80 block mb-1" data-i18n="lblDeluxeVideo">Video Deluxe (MP4)</label>
+                                <div id="slot-lvl-video-dlx">
+                                    <input type="file" id="lvlVideoFileDeluxe" accept="video/*" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-400">
                                 </div>
-                                <div id="current-lvl-video-deluxe-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate" data-i18n="lblAttachedVideoDlx">Video Deluxe Adjunto</div>
-                                <input type="file" id="lvlVideoFileDeluxe" accept="video/*" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-400">
                             </div>
                             <div>
-                                <div class="flex items-center justify-between mb-1">
-                                    <label class="block font-bold text-yellow-500/80" data-i18n="lblDeluxeZip">Deluxe ZIP (.zip)</label>
-                                    <button type="button" id="btn-remove-chart-deluxe-zip" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                        <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                    </button>
+                                <label class="block font-bold text-yellow-500/80 mb-1" data-i18n="lblDeluxeZip">Deluxe ZIP (.zip)</label>
+                                <div id="slot-lvl-zip-dlx">
+                                    <input type="file" id="lvlChartZipFileDeluxe" accept=".zip" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-400">
                                 </div>
-                                <div id="current-chart-deluxe-zip-badge" class="hidden mb-1 px-2 py-1 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[10px] font-mono truncate" data-i18n="lblAttachedZipDlx">ZIP Deluxe Adjunto</div>
-                                <input type="file" id="lvlChartZipFileDeluxe" accept=".zip" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-zinc-400">
                             </div>
                             <div class="space-y-1.5 pt-1">
                                 <input type="url" id="lvlDl1Deluxe" class="w-full bg-[#05020a] border border-yellow-900 p-2 rounded-lg text-[11px]" placeholder="Discord Deluxe URL">
@@ -620,25 +584,18 @@
                             </div>
                         </div>
 
-                        <!-- SECCIÓN EXPLICITA ADICIONAL SI EL TOGGLE ESTA ACTIVADO -->
                         <div id="section-explicit-fields" class="hidden space-y-3 bg-red-950/20 p-2.5 rounded-xl border border-red-500/40">
                             <div class="font-black text-red-400 uppercase tracking-wider text-[11px] pb-1 border-b border-red-500/30 flex items-center gap-1.5">
                                 <span class="w-3.5 h-3.5 bg-red-600 text-white rounded flex items-center justify-center text-[9px] font-black">E</span> <span data-i18n="lblExplicitSectionHeader">Datos Sin Censura / Explicit</span>
                             </div>
 
-                            <!-- AUDIO PREVIEW UNIFICADO SIN CENSURA -->
                             <div class="space-y-1 bg-black/40 p-2 rounded-lg border border-red-950">
-                                <div class="flex items-center justify-between mb-0.5">
-                                    <label class="text-[10px] font-bold text-red-400" data-i18n="lblExpAudioStd">Upload Audio Preview (Uncensored)</label>
-                                    <button type="button" id="btn-remove-lvl-audio-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                        <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                    </button>
+                                <label class="text-[10px] font-bold text-red-400 block mb-1" data-i18n="lblExpAudioStd">Upload Audio Preview (Uncensored)</label>
+                                <div id="slot-lvl-audio-exp">
+                                    <input type="file" id="lvlAudioFileExplicit" accept="audio/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                 </div>
-                                <div id="badge-lvl-audio-explicit" class="hidden mb-1 px-2 py-0.5 bg-red-950/40 border border-red-800/40 text-red-400 rounded text-[9px] font-mono truncate" data-i18n="lblAttachedExpAudioStd">Audio Explicit Adjunto</div>
-                                <input type="file" id="lvlAudioFileExplicit" accept="audio/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                             </div>
 
-                            <!-- EXPLICIT STANDARD -->
                             <div class="space-y-2 border-b border-red-950/60 pb-2">
                                 <span class="font-extrabold text-zinc-300 text-[10px] uppercase">Standard (Explicit)</span>
                                 <div class="grid grid-cols-2 gap-2">
@@ -650,29 +607,23 @@
                                         <label class="text-[10px] font-bold text-red-400" data-i18n="formRelease">Lanzamiento Explicit</label>
                                         <button type="button" id="btn-picker-lvl-explicit" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar fecha</button>
                                     </div>
-                                    <input type="date" id="lvlDateExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                    <div id="slot-lvl-date-exp-std">
+                                        <input type="date" id="lvlDateExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <div class="flex items-center justify-between mb-0.5">
-                                        <label class="text-[10px] font-bold text-red-400" data-i18n="lblExpVideoStd">Video Standard Explicit</label>
-                                        <button type="button" id="btn-remove-lvl-video-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                            <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                        </button>
+                                    <label class="text-[10px] font-bold text-red-400 block mb-1" data-i18n="lblExpVideoStd">Video Standard Explicit</label>
+                                    <div id="slot-lvl-video-exp-std">
+                                        <input type="file" id="lvlVideoFileExplicit" accept="video/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                     </div>
-                                    <div id="badge-lvl-video-explicit" class="hidden mb-1 px-2 py-0.5 bg-red-950/40 border border-red-800/40 text-red-400 rounded text-[9px] font-mono truncate" data-i18n="lblAttachedExpVideoStd">Video Standard Explicit Adjunto</div>
-                                    <input type="file" id="lvlVideoFileExplicit" accept="video/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                 </div>
 
                                 <div>
-                                    <div class="flex items-center justify-between mb-0.5">
-                                        <label class="text-[10px] font-bold text-red-400" data-i18n="lblExpZipStd">ZIP Standard Explicit</label>
-                                        <button type="button" id="btn-remove-lvl-zip-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                            <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                        </button>
+                                    <label class="text-[10px] font-bold text-red-400 block mb-1" data-i18n="lblExpZipStd">ZIP Standard Explicit</label>
+                                    <div id="slot-lvl-zip-exp-std">
+                                        <input type="file" id="lvlChartZipFileExplicit" accept=".zip" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                     </div>
-                                    <div id="badge-lvl-zip-explicit" class="hidden mb-1 px-2 py-0.5 bg-red-950/40 border border-red-800/40 text-red-400 rounded text-[9px] font-mono truncate" data-i18n="lblAttachedExpZipStd">ZIP Standard Explicit Adjunto</div>
-                                    <input type="file" id="lvlChartZipFileExplicit" accept=".zip" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                 </div>
 
                                 <input type="url" id="lvlDl1Explicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="Discord Explicit URL">
@@ -680,7 +631,6 @@
                                 <input type="url" id="lvlDl3Explicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="beatcharts Explicit URL">
                             </div>
 
-                            <!-- EXPLICIT DELUXE -->
                             <div id="sub-section-explicit-deluxe" class="space-y-2">
                                 <span class="font-extrabold text-yellow-400 text-[10px] uppercase">Deluxe (Explicit)</span>
                                 <div class="grid grid-cols-2 gap-2">
@@ -692,29 +642,23 @@
                                         <label class="text-[10px] font-bold text-yellow-500" data-i18n="lblDeluxeRelease">Lanzamiento Deluxe Explicit</label>
                                         <button type="button" id="btn-picker-lvl-deluxe-explicit" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar fecha</button>
                                     </div>
-                                    <input type="date" id="lvlDateDeluxeExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                    <div id="slot-lvl-date-exp-dlx">
+                                        <input type="date" id="lvlDateDeluxeExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <div class="flex items-center justify-between mb-0.5">
-                                        <label class="text-[10px] font-bold text-yellow-500" data-i18n="lblExpVideoDlx">Video Deluxe Explicit</label>
-                                        <button type="button" id="btn-remove-lvl-video-dlx-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                            <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                        </button>
+                                    <label class="text-[10px] font-bold text-yellow-500 block mb-1" data-i18n="lblExpVideoDlx">Video Deluxe Explicit</label>
+                                    <div id="slot-lvl-video-exp-dlx">
+                                        <input type="file" id="lvlVideoFileDeluxeExplicit" accept="video/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                     </div>
-                                    <div id="badge-lvl-video-dlx-explicit" class="hidden mb-1 px-2 py-0.5 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[9px] font-mono truncate" data-i18n="lblAttachedExpVideoDlx">Video Deluxe Explicit Adjunto</div>
-                                    <input type="file" id="lvlVideoFileDeluxeExplicit" accept="video/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                 </div>
 
                                 <div>
-                                    <div class="flex items-center justify-between mb-0.5">
-                                        <label class="text-[10px] font-bold text-yellow-500" data-i18n="lblExpZipDlx">ZIP Deluxe Explicit</label>
-                                        <button type="button" id="btn-remove-lvl-zip-dlx-explicit" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                            <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                        </button>
+                                    <label class="text-[10px] font-bold text-yellow-500 block mb-1" data-i18n="lblExpZipDlx">ZIP Deluxe Explicit</label>
+                                    <div id="slot-lvl-zip-exp-dlx">
+                                        <input type="file" id="lvlChartZipFileDeluxeExplicit" accept=".zip" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                     </div>
-                                    <div id="badge-lvl-zip-dlx-explicit" class="hidden mb-1 px-2 py-0.5 bg-yellow-950/40 border border-yellow-800/40 text-yellow-400 rounded text-[9px] font-mono truncate" data-i18n="lblAttachedExpZipDlx">ZIP Deluxe Explicit Adjunto</div>
-                                    <input type="file" id="lvlChartZipFileDeluxeExplicit" accept=".zip" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                 </div>
 
                                 <input type="url" id="lvlDl1DeluxeExplicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="Discord Deluxe Explicit URL">
@@ -727,14 +671,13 @@
                             <button type="button" id="btn-cancel-lvl-form" class="flex-1 py-2 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white font-black uppercase rounded-lg transition">
                                 <span data-i18n="btnCancel">Cancelar</span>
                             </button>
-                            <button type="submit" id="lvlSubmitBtn" class="flex-1 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-black font-black uppercase rounded-lg shadow transition hover:opacity-90">
+                            <button type="submit" id="lvlSubmitBtn" disabled class="flex-1 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-black font-black uppercase rounded-lg shadow transition hover:opacity-90 opacity-50 cursor-not-allowed">
                                 <span data-i18n="btnRegister">Registrar</span>
                             </button>
                         </div>
                     </form>
                 </div>
 
-                <!-- REGISTRO Y FILTROS CHARTS -->
                 <div id="levels-table-container" class="w-full overflow-hidden flex flex-col space-y-4 flex-grow">
                     <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex flex-col sm:flex-row landscape-pc-flex-row items-start sm:items-center justify-between gap-4">
                         <div class="flex flex-col items-start justify-center shrink-0">
@@ -847,27 +790,26 @@
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadIcon">Subir Icono</label>
                             <div id="cosIconPreviewBox" class="hidden relative w-20 h-20 mb-2 rounded-lg overflow-hidden border border-fuchsia-500/40 bg-black">
                                 <img id="cosIconPreviewImg" class="w-full h-full object-cover">
-                                <button type="button" id="btn-delete-cos-icon-preview" class="absolute top-1 right-1 bg-red-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shadow"><i class="fa-solid fa-xmark"></i></button>
                             </div>
-                            <input type="file" id="cosIconFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                            <div id="slot-cos-icon">
+                                <input type="file" id="cosIconFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                            </div>
                         </div>
                         <div>
-                            <div class="flex items-center justify-between mb-0.5">
-                                <label class="font-bold text-zinc-400" data-i18n="formUploadVideo">Subir Video (MP4)</label>
-                                <button type="button" id="btn-remove-cos-video" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                    <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                </button>
-                            </div>
+                            <label class="font-bold text-zinc-400 block mb-0.5" data-i18n="formUploadVideo">Subir Video (MP4)</label>
                             <p class="text-[10px] text-fuchsia-400/90 font-semibold mb-1" data-i18n="labelMaxVideoSize">Máx. 100 MB</p>
-                            <div id="current-cos-video-badge" class="hidden mb-1 px-2 py-1 bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-400 rounded text-[10px] font-mono truncate">Video Adjunto</div>
-                            <input type="file" id="cosVideoFile" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                            <div id="slot-cos-video">
+                                <input type="file" id="cosVideoFile" accept="video/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                            </div>
                         </div>
                         <div>
                             <div class="flex items-center justify-between mb-1 gap-1">
                                 <label class="font-bold text-zinc-400 uppercase tracking-wider"><span data-i18n="formRelease">Lanzamiento</span> (<span data-i18n="labelOptional">Opcional</span>)</label>
                                 <button type="button" id="btn-picker-cos" class="px-2 py-0.5 bg-white text-black font-extrabold rounded text-[10px] hover:bg-zinc-200 transition" data-i18n="btnChangeDate">Cambiar Fecha</button>
                             </div>
-                            <input type="date" id="cosDate" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                            <div id="slot-cos-date">
+                                <input type="date" id="cosDate" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                            </div>
                             <input type="hidden" id="cosIsComingSoon" value="false">
                         </div>
 
@@ -890,42 +832,33 @@
                         <div>
                             <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadBrand">Subir Marca / Inspiración</label>
                             
-                            <!-- Submenú de selección de modo -->
                             <div class="flex gap-2 mb-2">
                                 <button type="button" id="btn-brand-mode-existing" class="flex-1 py-1.5 bg-fuchsia-950/60 border border-fuchsia-800/40 text-fuchsia-300 font-extrabold rounded-lg text-[10px] uppercase transition hover:bg-fuchsia-900/60" data-i18n="selectExistingBrand">Elegir existente</button>
                                 <button type="button" id="btn-brand-mode-upload" class="flex-1 py-1.5 bg-zinc-900 border border-zinc-800 text-zinc-400 font-extrabold rounded-lg text-[10px] uppercase transition hover:bg-zinc-800 hover:text-white" data-i18n="uploadNewBrand">Subir nueva</button>
                             </div>
 
-                            <!-- Selector de marcas existentes (Desplegable) -->
                             <div id="box-brand-select-existing" class="hidden mb-2">
                                 <select id="selectExistingBrandUrl" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100 font-bold text-xs">
                                     <option value="" disabled selected data-i18n="selectExistingBrand">Elegir existente...</option>
                                 </select>
                             </div>
 
-                            <!-- Input para subir archivo nuevo a la página localmente -->
                             <div id="box-brand-upload-new" class="mb-2">
                                 <input type="file" id="cosBrandFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                             </div>
 
-                            <!-- Campo para asignar el nombre obligatorio tras seleccionar una nueva imagen -->
                             <div id="box-brand-name-field" class="hidden mb-2">
                                 <label class="block font-bold text-fuchsia-400 text-[10px] mb-1 uppercase" data-i18n="brandNameLabel">Nombre de la marca</label>
                                 <input type="text" id="cosBrandNameInput" placeholder="Nombre de la marca" data-i18n-ph="brandNamePlaceholder" class="w-full bg-[#05020a] border border-fuchsia-500 p-2 rounded-lg text-zinc-100 text-xs">
                             </div>
 
-                            <!-- Lista de marcas asignadas a la skin actual -->
                             <div id="cosBrandManagementList" class="flex flex-col gap-1.5 my-2 max-h-40 overflow-y-auto bg-black/40 p-2 rounded border border-zinc-800 hidden"></div>
                         </div>
                         <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadSkinFile">Subir Archivo (.zip)</label>
-                                <button type="button" id="btn-remove-skin-zip" class="hidden text-red-400 hover:text-red-300 font-extrabold text-[10px] uppercase flex items-center gap-1">
-                                    <i class="fa-solid fa-trash"></i> <span data-i18n="btnDelete">Eliminar</span>
-                                </button>
+                            <label class="block font-bold text-zinc-400 mb-1" data-i18n="formUploadSkinFile">Subir Archivo (.zip)</label>
+                            <div id="slot-cos-zip">
+                                <input type="file" id="cosSkinZipFile" accept=".zip" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                             </div>
-                            <div id="current-skin-zip-badge" class="hidden mb-1 px-2 py-1 bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 rounded text-[10px] font-mono truncate">ZIP Adjunto</div>
-                            <input type="file" id="cosSkinZipFile" accept=".zip" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
                         </div>
                         <div class="space-y-2 border-t border-fuchsia-950/40 pt-2">
                             <input type="url" id="cosDl1" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-[11px]" placeholder="Discord Link">
@@ -935,7 +868,7 @@
                             <button type="button" id="btn-cancel-cos-form" class="flex-1 py-2 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white font-black uppercase rounded-lg transition">
                                 <span data-i18n="btnCancel">Cancelar</span>
                             </button>
-                            <button type="submit" id="cosSubmitBtn" class="flex-1 py-2 bg-gradient-to-r from-fuchsia-500 to-pink-500 text-black font-black uppercase rounded-lg shadow transition hover:opacity-90">
+                            <button type="submit" id="cosSubmitBtn" disabled class="flex-1 py-2 bg-gradient-to-r from-fuchsia-500 to-pink-500 text-black font-black uppercase rounded-lg shadow transition hover:opacity-90 opacity-50 cursor-not-allowed">
                                 <span data-i18n="btnRegister">Registrar</span>
                             </button>
                         </div>
@@ -993,7 +926,6 @@
                     </div>
 
                     <div id="container-workspace-tapwave" class="hidden flex-col space-y-3 w-full">
-                        <!-- AVISO DISCORD TAPWAVE -->
                         <div id="tapwave-discord-notice-box" class="hidden w-full bg-[#11091c] border border-orange-500/40 rounded-2xl p-4 sm:p-5 flex-col sm:flex-row items-center justify-between gap-4 shadow-xl glow-orange">
                             <div class="text-center sm:text-left text-xs sm:text-sm font-semibold text-zinc-200 leading-relaxed" data-i18n="tapwaveDiscordNotice">
                                 Para poder usar este contenido es necesario unirse al servidor de Discord de TapWave.
@@ -1035,7 +967,6 @@
         </section>
     </main>
 
-    <!-- FOOTER -->
     <footer class="border-t border-fuchsia-950/20 bg-[#05020a] py-6 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div id="footer-boogie-admin-box" class="hidden md:flex items-center z-10">
@@ -1060,7 +991,6 @@
 
     <script type="module" src="js/app.js"></script>
 
-<!-- SCRIPT TRADICIONAL GLOBAL PARA EL OJO DE CONTRASEÑAS -->
     <script>
         function toggleBoogiePassword(inputId, btnElement) {
             var input = document.getElementById(inputId);
