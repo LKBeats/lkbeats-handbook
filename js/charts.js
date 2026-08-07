@@ -1,7 +1,7 @@
 import { ref, set, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 import { db, uploadFileToCloudflareR2 } from "./services.js";
 import { translations } from "./i18n.js";
-import { toggleAudioPreviewEngine } from "./audio-player.js";
+import { toggleAudioPreviewEngine, startRadialCanvasVisualizer, getActiveAudioElement, getAudioAnalyser } from "./audio-player.js";
 
 export function initChartsModule(state) {
     const {
@@ -424,6 +424,15 @@ export function initChartsModule(state) {
                 </td>
             `;
 
+            if (isThisAudioPlaying) {
+                const canvas = tr.querySelector('canvas');
+                const containerBox = tr.querySelector('.target-art-outer-container');
+                const analyser = getAudioAnalyser ? getAudioAnalyser() : null;
+                if (canvas && analyser) {
+                    startRadialCanvasVisualizer(canvas, analyser, containerBox, targetAudioThemeColor);
+                }
+            }
+
             if (isDual) {
                 const artBox = tr.querySelector('.target-art-outer-container');
                 artBox?.addEventListener('click', () => {
@@ -435,7 +444,6 @@ export function initChartsModule(state) {
                         const modalContainer = document.getElementById('modal-edition-art-container');
                         const targetColor = isDeluxeActive ? "#facc15" : "#d946ef";
 
-                        // keepPlayingIfSame = true e isModalOpen = true para que continúe en bucle sin interrupción si ya sonaba
                         toggleAudioPreviewEngine(currentAudioUrl, null, modalImg, modalCanvas, modalContainer, true, targetColor, true);
                     }
                 });
@@ -444,7 +452,6 @@ export function initChartsModule(state) {
             const explicitBtn = tr.querySelector('.btn-toggle-explicit-trigger');
             explicitBtn?.addEventListener('click', (e) => {
                 e.stopPropagation();
-                // NOTA: NO llamamos a stopAllMedia() aquí para que siga sonando mientras ve el aviso
                 if (activeChartExplicitStates[lvl.id]) {
                     activeChartExplicitStates[lvl.id] = false;
                     renderLevelsTable();
@@ -481,15 +488,6 @@ export function initChartsModule(state) {
                 const containerBox = tr.querySelector('.target-art-outer-container');
 
                 btn.addEventListener('click', () => toggleAudioPreviewEngine(currentAudioUrl, btn, img, canvas, containerBox, false, targetAudioThemeColor, false));
-            }
-            
-            if (isThisAudioPlaying) {
-                const canvas = tr.querySelector('canvas');
-                const containerBox = tr.querySelector('.target-art-outer-container');
-                const analyser = getAudioAnalyser ? getAudioAnalyser() : null;
-                if (canvas && analyser) {
-                    startRadialCanvasVisualizer(canvas, analyser, containerBox, targetAudioThemeColor);
-                }
             }
 
             if (currentChartZip) {
