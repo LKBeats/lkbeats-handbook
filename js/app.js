@@ -585,6 +585,19 @@ function buildVisualAssetsGenresList() {
     });
 }
 
+function resetBoogieAuthModal() {
+    document.getElementById('boogie-auth-modal')?.classList.add('hidden');
+    const errorMsgEl = document.getElementById('boogie-auth-error-msg');
+    if (errorMsgEl) {
+        errorMsgEl.classList.add('hidden');
+        errorMsgEl.innerText = '';
+    }
+    ['boogieCred1', 'boogieCred2', 'boogieCred3'].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) input.value = '';
+    });
+}
+
 // =========================================================
 // 5. INICIALIZACIÓN DE MÓDULOS DE VISTA
 // =========================================================
@@ -621,7 +634,7 @@ const chartsModule = initChartsModule(stateForModules);
 const skinsModule = initSkinsModule(stateForModules);
 
 function applyRoleUIVisibility() {
-    ['level-form-container', 'cosmetic-form-container', 'footer-links-management-box', 'visual-assets-panel-box', 'thanks-videos-panel-box', 'notifications-management-box'].forEach(id => {
+    ['level-form-container', 'cosmetic-form-container', 'footer-links-management-box', 'visual-assets-panel-box', 'thanks-videos-panel-box'].forEach(id => {
         document.getElementById(id)?.classList.toggle('hidden', !isCreatorMode);
     });
     document.querySelectorAll('.creator-action-header').forEach(el => el.classList.toggle('hidden', !isCreatorMode));
@@ -942,7 +955,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnBoogieTrigger = document.getElementById('btn-boogie-admin-trigger');
     btnBoogieTrigger?.addEventListener('click', () => {
         if (isCreatorMode) document.getElementById('boogie-exit-modal')?.classList.remove('hidden');
-        else document.getElementById('boogie-auth-modal')?.classList.remove('hidden');
+        else {
+            resetBoogieAuthModal();
+            document.getElementById('boogie-auth-modal')?.classList.remove('hidden');
+        }
     });
 
     document.getElementById('btn-confirm-exit-creator')?.addEventListener('click', () => {
@@ -954,45 +970,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('boogie-auth-form')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (document.getElementById('boogieCred1').value === "BeatstarTest") {
+        const inputVal = document.getElementById('boogieCred1').value;
+        const errorMsgEl = document.getElementById('boogie-auth-error-msg');
+
+        if (inputVal === "BeatstarTest") {
             isCreatorMode = true;
             btnBoogieTrigger?.classList.add('glow-green');
             applyRoleUIVisibility();
-            document.getElementById('boogie-auth-modal')?.classList.add('hidden');
+            resetBoogieAuthModal();
+        } else {
+            if (errorMsgEl) {
+                errorMsgEl.innerText = translations[currentLanguage].invalidCredentials || "Credenciales incorrectas";
+                errorMsgEl.classList.remove('hidden');
+                errorMsgEl.classList.add('block');
+            }
         }
     });
-
-    function resetBoogieAuthModal() {
-    document.getElementById('boogie-auth-modal')?.classList.add('hidden');
-    const errorMsgEl = document.getElementById('boogie-auth-error-msg');
-    if (errorMsgEl) {
-        errorMsgEl.classList.add('hidden');
-        errorMsgEl.innerText = '';
-    }
-    ['boogieCred1', 'boogieCred2', 'boogieCred3'].forEach(id => {
-        const input = document.getElementById(id);
-        if (input) input.value = '';
-    });
-}
-
-    document.getElementById('boogie-auth-form')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const inputVal = document.getElementById('boogieCred1').value;
-    const errorMsgEl = document.getElementById('boogie-auth-error-msg');
-
-    if (inputVal === "BeatstarTest") {
-        isCreatorMode = true;
-        btnBoogieTrigger?.classList.add('glow-green');
-        applyRoleUIVisibility();
-        resetBoogieAuthModal();
-    } else {
-        if (errorMsgEl) {
-            errorMsgEl.innerText = translations[currentLanguage].invalidCredentials || "Credenciales incorrectas";
-            errorMsgEl.classList.remove('hidden');
-            errorMsgEl.classList.add('block');
-        }
-    }
-});
 
     document.getElementById('download-modal-btn-close')?.addEventListener('click', () => {
         stopAllMedia();
@@ -1004,8 +997,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('thanks-custom-modal')?.classList.add('hidden');
     });
     
-    document.getElementById('btn-close-boogie-modal')?.addEventListener('click', () => document.getElementById('boogie-auth-modal')?.classList.add('hidden'));
-    document.getElementById('btn-close-boogie-modal-x')?.addEventListener('click', () => document.getElementById('boogie-auth-modal')?.classList.add('hidden'));
+    document.getElementById('btn-close-boogie-modal')?.addEventListener('click', resetBoogieAuthModal);
+    document.getElementById('btn-close-boogie-modal-x')?.addEventListener('click', resetBoogieAuthModal);
     document.getElementById('btn-cancel-exit-creator')?.addEventListener('click', () => document.getElementById('boogie-exit-modal')?.classList.add('hidden'));
     document.getElementById('btn-cancel-delete')?.addEventListener('click', () => document.getElementById('confirm-delete-modal')?.classList.add('hidden'));
     document.getElementById('btn-cancel-explicit')?.addEventListener('click', () => document.getElementById('explicit-warning-modal')?.classList.add('hidden'));
