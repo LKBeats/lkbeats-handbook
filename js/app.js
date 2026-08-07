@@ -720,9 +720,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-cancel-explicit')?.addEventListener('click', () => document.getElementById('explicit-warning-modal')?.classList.add('hidden'));
     
     document.getElementById('btn-close-beatstar-modal')?.addEventListener('click', () => {
-        setAudioLoopState(false); // Quita el bucle para que termine normal
+        const activeAudio = getActiveAudioElement();
+        if (activeAudio) activeAudio.loop = false; // <--- Desactiva el bucle directamente
+        
         document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
-        chartsModule.renderLevelsTable(); // Restaura el canvas y carátula circular en la tabla si sigue sonando
+        chartsModule.renderLevelsTable(); // Sincroniza el canvas y la carátula circular en la tabla
     });
 
     // 6. Modal Sin Censura (Explicit)
@@ -759,7 +761,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-opt-standard')?.addEventListener('click', () => {
         if (activeModalBeatstarChart) {
             activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Standard';
-            setAudioLoopState(false);
+            
+            const activeAudio = getActiveAudioElement();
+            if (activeAudio) activeAudio.loop = false; // <--- Desactiva el bucle directamente
+            
             document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
             chartsModule.renderLevelsTable();
         }
@@ -768,7 +773,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-opt-deluxe')?.addEventListener('click', () => {
         if (activeModalBeatstarChart) {
             activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Deluxe';
-            setAudioLoopState(false);
+            
+            const activeAudio = getActiveAudioElement();
+            if (activeAudio) activeAudio.loop = false; // <--- Desactiva el bucle directamente
+            
             document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
             chartsModule.renderLevelsTable();
         }
