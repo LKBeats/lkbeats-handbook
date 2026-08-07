@@ -8,12 +8,19 @@ import {
     getAudioAnalyser, 
     startRadialCanvasVisualizer 
 } from "./audio-player.js";
-import { subscribeToNotifications, deleteNotificationManually } from "./notifications-manager.js";
+import { 
+    subscribeToNotifications, 
+    deleteNotificationManually, 
+    setCreatorModeInNotifications,
+    nextNotification,
+    previousNotification
+} from "./notifications-manager.js";
 import { initChartsModule } from "./charts.js";
 import { initSkinsModule } from "./skins.js";
 
 // Variable global para mantener la última notificación activa y re-renderizarla al cargar assets
 let latestActiveNotification = null;
+let latestNotifMeta = { totalActive: 0, currentIndex: 0 };
 
 // Funciones auxiliares para renderizar badges dinámicos con iconos en las notificaciones
 function renderNotifGenresBadgesHtml(rawGenre) {
@@ -79,7 +86,7 @@ function renderNotifEditionTagHtml(editionVal) {
 }
 
 // Función para renderizar o actualizar el DOM del banner de notificación
-function drawNotificationBanner(activeNotif) {
+function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
     const banner = document.getElementById('home-notification-banner');
     const content = document.getElementById('notif-banner-content');
     
@@ -105,49 +112,101 @@ function drawNotificationBanner(activeNotif) {
             : (isEn ? 'Skin Available' : 'Skin Disponible');
     }
 
+    // Botón manual de cierre "X" (para modo creador)
+    const deleteBtnMarkup = isCreatorMode ? `
+        <button id="btn-banner-delete-x" type="button" class="absolute top-2 right-2 w-7 h-7 bg-red-950/80 border border-red-800/80 text-red-400 hover:bg-red-900 hover:text-white rounded-full flex items-center justify-center font-black text-xs transition shadow-lg z-30" title="${isEn ? 'Delete Notification' : 'Eliminar Notificación'}">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    ` : '';
+
+    // Controles de navegación manual si ambas notificaciones están activas en Modo Creador
+    let manualNavMarkup = '';
+    if (isCreatorMode && meta.totalActive === 2) {
+        manualNavMarkup = `
+            <div class="flex items-center gap-2 mt-2 sm:mt-0 z-20">
+                <button id="btn-notif-prev" type="button" class="w-7 h-7 bg-zinc-900 border border-fuchsia-800/60 text-fuchsia-400 hover:bg-fuchsia-950 rounded-lg flex items-center justify-center text-xs transition">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <span class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">${meta.currentIndex + 1} / 2</span>
+                <button id="btn-notif-next" type="button" class="w-7 h-7 bg-zinc-900 border border-fuchsia-800/60 text-fuchsia-400 hover:bg-fuchsia-950 rounded-lg flex items-center justify-center text-xs transition">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        `;
+    }
+
     if (activeNotif.category === 'chart') {
         content.innerHTML = `
-            <div class="flex items-center gap-3.5">
-                <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-orange-500/40 shadow-lg shrink-0">
-                <div>
-                    <span class="text-xs font-black uppercase tracking-widest text-orange-400 block mb-0.5">${notifTitle}</span>
-                    <h3 class="text-sm sm:text-base font-black text-white leading-tight tracking-wide">${activeNotif.song}</h3>
-                    <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
+            ${deleteBtnMarkup}
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full pr-8">
+                <div class="flex items-center gap-3.5">
+                    <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-orange-500/40 shadow-lg shrink-0">
+                    <div>
+                        <span class="text-xs font-black uppercase tracking-widest text-orange-400 block mb-0.5">${notifTitle}</span>
+                        <h3 class="text-sm sm:text-base font-black text-white leading-tight tracking-wide">${activeNotif.song}</h3>
+                        <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="flex items-center gap-2 flex-wrap justify-start sm:justify-end">
-                ${renderNotifGenresBadgesHtml(activeNotif.genre)}
-                ${renderNotifDiffTagHtml(activeNotif.diff)}
-                ${renderNotifEditionTagHtml(activeNotif.edition)}
+                <div class="flex flex-col sm:items-end gap-2 w-full sm:w-auto">
+                    <div class="flex items-center gap-2 flex-wrap justify-start sm:justify-end">
+                        ${renderNotifGenresBadgesHtml(activeNotif.genre)}
+                        ${renderNotifDiffTagHtml(activeNotif.diff)}
+                        ${renderNotifEditionTagHtml(activeNotif.edition)}
+                    </div>
+                    ${manualNavMarkup}
+                </div>
             </div>
         `;
     } else if (activeNotif.category === 'skin') {
         const platformLogo = activeNotif.platform === 'TapWave' ? 'TapWaveWhiteLogo.png' : 'BeatstarWhiteLogo.png';
         content.innerHTML = `
-            <div class="flex items-center gap-3.5">
-                <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-fuchsia-500/40 shadow-lg shrink-0">
-                <div>
-                    <span class="text-xs font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">${notifTitle}</span>
-                    <h3 class="text-sm sm:text-base font-black text-white leading-tight tracking-wide">${activeNotif.skinName}</h3>
-                    <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
+            ${deleteBtnMarkup}
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full pr-8">
+                <div class="flex items-center gap-3.5">
+                    <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-fuchsia-500/40 shadow-lg shrink-0">
+                    <div>
+                        <span class="text-xs font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">${notifTitle}</span>
+                        <h3 class="text-sm sm:text-base font-black text-white leading-tight tracking-wide">${activeNotif.skinName}</h3>
+                        <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-7 object-contain">
+                <div class="flex flex-col sm:items-end gap-2 w-full sm:w-auto">
+                    <div class="flex items-center gap-2">
+                        <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-7 object-contain">
+                    </div>
+                    ${manualNavMarkup}
+                </div>
             </div>
         `;
     }
+
+    // Eventos para los controles del banner
+    if (isCreatorMode) {
+        document.getElementById('btn-banner-delete-x')?.addEventListener('click', () => {
+            stateForModules.requestUserDeleteConfirmation(() => {
+                deleteNotificationManually(activeNotif.category);
+            });
+        });
+    }
+
+    document.getElementById('btn-notif-prev')?.addEventListener('click', () => previousNotification());
+    document.getElementById('btn-notif-next')?.addEventListener('click', () => nextNotification());
 }
 
 // Inicialización del banner de notificaciones
-subscribeToNotifications((activeNotif) => {
+subscribeToNotifications((activeNotif, meta) => {
     latestActiveNotification = activeNotif;
-    drawNotificationBanner(activeNotif);
-});
+    latestNotifMeta = meta;
+    drawNotificationBanner(activeNotif, meta);
+}, isCreatorMode);
 
 // Eventos de borrado manual desde el panel del creador
-document.getElementById('btn-delete-notif-chart')?.addEventListener('click', () => deleteNotificationManually('chart'));
-document.getElementById('btn-delete-notif-skin')?.addEventListener('click', () => deleteNotificationManually('skin'));
+document.getElementById('btn-delete-notif-chart')?.addEventListener('click', () => {
+    stateForModules.requestUserDeleteConfirmation(() => deleteNotificationManually('chart'));
+});
+document.getElementById('btn-delete-notif-skin')?.addEventListener('click', () => {
+    stateForModules.requestUserDeleteConfirmation(() => deleteNotificationManually('skin'));
+});
 
 const genreList = [
     { color: "#bf2726", label: "Rock" },
@@ -286,7 +345,7 @@ function navigateTo(view, pushState = true) {
     document.getElementById(`view-${view}`)?.classList.remove('hidden');
 
     const shortcuts = document.getElementById('nav-shortcuts');
-    const sep = document.getElementById('nav-separator');
+    const sep = document.getElementById('nav-[#nav-separator]');
     const footerBoogieBox = document.getElementById('footer-boogie-admin-box');
 
     if (view === 'home') {
@@ -554,7 +613,7 @@ const chartsModule = initChartsModule(stateForModules);
 const skinsModule = initSkinsModule(stateForModules);
 
 function applyRoleUIVisibility() {
-    ['level-form-container', 'cosmetic-form-container', 'footer-links-management-box', 'visual-assets-panel-box', 'thanks-videos-panel-box'].forEach(id => {
+    ['level-form-container', 'cosmetic-form-container', 'footer-links-management-box', 'visual-assets-panel-box', 'thanks-videos-panel-box', 'notifications-management-box'].forEach(id => {
         document.getElementById(id)?.classList.toggle('hidden', !isCreatorMode);
     });
     document.querySelectorAll('.creator-action-header').forEach(el => el.classList.toggle('hidden', !isCreatorMode));
@@ -570,6 +629,11 @@ function applyRoleUIVisibility() {
         lvlGrid?.classList.add('flex-col');
         cosGrid?.classList.replace('xl:flex-row', 'flex-col');
         cosGrid?.classList.add('flex-col');
+    }
+
+    setCreatorModeInNotifications(isCreatorMode);
+    if (latestActiveNotification) {
+        drawNotificationBanner(latestActiveNotification);
     }
 
     chartsModule.renderLevelsTable();

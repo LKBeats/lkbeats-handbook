@@ -11,6 +11,8 @@ let currentActiveNotifs = {
 
 let activeRotationIndex = 0;
 let rotationTimer = null;
+let currentRenderCallback = null;
+let currentIsCreatorMode = false;
 
 /**
  * Agrega o reemplaza la notificación actual para la categoría especificada.
@@ -43,7 +45,7 @@ export async function createOrUpdateNotification(category, data) {
 }
 
 /**
- * Elimina manualmente una notificación (Uso desde el modo creador).
+ * Elimina manualmente una notificación (Uso desde el botón "X" o panel de creador).
  * @param {'chart'|'skin'} category 
  */
 export async function deleteNotificationManually(category) {
@@ -52,11 +54,38 @@ export async function deleteNotificationManually(category) {
 }
 
 /**
+ * Elimina la notificación si se elimina el registro correspondiente.
+ * @param {'chart'|'skin'} category 
+ */
+export async function checkAndDeleteNotifOnRecordDelete(category) {
+    if (!db) return;
+    if (currentActiveNotifs[category]) {
+        await remove(ref(db, `active_notifications/${category}`));
+    }
+}
+
+/**
+ * Elimina la notificación si se elimina el archivo .zip y la notificación activa es de tipo 'zip' ("Chart/Skin Disponible").
+ * @param {'chart'|'skin'} category 
+ */
+export async function checkAndDeleteNotifOnZipDelete(category) {
+    if (!db) return;
+    const activeNotif = currentActiveNotifs[category];
+    if (activeNotif && activeNotif.type === 'zip') {
+        await remove(ref(db, `active_notifications/${category}`));
+    }
+}
+
+/**
  * Escucha las notificaciones activas de Firebase y limpia de manera automática las mayores a 7 días.
  * @param {Function} renderCallback 
+ * @param {boolean} isCreatorMode 
  */
-export function subscribeToNotifications(renderCallback) {
+export function subscribeToNotifications(renderCallback, isCreatorMode = false) {
     if (!db) return;
+
+    currentRenderCallback = renderCallback;
+    currentIsCreatorMode = isCreatorMode;
 
     onValue(ref(db, 'active_notifications'), (snap) => {
         const data = snap.val() || {};
@@ -77,41 +106,97 @@ export function subscribeToNotifications(renderCallback) {
         currentActiveNotifs.chart = data.chart || null;
         currentActiveNotifs.skin = data.skin || null;
 
-        startRotationLoop(renderCallback);
+        startRotationLoop();
     });
 }
 
 /**
- * Inicia o reinicia el ciclo de alternancia entre notificaciones si ambas existen.
+ * Actualiza el estado del modo creador y re-evalúa la rotación/suspensión.
+ * @param {boolean} isCreatorMode 
  */
-function startRotationLoop(renderCallback) {
-    if (rotationTimer) clearInterval(rotationTimer);
+export function setCreatorModeInNotifications(isCreatorMode) {
+    currentIsCreatorMode = isCreatorMode;
+    startRotationLoop();
+}
+
+/**
+ * Alterna manualmente a la siguiente notificación (si hay 2 activas).
+ */
+export function nextNotification() {
+    if (currentActiveNotifs.chart && currentActiveNotifs.skin) {
+        activeRotationIndex = (activeRotationIndex + 1) % 2;
+        renderActiveSelection();
+    }
+}
+
+/**
+ * Alterna manualmente a la notificación anterior (si hay 2 activas).
+ */
+export function previousNotification() {
+    if (currentActiveNotifs.chart && currentActiveNotifs.skin) {
+        activeRotationIndex = (activeRotationIndex - 1 + 2) % 2;
+        renderActiveSelection();
+    }
+}
+
+/**
+ * Renderiza la notificación basada en el índice activo actual.
+ */
+function renderActiveSelection() {
+    if (!currentRenderCallback) return;
 
     const hasChart = !!currentActiveNotifs.chart;
     const hasSkin = !!currentActiveNotifs.skin;
+    const totalActive = (hasChart ? 1 : 0) + (hasSkin ? 1 : 0);
 
-    if (!hasChart && !hasSkin) {
-        renderCallback(null);
+    if (totalActive === 0) {
+        currentRenderCallback(null, { totalActive: 0, currentIndex: 0 });
         return;
     }
 
     if (hasChart && !hasSkin) {
-        renderCallback(currentActiveNotifs.chart);
+        activeRotationIndex = 0;
+        currentRenderCallback(currentActiveNotifs.chart, { totalActive: 1, currentIndex: 0 });
         return;
     }
 
     if (!hasChart && hasSkin) {
-        renderCallback(currentActiveNotifs.skin);
+        activeRotationIndex = 1;
+        currentRenderCallback(currentActiveNotifs.skin, { totalActive: 1, currentIndex: 0 });
         return;
     }
 
-    // Si ambas existen, alternar cada 15 segundos
-    activeRotationIndex = 0;
-    renderCallback(currentActiveNotifs.chart);
+    // Ambas activas
+    const target = activeRotationIndex === 0 ? currentActiveNotifs.chart : currentActiveNotifs.skin;
+    currentRenderCallback(target, { totalActive: 2, currentIndex: activeRotationIndex });
+}
 
-    rotationTimer = setInterval(() => {
-        activeRotationIndex = (activeRotationIndex + 1) % 2;
-        const target = activeRotationIndex === 0 ? currentActiveNotifs.chart : currentActiveNotifs.skin;
-        renderCallback(target);
-    }, ROTATION_INTERVAL_MS);
+/**
+ * Inicia, detiene o gestiona el ciclo de alternancia entre notificaciones.
+ */
+function startRotationLoop() {
+    if (rotationTimer) {
+        clearInterval(rotationTimer);
+        rotationTimer = null;
+    }
+
+    const hasChart = !!currentActiveNotifs.chart;
+    const hasSkin = !!currentActiveNotifs.skin;
+
+    if (!hasChart || !hasSkin) {
+        activeRotationIndex = hasChart ? 0 : (hasSkin ? 1 : 0);
+        renderActiveSelection();
+        return;
+    }
+
+    // Si ambas existen
+    renderActiveSelection();
+
+    // Si NO estamos en modo creador, rotar automáticamente cada 15 segundos
+    if (!currentIsCreatorMode) {
+        rotationTimer = setInterval(() => {
+            activeRotationIndex = (activeRotationIndex + 1) % 2;
+            renderActiveSelection();
+        }, ROTATION_INTERVAL_MS);
+    }
 }

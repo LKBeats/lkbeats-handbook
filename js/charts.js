@@ -2,7 +2,11 @@ import { ref, set, remove } from "https://www.gstatic.com/firebasejs/10.8.0/fire
 import { db, uploadFileToCloudflareR2, deleteFileFromCloudflareR2 } from "./services.js";
 import { translations } from "./i18n.js";
 import { toggleAudioPreviewEngine } from "./audio-player.js";
-import { createOrUpdateNotification } from "./notifications-manager.js";
+import { 
+    createOrUpdateNotification, 
+    checkAndDeleteNotifOnRecordDelete, 
+    checkAndDeleteNotifOnZipDelete 
+} from "./notifications-manager.js";
 
 export function initChartsModule(state) {
     const {
@@ -745,7 +749,10 @@ export function initChartsModule(state) {
                             // 3. Eliminar de Firebase
                             await remove(ref(db, 'levels/' + lvl.id));
 
-                            // 4. Reiniciar formulario
+                            // 4. Eliminar notificación si el registro eliminado contaba con una activa
+                            await checkAndDeleteNotifOnRecordDelete('chart');
+
+                            // 5. Reiniciar formulario
                             resetLevelFormState();
                         } catch (err) {
                             console.error("Error al borrar el chart y sus archivos:", err);
@@ -782,6 +789,9 @@ export function initChartsModule(state) {
 
             const selectedGenres = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
             const genre = selectedGenres.join(' / ');
+
+            // Evaluamos si el archivo .zip fue borrado o reemplazado para gestión de notificaciones
+            const isZipDeleted = pendingDeletes.zipStd || pendingDeletes.zipDlx || pendingDeletes.zipExpStd || pendingDeletes.zipExpDlx;
 
             // 1. Borrados reales en Cloudflare R2 si se confirmó el botón "Borrar Archivo"
             if (pendingDeletes.art && existingLvl.art) { await deleteFileFromCloudflareR2(existingLvl.art); existingLvl.art = ""; }
@@ -891,6 +901,11 @@ export function initChartsModule(state) {
             };
 
             await set(ref(db, 'levels/' + id), payload);
+
+            // Eliminar notificación de tipo ZIP si se borró el archivo .zip de un chart
+            if (isZipDeleted) {
+                await checkAndDeleteNotifOnZipDelete('chart');
+            }
 
             // Registro automático de notificación
             const isNewRecord = !editingId;
