@@ -716,7 +716,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 6. Modal Sin Censura (Explicit)
     document.getElementById('btn-confirm-explicit')?.addEventListener('click', () => {
-        stopAllMedia(); // <--- Detiene cualquier audio/video que estuviera corriendo
+        stopAllMedia(); // Detiene la versión censurada solo cuando el usuario da clic en Habilitar
         const pendingId = chartsModule.getPendingExplicitActivationChartId();
         if (pendingId) {
             activeChartExplicitStates[pendingId] = true;
