@@ -1,7 +1,6 @@
 import { ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 import { translations } from "./i18n.js";
 import { db, uploadFileToCloudflareR2 } from "./services.js";
-import { initSkinsModule } from "./skins.js";
 import { 
     stopGlobalAudioPreview, 
     toggleAudioPreviewEngine, 
