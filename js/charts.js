@@ -425,14 +425,14 @@ export function initChartsModule(state) {
                 artBox?.addEventListener('click', () => {
                     openBeatstarEditionSelectionModal(lvl);
                     
-                    // Si el chart tiene preview de audio, se dispara usando el canvas del modal
                     if (currentAudioUrl) {
                         const modalCanvas = document.getElementById('modal-edition-canvas');
                         const modalImg = document.getElementById('modal-edition-art-img');
                         const modalContainer = document.getElementById('modal-edition-art-container');
                         const targetColor = isDeluxeActive ? "#facc15" : "#d946ef";
 
-                        toggleAudioPreviewEngine(currentAudioUrl, null, modalImg, modalCanvas, modalContainer, false, targetColor, false);
+                        // keepPlayingIfSame = true e isModalOpen = true para que continúe en bucle sin interrupción si ya sonaba
+                        toggleAudioPreviewEngine(currentAudioUrl, null, modalImg, modalCanvas, modalContainer, true, targetColor, true);
                     }
                 });
             }
