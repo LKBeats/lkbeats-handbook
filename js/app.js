@@ -589,7 +589,7 @@ function resetBoogieAuthModal() {
     document.getElementById('boogie-auth-modal')?.classList.add('hidden');
     const errorMsgEl = document.getElementById('boogie-auth-error-msg');
     if (errorMsgEl) {
-        errorMsgEl.classList.add('hidden');
+        errorMsgEl.style.display = 'none';
         errorMsgEl.innerText = '';
     }
     ['boogieCred1', 'boogieCred2', 'boogieCred3'].forEach(id => {
@@ -969,23 +969,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('boogie-auth-form')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const inputVal = document.getElementById('boogieCred1').value;
-        const errorMsgEl = document.getElementById('boogie-auth-error-msg');
+    e.preventDefault();
+    const inputVal = document.getElementById('boogieCred1').value;
+    const errorMsgEl = document.getElementById('boogie-auth-error-msg');
 
-        if (inputVal === "BeatstarTest") {
-            isCreatorMode = true;
-            btnBoogieTrigger?.classList.add('glow-green');
-            applyRoleUIVisibility();
-            resetBoogieAuthModal();
-        } else {
-            if (errorMsgEl) {
-                errorMsgEl.innerText = translations[currentLanguage].invalidCredentials || "Credenciales incorrectas";
-                errorMsgEl.classList.remove('hidden');
-                errorMsgEl.classList.add('block');
-            }
+    if (inputVal === "BeatstarTest") {
+        isCreatorMode = true;
+        btnBoogieTrigger?.classList.add('glow-green');
+        applyRoleUIVisibility();
+        resetBoogieAuthModal();
+    } else {
+        if (errorMsgEl) {
+            errorMsgEl.innerText = translations[currentLanguage].invalidCredentials || "Credenciales incorrectas";
+            errorMsgEl.style.display = 'block';
         }
-    });
+    }
+});
 
     document.getElementById('download-modal-btn-close')?.addEventListener('click', () => {
         stopAllMedia();
