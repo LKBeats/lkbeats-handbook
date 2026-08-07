@@ -12,6 +12,69 @@ import { subscribeToNotifications, deleteNotificationManually } from "./notifica
 import { initChartsModule } from "./charts.js";
 import { initSkinsModule } from "./skins.js";
 
+// Funciones auxiliares para renderizar badges dinámicos con iconos en las notificaciones
+function renderNotifGenresBadgesHtml(rawGenre) {
+    if (!rawGenre) return `<span class="px-2 py-1 rounded bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-300 text-[10px] font-black uppercase">General</span>`;
+    
+    return rawGenre.split(' / ').map(g => {
+        const trimmed = g.trim();
+        const matched = genreList.find(item => item.label.toLowerCase() === trimmed.toLowerCase());
+        const color = matched ? matched.color : '#f97316';
+        
+        const safeKey = trimmed.replace('/', '');
+        const dynamicAssetSrc = globalVisualAssets[`genre_${safeKey}`];
+        
+        const graphicElement = dynamicAssetSrc 
+            ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
+            : `<span class="w-2 h-2 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
+
+        return `
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
+                ${graphicElement}
+                <span>${trimmed}</span>
+            </div>
+        `;
+    }).join(' ');
+}
+
+function renderNotifDiffTagHtml(diffVal) {
+    let color = '#71717a';
+    let label = diffVal || 'Normal';
+
+    if (diffVal === 'Hard') color = '#f97316';
+    else if (diffVal === 'Extreme') color = '#ef4444';
+
+    const dynamicAsset = globalVisualAssets[`diff_${diffVal}`];
+    const graphicMarkup = dynamicAsset
+        ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
+        : `<i class="fa-solid fa-layer-group text-[10px]"></i>`;
+
+    return `
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
+            ${graphicMarkup}
+            <span>${label}</span>
+        </div>
+    `;
+}
+
+function renderNotifEditionTagHtml(editionVal) {
+    const isDeluxe = editionVal === 'Deluxe';
+    const color = isDeluxe ? '#facc15' : '#71717a';
+    const label = editionVal || 'Standard';
+
+    const dynamicAsset = globalVisualAssets[`edit_${editionVal}`];
+    const graphicMarkup = dynamicAsset
+        ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
+        : `<i class="fa-solid fa-star text-[10px]"></i>`;
+
+    return `
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
+            ${graphicMarkup}
+            <span>${label}</span>
+        </div>
+    `;
+}
+
 // Inicialización del banner de notificaciones con soporte multilingüe
 subscribeToNotifications((activeNotif) => {
     const banner = document.getElementById('home-notification-banner');
@@ -42,33 +105,33 @@ subscribeToNotifications((activeNotif) => {
 
     if (activeNotif.category === 'chart') {
         content.innerHTML = `
-            <div class="flex items-center gap-3">
-                <img src="${activeNotif.artOrIcon}" class="w-14 h-14 rounded-xl object-cover border border-orange-500/40 shadow">
+            <div class="flex items-center gap-3.5">
+                <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-orange-500/40 shadow-lg shrink-0">
                 <div>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-orange-400 block">${notifTitle}</span>
-                    <h3 class="text-base font-black text-white leading-tight">${activeNotif.song}</h3>
-                    <p class="text-xs text-zinc-400 font-bold">${activeNotif.artist}</p>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-orange-400 block mb-0.5">${notifTitle}</span>
+                    <h3 class="text-xl sm:text-2xl font-black text-white leading-snug tracking-wide">${activeNotif.song}</h3>
+                    <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
                 </div>
             </div>
-            <div class="flex items-center gap-2 flex-wrap">
-                <span class="px-2 py-1 rounded bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-300 text-[10px] font-black uppercase">${activeNotif.genre || 'General'}</span>
-                <span class="px-2 py-1 rounded bg-orange-950/40 border border-orange-800/40 text-orange-400 text-[10px] font-black uppercase">${activeNotif.diff || 'Normal'}</span>
-                <span class="px-2 py-1 rounded bg-zinc-900 border border-zinc-700 text-zinc-300 text-[10px] font-black uppercase">${activeNotif.edition || 'Standard'}</span>
+            <div class="flex items-center gap-2 flex-wrap justify-start sm:justify-end">
+                ${renderNotifGenresBadgesHtml(activeNotif.genre)}
+                ${renderNotifDiffTagHtml(activeNotif.diff)}
+                ${renderNotifEditionTagHtml(activeNotif.edition)}
             </div>
         `;
     } else if (activeNotif.category === 'skin') {
         const platformLogo = activeNotif.platform === 'TapWave' ? 'TapWaveWhiteLogo.png' : 'BeatstarWhiteLogo.png';
         content.innerHTML = `
-            <div class="flex items-center gap-3">
-                <img src="${activeNotif.artOrIcon}" class="w-14 h-14 rounded-xl object-cover border border-fuchsia-500/40 shadow">
+            <div class="flex items-center gap-3.5">
+                <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-fuchsia-500/40 shadow-lg shrink-0">
                 <div>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-fuchsia-400 block">${notifTitle}</span>
-                    <h3 class="text-base font-black text-white leading-tight">${activeNotif.skinName}</h3>
-                    <p class="text-xs text-zinc-400 font-bold">${activeNotif.artist}</p>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">${notifTitle}</span>
+                    <h3 class="text-xl sm:text-2xl font-black text-white leading-snug tracking-wide">${activeNotif.skinName}</h3>
+                    <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-6 object-contain">
+                <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-7 object-contain">
             </div>
         `;
     }
