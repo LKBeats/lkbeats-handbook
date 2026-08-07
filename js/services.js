@@ -22,7 +22,6 @@ export async function uploadFileToCloudflareR2(fileObject, subfolderName) {
     const cleanFileName = rawFileName.replace(/[^a-zA-Z0-9_\-]/g, "_");
     const extension = fileObject.name.split('.').pop();
     
-    // CORRECCIÓN: Garantiza la carpeta raíz 'lkbeats/' seguida de la subcarpeta enviada
     const cleanSubfolder = subfolderName ? subfolderName.trim().replace(/\/+$|^\/+/g, '') : "";
     const targetPath = cleanSubfolder ? `lkbeats/${cleanSubfolder}` : `lkbeats`;
     const fileKey = `${targetPath}/${cleanFileName}_${Date.now()}.${extension}`;
@@ -43,6 +42,29 @@ export async function uploadFileToCloudflareR2(fileObject, subfolderName) {
         console.error("Error al subir archivo a Cloudflare R2:", e);
         alert("Error al subir el archivo a Cloudflare R2. Revisa la consola.");
         return "";
+    }
+}
+
+export async function deleteFileFromCloudflareR2(fileUrlOrKey) {
+    if (!fileUrlOrKey) return true;
+
+    let fileKey = fileUrlOrKey;
+    if (fileUrlOrKey.includes(R2_PUBLIC_DOMAIN)) {
+        fileKey = fileUrlOrKey.replace(`${R2_PUBLIC_DOMAIN}/`, '');
+    }
+
+    const params = {
+        Bucket: R2_BUCKET_NAME,
+        Key: fileKey
+    };
+
+    try {
+        await s3.deleteObject(params).promise();
+        console.log("Archivo eliminado con éxito de R2:", fileKey);
+        return true;
+    } catch (e) {
+        console.error("Error al eliminar archivo de Cloudflare R2:", e);
+        return false;
     }
 }
 

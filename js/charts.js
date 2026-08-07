@@ -1,5 +1,5 @@
 import { ref, set, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-import { db, uploadFileToCloudflareR2 } from "./services.js";
+import { db, uploadFileToCloudflareR2, deleteFileFromCloudflareR2 } from "./services.js";
 import { translations } from "./i18n.js";
 import { toggleAudioPreviewEngine } from "./audio-player.js";
 
@@ -32,6 +32,25 @@ export function initChartsModule(state) {
 
     let pendingExplicitActivationChartId = null;
 
+    // Estado para gestionar los borrados diferidos de archivos y fechas
+    let pendingDeletes = {
+        art: false,
+        audio: false,
+        videoStd: false,
+        zipStd: false,
+        dateStd: false,
+        videoDlx: false,
+        zipDlx: false,
+        dateDlx: false,
+        audioExp: false,
+        videoExpStd: false,
+        zipExpStd: false,
+        dateExpStd: false,
+        videoExpDlx: false,
+        zipExpDlx: false,
+        dateExpDlx: false
+    };
+
     function buildGenresSelector() {
         const container = document.getElementById('genres-container');
         if (!container) return;
@@ -48,9 +67,50 @@ export function initChartsModule(state) {
             item.querySelector('input').addEventListener('change', (e) => {
                 const checked = document.querySelectorAll('.genre-checkbox:checked');
                 if (checked.length > 2) e.target.checked = false;
+                validateFormStateAndCheckChanges();
             });
             container.appendChild(item);
         });
+    }
+
+    // Configura un slot para alternar entre el file/date input y el botón de borrado diferido
+    function setupFileOrDeleteSlot(slotId, hasExisting, keyName, isDate = false) {
+        const slot = document.getElementById(slotId);
+        if (!slot) return;
+
+        const lang = getCurrentLanguage();
+        const defaultText = isDate ? translations[lang].btnDeleteDate : translations[lang].btnDeleteFile;
+        const pendingText = isDate ? translations[lang].btnDateDeletePending : translations[lang].btnFileDeletePending;
+
+        let inputEl = slot.querySelector('input');
+        let deleteBtn = slot.querySelector('.btn-slot-delete');
+
+        if (hasExisting && !pendingDeletes[keyName]) {
+            if (inputEl) inputEl.classList.add('hidden');
+            if (!deleteBtn) {
+                deleteBtn = document.createElement('button');
+                deleteBtn.type = 'button';
+                deleteBtn.className = 'btn-slot-delete w-full py-2 bg-red-950/60 border border-red-800/60 text-red-400 font-extrabold rounded-lg uppercase text-xs transition hover:bg-red-900/60';
+                slot.appendChild(deleteBtn);
+            }
+            deleteBtn.classList.remove('hidden', 'glow-red');
+            deleteBtn.innerText = defaultText;
+
+            deleteBtn.onclick = () => {
+                pendingDeletes[keyName] = !pendingDeletes[keyName];
+                if (pendingDeletes[keyName]) {
+                    deleteBtn.innerText = pendingText;
+                    deleteBtn.classList.add('glow-red');
+                } else {
+                    deleteBtn.innerText = defaultText;
+                    deleteBtn.classList.remove('glow-red');
+                }
+                validateFormStateAndCheckChanges();
+            };
+        } else {
+            if (inputEl) inputEl.classList.remove('hidden');
+            if (deleteBtn) deleteBtn.classList.add('hidden');
+        }
     }
 
     function resetLevelFormState() {
@@ -59,28 +119,17 @@ export function initChartsModule(state) {
 
         document.getElementById('editingLvlId').value = '';
         
+        Object.keys(pendingDeletes).forEach(k => pendingDeletes[k] = false);
+
         const submitBtn = document.getElementById('lvlSubmitBtn');
         const lang = getCurrentLanguage();
         if (submitBtn) {
             const textSpan = submitBtn.querySelector('span');
             if (textSpan) textSpan.innerText = translations[lang].btnRegister;
             else submitBtn.innerText = translations[lang].btnRegister;
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
         }
-
-        const badgesToHide = [
-            'current-chart-zip-badge', 'btn-remove-chart-zip',
-            'current-lvl-video-badge', 'btn-remove-lvl-video',
-            'current-lvl-audio-badge', 'btn-remove-lvl-audio',
-            'current-chart-deluxe-zip-badge', 'btn-remove-chart-deluxe-zip',
-            'current-lvl-video-deluxe-badge', 'btn-remove-lvl-video-deluxe',
-            'badge-lvl-audio-explicit', 'btn-remove-lvl-audio-explicit',
-            'badge-lvl-video-explicit', 'btn-remove-lvl-video-explicit',
-            'badge-lvl-zip-explicit', 'btn-remove-lvl-zip-explicit',
-            'badge-lvl-video-dlx-explicit', 'btn-remove-lvl-video-dlx-explicit',
-            'badge-lvl-zip-dlx-explicit', 'btn-remove-lvl-zip-dlx-explicit'
-        ];
-
-        badgesToHide.forEach(id => document.getElementById(id)?.classList.add('hidden'));
 
         document.getElementById('lvlArtPreviewBox')?.classList.add('hidden');
         document.getElementById('lvlIsComingSoon').value = "false";
@@ -88,12 +137,84 @@ export function initChartsModule(state) {
         document.getElementById('lvlHasExplicit').checked = false;
         
         const editionModeSelect = document.getElementById('lvlEditionMode');
-        if (editionModeSelect) editionModeSelect.value = "Standard";
+        if (editionModeSelect) {
+            editionModeSelect.value = "Standard";
+            editionModeSelect.disabled = false;
+            Array.from(editionModeSelect.options).forEach(opt => opt.disabled = false);
+        }
 
+        document.getElementById('section-standard-fields')?.classList.remove('hidden');
         document.getElementById('section-deluxe-fields')?.classList.add('hidden');
         document.getElementById('section-explicit-fields')?.classList.add('hidden');
 
+        // Limpiar botones de borrado dinámicos
+        document.querySelectorAll('.btn-slot-delete').forEach(btn => btn.remove());
+        document.querySelectorAll('#level-form input[type="file"], #level-form input[type="date"]').forEach(inp => inp.classList.remove('hidden'));
+
         buildGenresSelector();
+    }
+
+    function validateFormStateAndCheckChanges() {
+        const submitBtn = document.getElementById('lvlSubmitBtn');
+        if (!submitBtn) return;
+
+        const editingId = document.getElementById('editingLvlId').value;
+        const song = document.getElementById('lvlSong').value.trim();
+        const artist = document.getElementById('lvlArtist').value.trim();
+        const selectedGenres = document.querySelectorAll('.genre-checkbox:checked');
+
+        const hasRequired = song !== "" && artist !== "" && selectedGenres.length > 0;
+
+        if (!editingId) {
+            // Modo Registrar
+            if (hasRequired) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        } else {
+            // Modo Guardar Cambios: evaluar si cambió respecto a la base de datos
+            const existingLvl = getLevels().find(l => l.id === editingId);
+            if (!existingLvl || !hasRequired) {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                return;
+            }
+
+            const hasPendingDelete = Object.values(pendingDeletes).some(v => v === true);
+            const hasNewFile = Array.from(document.querySelectorAll('#level-form input[type="file"]')).some(inp => inp.files && inp.files.length > 0);
+
+            const changed = hasPendingDelete || hasNewFile ||
+                song !== (existingLvl.song || '') ||
+                artist !== (existingLvl.artist || '') ||
+                document.getElementById('lvlEditionMode').value !== (existingLvl.editionMode || 'Standard') ||
+                document.getElementById('lvlDiff').value !== (existingLvl.diff || 'Hard') ||
+                document.getElementById('lvlNotes').value !== (existingLvl.notes || '') ||
+                document.getElementById('lvlDuration').value !== (existingLvl.duration || '') ||
+                document.getElementById('lvlDate').value !== (existingLvl.date || '') ||
+                document.getElementById('lvlDl1').value !== (existingLvl.dl1 || '') ||
+                document.getElementById('lvlDl2').value !== (existingLvl.dl2 || '') ||
+                document.getElementById('lvlDl3').value !== (existingLvl.dl3 || '') ||
+                document.getElementById('lvlDiffDeluxe').value !== (existingLvl.diffDeluxe || 'Extreme') ||
+                document.getElementById('lvlNotesDeluxe').value !== (existingLvl.notesDeluxe || '') ||
+                document.getElementById('lvlDurationDeluxe').value !== (existingLvl.durationDeluxe || '') ||
+                document.getElementById('lvlDateDeluxe').value !== (existingLvl.dateDeluxe || '') ||
+                document.getElementById('lvlDl1Deluxe').value !== (existingLvl.dl1Deluxe || '') ||
+                document.getElementById('lvlDl2Deluxe').value !== (existingLvl.dl2Deluxe || '') ||
+                document.getElementById('lvlDl3Deluxe').value !== (existingLvl.dl3Deluxe || '') ||
+                document.getElementById('lvlIsExclusive').checked !== !!existingLvl.isExclusive ||
+                document.getElementById('lvlHasExplicit').checked !== !!existingLvl.hasExplicit;
+
+            if (changed) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
     }
 
     function renderGenresBadgesHtml(raw) {
@@ -170,7 +291,7 @@ export function initChartsModule(state) {
 
         if (activeLvlGenreFilter) filtered = filtered.filter(l => l.genre && l.genre.toLowerCase().includes(activeLvlGenreFilter.toLowerCase()));
         if (activeLvlDiffFilter) filtered = filtered.filter(l => (l.diff === activeLvlDiffFilter) || (l.diffDeluxe === activeLvlDiffFilter));
-        if (activeLvlEditionFilter) filtered = filtered.filter(l => (l.edition === activeLvlEditionFilter) || (l.editionMode === 'Both'));
+        if (activeLvlEditionFilter) filtered = filtered.filter(l => (l.editionMode === activeLvlEditionFilter) || (l.editionMode === 'Both') || (l.edition === activeLvlEditionFilter));
 
         const hasActiveFilters = activeLvlGenreFilter || activeLvlDiffFilter || activeLvlEditionFilter;
         const counterLbl = document.getElementById('lbl-counter-charts');
@@ -470,21 +591,44 @@ export function initChartsModule(state) {
                 tr.querySelector('.btn-direct-download-trigger')?.addEventListener('click', () => triggerDownloadAlert(currentChartZip));
             }
 
+            // EDICIÓN DE UN CHART REGISTRADO
             tr.querySelector('.btn-edit-lvl')?.addEventListener('click', () => {
+                resetLevelFormState();
+
                 document.getElementById('editingLvlId').value = lvl.id;
                 document.getElementById('lvlSong').value = lvl.song;
                 document.getElementById('lvlArtist').value = lvl.artist;
                 
                 const editionModeSelect = document.getElementById('lvlEditionMode');
-                if (editionModeSelect) editionModeSelect.value = lvl.editionMode || (lvl.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
-
+                const sectionStandard = document.getElementById('section-standard-fields');
                 const sectionDeluxe = document.getElementById('section-deluxe-fields');
                 const subSectionExplicitDeluxe = document.getElementById('sub-section-explicit-deluxe');
 
-                if (lvl.editionMode === 'Both' || lvl.editionMode === 'Deluxe') {
+                // Regla de bloqueo de versión registrada
+                const currentEditMode = lvl.editionMode || (lvl.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
+                if (editionModeSelect) {
+                    editionModeSelect.value = currentEditMode;
+                    if (currentEditMode === 'Standard') {
+                        Array.from(editionModeSelect.options).forEach(opt => {
+                            if (opt.value === 'Deluxe') opt.disabled = true;
+                        });
+                    } else if (currentEditMode === 'Deluxe') {
+                        Array.from(editionModeSelect.options).forEach(opt => {
+                            if (opt.value === 'Standard') opt.disabled = true;
+                        });
+                    }
+                }
+
+                if (currentEditMode === 'Deluxe') {
+                    sectionStandard?.classList.add('hidden');
+                    sectionDeluxe?.classList.remove('hidden');
+                    subSectionExplicitDeluxe?.classList.remove('hidden');
+                } else if (currentEditMode === 'Both') {
+                    sectionStandard?.classList.remove('hidden');
                     sectionDeluxe?.classList.remove('hidden');
                     subSectionExplicitDeluxe?.classList.remove('hidden');
                 } else {
+                    sectionStandard?.classList.remove('hidden');
                     sectionDeluxe?.classList.add('hidden');
                     subSectionExplicitDeluxe?.classList.add('hidden');
                 }
@@ -498,10 +642,6 @@ export function initChartsModule(state) {
                 document.getElementById('lvlDl2').value = lvl.dl2 || '';
                 document.getElementById('lvlDl3').value = lvl.dl3 || '';
 
-                if (lvl.audioDirectUrl) { document.getElementById('current-lvl-audio-badge')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio')?.classList.remove('hidden'); }
-                if (lvl.video) { document.getElementById('current-lvl-video-badge')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-video')?.classList.remove('hidden'); }
-                if (lvl.chartDirectUrl) { document.getElementById('current-chart-zip-badge')?.classList.remove('hidden'); document.getElementById('btn-remove-chart-zip')?.classList.remove('hidden'); }
-
                 document.getElementById('lvlDiffDeluxe').value = lvl.diffDeluxe || 'Extreme';
                 document.getElementById('lvlNotesDeluxe').value = lvl.notesDeluxe || '';
                 document.getElementById('lvlDurationDeluxe').value = lvl.durationDeluxe || '';
@@ -510,9 +650,6 @@ export function initChartsModule(state) {
                 document.getElementById('lvlDl1Deluxe').value = lvl.dl1Deluxe || '';
                 document.getElementById('lvlDl2Deluxe').value = lvl.dl2Deluxe || '';
                 document.getElementById('lvlDl3Deluxe').value = lvl.dl3Deluxe || '';
-
-                if (lvl.videoDeluxe) { document.getElementById('current-lvl-video-deluxe-badge')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-video-deluxe')?.classList.remove('hidden'); }
-                if (lvl.chartDirectUrlDeluxe) { document.getElementById('current-chart-deluxe-zip-badge')?.classList.remove('hidden'); document.getElementById('btn-remove-chart-deluxe-zip')?.classList.remove('hidden'); }
 
                 document.getElementById('lvlIsExclusive').checked = !!lvl.isExclusive;
                 document.getElementById('lvlHasExplicit').checked = !!lvl.hasExplicit;
@@ -533,16 +670,29 @@ export function initChartsModule(state) {
                     document.getElementById('lvlDl1DeluxeExplicit').value = lvl.dl1DeluxeExplicit || '';
                     document.getElementById('lvlDl2DeluxeExplicit').value = lvl.dl2DeluxeExplicit || '';
                     document.getElementById('lvlDl3DeluxeExplicit').value = lvl.dl3DeluxeExplicit || '';
-
-                    if (lvl.audioExplicit) { document.getElementById('badge-lvl-audio-explicit')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-audio-explicit')?.classList.remove('hidden'); }
-                    if (lvl.videoExplicit) { document.getElementById('badge-lvl-video-explicit')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-video-explicit')?.classList.remove('hidden'); }
-                    if (lvl.zipExplicit) { document.getElementById('badge-lvl-zip-explicit')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-zip-explicit')?.classList.remove('hidden'); }
-
-                    if (lvl.videoDeluxeExplicit) { document.getElementById('badge-lvl-video-dlx-explicit')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-video-dlx-explicit')?.classList.remove('hidden'); }
-                    if (lvl.zipDeluxeExplicit) { document.getElementById('badge-lvl-zip-dlx-explicit')?.classList.remove('hidden'); document.getElementById('btn-remove-lvl-zip-dlx-explicit')?.classList.remove('hidden'); }
                 } else {
                     sectionExplicit?.classList.add('hidden');
                 }
+
+                // Configuración de slots para los botones de Borrar Archivo / Borrar Fecha
+                setupFileOrDeleteSlot('slot-lvl-art', !!lvl.art, 'art');
+                setupFileOrDeleteSlot('slot-lvl-audio', !!lvl.audioDirectUrl, 'audio');
+                setupFileOrDeleteSlot('slot-lvl-video-std', !!lvl.video, 'videoStd');
+                setupFileOrDeleteSlot('slot-lvl-zip-std', !!lvl.chartDirectUrl, 'zipStd');
+                setupFileOrDeleteSlot('slot-lvl-date-std', !!lvl.date, 'dateStd', true);
+
+                setupFileOrDeleteSlot('slot-lvl-video-dlx', !!lvl.videoDeluxe, 'videoDlx');
+                setupFileOrDeleteSlot('slot-lvl-zip-dlx', !!lvl.chartDirectUrlDeluxe, 'zipDlx');
+                setupFileOrDeleteSlot('slot-lvl-date-dlx', !!lvl.dateDeluxe, 'dateDlx', true);
+
+                setupFileOrDeleteSlot('slot-lvl-audio-exp', !!lvl.audioExplicit, 'audioExp');
+                setupFileOrDeleteSlot('slot-lvl-video-exp-std', !!lvl.videoExplicit, 'videoExpStd');
+                setupFileOrDeleteSlot('slot-lvl-zip-exp-std', !!lvl.zipExplicit, 'zipExpStd');
+                setupFileOrDeleteSlot('slot-lvl-date-exp-std', !!lvl.dateExplicit, 'dateExpStd', true);
+
+                setupFileOrDeleteSlot('slot-lvl-video-exp-dlx', !!lvl.videoDeluxeExplicit, 'videoExpDlx');
+                setupFileOrDeleteSlot('slot-lvl-zip-exp-dlx', !!lvl.zipDeluxeExplicit, 'zipExpDlx');
+                setupFileOrDeleteSlot('slot-lvl-date-exp-dlx', !!lvl.dateDeluxeExplicit, 'dateExpDlx', true);
 
                 const submitBtn = document.getElementById('lvlSubmitBtn');
                 if (submitBtn) {
@@ -553,7 +703,7 @@ export function initChartsModule(state) {
                 
                 const pBox = document.getElementById('lvlArtPreviewBox');
                 const pImg = document.getElementById('lvlArtPreviewImg');
-                if (lvl.art) {
+                if (lvl.art && !pendingDeletes.art) {
                     pImg.src = lvl.art;
                     pBox.classList.remove('hidden');
                 } else { pBox.classList.add('hidden'); }
@@ -562,6 +712,8 @@ export function initChartsModule(state) {
                 document.querySelectorAll('.genre-checkbox').forEach(cb => {
                     cb.checked = currentGenresArray.includes(cb.value.trim().toLowerCase());
                 });
+
+                validateFormStateAndCheckChanges();
             });
 
             tr.querySelector('.btn-del-lvl')?.addEventListener('click', () => {
@@ -579,6 +731,7 @@ export function initChartsModule(state) {
         tbody.appendChild(fragment);
     }
 
+    // FORM SUBMIT Y PROCESAMIENTO DIFERIDO
     document.getElementById('level-form')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         showLoadingOverlay();
@@ -597,59 +750,61 @@ export function initChartsModule(state) {
             const selectedGenres = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
             const genre = selectedGenres.join(' / ');
 
-// --- SUBIDA DE ARCHIVOS A LAS CARPETAS CORRESPONDIENTES EN CLOUDFLARE R2 ---
+            // 1. Borrados reales en Cloudflare R2 si se confirmó el botón "Borrar Archivo"
+            if (pendingDeletes.art && existingLvl.art) { await deleteFileFromCloudflareR2(existingLvl.art); existingLvl.art = ""; }
+            if (pendingDeletes.audio && existingLvl.audioDirectUrl) { await deleteFileFromCloudflareR2(existingLvl.audioDirectUrl); existingLvl.audioDirectUrl = ""; }
+            if (pendingDeletes.videoStd && existingLvl.video) { await deleteFileFromCloudflareR2(existingLvl.video); existingLvl.video = ""; }
+            if (pendingDeletes.zipStd && existingLvl.chartDirectUrl) { await deleteFileFromCloudflareR2(existingLvl.chartDirectUrl); existingLvl.chartDirectUrl = ""; }
+            if (pendingDeletes.videoDlx && existingLvl.videoDeluxe) { await deleteFileFromCloudflareR2(existingLvl.videoDeluxe); existingLvl.videoDeluxe = ""; }
+            if (pendingDeletes.zipDlx && existingLvl.chartDirectUrlDeluxe) { await deleteFileFromCloudflareR2(existingLvl.chartDirectUrlDeluxe); existingLvl.chartDirectUrlDeluxe = ""; }
 
-            // Arte / Carátula
+            if (pendingDeletes.audioExp && existingLvl.audioExplicit) { await deleteFileFromCloudflareR2(existingLvl.audioExplicit); existingLvl.audioExplicit = ""; }
+            if (pendingDeletes.videoExpStd && existingLvl.videoExplicit) { await deleteFileFromCloudflareR2(existingLvl.videoExplicit); existingLvl.videoExplicit = ""; }
+            if (pendingDeletes.zipExpStd && existingLvl.zipExplicit) { await deleteFileFromCloudflareR2(existingLvl.zipExplicit); existingLvl.zipExplicit = ""; }
+            if (pendingDeletes.videoExpDlx && existingLvl.videoDeluxeExplicit) { await deleteFileFromCloudflareR2(existingLvl.videoDeluxeExplicit); existingLvl.videoDeluxeExplicit = ""; }
+            if (pendingDeletes.zipExpDlx && existingLvl.zipDeluxeExplicit) { await deleteFileFromCloudflareR2(existingLvl.zipDeluxeExplicit); existingLvl.zipDeluxeExplicit = ""; }
+
+            // 2. Subida de nuevos archivos si fueron seleccionados
             let art = existingLvl.art || '';
             const artFile = document.getElementById('lvlArtFile')?.files[0];
             if (artFile) art = await uploadFileToCloudflareR2(artFile, 'charts_art');
 
-            // Audio Principal
             let audioDirectUrl = existingLvl.audioDirectUrl || '';
             const audioFile = document.getElementById('lvlAudioFile')?.files[0];
             if (audioFile) audioDirectUrl = await uploadFileToCloudflareR2(audioFile, 'audio');
 
-            // Video Preview Standard
             let video = existingLvl.video || '';
             const videoFile = document.getElementById('lvlVideoFile')?.files[0];
             if (videoFile) video = await uploadFileToCloudflareR2(videoFile, 'prevchart');
 
-            // ZIP Standard (Ruta garantizada: lkbeats/charts_zip/)
             let chartDirectUrl = existingLvl.chartDirectUrl || '';
             const zipFile = document.getElementById('lvlChartZipFile')?.files[0];
             if (zipFile) chartDirectUrl = await uploadFileToCloudflareR2(zipFile, 'charts_zip');
 
-            // Video Preview Deluxe
             let videoDeluxe = existingLvl.videoDeluxe || '';
             const videoDeluxeFile = document.getElementById('lvlVideoFileDeluxe')?.files[0];
             if (videoDeluxeFile) videoDeluxe = await uploadFileToCloudflareR2(videoDeluxeFile, 'prevchart');
 
-            // ZIP Deluxe (Ruta garantizada: lkbeats/charts_zip/)
             let chartDirectUrlDeluxe = existingLvl.chartDirectUrlDeluxe || '';
             const zipDeluxeFile = document.getElementById('lvlChartZipFileDeluxe')?.files[0];
             if (zipDeluxeFile) chartDirectUrlDeluxe = await uploadFileToCloudflareR2(zipDeluxeFile, 'charts_zip');
 
-            // Audio Explícito
             let audioExplicit = existingLvl.audioExplicit || '';
             const audioExplicitFile = document.getElementById('lvlAudioFileExplicit')?.files[0];
             if (audioExplicitFile) audioExplicit = await uploadFileToCloudflareR2(audioExplicitFile, 'audio');
 
-            // Video Explícito Standard
             let videoExplicit = existingLvl.videoExplicit || '';
             const videoExplicitFile = document.getElementById('lvlVideoFileExplicit')?.files[0];
             if (videoExplicitFile) videoExplicit = await uploadFileToCloudflareR2(videoExplicitFile, 'prevchart');
 
-            // ZIP Explícito Standard (Ruta garantizada: lkbeats/charts_zip/)
             let zipExplicit = existingLvl.zipExplicit || '';
             const zipExplicitFile = document.getElementById('lvlChartZipFileExplicit')?.files[0];
             if (zipExplicitFile) zipExplicit = await uploadFileToCloudflareR2(zipExplicitFile, 'charts_zip');
 
-            // Video Explícito Deluxe
             let videoDeluxeExplicit = existingLvl.videoDeluxeExplicit || '';
             const videoDeluxeExplicitFile = document.getElementById('lvlVideoFileDeluxeExplicit')?.files[0];
             if (videoDeluxeExplicitFile) videoDeluxeExplicit = await uploadFileToCloudflareR2(videoDeluxeExplicitFile, 'prevchart');
 
-            // ZIP Explícito Deluxe (Ruta garantizada: lkbeats/charts_zip/)
             let zipDeluxeExplicit = existingLvl.zipDeluxeExplicit || '';
             const zipDeluxeExplicitFile = document.getElementById('lvlChartZipFileDeluxeExplicit')?.files[0];
             if (zipDeluxeExplicitFile) zipDeluxeExplicit = await uploadFileToCloudflareR2(zipDeluxeExplicitFile, 'charts_zip');
@@ -668,7 +823,7 @@ export function initChartsModule(state) {
                 diff: document.getElementById('lvlDiff').value,
                 notes: document.getElementById('lvlNotes').value,
                 duration: document.getElementById('lvlDuration').value,
-                date: document.getElementById('lvlDate').value,
+                date: pendingDeletes.dateStd ? "" : document.getElementById('lvlDate').value,
                 dl1: document.getElementById('lvlDl1').value,
                 dl2: document.getElementById('lvlDl2').value,
                 dl3: document.getElementById('lvlDl3').value,
@@ -677,7 +832,7 @@ export function initChartsModule(state) {
                 diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
                 notesDeluxe: document.getElementById('lvlNotesDeluxe').value,
                 durationDeluxe: document.getElementById('lvlDurationDeluxe').value,
-                dateDeluxe: document.getElementById('lvlDateDeluxe').value,
+                dateDeluxe: pendingDeletes.dateDlx ? "" : document.getElementById('lvlDateDeluxe').value,
                 dl1Deluxe: document.getElementById('lvlDl1Deluxe').value,
                 dl2Deluxe: document.getElementById('lvlDl2Deluxe').value,
                 dl3Deluxe: document.getElementById('lvlDl3Deluxe').value,
@@ -686,7 +841,7 @@ export function initChartsModule(state) {
                 audioExplicit,
                 notesExplicit: document.getElementById('lvlNotesExplicit').value,
                 durationExplicit: document.getElementById('lvlDurationExplicit').value,
-                dateExplicit: document.getElementById('lvlDateExplicit').value,
+                dateExplicit: pendingDeletes.dateExpStd ? "" : document.getElementById('lvlDateExplicit').value,
                 dl1Explicit: document.getElementById('lvlDl1Explicit').value,
                 dl2Explicit: document.getElementById('lvlDl2Explicit').value,
                 dl3Explicit: document.getElementById('lvlDl3Explicit').value,
@@ -694,7 +849,7 @@ export function initChartsModule(state) {
                 zipExplicit,
                 notesDeluxeExplicit: document.getElementById('lvlNotesDeluxeExplicit').value,
                 durationDeluxeExplicit: document.getElementById('lvlDurationDeluxeExplicit').value,
-                dateDeluxeExplicit: document.getElementById('lvlDateDeluxeExplicit').value,
+                dateDeluxeExplicit: pendingDeletes.dateExpDlx ? "" : document.getElementById('lvlDateDeluxeExplicit').value,
                 dl1DeluxeExplicit: document.getElementById('lvlDl1DeluxeExplicit').value,
                 dl2DeluxeExplicit: document.getElementById('lvlDl2DeluxeExplicit').value,
                 dl3DeluxeExplicit: document.getElementById('lvlDl3DeluxeExplicit').value,
@@ -716,25 +871,39 @@ export function initChartsModule(state) {
         resetLevelFormState();
     });
 
+    // Escuchadores dinámicos para visibilidad de Standard/Deluxe y Explicit
     document.getElementById('lvlEditionMode')?.addEventListener('change', (e) => {
         const val = e.target.value;
+        const sectionStandard = document.getElementById('section-standard-fields');
         const sectionDeluxe = document.getElementById('section-deluxe-fields');
         const subSectionExplicitDeluxe = document.getElementById('sub-section-explicit-deluxe');
 
-        if (val === 'Both' || val === 'Deluxe') {
+        if (val === 'Deluxe') {
+            sectionStandard?.classList.add('hidden');
+            sectionDeluxe?.classList.remove('hidden');
+            subSectionExplicitDeluxe?.classList.remove('hidden');
+        } else if (val === 'Both') {
+            sectionStandard?.classList.remove('hidden');
             sectionDeluxe?.classList.remove('hidden');
             subSectionExplicitDeluxe?.classList.remove('hidden');
         } else {
+            sectionStandard?.classList.remove('hidden');
             sectionDeluxe?.classList.add('hidden');
             subSectionExplicitDeluxe?.classList.add('hidden');
         }
+        validateFormStateAndCheckChanges();
     });
 
     document.getElementById('lvlHasExplicit')?.addEventListener('change', (e) => {
         const sectionExplicit = document.getElementById('section-explicit-fields');
         if (e.target.checked) sectionExplicit?.classList.remove('hidden');
         else sectionExplicit?.classList.add('hidden');
+        validateFormStateAndCheckChanges();
     });
+
+    // Añadir escuchador universal a las entradas para habilitar/deshabilitar el botón Submit
+    document.getElementById('level-form')?.addEventListener('input', validateFormStateAndCheckChanges);
+    document.getElementById('level-form')?.addEventListener('change', validateFormStateAndCheckChanges);
 
     return {
         buildGenresSelector,

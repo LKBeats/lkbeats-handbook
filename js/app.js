@@ -12,7 +12,6 @@ import {
 import { initChartsModule } from "./charts.js";
 import { initSkinsModule } from "./skins.js";
 
-// --- CONFIGURACIÓN DE GÉNEROS ---
 const genreList = [
     { color: "#bf2726", label: "Rock" },
     { color: "#da6128", label: "Alternative" },
@@ -34,7 +33,6 @@ const skinUniversalGenreList = [
     { color: "#019ac4", label: "RnB" }
 ];
 
-// --- ESTADOS GLOBALES ---
 let isCreatorMode = false;
 let currentLanguage = localStorage.getItem('nexus_lang') || 'es';
 let currentViewName = 'home';
@@ -54,7 +52,6 @@ let activeVideoElement = null;
 let pendingDeleteActionCallback = null;
 let activeModalBeatstarChart = null;
 
-// --- SANITIZACIÓN KEY FIREBASE ---
 function sanitizeFirebaseKey(key) {
     return btoa(key).replace(/=/g, '').replace(/\//g, '_').replace(/\+/g, '-');
 }
@@ -69,7 +66,6 @@ function desanitizeFirebaseKey(safeKey) {
     }
 }
 
-// --- OVERLAY DE CARGA ---
 function showLoadingOverlay() {
     const overlay = document.getElementById('global-loading-overlay');
     const text = document.getElementById('loading-overlay-text');
@@ -82,7 +78,6 @@ function hideLoadingOverlay() {
     if (overlay) overlay.classList.add('hidden');
 }
 
-// --- CONTROL DE MEDIOS Y MODALES ---
 function closeAllActiveModalsAndMenus() {
     let wasModalOpen = false;
     const modalIds = [
@@ -146,7 +141,6 @@ function stopAllMedia() {
     activeVideoElement = null;
 }
 
-// --- NAVEGACIÓN ---
 function navigateTo(view, pushState = true) {
     stopAllMedia();
     closeAllActiveModalsAndMenus();
@@ -268,7 +262,6 @@ function setupNativeVideoBehavior(vidWrapper) {
     });
 }
 
-// --- DESCARGAS Y MODALES DE AGRADECIMIENTO ---
 function triggerDownloadAlert(url) {
     currentActiveDownloadUrl = url;
     document.getElementById('download-modal-msg').innerText = translations[currentLanguage].beatcloneNotice;
@@ -299,7 +292,6 @@ function openBeatstarEditionSelectionModal(lvl) {
     if (titleEl) titleEl.innerText = lvl.song || '';
     if (artistEl) artistEl.innerText = lvl.artist || '';
 
-    // Renderizar tags de dificultad usando chartsModule
     const stdDiffContainer = document.getElementById('modal-opt-standard-diff-tag');
     const dlxDiffContainer = document.getElementById('modal-opt-deluxe-diff-tag');
 
@@ -330,7 +322,6 @@ function openBeatstarEditionSelectionModal(lvl) {
     modal.classList.remove('hidden');
 }
 
-// --- INICIALIZACIÓN MÓDULOS HIJOS ---
 const stateForModules = {
     genreList,
     skinUniversalGenreList,
@@ -428,7 +419,6 @@ function syncFooterLinks() {
     }
 }
 
-// --- FILTROS Y DROPDOWNS ---
 function updateCustomDropdownButtonUI(btnId, labelId, val, categoryType) {
     const btn = document.getElementById(btnId);
     const label = document.getElementById(labelId);
@@ -487,7 +477,6 @@ function updateCustomDropdownButtonUI(btnId, labelId, val, categoryType) {
 function buildCustomDropdownMenus() {
     const allTxt = translations[currentLanguage].filterAll;
     
-    // 1. Dropdown Género Charts
     const dLvlGenre = document.getElementById('dropdown-custom-lvl-genre');
     if (dLvlGenre) {
         dLvlGenre.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlGenre" data-value=""><span>${allTxt}</span></div>`;
@@ -502,7 +491,6 @@ function buildCustomDropdownMenus() {
         });
     }
 
-    // Helper interno para generar el icono dinámico o fallback
     const getDynamicIconMarkup = (assetKey, color, fallbackIconClass) => {
         const imgAsset = globalVisualAssets[assetKey];
         return imgAsset
@@ -510,7 +498,6 @@ function buildCustomDropdownMenus() {
             : `<i class="${fallbackIconClass} text-[10px]"></i>`;
     };
 
-    // 2. Dropdown Dificultad Charts (Normal, Hard, Extreme)
     const dLvlDiff = document.getElementById('dropdown-custom-lvl-diff');
     if (dLvlDiff) {
         const iconNormal = getDynamicIconMarkup('diff_Normal', '#71717a', 'fa-solid fa-layer-group');
@@ -525,7 +512,6 @@ function buildCustomDropdownMenus() {
         `;
     }
 
-    // 3. Dropdown Edición Charts (Standard, Deluxe)
     const dLvlEdition = document.getElementById('dropdown-custom-lvl-edition');
     if (dLvlEdition) {
         const iconStandard = getDynamicIconMarkup('edit_Standard', '#71717a', 'fa-solid fa-star');
@@ -538,7 +524,6 @@ function buildCustomDropdownMenus() {
         `;
     }
 
-    // 4. Dropdown Género Skins
     const dSkinGenre = document.getElementById('dropdown-custom-skin-genre');
     if (dSkinGenre) {
         dSkinGenre.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="skinGenre" data-value=""><span>${allTxt}</span></div>`;
@@ -599,7 +584,6 @@ function applyLanguagePack() {
     buildCustomDropdownMenus();
 }
 
-// --- CONEXIONES FIREBASE ---
 try {
     showLoadingOverlay();
 
@@ -649,10 +633,8 @@ try {
     hideLoadingOverlay();
 }
 
-// --- REGISTRO DE EVENTOS DOM ---
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 1. Navegación Principal y Botones "Volver"
     document.getElementById('nav-logo')?.addEventListener('click', () => navigateTo('home'));
     document.getElementById('btn-nav-levels')?.addEventListener('click', () => navigateTo('levels'));
     document.getElementById('btn-nav-cosmetics')?.addEventListener('click', () => navigateTo('cosmetics'));
@@ -663,21 +645,18 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', () => navigateTo('home'));
     });
 
-    // 2. Submenú e Intercambio de Plataformas Skins (Ir a Beatstar / Ir a TapWave)
     document.getElementById('submenu-card-beatstar')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('Beatstar'));
     document.getElementById('submenu-card-tapwave')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('TapWave'));
     document.getElementById('btn-toggle-to-tapwave')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('TapWave'));
     document.getElementById('btn-toggle-to-beatstar')?.addEventListener('click', () => openCosmeticsSubmenuPlatform('Beatstar'));
 
-    // 3. Idioma
     document.getElementById('btn-lang-toggle')?.addEventListener('click', () => {
-        stopAllMedia(); // <--- Detiene audios/videos antes de reconstruir las tablas
+        stopAllMedia();
         currentLanguage = currentLanguage === 'es' ? 'en' : 'es';
         localStorage.setItem('nexus_lang', currentLanguage);
         applyLanguagePack();
     });
 
-    // 4. Modo Creador
     const btnBoogieTrigger = document.getElementById('btn-boogie-admin-trigger');
     btnBoogieTrigger?.addEventListener('click', () => {
         if (isCreatorMode) document.getElementById('boogie-exit-modal')?.classList.remove('hidden');
@@ -701,34 +680,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- DELEGACIÓN DE EVENTOS PARA LOS 3 CAMPOS CON OJO ---
-    document.getElementById('boogie-auth-form')?.addEventListener('click', (e) => {
-        const btn = e.target.closest('.toggle-password-btn');
-        if (!btn) return;
-
-        e.preventDefault();
-        
-        const targetId = btn.getAttribute('data-target');
-        const input = document.getElementById(targetId);
-        const icon = btn.querySelector('i');
-
-        if (input) {
-            const isPassword = input.type === 'password';
-            input.type = isPassword ? 'text' : 'password';
-
-            if (icon) {
-                if (isPassword) {
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
-                } else {
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
-                }
-            }
-        }
-    });
-
-    // 5. Botones "X" y Cierre de Modales
     document.getElementById('download-modal-btn-close')?.addEventListener('click', () => {
         stopAllMedia();
         document.getElementById('download-custom-modal')?.classList.add('hidden');
@@ -747,15 +698,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     document.getElementById('btn-close-beatstar-modal')?.addEventListener('click', () => {
         const activeAudio = getActiveAudioElement();
-        if (activeAudio) activeAudio.loop = false; // <--- Desactiva el bucle directamente
+        if (activeAudio) activeAudio.loop = false;
         
         document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
-        chartsModule.renderLevelsTable(); // Sincroniza el canvas y la carátula circular en la tabla
+        chartsModule.renderLevelsTable();
     });
 
-    // 6. Modal Sin Censura (Explicit)
     document.getElementById('btn-confirm-explicit')?.addEventListener('click', () => {
-        stopAllMedia(); // Detiene la versión censurada solo cuando el usuario da clic en Habilitar
+        stopAllMedia();
         const pendingId = chartsModule.getPendingExplicitActivationChartId();
         if (pendingId) {
             activeChartExplicitStates[pendingId] = true;
@@ -765,7 +715,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('explicit-warning-modal')?.classList.add('hidden');
     });
 
-    // 7. Modal de Descargas Directas
     document.getElementById('download-modal-btn-confirm')?.addEventListener('click', () => {
         if (currentActiveDownloadUrl) {
             window.open(currentActiveDownloadUrl, '_blank');
@@ -783,13 +732,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 8. Opciones dentro del Modal de Selección de Edición (Beatstar)
     document.getElementById('modal-opt-standard')?.addEventListener('click', () => {
         if (activeModalBeatstarChart) {
             activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Standard';
             
             const activeAudio = getActiveAudioElement();
-            if (activeAudio) activeAudio.loop = false; // <--- Desactiva el bucle directamente
+            if (activeAudio) activeAudio.loop = false;
             
             document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
             chartsModule.renderLevelsTable();
@@ -801,45 +749,32 @@ document.addEventListener('DOMContentLoaded', () => {
             activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Deluxe';
             
             const activeAudio = getActiveAudioElement();
-            if (activeAudio) activeAudio.loop = false; // <--- Desactiva el bucle directamente
+            if (activeAudio) activeAudio.loop = false;
             
             document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
             chartsModule.renderLevelsTable();
         }
     });
 
-// --- FUNCIONALIDAD PARA MOSTRAR / OCULTAR CONTRASEÑAS EN LOS 3 CAMPOS ---
-document.querySelectorAll('.toggle-password-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const targetId = btn.getAttribute('data-target');
-        const input = document.getElementById(targetId);
-        const icon = btn.querySelector('i');
-
-        if (input) {
-            const isPassword = input.type === 'password';
-            input.type = isPassword ? 'text' : 'password';
-
-            if (icon) {
-                if (isPassword) {
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
-                } else {
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
-                }
+    // Evento de selección universal para selectores de fecha
+    document.querySelectorAll('button[id^="btn-picker-"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const container = btn.closest('div');
+            const dateInput = container?.querySelector('input[type="date"]');
+            if (dateInput && typeof dateInput.showPicker === 'function') {
+                dateInput.showPicker();
+            } else if (dateInput) {
+                dateInput.focus();
             }
-        }
+        });
     });
-});
 
-    // 9. Alternadores de Botones Desplegables de Filtro
     document.getElementById('btn-custom-lvl-genre')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('dropdown-custom-lvl-genre')?.classList.toggle('hidden'); });
     document.getElementById('btn-custom-lvl-diff')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('dropdown-custom-lvl-diff')?.classList.toggle('hidden'); });
     document.getElementById('btn-custom-lvl-edition')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('dropdown-custom-lvl-edition')?.classList.toggle('hidden'); });
     document.getElementById('btn-custom-skin-genre')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('dropdown-custom-skin-genre')?.classList.toggle('hidden'); });
 
-    // 10. Limpieza de Filtros
     document.getElementById('btn-clear-lvl-filters')?.addEventListener('click', () => {
         chartsModule.setLvlGenreFilter("");
         chartsModule.setLvlDiffFilter("");
@@ -856,7 +791,6 @@ document.querySelectorAll('.toggle-password-btn').forEach(btn => {
         skinsModule.renderCosmeticsTables();
     });
 
-    // Cerrar desplegables al hacer clic fuera
     document.addEventListener('click', () => {
         ['dropdown-custom-lvl-genre', 'dropdown-custom-lvl-diff', 'dropdown-custom-lvl-edition', 'dropdown-custom-skin-genre'].forEach(id => {
             document.getElementById(id)?.classList.add('hidden');
@@ -869,8 +803,27 @@ document.querySelectorAll('.toggle-password-btn').forEach(btn => {
         document.getElementById('confirm-delete-modal')?.classList.add('hidden');
     });
 
-    // Inicializaciones del sistema
     chartsModule.buildGenresSelector();
     skinsModule.buildSkinGenresSelector();
     applyLanguagePack();
 });
+
+window.toggleBoogiePassword = function(inputId, btnElement) {
+    const input = document.getElementById(inputId);
+    const icon = btnElement ? btnElement.querySelector('i') : null;
+
+    if (input) {
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+
+        if (icon) {
+            if (isPassword) {
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    }
+};

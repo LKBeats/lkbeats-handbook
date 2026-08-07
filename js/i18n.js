@@ -88,7 +88,11 @@ export const translations = {
         optDeluxe: "Deluxe",
         optBoth: "Standard + Deluxe",
         tapwaveDiscordNotice: "Para poder usar este contenido es necesario unirse al servidor de Discord de TapWave.",
-        tapwaveJoinPrefix: "Unirse a"
+        tapwaveJoinPrefix: "Unirse a",
+        btnDeleteFile: "Borrar Archivo",
+        btnFileDeletePending: "Activado",
+        btnDeleteDate: "Borrar Fecha",
+        btnDateDeletePending: "Activado"
     },
     en: {
         tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -178,6 +182,10 @@ export const translations = {
         optDeluxe: "Deluxe",
         optBoth: "Standard + Deluxe",
         tapwaveDiscordNotice: "To use this content, you must join the TapWave Discord server.",
-        tapwaveJoinPrefix: "Join"
+        tapwaveJoinPrefix: "Join",
+        btnDeleteFile: "Delete File",
+        btnFileDeletePending: "Active",
+        btnDeleteDate: "Delete Date",
+        btnDateDeletePending: "Active"
     }
 };

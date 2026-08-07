@@ -1,5 +1,5 @@
 import { ref, set, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-import { db, uploadFileToCloudflareR2 } from "./services.js";
+import { db, uploadFileToCloudflareR2, deleteFileFromCloudflareR2 } from "./services.js";
 import { translations } from "./i18n.js";
 
 export function initSkinsModule(state) {
@@ -23,14 +23,16 @@ export function initSkinsModule(state) {
     let activeSkinGenreFilter = "";
     let editingCosBrandUrlsList = [];
 
-    let cosmeticIconToRemove = false;
-    let cosmeticVideoToRemove = false;
-    let cosmeticZipToRemove = false;
+    let pendingSkinDeletes = {
+        icon: false,
+        video: false,
+        zip: false,
+        date: false
+    };
 
     let pendingBrandFileToUpload = null;
     let tempPreviewBrandUrl = null;
 
-    // --- HELPERS BÁSICOS Y SANITIZACIÓN FIREBASE ---
     function sanitizeFirebaseKey(key) {
         return btoa(key).replace(/=/g, '').replace(/\//g, '_').replace(/\+/g, '-');
     }
@@ -84,7 +86,6 @@ export function initSkinsModule(state) {
         });
     }
 
-    // --- RENDERIZADO DE LA LISTA DE MARCAS DEL FORMULARIO ---
     function renderBrandManagementFormInterface() {
         const container = document.getElementById('cosBrandManagementList');
         if (!container) return;
@@ -119,6 +120,7 @@ export function initSkinsModule(state) {
                     editingCosBrandUrlsList[index] = editingCosBrandUrlsList[index - 1];
                     editingCosBrandUrlsList[index - 1] = temp;
                     renderBrandManagementFormInterface();
+                    validateSkinFormStateAndCheckChanges();
                 }
             });
             
@@ -128,6 +130,7 @@ export function initSkinsModule(state) {
                     editingCosBrandUrlsList[index] = editingCosBrandUrlsList[index + 1];
                     editingCosBrandUrlsList[index + 1] = temp;
                     renderBrandManagementFormInterface();
+                    validateSkinFormStateAndCheckChanges();
                 }
             });
             
@@ -135,6 +138,7 @@ export function initSkinsModule(state) {
                 requestUserDeleteConfirmation(() => {
                     editingCosBrandUrlsList.splice(index, 1);
                     renderBrandManagementFormInterface();
+                    validateSkinFormStateAndCheckChanges();
                 });
             });
             
@@ -142,7 +146,6 @@ export function initSkinsModule(state) {
         });
     }
 
-    // --- CONSTRUCCIÓN DEL SELECTOR DE GÉNEROS SKINS ---
     function buildSkinGenresSelector() {
         const container = document.getElementById('skin-genres-container');
         if (!container) return;
@@ -160,31 +163,69 @@ export function initSkinsModule(state) {
                 if (e.target.checked) {
                     document.querySelectorAll('.skin-genre-checkbox').forEach(cb => { if (cb !== e.target) cb.checked = false; });
                 }
+                validateSkinFormStateAndCheckChanges();
             });
             container.appendChild(item);
         });
     }
 
-    // --- REINICIAR FORMULARIO DE SKINS ---
+    function setupSkinFileOrDeleteSlot(slotId, hasExisting, keyName, isDate = false) {
+        const slot = document.getElementById(slotId);
+        if (!slot) return;
+
+        const lang = getCurrentLanguage();
+        const defaultText = isDate ? translations[lang].btnDeleteDate : translations[lang].btnDeleteFile;
+        const pendingText = isDate ? translations[lang].btnDateDeletePending : translations[lang].btnFileDeletePending;
+
+        let inputEl = slot.querySelector('input');
+        let deleteBtn = slot.querySelector('.btn-slot-delete');
+
+        if (hasExisting && !pendingSkinDeletes[keyName]) {
+            if (inputEl) inputEl.classList.add('hidden');
+            if (!deleteBtn) {
+                deleteBtn = document.createElement('button');
+                deleteBtn.type = 'button';
+                deleteBtn.className = 'btn-slot-delete w-full py-2 bg-red-950/60 border border-red-800/60 text-red-400 font-extrabold rounded-lg uppercase text-xs transition hover:bg-red-900/60';
+                slot.appendChild(deleteBtn);
+            }
+            deleteBtn.classList.remove('hidden', 'glow-red');
+            deleteBtn.innerText = defaultText;
+
+            deleteBtn.onclick = () => {
+                pendingSkinDeletes[keyName] = !pendingSkinDeletes[keyName];
+                if (pendingSkinDeletes[keyName]) {
+                    deleteBtn.innerText = pendingText;
+                    deleteBtn.classList.add('glow-red');
+                } else {
+                    deleteBtn.innerText = defaultText;
+                    deleteBtn.classList.remove('glow-red');
+                }
+                validateSkinFormStateAndCheckChanges();
+            };
+        } else {
+            if (inputEl) inputEl.classList.remove('hidden');
+            if (deleteBtn) deleteBtn.classList.add('hidden');
+        }
+    }
+
     function resetCosmeticFormState() {
         const form = document.getElementById('cosmetic-form');
         if (form) form.reset();
 
         document.getElementById('editingCosId').value = '';
-        
+        Object.keys(pendingSkinDeletes).forEach(k => pendingSkinDeletes[k] = false);
+
         const lang = getCurrentLanguage();
         const submitBtn = document.getElementById('cosSubmitBtn');
         if (submitBtn) {
             const textSpan = submitBtn.querySelector('span');
             if (textSpan) textSpan.innerText = translations[lang].btnRegister;
             else submitBtn.innerText = translations[lang].btnRegister;
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
         }
 
         document.getElementById('cosBrandManagementList')?.classList.add('hidden');
-        document.getElementById('current-skin-zip-badge')?.classList.add('hidden');
-        document.getElementById('btn-remove-skin-zip')?.classList.add('hidden');
-        document.getElementById('current-cos-video-badge')?.classList.add('hidden');
-        document.getElementById('btn-remove-cos-video')?.classList.add('hidden');
         document.getElementById('cosIconPreviewBox')?.classList.add('hidden');
         document.getElementById('cosIsComingSoon').value = "false";
         document.getElementById('cosIsExclusive').checked = false;
@@ -195,13 +236,13 @@ export function initSkinsModule(state) {
         
         buildSkinGenresSelector();
 
-        cosmeticZipToRemove = false;
-        cosmeticIconToRemove = false;
-        cosmeticVideoToRemove = false;
         pendingBrandFileToUpload = null;
         tempPreviewBrandUrl = null;
         editingCosBrandUrlsList = [];
-        
+
+        document.querySelectorAll('.btn-slot-delete').forEach(btn => btn.remove());
+        document.querySelectorAll('#cosmetic-form input[type="file"], #cosmetic-form input[type="date"]').forEach(inp => inp.classList.remove('hidden'));
+
         const nameInput = document.getElementById('cosBrandNameInput');
         if (nameInput) nameInput.value = "";
         document.getElementById('box-brand-name-field')?.classList.add('hidden');
@@ -210,6 +251,56 @@ export function initSkinsModule(state) {
         document.getElementById('box-brand-select-existing')?.classList.add('hidden');
         document.getElementById('btn-brand-mode-upload')?.classList.replace('bg-zinc-900', 'bg-fuchsia-950/60');
         document.getElementById('btn-brand-mode-existing')?.classList.replace('bg-fuchsia-950/60', 'bg-zinc-900');
+    }
+
+    function validateSkinFormStateAndCheckChanges() {
+        const submitBtn = document.getElementById('cosSubmitBtn');
+        if (!submitBtn) return;
+
+        const editingId = document.getElementById('editingCosId').value;
+        const name = document.getElementById('cosName').value.trim();
+        const artist = document.getElementById('cosArtist').value.trim();
+        const isUniversal = document.getElementById('cosSelectedGenreMode').value === 'universal';
+        const checkedGenres = document.querySelectorAll('.skin-genre-checkbox:checked');
+
+        const hasRequired = name !== "" && artist !== "" && (isUniversal || checkedGenres.length > 0);
+
+        if (!editingId) {
+            if (hasRequired) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        } else {
+            const existingCos = getCosmetics().find(c => c.id === editingId);
+            if (!existingCos || !hasRequired) {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                return;
+            }
+
+            const hasPendingDelete = Object.values(pendingSkinDeletes).some(v => v === true);
+            const hasNewFile = Array.from(document.querySelectorAll('#cosmetic-form input[type="file"]')).some(inp => inp.files && inp.files.length > 0);
+
+            const changed = hasPendingDelete || hasNewFile ||
+                name !== (existingCos.name || '') ||
+                artist !== (existingCos.artist || '') ||
+                document.getElementById('cosDate').value !== (existingCos.date || '') ||
+                document.getElementById('cosDl1').value !== (existingCos.dl1 || '') ||
+                document.getElementById('cosDl2').value !== (existingCos.dl2 || '') ||
+                document.getElementById('cosIsExclusive').checked !== !!existingCos.isExclusive ||
+                editingCosBrandUrlsList.join(', ') !== (existingCos.insp || '');
+
+            if (changed) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
     }
 
     function renderGenresBadgesHtml(raw) {
@@ -245,7 +336,6 @@ export function initSkinsModule(state) {
         });
     }
 
-    // --- RENDERIZADO DE TABLAS DE SKINS ---
     function renderCosmeticsTables() {
         const tbodyB = document.getElementById('tbody-beatstar');
         const tbodyT = document.getElementById('tbody-tapwave');
@@ -386,6 +476,8 @@ export function initSkinsModule(state) {
             }
 
             tr.querySelector('.btn-edit-cos')?.addEventListener('click', () => {
+                resetCosmeticFormState();
+
                 document.getElementById('editingCosId').value = cos.id;
                 document.getElementById('cosName').value = cos.name;
                 document.getElementById('cosArtist').value = cos.artist; 
@@ -394,8 +486,10 @@ export function initSkinsModule(state) {
                 document.getElementById('cosDl2').value = cos.dl2 || '';
                 document.getElementById('cosIsExclusive').checked = !!cos.isExclusive;
                 
-                if (cos.video) { document.getElementById('current-cos-video-badge')?.classList.remove('hidden'); document.getElementById('btn-remove-cos-video')?.classList.remove('hidden'); }
-                if (cos.skinDirectUrl) { document.getElementById('current-skin-zip-badge')?.classList.remove('hidden'); document.getElementById('btn-remove-skin-zip')?.classList.remove('hidden'); }
+                setupSkinFileOrDeleteSlot('slot-cos-icon', !!cos.icon && cos.icon !== 'BoxSprite_MerchSkin2.png', 'icon');
+                setupSkinFileOrDeleteSlot('slot-cos-video', !!cos.video, 'video');
+                setupSkinFileOrDeleteSlot('slot-cos-zip', !!cos.skinDirectUrl, 'zip');
+                setupSkinFileOrDeleteSlot('slot-cos-date', !!cos.date, 'date', true);
 
                 const submitBtn = document.getElementById('cosSubmitBtn');
                 if (submitBtn) {
@@ -406,7 +500,7 @@ export function initSkinsModule(state) {
                 
                 const pBox = document.getElementById('cosIconPreviewBox');
                 const pImg = document.getElementById('cosIconPreviewImg');
-                if (cos.icon) {
+                if (cos.icon && !pendingSkinDeletes.icon) {
                     pImg.src = cos.icon;
                     pBox.classList.remove('hidden');
                 } else { pBox.classList.add('hidden'); }
@@ -433,6 +527,8 @@ export function initSkinsModule(state) {
                     });
                     if (btnUniversal) btnUniversal.classList.replace('bg-emerald-600', 'bg-fuchsia-600');
                 }
+
+                validateSkinFormStateAndCheckChanges();
             });
 
             tr.querySelector('.btn-del-cos')?.addEventListener('click', () => {
@@ -453,7 +549,6 @@ export function initSkinsModule(state) {
         tbodyT.appendChild(fragT);
     }
 
-    // --- ESCUCHADORES Y SUBMIT DEL FORMULARIO ---
     document.getElementById('btn-skin-universal-genre')?.addEventListener('click', () => {
         const modeInput = document.getElementById('cosSelectedGenreMode');
         const checkboxes = document.querySelectorAll('.skin-genre-checkbox');
@@ -468,21 +563,10 @@ export function initSkinsModule(state) {
             checkboxes.forEach(cb => { cb.checked = false; cb.disabled = false; });
             btn.classList.replace('bg-emerald-600', 'bg-fuchsia-600');
         }
+        validateSkinFormStateAndCheckChanges();
     });
 
     document.getElementById('btn-cancel-cos-form')?.addEventListener('click', resetCosmeticFormState);
-
-    document.getElementById('btn-remove-cos-video')?.addEventListener('click', () => { cosmeticVideoToRemove = true; document.getElementById('current-cos-video-badge')?.classList.add('hidden'); document.getElementById('btn-remove-cos-video')?.classList.add('hidden'); });
-    document.getElementById('btn-remove-skin-zip')?.addEventListener('click', () => { cosmeticZipToRemove = true; document.getElementById('current-skin-zip-badge')?.classList.add('hidden'); document.getElementById('btn-remove-skin-zip')?.classList.add('hidden'); });
-
-    document.getElementById('btn-delete-cos-icon-preview')?.addEventListener('click', () => {
-        requestUserDeleteConfirmation(() => {
-            cosmeticIconToRemove = true;
-            document.getElementById('cosIconPreviewBox')?.classList.add('hidden');
-            const fileIn = document.getElementById('cosIconFile');
-            if (fileIn) fileIn.value = "";
-        });
-    });
 
     document.getElementById('btn-brand-mode-upload')?.addEventListener('click', () => {
         document.getElementById('box-brand-upload-new')?.classList.remove('hidden');
@@ -506,6 +590,7 @@ export function initSkinsModule(state) {
             if (!editingCosBrandUrlsList.includes(selectedUrl)) {
                 editingCosBrandUrlsList.push(selectedUrl);
                 renderBrandManagementFormInterface();
+                validateSkinFormStateAndCheckChanges();
             }
         }
         e.target.value = "";
@@ -531,6 +616,7 @@ export function initSkinsModule(state) {
 
                 if (nameBox) nameBox.classList.remove('hidden');
                 if (nameInput) nameInput.focus();
+                validateSkinFormStateAndCheckChanges();
             };
             reader.readAsDataURL(file);
             e.target.value = "";
@@ -562,10 +648,16 @@ export function initSkinsModule(state) {
         try {
             let id = document.getElementById('editingCosId').value.trim() || Date.now().toString();
             const cosmetics = getCosmetics();
-            let existingCos = cosmetics.find(c => c.id === id);
-            let finalIconUrl = cosmeticIconToRemove ? "BoxSprite_MerchSkin2.png" : (existingCos?.icon || "BoxSprite_MerchSkin2.png");
-            let finalVideoUrl = cosmeticVideoToRemove ? "" : (existingCos?.video || "");
-            let finalSkinDirectUrl = cosmeticZipToRemove ? "" : (existingCos?.skinDirectUrl || "");
+            let existingCos = cosmetics.find(c => c.id === id) || {};
+
+            // Executar borrados en R2
+            if (pendingSkinDeletes.icon && existingCos.icon) { await deleteFileFromCloudflareR2(existingCos.icon); existingCos.icon = "BoxSprite_MerchSkin2.png"; }
+            if (pendingSkinDeletes.video && existingCos.video) { await deleteFileFromCloudflareR2(existingCos.video); existingCos.video = ""; }
+            if (pendingSkinDeletes.zip && existingCos.skinDirectUrl) { await deleteFileFromCloudflareR2(existingCos.skinDirectUrl); existingCos.skinDirectUrl = ""; }
+
+            let finalIconUrl = existingCos.icon || "BoxSprite_MerchSkin2.png";
+            let finalVideoUrl = existingCos.video || "";
+            let finalSkinDirectUrl = existingCos.skinDirectUrl || "";
 
             const iconFileInput = document.getElementById('cosIconFile');
             if (iconFileInput && iconFileInput.files && iconFileInput.files[0]) {
@@ -611,7 +703,7 @@ export function initSkinsModule(state) {
                 if (checkedCb) finalSkinGenre = checkedCb.value;
             }
 
-            const dateVal = document.getElementById('cosDate')?.value || '';
+            const dateVal = pendingSkinDeletes.date ? "" : (document.getElementById('cosDate')?.value || '');
             const isExclusive = document.getElementById('cosIsExclusive')?.checked || false;
             const currentSelectedSkinSubPlatform = getCurrentSelectedSkinSubPlatform();
 
@@ -643,6 +735,9 @@ export function initSkinsModule(state) {
             hideLoadingOverlay();
         }
     });
+
+    document.getElementById('cosmetic-form')?.addEventListener('input', validateSkinFormStateAndCheckChanges);
+    document.getElementById('cosmetic-form')?.addEventListener('change', validateSkinFormStateAndCheckChanges);
 
     return {
         buildSkinGenresSelector,
