@@ -113,22 +113,25 @@ export function startRadialCanvasVisualizer(canvas, analyser, containerElement, 
 }
 
 export function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement, containerElement, isModalOpen = false, themeColor = "#d946ef", keepPlayingIfSame = false, onEndCallback = null) {
-    // Si la misma pista ya está reproduciéndose
+    // Si la misma canción ya está reproduciéndose
     if (activeAudioElement && activeAudioElement.dataset.url === audioUrl && !activeAudioElement.paused) {
         if (keepPlayingIfSame) {
+            // Cambiar a bucle si el modal está abierto
             activeAudioElement.loop = isModalOpen;
             if (containerElement) {
                 containerElement.classList.add('art-container-circular');
                 containerElement.classList.add('art-circle-shape');
             }
-            startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement, themeColor);
+            if (canvasElement && audioAnalyser) {
+                startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement, themeColor);
+            }
             return;
         }
         stopGlobalAudioPreview();
         return;
     }
 
-    // Detener cualquier audio previo antes de arrancar uno nuevo
+    // Si es un audio nuevo, detener el anterior
     stopGlobalAudioPreview();
 
     if (btnElement) btnElement.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-[10px]"></i>`;
@@ -159,13 +162,17 @@ export function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canva
         if (audioCtx.state === 'suspended') audioCtx.resume();
 
         try {
-            audioSource = audioCtx.createMediaElementSource(audio);
-            audioSource.connect(audioAnalyser);
-            audioAnalyser.connect(audioCtx.destination);
+            if (!audioSource || audioSource.mediaElement !== audio) {
+                audioSource = audioCtx.createMediaElementSource(audio);
+                audioSource.connect(audioAnalyser);
+                audioAnalyser.connect(audioCtx.destination);
+            }
         } catch (e) {}
 
         audio.play().then(() => {
-            startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement, themeColor);
+            if (canvasElement) {
+                startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement, themeColor);
+            }
         }).catch(err => {
             console.error("Audio playback error:", err);
             stopGlobalAudioPreview();
@@ -189,6 +196,12 @@ export function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canva
             if (onEndCallback) onEndCallback();
         }
     };
+}
+
+export function setAudioLoopState(isLooping) {
+    if (activeAudioElement) {
+        activeAudioElement.loop = isLooping;
+    }
 }
 
 export function getActiveAudioElement() {
