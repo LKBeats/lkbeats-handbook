@@ -692,18 +692,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 5. Botones "X" y Cierre de Modales
-    document.getElementById('download-modal-btn-close')?.addEventListener('click', () => document.getElementById('download-custom-modal')?.classList.add('hidden'));
+    document.getElementById('download-modal-btn-close')?.addEventListener('click', () => {
+        stopAllMedia();
+        document.getElementById('download-custom-modal')?.classList.add('hidden');
+    });
+    
     document.getElementById('thanks-modal-btn-close')?.addEventListener('click', () => {
-        const thanksVid = document.getElementById('download-thanks-video');
-        if (thanksVid) { thanksVid.pause(); thanksVid.src = ""; }
+        stopAllMedia();
         document.getElementById('thanks-custom-modal')?.classList.add('hidden');
     });
+    
     document.getElementById('btn-close-boogie-modal')?.addEventListener('click', () => document.getElementById('boogie-auth-modal')?.classList.add('hidden'));
     document.getElementById('btn-close-boogie-modal-x')?.addEventListener('click', () => document.getElementById('boogie-auth-modal')?.classList.add('hidden'));
     document.getElementById('btn-cancel-exit-creator')?.addEventListener('click', () => document.getElementById('boogie-exit-modal')?.classList.add('hidden'));
     document.getElementById('btn-cancel-delete')?.addEventListener('click', () => document.getElementById('confirm-delete-modal')?.classList.add('hidden'));
     document.getElementById('btn-cancel-explicit')?.addEventListener('click', () => document.getElementById('explicit-warning-modal')?.classList.add('hidden'));
-    document.getElementById('btn-close-beatstar-modal')?.addEventListener('click', () => document.getElementById('beatstar-edition-modal')?.classList.add('hidden'));
+    
+    document.getElementById('btn-close-beatstar-modal')?.addEventListener('click', () => {
+        stopAllMedia();
+        document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
+    });
 
     // 6. Modal Sin Censura (Explicit)
     document.getElementById('btn-confirm-explicit')?.addEventListener('click', () => {
@@ -739,6 +747,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-opt-standard')?.addEventListener('click', () => {
         if (activeModalBeatstarChart) {
             activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Standard';
+            stopAllMedia();
             chartsModule.renderLevelsTable();
             document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
         }
@@ -747,6 +756,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-opt-deluxe')?.addEventListener('click', () => {
         if (activeModalBeatstarChart) {
             activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Deluxe';
+            stopAllMedia();
             chartsModule.renderLevelsTable();
             document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
         }
