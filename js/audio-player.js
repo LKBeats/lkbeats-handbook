@@ -78,6 +78,7 @@ export function startRadialCanvasVisualizer(canvas, analyser, containerElement, 
         analyser.getByteFrequencyData(audioDataArray);
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Velocidad de rotación fija sincronizada para todos los canvas
         currentRotationAngle += 0.008;
 
         const barCount = 64;
@@ -113,14 +114,16 @@ export function startRadialCanvasVisualizer(canvas, analyser, containerElement, 
 }
 
 export function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement, containerElement, isModalOpen = false, themeColor = "#d946ef", keepPlayingIfSame = false, onEndCallback = null) {
-    // Si la misma canción ya está reproduciéndose
     if (activeAudioElement && activeAudioElement.dataset.url === audioUrl && !activeAudioElement.paused) {
         if (keepPlayingIfSame) {
-            // Cambiar a bucle si el modal está abierto
             activeAudioElement.loop = isModalOpen;
             if (containerElement) {
                 containerElement.classList.add('art-container-circular');
                 containerElement.classList.add('art-circle-shape');
+            }
+            if (btnElement) {
+                btnElement.innerHTML = `<i class="fa-solid fa-stop text-[10px]"></i>`;
+                activeAudioButton = btnElement;
             }
             if (canvasElement && audioAnalyser) {
                 startRadialCanvasVisualizer(canvasElement, audioAnalyser, containerElement, themeColor);
@@ -206,4 +209,8 @@ export function setAudioLoopState(isLooping) {
 
 export function getActiveAudioElement() {
     return activeAudioElement;
+}
+
+export function getAudioAnalyser() {
+    return audioAnalyser;
 }
