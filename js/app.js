@@ -18,11 +18,56 @@ import {
 import { initChartsModule } from "./charts.js";
 import { initSkinsModule } from "./skins.js";
 
-// Variable global para mantener la última notificación activa y re-renderizarla al cargar assets
+// =========================================================
+// 1. DECLARACIÓN DE CONSTANTES Y VARIABLES DE ESTADO GLOBALES
+// =========================================================
+const genreList = [
+    { color: "#bf2726", label: "Rock" },
+    { color: "#da6128", label: "Alternative" },
+    { color: "#02fe03", label: "Classical" },
+    { color: "#84532f", label: "Country" },
+    { color: "#8836c7", label: "Dance/EDM" },
+    { color: "#2660d2", label: "Hip-Hop" },
+    { color: "#c43d73", label: "Pop" },
+    { color: "#019ac4", label: "RnB" }
+];
+
+const skinUniversalGenreList = [
+    { color: "#c43d73", label: "Pop" },
+    { color: "#da6128", label: "Alternative" },
+    { color: "#8836c7", label: "Dance/EDM" },
+    { color: "#bf2726", label: "Rock" },
+    { color: "#2660d2", label: "Hip-Hop" },
+    { color: "#84532f", label: "Country" },
+    { color: "#019ac4", label: "RnB" }
+];
+
+let isCreatorMode = false;
+let currentLanguage = localStorage.getItem('nexus_lang') || 'es';
+let currentViewName = 'home';
+let levels = [];
+let cosmetics = [];
+let globalFooterLinks = { beatclone: '', bscm: '', beatcharts: '', tapwave: '' };
+let currentSelectedSkinSubPlatform = 'Beatstar';
+let globalVisualAssets = {};
+let globalThanksVideos = [];
+let brandCustomNamesMap = {};
+
+let activeChartSelectedEditions = {};
+let activeChartExplicitStates = {};
+let currentActiveDownloadUrl = "";
+
+let activeVideoElement = null;
+let pendingDeleteActionCallback = null;
+let activeModalBeatstarChart = null;
+
+// Mantener la última notificación activa
 let latestActiveNotification = null;
 let latestNotifMeta = { totalActive: 0, currentIndex: 0 };
 
-// Funciones auxiliares para renderizar badges dinámicos con iconos en las notificaciones
+// =========================================================
+// 2. FUNCIONES AUXILIARES DE RENDERIZADO PARA BANNER
+// =========================================================
 function renderNotifGenresBadgesHtml(rawGenre) {
     if (!rawGenre) return `<span class="px-2 py-1 rounded bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-300 text-[10px] font-black uppercase">General</span>`;
     
@@ -85,7 +130,6 @@ function renderNotifEditionTagHtml(editionVal) {
     `;
 }
 
-// Función para renderizar o actualizar el DOM del banner de notificación
 function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
     const banner = document.getElementById('home-notification-banner');
     const content = document.getElementById('notif-banner-content');
@@ -112,14 +156,12 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
             : (isEn ? 'Skin Available' : 'Skin Disponible');
     }
 
-    // Botón manual de cierre "X" (para modo creador)
     const deleteBtnMarkup = isCreatorMode ? `
         <button id="btn-banner-delete-x" type="button" class="absolute top-2 right-2 w-7 h-7 bg-red-950/80 border border-red-800/80 text-red-400 hover:bg-red-900 hover:text-white rounded-full flex items-center justify-center font-black text-xs transition shadow-lg z-30" title="${isEn ? 'Delete Notification' : 'Eliminar Notificación'}">
             <i class="fa-solid fa-xmark"></i>
         </button>
     ` : '';
 
-    // Controles de navegación manual si ambas notificaciones están activas en Modo Creador
     let manualNavMarkup = '';
     if (isCreatorMode && meta.totalActive === 2) {
         manualNavMarkup = `
@@ -180,7 +222,6 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
         `;
     }
 
-    // Eventos para los controles del banner
     if (isCreatorMode) {
         document.getElementById('btn-banner-delete-x')?.addEventListener('click', () => {
             stateForModules.requestUserDeleteConfirmation(() => {
@@ -193,14 +234,15 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
     document.getElementById('btn-notif-next')?.addEventListener('click', () => nextNotification());
 }
 
-// Inicialización del banner de notificaciones
+// =========================================================
+// 3. INICIALIZACIÓN DE NOTIFICACIONES Y EVENTOS MANUALES
+// =========================================================
 subscribeToNotifications((activeNotif, meta) => {
     latestActiveNotification = activeNotif;
     latestNotifMeta = meta;
     drawNotificationBanner(activeNotif, meta);
 }, isCreatorMode);
 
-// Eventos de borrado manual desde el panel del creador
 document.getElementById('btn-delete-notif-chart')?.addEventListener('click', () => {
     stateForModules.requestUserDeleteConfirmation(() => deleteNotificationManually('chart'));
 });
@@ -208,46 +250,9 @@ document.getElementById('btn-delete-notif-skin')?.addEventListener('click', () =
     stateForModules.requestUserDeleteConfirmation(() => deleteNotificationManually('skin'));
 });
 
-const genreList = [
-    { color: "#bf2726", label: "Rock" },
-    { color: "#da6128", label: "Alternative" },
-    { color: "#02fe03", label: "Classical" },
-    { color: "#84532f", label: "Country" },
-    { color: "#8836c7", label: "Dance/EDM" },
-    { color: "#2660d2", label: "Hip-Hop" },
-    { color: "#c43d73", label: "Pop" },
-    { color: "#019ac4", label: "RnB" }
-];
-
-const skinUniversalGenreList = [
-    { color: "#c43d73", label: "Pop" },
-    { color: "#da6128", label: "Alternative" },
-    { color: "#8836c7", label: "Dance/EDM" },
-    { color: "#bf2726", label: "Rock" },
-    { color: "#2660d2", label: "Hip-Hop" },
-    { color: "#84532f", label: "Country" },
-    { color: "#019ac4", label: "RnB" }
-];
-
-let isCreatorMode = false;
-let currentLanguage = localStorage.getItem('nexus_lang') || 'es';
-let currentViewName = 'home';
-let levels = [];
-let cosmetics = [];
-let globalFooterLinks = { beatclone: '', bscm: '', beatcharts: '', tapwave: '' };
-let currentSelectedSkinSubPlatform = 'Beatstar';
-let globalVisualAssets = {};
-let globalThanksVideos = [];
-let brandCustomNamesMap = {};
-
-let activeChartSelectedEditions = {};
-let activeChartExplicitStates = {};
-let currentActiveDownloadUrl = "";
-
-let activeVideoElement = null;
-let pendingDeleteActionCallback = null;
-let activeModalBeatstarChart = null;
-
+// =========================================================
+// 4. FUNCIONES UTILITARIAS Y DE NAVEGACIÓN
+// =========================================================
 function sanitizeFirebaseKey(key) {
     return btoa(key).replace(/=/g, '').replace(/\//g, '_').replace(/\+/g, '-');
 }
@@ -580,6 +585,9 @@ function buildVisualAssetsGenresList() {
     });
 }
 
+// =========================================================
+// 5. INICIALIZACIÓN DE MÓDULOS DE VISTA
+// =========================================================
 const stateForModules = {
     genreList,
     skinUniversalGenreList,
@@ -847,6 +855,9 @@ function applyLanguagePack() {
     buildCustomDropdownMenus();
 }
 
+// =========================================================
+// 6. SUSCRIPCIONES A BASE DE DATOS FIREBASE
+// =========================================================
 try {
     showLoadingOverlay();
 
@@ -880,7 +891,6 @@ try {
         updateCMSHeaderIcons();
         chartsModule.renderLevelsTable();
         
-        // Re-renderizar la notificación si ya había una activa cuando se cargan los assets de Firebase
         if (latestActiveNotification) {
             drawNotificationBanner(latestActiveNotification);
         }
@@ -902,6 +912,9 @@ try {
     hideLoadingOverlay();
 }
 
+// =========================================================
+// 7. LISTENERS DE EVENTOS DOM
+// =========================================================
 document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('nav-logo')?.addEventListener('click', () => navigateTo('home'));
@@ -1025,7 +1038,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Evento de selección universal para selectores de fecha
     document.querySelectorAll('button[id^="btn-picker-"]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
