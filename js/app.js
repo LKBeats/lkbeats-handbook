@@ -962,6 +962,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    function resetBoogieAuthModal() {
+    document.getElementById('boogie-auth-modal')?.classList.add('hidden');
+    const errorMsgEl = document.getElementById('boogie-auth-error-msg');
+    if (errorMsgEl) {
+        errorMsgEl.classList.add('hidden');
+        errorMsgEl.innerText = '';
+    }
+    ['boogieCred1', 'boogieCred2', 'boogieCred3'].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) input.value = '';
+    });
+}
+
+    document.getElementById('boogie-auth-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const inputVal = document.getElementById('boogieCred1').value;
+    const errorMsgEl = document.getElementById('boogie-auth-error-msg');
+
+    if (inputVal === "BeatstarTest") {
+        isCreatorMode = true;
+        btnBoogieTrigger?.classList.add('glow-green');
+        applyRoleUIVisibility();
+        resetBoogieAuthModal();
+    } else {
+        if (errorMsgEl) {
+            errorMsgEl.innerText = translations[currentLanguage].invalidCredentials || "Credenciales incorrectas";
+            errorMsgEl.classList.remove('hidden');
+            errorMsgEl.classList.add('block');
+        }
+    }
+});
+
     document.getElementById('download-modal-btn-close')?.addEventListener('click', () => {
         stopAllMedia();
         document.getElementById('download-custom-modal')?.classList.add('hidden');
