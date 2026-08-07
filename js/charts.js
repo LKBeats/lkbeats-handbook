@@ -599,48 +599,59 @@ export function initChartsModule(state) {
 
 // --- SUBIDA DE ARCHIVOS A LAS CARPETAS CORRESPONDIENTES EN CLOUDFLARE R2 ---
 
+            // Arte / Carátula
             let art = existingLvl.art || '';
-            const artFile = document.getElementById('lvlArtFile').files[0];
+            const artFile = document.getElementById('lvlArtFile')?.files[0];
             if (artFile) art = await uploadFileToCloudflareR2(artFile, 'charts_art');
 
+            // Audio Principal
             let audioDirectUrl = existingLvl.audioDirectUrl || '';
-            const audioFile = document.getElementById('lvlAudioFile').files[0];
+            const audioFile = document.getElementById('lvlAudioFile')?.files[0];
             if (audioFile) audioDirectUrl = await uploadFileToCloudflareR2(audioFile, 'audio');
 
+            // Video Preview Standard
             let video = existingLvl.video || '';
-            const videoFile = document.getElementById('lvlVideoFile').files[0];
+            const videoFile = document.getElementById('lvlVideoFile')?.files[0];
             if (videoFile) video = await uploadFileToCloudflareR2(videoFile, 'prevchart');
 
+            // ZIP Standard (Ruta garantizada: lkbeats/charts_zip/)
             let chartDirectUrl = existingLvl.chartDirectUrl || '';
-            const zipFile = document.getElementById('lvlChartZipFile').files[0];
+            const zipFile = document.getElementById('lvlChartZipFile')?.files[0];
             if (zipFile) chartDirectUrl = await uploadFileToCloudflareR2(zipFile, 'charts_zip');
 
+            // Video Preview Deluxe
             let videoDeluxe = existingLvl.videoDeluxe || '';
-            const videoDeluxeFile = document.getElementById('lvlVideoFileDeluxe').files[0];
+            const videoDeluxeFile = document.getElementById('lvlVideoFileDeluxe')?.files[0];
             if (videoDeluxeFile) videoDeluxe = await uploadFileToCloudflareR2(videoDeluxeFile, 'prevchart');
 
+            // ZIP Deluxe (Ruta garantizada: lkbeats/charts_zip/)
             let chartDirectUrlDeluxe = existingLvl.chartDirectUrlDeluxe || '';
-            const zipDeluxeFile = document.getElementById('lvlChartZipFileDeluxe').files[0];
+            const zipDeluxeFile = document.getElementById('lvlChartZipFileDeluxe')?.files[0];
             if (zipDeluxeFile) chartDirectUrlDeluxe = await uploadFileToCloudflareR2(zipDeluxeFile, 'charts_zip');
 
+            // Audio Explícito
             let audioExplicit = existingLvl.audioExplicit || '';
-            const audioExplicitFile = document.getElementById('lvlAudioFileExplicit').files[0];
+            const audioExplicitFile = document.getElementById('lvlAudioFileExplicit')?.files[0];
             if (audioExplicitFile) audioExplicit = await uploadFileToCloudflareR2(audioExplicitFile, 'audio');
 
+            // Video Explícito Standard
             let videoExplicit = existingLvl.videoExplicit || '';
-            const videoExplicitFile = document.getElementById('lvlVideoFileExplicit').files[0];
+            const videoExplicitFile = document.getElementById('lvlVideoFileExplicit')?.files[0];
             if (videoExplicitFile) videoExplicit = await uploadFileToCloudflareR2(videoExplicitFile, 'prevchart');
 
+            // ZIP Explícito Standard (Ruta garantizada: lkbeats/charts_zip/)
             let zipExplicit = existingLvl.zipExplicit || '';
-            const zipExplicitFile = document.getElementById('lvlChartZipFileExplicit').files[0];
+            const zipExplicitFile = document.getElementById('lvlChartZipFileExplicit')?.files[0];
             if (zipExplicitFile) zipExplicit = await uploadFileToCloudflareR2(zipExplicitFile, 'charts_zip');
 
+            // Video Explícito Deluxe
             let videoDeluxeExplicit = existingLvl.videoDeluxeExplicit || '';
-            const videoDeluxeExplicitFile = document.getElementById('lvlVideoFileDeluxeExplicit').files[0];
+            const videoDeluxeExplicitFile = document.getElementById('lvlVideoFileDeluxeExplicit')?.files[0];
             if (videoDeluxeExplicitFile) videoDeluxeExplicit = await uploadFileToCloudflareR2(videoDeluxeExplicitFile, 'prevchart');
 
+            // ZIP Explícito Deluxe (Ruta garantizada: lkbeats/charts_zip/)
             let zipDeluxeExplicit = existingLvl.zipDeluxeExplicit || '';
-            const zipDeluxeExplicitFile = document.getElementById('lvlChartZipFileDeluxeExplicit').files[0];
+            const zipDeluxeExplicitFile = document.getElementById('lvlChartZipFileDeluxeExplicit')?.files[0];
             if (zipDeluxeExplicitFile) zipDeluxeExplicit = await uploadFileToCloudflareR2(zipDeluxeExplicitFile, 'charts_zip');
 
             const payload = {
