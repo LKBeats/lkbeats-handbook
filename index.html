@@ -1059,5 +1059,29 @@
     </footer>
 
     <script type="module" src="js/app.js"></script>
+
+<!-- SCRIPT TRADICIONAL GLOBAL PARA EL OJO DE CONTRASEÑAS -->
+    <script>
+        function toggleBoogiePassword(inputId, btnElement) {
+            var input = document.getElementById(inputId);
+            var icon = btnElement ? btnElement.querySelector('i') : null;
+
+            if (input) {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    if (icon) {
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    }
+                } else {
+                    input.type = 'password';
+                    if (icon) {
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                }
+            }
+        }
+    </script>
 </body>
 </html>
