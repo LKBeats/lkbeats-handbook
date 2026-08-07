@@ -1,7 +1,7 @@
 import { ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 import { translations } from "./i18n.js";
 import { db, uploadFileToCloudflareR2 } from "./services.js";
-import { stopGlobalAudioPreview, toggleAudioPreviewEngine, getActiveAudioElement } from "./audio-player.js";
+import { stopGlobalAudioPreview, toggleAudioPreviewEngine, getActiveAudioElement, setAudioLoopState } from "./audio-player.js";
 import { initChartsModule } from "./charts.js";
 import { initSkinsModule } from "./skins.js";
 
@@ -709,8 +709,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-cancel-explicit')?.addEventListener('click', () => document.getElementById('explicit-warning-modal')?.classList.add('hidden'));
     
     document.getElementById('btn-close-beatstar-modal')?.addEventListener('click', () => {
-        stopAllMedia();
+        setAudioLoopState(false); // Quita el bucle para que termine normal
         document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
+        chartsModule.renderLevelsTable(); // Restaura el canvas y carátula circular en la tabla si sigue sonando
     });
 
     // 6. Modal Sin Censura (Explicit)
@@ -747,18 +748,18 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-opt-standard')?.addEventListener('click', () => {
         if (activeModalBeatstarChart) {
             activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Standard';
-            stopAllMedia();
-            chartsModule.renderLevelsTable();
+            setAudioLoopState(false);
             document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
+            chartsModule.renderLevelsTable();
         }
     });
 
     document.getElementById('modal-opt-deluxe')?.addEventListener('click', () => {
         if (activeModalBeatstarChart) {
             activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Deluxe';
-            stopAllMedia();
-            chartsModule.renderLevelsTable();
+            setAudioLoopState(false);
             document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
+            chartsModule.renderLevelsTable();
         }
     });
 
