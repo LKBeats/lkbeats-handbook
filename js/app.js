@@ -8,9 +8,75 @@ import {
     getAudioAnalyser, 
     startRadialCanvasVisualizer 
 } from "./audio-player.js";
-
+import { subscribeToNotifications, deleteNotificationManually } from "./notifications-manager.js";
 import { initChartsModule } from "./charts.js";
 import { initSkinsModule } from "./skins.js";
+
+// Inicialización del banner de notificaciones con soporte multilingüe
+subscribeToNotifications((activeNotif) => {
+    const banner = document.getElementById('home-notification-banner');
+    const content = document.getElementById('notif-banner-content');
+    
+    if (!banner || !content) return;
+
+    if (!activeNotif) {
+        banner.classList.add('hidden');
+        return;
+    }
+
+    banner.classList.remove('hidden');
+
+    // Mapeo de títulos según el idioma actual y tipo de notificación
+    const isEn = currentLanguage === 'en';
+    
+    let notifTitle = '';
+    if (activeNotif.type === 'new') {
+        notifTitle = activeNotif.category === 'chart' 
+            ? (isEn ? 'New Chart' : 'Nuevo Chart') 
+            : (isEn ? 'New Skin' : 'Nueva Skin');
+    } else {
+        notifTitle = activeNotif.category === 'chart' 
+            ? (isEn ? 'Chart Available' : 'Chart Disponible') 
+            : (isEn ? 'Skin Available' : 'Skin Disponible');
+    }
+
+    if (activeNotif.category === 'chart') {
+        content.innerHTML = `
+            <div class="flex items-center gap-3">
+                <img src="${activeNotif.artOrIcon}" class="w-14 h-14 rounded-xl object-cover border border-orange-500/40 shadow">
+                <div>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-orange-400 block">${notifTitle}</span>
+                    <h3 class="text-base font-black text-white leading-tight">${activeNotif.song}</h3>
+                    <p class="text-xs text-zinc-400 font-bold">${activeNotif.artist}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2 py-1 rounded bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-300 text-[10px] font-black uppercase">${activeNotif.genre || 'General'}</span>
+                <span class="px-2 py-1 rounded bg-orange-950/40 border border-orange-800/40 text-orange-400 text-[10px] font-black uppercase">${activeNotif.diff || 'Normal'}</span>
+                <span class="px-2 py-1 rounded bg-zinc-900 border border-zinc-700 text-zinc-300 text-[10px] font-black uppercase">${activeNotif.edition || 'Standard'}</span>
+            </div>
+        `;
+    } else if (activeNotif.category === 'skin') {
+        const platformLogo = activeNotif.platform === 'TapWave' ? 'TapWaveWhiteLogo.png' : 'BeatstarWhiteLogo.png';
+        content.innerHTML = `
+            <div class="flex items-center gap-3">
+                <img src="${activeNotif.artOrIcon}" class="w-14 h-14 rounded-xl object-cover border border-fuchsia-500/40 shadow">
+                <div>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-fuchsia-400 block">${notifTitle}</span>
+                    <h3 class="text-base font-black text-white leading-tight">${activeNotif.skinName}</h3>
+                    <p class="text-xs text-zinc-400 font-bold">${activeNotif.artist}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-6 object-contain">
+            </div>
+        `;
+    }
+});
+
+// Eventos de borrado manual desde el panel del creador
+document.getElementById('btn-delete-notif-chart')?.addEventListener('click', () => deleteNotificationManually('chart'));
+document.getElementById('btn-delete-notif-skin')?.addEventListener('click', () => deleteNotificationManually('skin'));
 
 const genreList = [
     { color: "#bf2726", label: "Rock" },
@@ -757,23 +823,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Evento de selección universal para selectores de fecha
-document.querySelectorAll('button[id^="btn-picker-"]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        // Busca el contenedor padre que agrupa el label/botón y el input de fecha
-        const parentSection = btn.parentElement.parentElement;
-        const dateInput = parentSection?.querySelector('input[type="date"]');
-        
-        if (dateInput) {
-            if (typeof dateInput.showPicker === 'function') {
-                dateInput.showPicker();
-            } else {
-                dateInput.focus();
-                dateInput.click();
+    document.querySelectorAll('button[id^="btn-picker-"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const parentSection = btn.parentElement.parentElement;
+            const dateInput = parentSection?.querySelector('input[type="date"]');
+            
+            if (dateInput) {
+                if (typeof dateInput.showPicker === 'function') {
+                    dateInput.showPicker();
+                } else {
+                    dateInput.focus();
+                    dateInput.click();
+                }
             }
-        }
+        });
     });
-});
 
     document.getElementById('btn-custom-lvl-genre')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('dropdown-custom-lvl-genre')?.classList.toggle('hidden'); });
     document.getElementById('btn-custom-lvl-diff')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('dropdown-custom-lvl-diff')?.classList.toggle('hidden'); });

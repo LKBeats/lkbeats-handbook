@@ -1,6 +1,7 @@
 import { ref, set, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 import { db, uploadFileToCloudflareR2, deleteFileFromCloudflareR2 } from "./services.js";
 import { translations } from "./i18n.js";
+import { createOrUpdateNotification } from "./notifications-manager.js";
 
 export function initSkinsModule(state) {
     const {
@@ -532,38 +533,38 @@ export function initSkinsModule(state) {
             });
 
             tr.querySelector('.btn-del-cos')?.addEventListener('click', () => {
-    requestUserDeleteConfirmation(async () => {
-        if (db) {
-            showLoadingOverlay();
-            try {
-                // 1. Recopilar icono, video y archivo ZIP de la skin
-                const filesToDelete = [
-                    cos.icon,
-                    cos.video,
-                    cos.skinDirectUrl
-                ].filter(url => url && url.trim() !== "" && url !== "BoxSprite_MerchSkin2.png");
+                requestUserDeleteConfirmation(async () => {
+                    if (db) {
+                        showLoadingOverlay();
+                        try {
+                            // 1. Recopilar icono, video y archivo ZIP de la skin
+                            const filesToDelete = [
+                                cos.icon,
+                                cos.video,
+                                cos.skinDirectUrl
+                            ].filter(url => url && url.trim() !== "" && url !== "BoxSprite_MerchSkin2.png");
 
-                // 2. Eliminarlos de Cloudflare R2 en paralelo
-                if (filesToDelete.length > 0) {
-                    await Promise.all(filesToDelete.map(url => deleteFileFromCloudflareR2(url)));
-                }
+                            // 2. Eliminarlos de Cloudflare R2 en paralelo
+                            if (filesToDelete.length > 0) {
+                                await Promise.all(filesToDelete.map(url => deleteFileFromCloudflareR2(url)));
+                            }
 
-                // 3. Eliminar de Firebase
-                await remove(ref(db, 'cosmetics/' + cos.id));
+                            // 3. Eliminar de Firebase
+                            await remove(ref(db, 'cosmetics/' + cos.id));
 
-                // 4. Reiniciar formulario
-                resetCosmeticFormState();
-            } catch (err) {
-                console.error("Error al borrar la skin y sus archivos:", err);
-                alert("Ocurrió un error al intentar eliminar los archivos de la skin.");
-            } finally {
-                hideLoadingOverlay();
-            }
-        }
-    });
-});
+                            // 4. Reiniciar formulario
+                            resetCosmeticFormState();
+                        } catch (err) {
+                            console.error("Error al borrar la skin y sus archivos:", err);
+                            alert("Ocurrió un error al intentar eliminar los archivos de la skin.");
+                        } finally {
+                            hideLoadingOverlay();
+                        }
+                    }
+                });
+            });
 
-if (isT) fragT.appendChild(tr); else fragB.appendChild(tr);
+            if (isT) fragT.appendChild(tr); else fragB.appendChild(tr);
         });
 
         tbodyB.innerHTML = '';
@@ -749,6 +750,31 @@ if (isT) fragT.appendChild(tr); else fragB.appendChild(tr);
             if (db) {
                 await set(ref(db, 'cosmetics/' + id), data);
                 await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
+
+                // Registro automático de notificación
+                const isNewRecord = !document.getElementById('editingCosId').value.trim();
+                const zipAddedToExisting = !isNewRecord && !existingCos.skinDirectUrl && !!finalSkinDirectUrl;
+
+                if (isNewRecord) {
+                    await createOrUpdateNotification('skin', {
+                        type: 'new',
+                        title: 'Nueva Skin',
+                        skinName: data.name,
+                        artist: data.artist,
+                        artOrIcon: finalIconUrl,
+                        platform: currentSelectedSkinSubPlatform
+                    });
+                } else if (zipAddedToExisting) {
+                    await createOrUpdateNotification('skin', {
+                        type: 'zip',
+                        title: 'Skin Disponible',
+                        skinName: data.name,
+                        artist: data.artist,
+                        artOrIcon: finalIconUrl,
+                        platform: currentSelectedSkinSubPlatform
+                    });
+                }
+
                 resetCosmeticFormState();
             }
         } catch(err) {

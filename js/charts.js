@@ -2,6 +2,7 @@ import { ref, set, remove } from "https://www.gstatic.com/firebasejs/10.8.0/fire
 import { db, uploadFileToCloudflareR2, deleteFileFromCloudflareR2 } from "./services.js";
 import { translations } from "./i18n.js";
 import { toggleAudioPreviewEngine } from "./audio-player.js";
+import { createOrUpdateNotification } from "./notifications-manager.js";
 
 export function initChartsModule(state) {
     const {
@@ -717,46 +718,46 @@ export function initChartsModule(state) {
             });
 
             tr.querySelector('.btn-del-lvl')?.addEventListener('click', () => {
-    requestUserDeleteConfirmation(async () => {
-        if (db) {
-            showLoadingOverlay();
-            try {
-                // 1. Recopilar todos los archivos vinculados (Standard, Deluxe y Explicit)
-                const filesToDelete = [
-                    lvl.art,
-                    lvl.audioDirectUrl,
-                    lvl.video,
-                    lvl.chartDirectUrl,
-                    lvl.videoDeluxe,
-                    lvl.chartDirectUrlDeluxe,
-                    lvl.audioExplicit,
-                    lvl.videoExplicit,
-                    lvl.zipExplicit,
-                    lvl.videoDeluxeExplicit,
-                    lvl.zipDeluxeExplicit
-                ].filter(url => url && url.trim() !== "");
+                requestUserDeleteConfirmation(async () => {
+                    if (db) {
+                        showLoadingOverlay();
+                        try {
+                            // 1. Recopilar todos los archivos vinculados (Standard, Deluxe y Explicit)
+                            const filesToDelete = [
+                                lvl.art,
+                                lvl.audioDirectUrl,
+                                lvl.video,
+                                lvl.chartDirectUrl,
+                                lvl.videoDeluxe,
+                                lvl.chartDirectUrlDeluxe,
+                                lvl.audioExplicit,
+                                lvl.videoExplicit,
+                                lvl.zipExplicit,
+                                lvl.videoDeluxeExplicit,
+                                lvl.zipDeluxeExplicit
+                            ].filter(url => url && url.trim() !== "");
 
-                // 2. Eliminarlos de Cloudflare R2 en paralelo
-                if (filesToDelete.length > 0) {
-                    await Promise.all(filesToDelete.map(url => deleteFileFromCloudflareR2(url)));
-                }
+                            // 2. Eliminarlos de Cloudflare R2 en paralelo
+                            if (filesToDelete.length > 0) {
+                                await Promise.all(filesToDelete.map(url => deleteFileFromCloudflareR2(url)));
+                            }
 
-                // 3. Eliminar de Firebase
-                await remove(ref(db, 'levels/' + lvl.id));
+                            // 3. Eliminar de Firebase
+                            await remove(ref(db, 'levels/' + lvl.id));
 
-                // 4. Reiniciar formulario
-                resetLevelFormState();
-            } catch (err) {
-                console.error("Error al borrar el chart y sus archivos:", err);
-                alert("Ocurrió un error al intentar eliminar todos los archivos vinculados.");
-            } finally {
-                hideLoadingOverlay();
-            }
-        }
-    });
-});
+                            // 4. Reiniciar formulario
+                            resetLevelFormState();
+                        } catch (err) {
+                            console.error("Error al borrar el chart y sus archivos:", err);
+                            alert("Ocurrió un error al intentar eliminar todos los archivos vinculados.");
+                        } finally {
+                            hideLoadingOverlay();
+                        }
+                    }
+                });
+            });
 
-fragment.appendChild(tr);
+            fragment.appendChild(tr);
         });
 
         tbody.innerHTML = '';
@@ -890,6 +891,35 @@ fragment.appendChild(tr);
             };
 
             await set(ref(db, 'levels/' + id), payload);
+
+            // Registro automático de notificación
+            const isNewRecord = !editingId;
+            const zipAddedToExisting = !!editingId && !existingLvl.chartDirectUrl && !!chartDirectUrl;
+
+            if (isNewRecord) {
+                await createOrUpdateNotification('chart', {
+                    type: 'new',
+                    title: 'Nuevo Chart',
+                    song: song,
+                    artist: artist,
+                    artOrIcon: art || 'free_song_Image.png',
+                    genre: genre,
+                    diff: document.getElementById('lvlDiff').value,
+                    edition: editionMode
+                });
+            } else if (zipAddedToExisting) {
+                await createOrUpdateNotification('chart', {
+                    type: 'zip',
+                    title: 'Chart Disponible',
+                    song: song,
+                    artist: artist,
+                    artOrIcon: art || 'free_song_Image.png',
+                    genre: genre,
+                    diff: document.getElementById('lvlDiff').value,
+                    edition: editionMode
+                });
+            }
+
             resetLevelFormState();
         } catch (err) {
             console.error("Error al registrar chart:", err);
