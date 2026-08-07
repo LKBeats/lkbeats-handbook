@@ -30,20 +30,6 @@ export function initChartsModule(state) {
     let activeLvlDiffFilter = "";
     let activeLvlEditionFilter = "";
 
-    let levelArtToRemove = false;
-    let levelAudioToRemove = false;
-    let levelVideoToRemove = false;
-    let levelZipToRemove = false;
-
-    let levelVideoDeluxeToRemove = false;
-    let levelZipDeluxeToRemove = false;
-
-    let levelAudioExplicitToRemove = false;
-    let levelVideoExplicitToRemove = false;
-    let levelZipExplicitToRemove = false;
-    let levelVideoDeluxeExplicitToRemove = false;
-    let levelZipDeluxeExplicitToRemove = false;
-
     let pendingExplicitActivationChartId = null;
 
     function buildGenresSelector() {
@@ -107,21 +93,6 @@ export function initChartsModule(state) {
         document.getElementById('section-deluxe-fields')?.classList.add('hidden');
         document.getElementById('section-explicit-fields')?.classList.add('hidden');
 
-        levelZipToRemove = false;
-        levelZipDeluxeToRemove = false;
-        levelZipExplicitToRemove = false;
-        levelZipDeluxeExplicitToRemove = false;
-
-        levelArtToRemove = false;
-
-        levelVideoToRemove = false;
-        levelVideoDeluxeToRemove = false;
-        levelVideoExplicitToRemove = false;
-        levelVideoDeluxeExplicitToRemove = false;
-
-        levelAudioToRemove = false;
-        levelAudioExplicitToRemove = false;
-        
         buildGenresSelector();
     }
 
@@ -193,10 +164,6 @@ export function initChartsModule(state) {
         const activeChartSelectedEditions = getActiveChartSelectedEditions();
         const activeChartExplicitStates = getActiveChartExplicitStates();
         const levels = getLevels();
-        const activeAudio = getActiveAudioElement ? getActiveAudioElement() : null;
-        const isThisAudioPlaying = activeAudio && !activeAudio.paused && activeAudio.dataset.url === currentAudioUrl;
-        const audioBtnIcon = isThisAudioPlaying ? 'fa-stop' : 'fa-play';
-        const artShapeClass = isThisAudioPlaying ? 'art-circle-shape art-container-circular' : '';
 
         const fragment = document.createDocumentFragment();
         let filtered = sortAscendingByDate(levels);
@@ -273,6 +240,12 @@ export function initChartsModule(state) {
             let currentDl3 = isExplicitActive
                 ? (isDeluxeActive ? (lvl.dl3DeluxeExplicit || lvl.dl3Explicit || lvl.dl3Deluxe || lvl.dl3) : (lvl.dl3Explicit || lvl.dl3))
                 : (isDeluxeActive ? (lvl.dl3Deluxe || lvl.dl3) : lvl.dl3);
+
+            const activeAudio = (typeof getActiveAudioElement === 'function') ? getActiveAudioElement() : null;
+            const isThisAudioPlaying = activeAudio && !activeAudio.paused && activeAudio.dataset.url === currentAudioUrl;
+
+            const audioBtnIcon = isThisAudioPlaying ? 'fa-stop' : 'fa-play';
+            const artShapeClass = isThisAudioPlaying ? 'art-circle-shape art-container-circular' : '';
 
             const tr = document.createElement('tr');
             tr.className = "hover:bg-fuchsia-950/20 transition border-b-2 border-fuchsia-900/50 shadow-sm";
@@ -430,8 +403,8 @@ export function initChartsModule(state) {
             if (isThisAudioPlaying) {
                 const canvas = tr.querySelector('canvas');
                 const containerBox = tr.querySelector('.target-art-outer-container');
-                const analyser = getAudioAnalyser ? getAudioAnalyser() : null;
-                if (canvas && analyser) {
+                const analyser = (typeof getAudioAnalyser === 'function') ? getAudioAnalyser() : null;
+                if (canvas && analyser && typeof startRadialCanvasVisualizer === 'function') {
                     startRadialCanvasVisualizer(canvas, analyser, containerBox, targetAudioThemeColor);
                 }
             }
@@ -606,7 +579,6 @@ export function initChartsModule(state) {
         tbody.appendChild(fragment);
     }
 
-    // --- MANEJO SEGURO DE REGISTRO/SUBIDA DE CHARTS ---
     document.getElementById('level-form')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         showLoadingOverlay();
@@ -721,7 +693,7 @@ export function initChartsModule(state) {
             resetLevelFormState();
         } catch (err) {
             console.error("Error al registrar chart:", err);
-            alert("Ocurrió un error al guardar el registro. Revisa la consola o tus credenciales R2.");
+            alert("Ocurrió un error al guardar el registro.");
         } finally {
             hideLoadingOverlay();
         }
