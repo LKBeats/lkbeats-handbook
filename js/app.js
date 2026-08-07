@@ -701,31 +701,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- FUNCIONALIDAD PARA MOSTRAR / OCULTAR LAS 3 CREDENCIALES ---
-    document.querySelectorAll('.toggle-password-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const targetId = btn.getAttribute('data-target');
-            const input = document.getElementById(targetId);
-            const icon = btn.querySelector('i');
+    // --- DELEGACIÓN DE EVENTOS PARA LOS 3 CAMPOS CON OJO ---
+    document.getElementById('boogie-auth-form')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.toggle-password-btn');
+        if (!btn) return;
 
-            if (input) {
-                const isPassword = input.type === 'password';
-                input.type = isPassword ? 'text' : 'password';
+        e.preventDefault();
+        
+        const targetId = btn.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        const icon = btn.querySelector('i');
 
-                if (icon) {
-                    if (isPassword) {
-                        icon.classList.remove('fa-eye');
-                        icon.classList.add('fa-eye-slash');
-                    } else {
-                        icon.classList.remove('fa-eye-slash');
-                        icon.classList.add('fa-eye');
-                    }
+        if (input) {
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+
+            if (icon) {
+                if (isPassword) {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
                 }
             }
-        });
+        }
     });
 
     // 5. Botones "X" y Cierre de Modales
