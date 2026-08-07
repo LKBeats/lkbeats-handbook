@@ -532,15 +532,38 @@ export function initSkinsModule(state) {
             });
 
             tr.querySelector('.btn-del-cos')?.addEventListener('click', () => {
-                requestUserDeleteConfirmation(() => {
-                    if (db) {
-                        showLoadingOverlay();
-                        remove(ref(db, 'cosmetics/' + cos.id)).finally(() => hideLoadingOverlay());
-                    }
-                });
-            });
-            
-            if (isT) fragT.appendChild(tr); else fragB.appendChild(tr);
+    requestUserDeleteConfirmation(async () => {
+        if (db) {
+            showLoadingOverlay();
+            try {
+                // 1. Recopilar icono, video y archivo ZIP de la skin
+                const filesToDelete = [
+                    cos.icon,
+                    cos.video,
+                    cos.skinDirectUrl
+                ].filter(url => url && url.trim() !== "" && url !== "BoxSprite_MerchSkin2.png");
+
+                // 2. Eliminarlos de Cloudflare R2 en paralelo
+                if (filesToDelete.length > 0) {
+                    await Promise.all(filesToDelete.map(url => deleteFileFromCloudflareR2(url)));
+                }
+
+                // 3. Eliminar de Firebase
+                await remove(ref(db, 'cosmetics/' + cos.id));
+
+                // 4. Reiniciar formulario
+                resetCosmeticFormState();
+            } catch (err) {
+                console.error("Error al borrar la skin y sus archivos:", err);
+                alert("Ocurrió un error al intentar eliminar los archivos de la skin.");
+            } finally {
+                hideLoadingOverlay();
+            }
+        }
+    });
+});
+
+if (isT) fragT.appendChild(tr); else fragB.appendChild(tr);
         });
 
         tbodyB.innerHTML = '';

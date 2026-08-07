@@ -717,14 +717,46 @@ export function initChartsModule(state) {
             });
 
             tr.querySelector('.btn-del-lvl')?.addEventListener('click', () => {
-                requestUserDeleteConfirmation(() => {
-                    if (db) {
-                        showLoadingOverlay();
-                        remove(ref(db, 'levels/' + lvl.id)).finally(() => hideLoadingOverlay());
-                    }
-                });
-            });
-            fragment.appendChild(tr);
+    requestUserDeleteConfirmation(async () => {
+        if (db) {
+            showLoadingOverlay();
+            try {
+                // 1. Recopilar todos los archivos vinculados (Standard, Deluxe y Explicit)
+                const filesToDelete = [
+                    lvl.art,
+                    lvl.audioDirectUrl,
+                    lvl.video,
+                    lvl.chartDirectUrl,
+                    lvl.videoDeluxe,
+                    lvl.chartDirectUrlDeluxe,
+                    lvl.audioExplicit,
+                    lvl.videoExplicit,
+                    lvl.zipExplicit,
+                    lvl.videoDeluxeExplicit,
+                    lvl.zipDeluxeExplicit
+                ].filter(url => url && url.trim() !== "");
+
+                // 2. Eliminarlos de Cloudflare R2 en paralelo
+                if (filesToDelete.length > 0) {
+                    await Promise.all(filesToDelete.map(url => deleteFileFromCloudflareR2(url)));
+                }
+
+                // 3. Eliminar de Firebase
+                await remove(ref(db, 'levels/' + lvl.id));
+
+                // 4. Reiniciar formulario
+                resetLevelFormState();
+            } catch (err) {
+                console.error("Error al borrar el chart y sus archivos:", err);
+                alert("Ocurrió un error al intentar eliminar todos los archivos vinculados.");
+            } finally {
+                hideLoadingOverlay();
+            }
+        }
+    });
+});
+
+fragment.appendChild(tr);
         });
 
         tbody.innerHTML = '';
