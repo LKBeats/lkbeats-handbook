@@ -10,7 +10,6 @@ let activeAudioImg = null;
 let activeCanvas = null;
 let activeArtContainer = null;
 let audioDataArray = null;
-let activeVisualizerColor = "#d946ef";
 
 export function stopGlobalAudioPreview() {
     if (canvasAnimationId) {
@@ -114,6 +113,7 @@ export function startRadialCanvasVisualizer(canvas, analyser, containerElement, 
 }
 
 export function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canvasElement, containerElement, isModalOpen = false, themeColor = "#d946ef", keepPlayingIfSame = false, onEndCallback = null) {
+    // Si la misma pista ya está reproduciéndose
     if (activeAudioElement && activeAudioElement.dataset.url === audioUrl && !activeAudioElement.paused) {
         if (keepPlayingIfSame) {
             activeAudioElement.loop = isModalOpen;
@@ -127,6 +127,9 @@ export function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canva
         stopGlobalAudioPreview();
         return;
     }
+
+    // Detener cualquier audio previo antes de arrancar uno nuevo
+    stopGlobalAudioPreview();
 
     if (btnElement) btnElement.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-[10px]"></i>`;
 
@@ -156,11 +159,9 @@ export function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canva
         if (audioCtx.state === 'suspended') audioCtx.resume();
 
         try {
-            if (!audioSource || audioSource.mediaElement !== audio) {
-                audioSource = audioCtx.createMediaElementSource(audio);
-                audioSource.connect(audioAnalyser);
-                audioAnalyser.connect(audioCtx.destination);
-            }
+            audioSource = audioCtx.createMediaElementSource(audio);
+            audioSource.connect(audioAnalyser);
+            audioAnalyser.connect(audioCtx.destination);
         } catch (e) {}
 
         audio.play().then(() => {
@@ -184,23 +185,8 @@ export function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canva
 
     audio.onended = () => {
         if (!audio.loop) {
-            if (activeArtContainer) {
-                activeArtContainer.classList.remove('art-circle-shape');
-                activeArtContainer.classList.remove('art-container-circular');
-            }
-            document.querySelectorAll('.target-art-outer-container, #modal-edition-art-container').forEach(box => {
-                box.classList.remove('art-circle-shape');
-                box.classList.remove('art-container-circular');
-            });
-
-            if (activeAudioButton) {
-                activeAudioButton.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
-            }
-
-            setTimeout(() => {
-                stopGlobalAudioPreview();
-                if (onEndCallback) onEndCallback();
-            }, 400);
+            stopGlobalAudioPreview();
+            if (onEndCallback) onEndCallback();
         }
     };
 }
