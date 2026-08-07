@@ -597,49 +597,51 @@ export function initChartsModule(state) {
             const selectedGenres = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
             const genre = selectedGenres.join(' / ');
 
+// --- SUBIDA DE ARCHIVOS A LAS CARPETAS CORRESPONDIENTES EN CLOUDFLARE R2 ---
+
             let art = existingLvl.art || '';
             const artFile = document.getElementById('lvlArtFile').files[0];
-            if (artFile) art = await uploadFileToCloudflareR2(artFile, 'charts/art');
+            if (artFile) art = await uploadFileToCloudflareR2(artFile, 'charts_art');
 
             let audioDirectUrl = existingLvl.audioDirectUrl || '';
             const audioFile = document.getElementById('lvlAudioFile').files[0];
-            if (audioFile) audioDirectUrl = await uploadFileToCloudflareR2(audioFile, 'charts/audio');
+            if (audioFile) audioDirectUrl = await uploadFileToCloudflareR2(audioFile, 'audio');
 
             let video = existingLvl.video || '';
             const videoFile = document.getElementById('lvlVideoFile').files[0];
-            if (videoFile) video = await uploadFileToCloudflareR2(videoFile, 'charts/video');
+            if (videoFile) video = await uploadFileToCloudflareR2(videoFile, 'prevchart');
 
             let chartDirectUrl = existingLvl.chartDirectUrl || '';
             const zipFile = document.getElementById('lvlChartZipFile').files[0];
-            if (zipFile) chartDirectUrl = await uploadFileToCloudflareR2(zipFile, 'charts/zip');
+            if (zipFile) chartDirectUrl = await uploadFileToCloudflareR2(zipFile, 'charts_zip');
 
             let videoDeluxe = existingLvl.videoDeluxe || '';
             const videoDeluxeFile = document.getElementById('lvlVideoFileDeluxe').files[0];
-            if (videoDeluxeFile) videoDeluxe = await uploadFileToCloudflareR2(videoDeluxeFile, 'charts/video');
+            if (videoDeluxeFile) videoDeluxe = await uploadFileToCloudflareR2(videoDeluxeFile, 'prevchart');
 
             let chartDirectUrlDeluxe = existingLvl.chartDirectUrlDeluxe || '';
             const zipDeluxeFile = document.getElementById('lvlChartZipFileDeluxe').files[0];
-            if (zipDeluxeFile) chartDirectUrlDeluxe = await uploadFileToCloudflareR2(zipDeluxeFile, 'charts/zip');
+            if (zipDeluxeFile) chartDirectUrlDeluxe = await uploadFileToCloudflareR2(zipDeluxeFile, 'charts_zip');
 
             let audioExplicit = existingLvl.audioExplicit || '';
             const audioExplicitFile = document.getElementById('lvlAudioFileExplicit').files[0];
-            if (audioExplicitFile) audioExplicit = await uploadFileToCloudflareR2(audioExplicitFile, 'charts/audio');
+            if (audioExplicitFile) audioExplicit = await uploadFileToCloudflareR2(audioExplicitFile, 'audio');
 
             let videoExplicit = existingLvl.videoExplicit || '';
             const videoExplicitFile = document.getElementById('lvlVideoFileExplicit').files[0];
-            if (videoExplicitFile) videoExplicit = await uploadFileToCloudflareR2(videoExplicitFile, 'charts/video');
+            if (videoExplicitFile) videoExplicit = await uploadFileToCloudflareR2(videoExplicitFile, 'prevchart');
 
             let zipExplicit = existingLvl.zipExplicit || '';
             const zipExplicitFile = document.getElementById('lvlChartZipFileExplicit').files[0];
-            if (zipExplicitFile) zipExplicit = await uploadFileToCloudflareR2(zipExplicitFile, 'charts/zip');
+            if (zipExplicitFile) zipExplicit = await uploadFileToCloudflareR2(zipExplicitFile, 'charts_zip');
 
             let videoDeluxeExplicit = existingLvl.videoDeluxeExplicit || '';
             const videoDeluxeExplicitFile = document.getElementById('lvlVideoFileDeluxeExplicit').files[0];
-            if (videoDeluxeExplicitFile) videoDeluxeExplicit = await uploadFileToCloudflareR2(videoDeluxeExplicitFile, 'charts/video');
+            if (videoDeluxeExplicitFile) videoDeluxeExplicit = await uploadFileToCloudflareR2(videoDeluxeExplicitFile, 'prevchart');
 
             let zipDeluxeExplicit = existingLvl.zipDeluxeExplicit || '';
             const zipDeluxeExplicitFile = document.getElementById('lvlChartZipFileDeluxeExplicit').files[0];
-            if (zipDeluxeExplicitFile) zipDeluxeExplicit = await uploadFileToCloudflareR2(zipDeluxeExplicitFile, 'charts/zip');
+            if (zipDeluxeExplicitFile) zipDeluxeExplicit = await uploadFileToCloudflareR2(zipDeluxeExplicitFile, 'charts_zip');
 
             const payload = {
                 id,
