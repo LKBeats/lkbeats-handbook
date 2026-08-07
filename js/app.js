@@ -111,7 +111,7 @@ subscribeToNotifications((activeNotif) => {
                     <!-- Titular agrandado muy poco: text-xs -->
                     <span class="text-xs font-black uppercase tracking-widest text-orange-400 block mb-0.5">${notifTitle}</span>
                     <!-- Título de canción reducido: text-base sm:text-lg -->
-                    <h3 class="text-base sm:text-base font-black text-white leading-tight tracking-wide">${activeNotif.song}</h3>
+                    <h3 class="text-sm sm:text-base font-black text-white leading-tight tracking-wide">${activeNotif.song}</h3>
                     <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
                 </div>
             </div>
@@ -130,7 +130,7 @@ subscribeToNotifications((activeNotif) => {
                     <!-- Titular agrandado muy poco: text-xs -->
                     <span class="text-xs font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">${notifTitle}</span>
                     <!-- Título de skin reducido: text-base sm:text-lg -->
-                    <h3 class="text-base sm:text-lg font-black text-white leading-tight tracking-wide">${activeNotif.skinName}</h3>
+                    <h3 class="text-sm sm:text-base font-black text-white leading-tight tracking-wide">${activeNotif.skinName}</h3>
                     <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
                 </div>
             </div>
