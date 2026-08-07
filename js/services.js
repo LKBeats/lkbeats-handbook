@@ -22,7 +22,10 @@ export async function uploadFileToCloudflareR2(fileObject, subfolderName) {
     const cleanFileName = rawFileName.replace(/[^a-zA-Z0-9_\-]/g, "_");
     const extension = fileObject.name.split('.').pop();
     
-    const fileKey = `lkbeats/${subfolderName}/${cleanFileName}_${Date.now()}.${extension}`;
+    // CORRECCIÓN: Se elimina la subcarpeta fija "lkbeats/" y se formatea la carpeta dinámica recibida
+    const cleanSubfolder = subfolderName ? subfolderName.trim().replace(/\/+$|^\/+/g, '') : "";
+    const folderPath = cleanSubfolder ? `${cleanSubfolder}/` : "";
+    const fileKey = `${folderPath}${cleanFileName}_${Date.now()}.${extension}`;
 
     const params = {
         Bucket: R2_BUCKET_NAME,
