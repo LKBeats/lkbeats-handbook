@@ -108,8 +108,10 @@ subscribeToNotifications((activeNotif) => {
             <div class="flex items-center gap-3.5">
                 <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-orange-500/40 shadow-lg shrink-0">
                 <div>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-orange-400 block mb-0.5">${notifTitle}</span>
-                    <h3 class="text-xl sm:text-2xl font-black text-white leading-snug tracking-wide">${activeNotif.song}</h3>
+                    <!-- Titular agrandado muy poco: text-xs -->
+                    <span class="text-xs font-black uppercase tracking-widest text-orange-400 block mb-0.5">${notifTitle}</span>
+                    <!-- Título de canción reducido: text-base sm:text-lg -->
+                    <h3 class="text-base sm:text-lg font-black text-white leading-tight tracking-wide">${activeNotif.song}</h3>
                     <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
                 </div>
             </div>
@@ -125,8 +127,10 @@ subscribeToNotifications((activeNotif) => {
             <div class="flex items-center gap-3.5">
                 <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-fuchsia-500/40 shadow-lg shrink-0">
                 <div>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">${notifTitle}</span>
-                    <h3 class="text-xl sm:text-2xl font-black text-white leading-snug tracking-wide">${activeNotif.skinName}</h3>
+                    <!-- Titular agrandado muy poco: text-xs -->
+                    <span class="text-xs font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">${notifTitle}</span>
+                    <!-- Título de skin reducido: text-base sm:text-lg -->
+                    <h3 class="text-base sm:text-lg font-black text-white leading-tight tracking-wide">${activeNotif.skinName}</h3>
                     <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
                 </div>
             </div>
