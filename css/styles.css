@@ -399,3 +399,26 @@
         display: flex !important;
     }
 }
+
+/* Ajustes para móviles en orientación horizontal (Landscape) */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+    /* Botones de Charts y Skins en el menú de inicio */
+    #btn-nav-charts,
+    #btn-nav-skins {
+        padding-top: 0.375rem !important;    /* py-1.5 */
+        padding-bottom: 0.375rem !important;
+        padding-left: 0.75rem !important;     /* px-3 */
+        padding-right: 0.75rem !important;
+        font-size: 0.75rem !important;        /* text-xs */
+    }
+
+    /* Botones de Beatstar y TapWave en selección de plataforma */
+    #btn-tab-beatstar,
+    #btn-tab-tapwave {
+        padding-top: 0.25rem !important;     /* py-1 */
+        padding-bottom: 0.25rem !important;
+        padding-left: 0.5rem !important;      /* px-2 */
+        padding-right: 0.5rem !important;
+        font-size: 0.7rem !important;         /* tamaño de texto reducido */
+    }
+}
