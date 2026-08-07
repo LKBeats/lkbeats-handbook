@@ -757,18 +757,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Evento de selección universal para selectores de fecha
-    document.querySelectorAll('button[id^="btn-picker-"]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const container = btn.closest('div');
-            const dateInput = container?.querySelector('input[type="date"]');
-            if (dateInput && typeof dateInput.showPicker === 'function') {
+document.querySelectorAll('button[id^="btn-picker-"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Busca el contenedor padre que agrupa el label/botón y el input de fecha
+        const parentSection = btn.parentElement.parentElement;
+        const dateInput = parentSection?.querySelector('input[type="date"]');
+        
+        if (dateInput) {
+            if (typeof dateInput.showPicker === 'function') {
                 dateInput.showPicker();
-            } else if (dateInput) {
+            } else {
                 dateInput.focus();
+                dateInput.click();
             }
-        });
+        }
     });
+});
 
     document.getElementById('btn-custom-lvl-genre')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('dropdown-custom-lvl-genre')?.classList.toggle('hidden'); });
     document.getElementById('btn-custom-lvl-diff')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('dropdown-custom-lvl-diff')?.classList.toggle('hidden'); });
