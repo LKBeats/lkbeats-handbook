@@ -190,6 +190,10 @@ export function initChartsModule(state) {
         const activeChartSelectedEditions = getActiveChartSelectedEditions();
         const activeChartExplicitStates = getActiveChartExplicitStates();
         const levels = getLevels();
+        const activeAudio = getActiveAudioElement ? getActiveAudioElement() : null;
+        const isThisAudioPlaying = activeAudio && !activeAudio.paused && activeAudio.dataset.url === currentAudioUrl;
+        const audioBtnIcon = isThisAudioPlaying ? 'fa-stop' : 'fa-play';
+        const artShapeClass = isThisAudioPlaying ? 'art-circle-shape art-container-circular' : '';
 
         const fragment = document.createDocumentFragment();
         let filtered = sortAscendingByDate(levels);
@@ -348,7 +352,7 @@ export function initChartsModule(state) {
                     <div class="flex flex-col items-center justify-center relative">
                         <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
                             <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
-                            <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
+                            <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} ${artShapeClass} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
                                 <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
                                 ${artOverlayBadgeDesktop}
                             </div>
@@ -357,7 +361,7 @@ export function initChartsModule(state) {
 
                             ${hasAudio ? `
                                 <button class="btn-play-audio-preview absolute bottom-1 right-1 w-7 h-7 sm:w-8 sm:h-8 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
-                                    <i class="fa-solid fa-play text-[10px]"></i>
+                                    <i class="fa-solid ${audioBtnIcon} text-[10px]"></i>
                                 </button>
                             ` : ''}
                         </div>
@@ -440,8 +444,7 @@ export function initChartsModule(state) {
             const explicitBtn = tr.querySelector('.btn-toggle-explicit-trigger');
             explicitBtn?.addEventListener('click', (e) => {
                 e.stopPropagation();
-                stopAllMedia(); // <--- Detiene audios y videos activos para evitar sobreposición
-                
+                // NOTA: NO llamamos a stopAllMedia() aquí para que siga sonando mientras ve el aviso
                 if (activeChartExplicitStates[lvl.id]) {
                     activeChartExplicitStates[lvl.id] = false;
                     renderLevelsTable();
@@ -478,6 +481,15 @@ export function initChartsModule(state) {
                 const containerBox = tr.querySelector('.target-art-outer-container');
 
                 btn.addEventListener('click', () => toggleAudioPreviewEngine(currentAudioUrl, btn, img, canvas, containerBox, false, targetAudioThemeColor, false));
+            }
+            
+            if (isThisAudioPlaying) {
+                const canvas = tr.querySelector('canvas');
+                const containerBox = tr.querySelector('.target-art-outer-container');
+                const analyser = getAudioAnalyser ? getAudioAnalyser() : null;
+                if (canvas && analyser) {
+                    startRadialCanvasVisualizer(canvas, analyser, containerBox, targetAudioThemeColor);
+                }
             }
 
             if (currentChartZip) {
