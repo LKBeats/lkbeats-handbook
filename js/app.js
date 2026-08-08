@@ -193,31 +193,29 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
 
     if (activeNotif.category === 'chart') {
         content.innerHTML = `
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 w-full pr-6 sm:pr-8">
-                <!-- Información principal de la canción -->
-                <div class="flex items-start sm:items-center justify-between w-full sm:w-auto gap-3">
-                    <div class="flex items-center gap-3.5 flex-1 min-w-0">
-                        <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-orange-500/40 shadow-lg shrink-0">
-                        <div class="truncate">
-                            <span class="text-xs font-black uppercase tracking-widest text-orange-400 block mb-0.5">${notifTitle}</span>
-                            <h3 class="text-sm sm:text-base font-black text-white leading-tight tracking-wide truncate">${activeNotif.song}</h3>
-                            <p class="text-xs sm:text-sm text-zinc-400 font-bold truncate">${activeNotif.artist}</p>
-                        </div>
+            <div class="flex flex-row items-center justify-between gap-2 sm:gap-4 w-full pr-6 sm:pr-8">
+                <!-- Información principal de la canción (Izquierda) -->
+                <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1">
+                    <img src="${activeNotif.artOrIcon}" class="w-14 h-14 sm:w-20 sm:h-20 rounded-xl object-cover border border-orange-500/40 shadow-lg shrink-0">
+                    <div class="min-w-0 flex-1">
+                        <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-orange-400 block mb-0.5">${notifTitle}</span>
+                        <h3 class="text-xs sm:text-base font-black text-white leading-tight tracking-wide truncate">${activeNotif.song}</h3>
+                        <p class="text-[11px] sm:text-sm text-zinc-400 font-bold truncate">${activeNotif.artist}</p>
                     </div>
                 </div>
 
-                <!-- Etiquetas organizadas en 3 filas alineadas a la derecha -->
-                <div class="flex flex-col items-end gap-1.5 w-full sm:w-auto shrink-0">
+                <!-- Etiquetas organizadas en 3 filas alineadas a la derecha (Derecha) -->
+                <div class="flex flex-col items-end gap-1 sm:gap-1.5 shrink-0">
                     <!-- Fila 1: Géneros -->
-                    <div class="flex items-center justify-end gap-1.5 flex-wrap w-full">
+                    <div class="flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
                         ${renderNotifGenresBadgesHtml(activeNotif.genre)}
                     </div>
                     <!-- Fila 2: Dificultad -->
-                    <div class="flex items-center justify-end gap-1.5 w-full">
+                    <div class="flex items-center justify-end gap-1 sm:gap-1.5">
                         ${renderNotifDiffTagHtml(activeNotif.diff)}
                     </div>
                     <!-- Fila 3: Ediciones -->
-                    <div class="flex items-center justify-end gap-1.5 w-full">
+                    <div class="flex items-center justify-end gap-1 sm:gap-1.5">
                         ${renderNotifEditionTagHtml(activeNotif.edition)}
                     </div>
 
@@ -228,30 +226,20 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
     } else if (activeNotif.category === 'skin') {
         const platformLogo = activeNotif.platform === 'TapWave' ? 'TapWaveWhiteLogo.png' : 'BeatstarWhiteLogo.png';
         content.innerHTML = `
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 w-full pr-6 sm:pr-8">
-                <div class="flex items-start sm:items-center justify-between w-full sm:w-auto gap-3">
-                    <div class="flex items-center gap-3.5 flex-1 min-w-0">
-                        <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-fuchsia-500/40 shadow-lg shrink-0">
-                        <div class="truncate">
-                            <span class="text-xs font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">${notifTitle}</span>
-                            <h3 class="text-sm sm:text-base font-black text-white leading-tight tracking-wide truncate">${activeNotif.skinName}</h3>
-                            <p class="text-xs sm:text-sm text-zinc-400 font-bold truncate">${activeNotif.artist}</p>
-                        </div>
-                    </div>
-
-                    <div class="flex sm:hidden items-center justify-end shrink-0 pt-1">
-                        <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-5 object-contain">
+            <div class="flex flex-row items-center justify-between gap-2 sm:gap-4 w-full pr-6 sm:pr-8">
+                <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1">
+                    <img src="${activeNotif.artOrIcon}" class="w-14 h-14 sm:w-20 sm:h-20 rounded-xl object-cover border border-fuchsia-500/40 shadow-lg shrink-0">
+                    <div class="min-w-0 flex-1">
+                        <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">${notifTitle}</span>
+                        <h3 class="text-xs sm:text-base font-black text-white leading-tight tracking-wide truncate">${activeNotif.skinName}</h3>
+                        <p class="text-[11px] sm:text-sm text-zinc-400 font-bold truncate">${activeNotif.artist}</p>
                     </div>
                 </div>
 
-                <div class="hidden sm:flex flex-col items-end gap-2 w-auto">
-                    <div class="flex items-center justify-end gap-2">
-                        <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-7 object-contain">
+                <div class="flex flex-col items-end gap-1 sm:gap-2 shrink-0">
+                    <div class="flex items-center justify-end">
+                        <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-5 sm:h-7 object-contain">
                     </div>
-                    ${manualNavMarkup}
-                </div>
-
-                <div class="flex sm:hidden justify-end w-full">
                     ${manualNavMarkup}
                 </div>
             </div>
