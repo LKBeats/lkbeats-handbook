@@ -80,16 +80,14 @@
 }
 
 /* =========================================================
-   BORDES Y RESPLANDORES POR EDICIÓN
+   BORDES POR EDICIÓN (SIN RESPLANDOR/BOX-SHADOW)
    ========================================================= */
 .border-edition-standard {
     border: 2px solid #d946ef !important;
-    box-shadow: 0 0 15px -3px rgba(217, 70, 239, 0.3) !important;
 }
 
 .border-edition-deluxe {
     border: 2px solid #facc15 !important;
-    box-shadow: 0 0 20px -3px rgba(250, 204, 21, 0.4) !important;
 }
 
 /* =========================================================
