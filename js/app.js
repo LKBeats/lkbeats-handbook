@@ -194,20 +194,38 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
     if (activeNotif.category === 'chart') {
         content.innerHTML = `
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 w-full pr-6 sm:pr-8">
-                <div class="flex items-center gap-3.5">
-                    <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-orange-500/40 shadow-lg shrink-0">
-                    <div>
-                        <span class="text-xs font-black uppercase tracking-widest text-orange-400 block mb-0.5">${notifTitle}</span>
-                        <h3 class="text-sm sm:text-base font-black text-white leading-tight tracking-wide">${activeNotif.song}</h3>
-                        <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
+                <div class="flex items-start sm:items-center justify-between w-full sm:w-auto gap-3.5">
+                    <div class="flex items-center gap-3.5 flex-1 min-w-0">
+                        <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-orange-500/40 shadow-lg shrink-0">
+                        <div class="truncate">
+                            <span class="text-xs font-black uppercase tracking-widest text-orange-400 block mb-0.5">${notifTitle}</span>
+                            <h3 class="text-sm sm:text-base font-black text-white leading-tight tracking-wide truncate">${activeNotif.song}</h3>
+                            <p class="text-xs sm:text-sm text-zinc-400 font-bold truncate">${activeNotif.artist}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- En móvil queda a la misma altura alineado a la derecha -->
+                    <div class="flex sm:hidden flex-col items-end gap-1 shrink-0 pt-0.5">
+                        <div class="flex items-center gap-1 flex-wrap justify-end">
+                            ${renderNotifGenresBadgesHtml(activeNotif.genre)}
+                            ${renderNotifDiffTagHtml(activeNotif.diff)}
+                            ${renderNotifEditionTagHtml(activeNotif.edition)}
+                        </div>
                     </div>
                 </div>
-                <div class="flex flex-col items-end gap-2 w-full sm:w-auto">
-                    <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end w-full">
+
+                <!-- En pantallas sm+ (escritorio/horizontal) mantiene la distribución habitual -->
+                <div class="hidden sm:flex flex-col items-end gap-2 w-auto">
+                    <div class="flex items-center gap-2 flex-wrap justify-end">
                         ${renderNotifGenresBadgesHtml(activeNotif.genre)}
                         ${renderNotifDiffTagHtml(activeNotif.diff)}
                         ${renderNotifEditionTagHtml(activeNotif.edition)}
                     </div>
+                    ${manualNavMarkup}
+                </div>
+
+                <!-- Controles manuales en móvil si aplica -->
+                <div class="flex sm:hidden justify-end w-full">
                     ${manualNavMarkup}
                 </div>
             </div>
@@ -216,18 +234,32 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
         const platformLogo = activeNotif.platform === 'TapWave' ? 'TapWaveWhiteLogo.png' : 'BeatstarWhiteLogo.png';
         content.innerHTML = `
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 w-full pr-6 sm:pr-8">
-                <div class="flex items-center gap-3.5">
-                    <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-fuchsia-500/40 shadow-lg shrink-0">
-                    <div>
-                        <span class="text-xs font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">${notifTitle}</span>
-                        <h3 class="text-sm sm:text-base font-black text-white leading-tight tracking-wide">${activeNotif.skinName}</h3>
-                        <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
+                <div class="flex items-start sm:items-center justify-between w-full sm:w-auto gap-3.5">
+                    <div class="flex items-center gap-3.5 flex-1 min-w-0">
+                        <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-fuchsia-500/40 shadow-lg shrink-0">
+                        <div class="truncate">
+                            <span class="text-xs font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">${notifTitle}</span>
+                            <h3 class="text-sm sm:text-base font-black text-white leading-tight tracking-wide truncate">${activeNotif.skinName}</h3>
+                            <p class="text-xs sm:text-sm text-zinc-400 font-bold truncate">${activeNotif.artist}</p>
+                        </div>
+                    </div>
+
+                    <!-- En móvil el logo de TapWave / Beatstar queda alineado a la derecha a la misma altura -->
+                    <div class="flex sm:hidden items-center justify-end shrink-0 pt-1">
+                        <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-5 object-contain">
                     </div>
                 </div>
-                <div class="flex flex-col items-end gap-2 w-full sm:w-auto">
-                    <div class="flex items-center justify-end gap-2 w-full">
-                        <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-6 sm:h-7 object-contain">
+
+                <!-- Distribución para pantallas sm+ -->
+                <div class="hidden sm:flex flex-col items-end gap-2 w-auto">
+                    <div class="flex items-center justify-end gap-2">
+                        <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-7 object-contain">
                     </div>
+                    ${manualNavMarkup}
+                </div>
+
+                <!-- Controles manuales en móvil si aplica -->
+                <div class="flex sm:hidden justify-end w-full">
                     ${manualNavMarkup}
                 </div>
             </div>
