@@ -194,6 +194,7 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
     if (activeNotif.category === 'chart') {
         content.innerHTML = `
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 w-full pr-6 sm:pr-8">
+                <!-- Información principal de la canción -->
                 <div class="flex items-start sm:items-center justify-between w-full sm:w-auto gap-3">
                     <div class="flex items-center gap-3.5 flex-1 min-w-0">
                         <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-orange-500/40 shadow-lg shrink-0">
@@ -203,26 +204,23 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
                             <p class="text-xs sm:text-sm text-zinc-400 font-bold truncate">${activeNotif.artist}</p>
                         </div>
                     </div>
-                    
-                    <div class="flex sm:hidden flex-col items-end gap-1 shrink-0 pt-0.5">
-                        <div class="flex items-center gap-1 flex-wrap justify-end">
-                            ${renderNotifGenresBadgesHtml(activeNotif.genre)}
-                            ${renderNotifDiffTagHtml(activeNotif.diff)}
-                            ${renderNotifEditionTagHtml(activeNotif.edition)}
-                        </div>
-                    </div>
                 </div>
 
-                <div class="hidden sm:flex flex-col items-end gap-2 w-auto">
-                    <div class="flex items-center gap-2 flex-wrap justify-end">
+                <!-- Etiquetas organizadas en 3 filas alineadas a la derecha -->
+                <div class="flex flex-col items-end gap-1.5 w-full sm:w-auto shrink-0">
+                    <!-- Fila 1: Géneros -->
+                    <div class="flex items-center justify-end gap-1.5 flex-wrap w-full">
                         ${renderNotifGenresBadgesHtml(activeNotif.genre)}
+                    </div>
+                    <!-- Fila 2: Dificultad -->
+                    <div class="flex items-center justify-end gap-1.5 w-full">
                         ${renderNotifDiffTagHtml(activeNotif.diff)}
+                    </div>
+                    <!-- Fila 3: Ediciones -->
+                    <div class="flex items-center justify-end gap-1.5 w-full">
                         ${renderNotifEditionTagHtml(activeNotif.edition)}
                     </div>
-                    ${manualNavMarkup}
-                </div>
 
-                <div class="flex sm:hidden justify-end w-full">
                     ${manualNavMarkup}
                 </div>
             </div>
