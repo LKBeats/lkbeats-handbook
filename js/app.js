@@ -68,8 +68,9 @@ let latestNotifMeta = { totalActive: 0, currentIndex: 0 };
 // =========================================================
 // 2. FUNCIONES AUXILIARES DE RENDERIZADO PARA BANNER
 // =========================================================
+
 function renderNotifGenresBadgesHtml(rawGenre) {
-    if (!rawGenre) return `<span class="px-2 py-1 rounded bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-300 text-[10px] font-black uppercase">General</span>`;
+    if (!rawGenre) return `<span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-300 text-[10px] sm:text-[11px] font-black uppercase">General</span>`;
     
     return rawGenre.split(' / ').map(g => {
         const trimmed = g.trim();
@@ -80,11 +81,11 @@ function renderNotifGenresBadgesHtml(rawGenre) {
         const dynamicAssetSrc = globalVisualAssets[`genre_${safeKey}`] || globalVisualAssets[`genre_${trimmed}`];
         
         const graphicElement = dynamicAssetSrc 
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
-            : `<span class="w-2.5 h-2.5 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
+            ? `<span class="dynamic-color-mask w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
+            : `<span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
 
         return `
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
+            <div class="inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
                 ${graphicElement}
                 <span>${trimmed}</span>
             </div>
@@ -101,11 +102,11 @@ function renderNotifDiffTagHtml(diffVal) {
 
     const dynamicAsset = globalVisualAssets[`diff_${diffVal}`];
     const graphicMarkup = dynamicAsset
-        ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
-        : `<i class="fa-solid fa-layer-group text-[10px]"></i>`;
+        ? `<span class="dynamic-color-mask w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
+        : `<i class="fa-solid fa-layer-group text-[9px] sm:text-[10px]"></i>`;
 
     return `
-        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
+        <div class="inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
             ${graphicMarkup}
             <span>${label}</span>
         </div>
@@ -119,11 +120,11 @@ function renderNotifEditionTagHtml(editionVal) {
 
     const dynamicAsset = globalVisualAssets[`edit_${editionVal}`];
     const graphicMarkup = dynamicAsset
-        ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
-        : `<i class="fa-solid fa-star text-[10px]"></i>`;
+        ? `<span class="dynamic-color-mask w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
+        : `<i class="fa-solid fa-star text-[9px] sm:text-[10px]"></i>`;
 
     return `
-        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
+        <div class="inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
             ${graphicMarkup}
             <span>${label}</span>
         </div>
@@ -143,10 +144,8 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
 
     banner.classList.remove('hidden');
 
-    // Remover cualquier botón X previo adjuntado directo al banner
     document.getElementById('btn-banner-delete-x')?.remove();
 
-    // Inyectar el botón "X" directamente en el contenedor padre (#home-notification-banner)
     if (isCreatorMode) {
         const deleteBtn = document.createElement('button');
         deleteBtn.id = 'btn-banner-delete-x';
@@ -194,7 +193,7 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
 
     if (activeNotif.category === 'chart') {
         content.innerHTML = `
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full pr-8">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 w-full pr-6 sm:pr-8">
                 <div class="flex items-center gap-3.5">
                     <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-orange-500/40 shadow-lg shrink-0">
                     <div>
@@ -203,8 +202,8 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
                         <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
                     </div>
                 </div>
-                <div class="flex flex-col sm:items-end gap-2 w-full sm:w-auto">
-                    <div class="flex items-center gap-2 flex-wrap justify-start sm:justify-end">
+                <div class="flex flex-col items-end gap-2 w-full sm:w-auto">
+                    <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end w-full">
                         ${renderNotifGenresBadgesHtml(activeNotif.genre)}
                         ${renderNotifDiffTagHtml(activeNotif.diff)}
                         ${renderNotifEditionTagHtml(activeNotif.edition)}
@@ -216,7 +215,7 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
     } else if (activeNotif.category === 'skin') {
         const platformLogo = activeNotif.platform === 'TapWave' ? 'TapWaveWhiteLogo.png' : 'BeatstarWhiteLogo.png';
         content.innerHTML = `
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full pr-8">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 w-full pr-6 sm:pr-8">
                 <div class="flex items-center gap-3.5">
                     <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-fuchsia-500/40 shadow-lg shrink-0">
                     <div>
@@ -225,9 +224,9 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
                         <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
                     </div>
                 </div>
-                <div class="flex flex-col sm:items-end gap-2 w-full sm:w-auto">
-                    <div class="flex items-center gap-2">
-                        <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-7 object-contain">
+                <div class="flex flex-col items-end gap-2 w-full sm:w-auto">
+                    <div class="flex items-center justify-end gap-2 w-full">
+                        <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-6 sm:h-7 object-contain">
                     </div>
                     ${manualNavMarkup}
                 </div>
