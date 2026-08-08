@@ -383,12 +383,20 @@ function navigateTo(view, pushState = true) {
     if (view === 'home') {
         shortcuts?.classList.add('hidden');
         sep?.classList.add('hidden');
-        footerBoogieBox?.classList.remove('hidden');
+        
+        // El botón solo debe mostrarse en pantallas md+ (PC/Tablet grandes)
+        if (footerBoogieBox) {
+            footerBoogieBox.classList.remove('hidden');
+            footerBoogieBox.classList.add('hidden', 'md:flex');
+        }
     } else {
         shortcuts?.classList.remove('hidden');
         shortcuts?.classList.add('flex');
         sep?.classList.remove('hidden');
-        footerBoogieBox?.classList.add('hidden');
+        if (footerBoogieBox) {
+            footerBoogieBox.classList.add('hidden');
+            footerBoogieBox.classList.remove('md:flex');
+        }
     }
 
     if (view === 'cosmetics') resetCosmeticsSubmenuWorkspace();
