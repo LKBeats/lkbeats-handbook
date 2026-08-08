@@ -2,7 +2,7 @@ import { ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10
 import { db } from "./services.js";
 
 const NOTIF_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 días
-const ROTATION_INTERVAL_MS = 15000; // 15 segundos
+const ROTATION_INTERVAL_MS = 15000; // 15 segundos entre notificaciones
 
 let currentActiveNotifs = {
     chart: null,
@@ -10,7 +10,7 @@ let currentActiveNotifs = {
 };
 
 let activeRotationIndex = 0;
-let rotationTimer = null;
+let progressTimer = null;
 let currentRenderCallback = null;
 let currentIsCreatorMode = false;
 
@@ -124,8 +124,12 @@ export function setCreatorModeInNotifications(isCreatorMode) {
  */
 export function nextNotification() {
     if (currentActiveNotifs.chart && currentActiveNotifs.skin) {
-        activeRotationIndex = (activeRotationIndex + 1) % 2;
-        renderActiveSelection();
+        stopRotationLoop();
+        triggerAnimatedTransition(() => {
+            activeRotationIndex = (activeRotationIndex + 1) % 2;
+            renderActiveSelection();
+        });
+        startRotationLoop();
     }
 }
 
@@ -134,9 +138,37 @@ export function nextNotification() {
  */
 export function previousNotification() {
     if (currentActiveNotifs.chart && currentActiveNotifs.skin) {
-        activeRotationIndex = (activeRotationIndex - 1 + 2) % 2;
-        renderActiveSelection();
+        stopRotationLoop();
+        triggerAnimatedTransition(() => {
+            activeRotationIndex = (activeRotationIndex - 1 + 2) % 2;
+            renderActiveSelection();
+        });
+        startRotationLoop();
     }
+}
+
+/**
+ * Ejecuta la animación de salida (slideUpOut) y entrada (slideDownIn) del banner.
+ */
+function triggerAnimatedTransition(updateCallback) {
+    const banner = document.getElementById('home-notification-banner');
+    if (!banner) {
+        if (updateCallback) updateCallback();
+        return;
+    }
+
+    // 1. Animación hacia arriba (Cierre)
+    banner.classList.remove('anim-notif-enter');
+    banner.classList.add('anim-notif-leave');
+
+    setTimeout(() => {
+        // 2. Ejecutar cambio de contenido/notificación
+        if (updateCallback) updateCallback();
+
+        // 3. Animación hacia abajo (Apertura)
+        banner.classList.remove('anim-notif-leave');
+        banner.classList.add('anim-notif-enter');
+    }, 350); // Tiempo equivalente a la animación CSS (0.35s)
 }
 
 /**
@@ -172,13 +204,22 @@ function renderActiveSelection() {
 }
 
 /**
+ * Detiene el temporizador de rotación y limpia la barra de progreso.
+ */
+function stopRotationLoop() {
+    if (progressTimer) {
+        clearInterval(progressTimer);
+        progressTimer = null;
+    }
+    const progressBar = document.getElementById('notif-progress-fill');
+    if (progressBar) progressBar.style.width = '0%';
+}
+
+/**
  * Inicia, detiene o gestiona el ciclo de alternancia entre notificaciones.
  */
 function startRotationLoop() {
-    if (rotationTimer) {
-        clearInterval(rotationTimer);
-        rotationTimer = null;
-    }
+    stopRotationLoop();
 
     const hasChart = !!currentActiveNotifs.chart;
     const hasSkin = !!currentActiveNotifs.skin;
@@ -189,14 +230,30 @@ function startRotationLoop() {
         return;
     }
 
-    // Si ambas existen
+    // Si ambas existen, renderizar selección inicial
     renderActiveSelection();
 
-    // Si NO estamos en modo creador, rotar automáticamente cada 15 segundos
+    // Si NO estamos en modo creador, rotar automáticamente actualizando la barra de progreso
     if (!currentIsCreatorMode) {
-        rotationTimer = setInterval(() => {
-            activeRotationIndex = (activeRotationIndex + 1) % 2;
-            renderActiveSelection();
-        }, ROTATION_INTERVAL_MS);
+        let elapsedTime = 0;
+        const step = 100;
+
+        progressTimer = setInterval(() => {
+            elapsedTime += step;
+            const percentage = Math.min((elapsedTime / ROTATION_INTERVAL_MS) * 100, 100);
+            
+            const progressBar = document.getElementById('notif-progress-fill');
+            if (progressBar) {
+                progressBar.style.width = `${percentage}%`;
+            }
+
+            if (elapsedTime >= ROTATION_INTERVAL_MS) {
+                elapsedTime = 0;
+                triggerAnimatedTransition(() => {
+                    activeRotationIndex = (activeRotationIndex + 1) % 2;
+                    renderActiveSelection();
+                });
+            }
+        }, step);
     }
 }

@@ -191,6 +191,13 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
         `;
     }
 
+    // Barra de progreso visible solo cuando existen 2 notificaciones activas
+    const progressBarMarkup = meta.totalActive === 2 ? `
+        <div class="absolute bottom-0 left-0 w-full bg-zinc-800/40 h-[2px] overflow-hidden rounded-b-xl pointer-events-none z-10">
+            <div id="notif-progress-fill" class="notif-progress-bar"></div>
+        </div>
+    ` : '';
+
     if (activeNotif.category === 'chart') {
         content.innerHTML = `
             <div class="flex flex-row items-center justify-between gap-2 sm:gap-4 w-full pr-6 sm:pr-8">
@@ -222,6 +229,7 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
                     ${manualNavMarkup}
                 </div>
             </div>
+            ${progressBarMarkup}
         `;
     } else if (activeNotif.category === 'skin') {
         const platformLogo = activeNotif.platform === 'TapWave' ? 'TapWaveWhiteLogo.png' : 'BeatstarWhiteLogo.png';
@@ -238,12 +246,12 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
 
                 <div class="flex flex-col items-end gap-1 sm:gap-2 shrink-0">
                     <div class="flex items-center justify-end">
-                        <!-- En móvil vertical conserva h-5, mientras que en horizontal y PC (sm:) sube a h-10 -->
                         <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-5 sm:h-10 object-contain">
                     </div>
                     ${manualNavMarkup}
                 </div>
             </div>
+            ${progressBarMarkup}
         `;
     }
 
@@ -986,22 +994,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('boogie-auth-form')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const inputVal = document.getElementById('boogieCred1').value;
-    const errorMsgEl = document.getElementById('boogie-auth-error-msg');
+        e.preventDefault();
+        const inputVal = document.getElementById('boogieCred1').value;
+        const errorMsgEl = document.getElementById('boogie-auth-error-msg');
 
-    if (inputVal === "BeatstarTest") {
-        isCreatorMode = true;
-        btnBoogieTrigger?.classList.add('glow-green');
-        applyRoleUIVisibility();
-        resetBoogieAuthModal();
-    } else {
-        if (errorMsgEl) {
-            errorMsgEl.innerText = translations[currentLanguage].invalidCredentials || "Credenciales incorrectas";
-            errorMsgEl.style.display = 'block';
+        if (inputVal === "BeatstarTest") {
+            isCreatorMode = true;
+            btnBoogieTrigger?.classList.add('glow-green');
+            applyRoleUIVisibility();
+            resetBoogieAuthModal();
+        } else {
+            if (errorMsgEl) {
+                errorMsgEl.innerText = translations[currentLanguage].invalidCredentials || "Credenciales incorrectas";
+                errorMsgEl.style.display = 'block';
+            }
         }
-    }
-});
+    });
 
     document.getElementById('download-modal-btn-close')?.addEventListener('click', () => {
         stopAllMedia();
