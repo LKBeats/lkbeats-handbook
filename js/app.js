@@ -737,6 +737,14 @@ function syncFooterLinks() {
     const aS = document.getElementById('footer-link-bscm'); if (aS) aS.href = globalFooterLinks.bscm || '#';
     const aC = document.getElementById('footer-link-beatcharts'); if (aC) aC.href = globalFooterLinks.beatcharts || '#';
 
+// ASIGNAR LA URL AL BOTÓN DE BEATCLONE DENTRO DEL MODAL
+    const modalBeatcloneBtn = document.getElementById('download-modal-btn-beatclone');
+    if (modalBeatcloneBtn) {
+        modalBeatcloneBtn.href = globalFooterLinks.beatclone && globalFooterLinks.beatclone.trim() !== "" 
+            ? globalFooterLinks.beatclone.trim() 
+            : '#';
+    }
+
     const tapNoticeBox = document.getElementById('tapwave-discord-notice-box');
     const tapJoinBtn = document.getElementById('btn-join-tapwave-discord');
     if (tapNoticeBox && tapJoinBtn) {
