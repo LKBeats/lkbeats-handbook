@@ -12,15 +12,15 @@
     }
 }
 
-/* Base predeterminada para PC, Tabletas y Horizontal (Tamaño original que no se agranda) */
+/* Base original para PC, Laptops, Tablets y Móviles en Horizontal */
 .bg-spinning-swirl {
-    position: fixed;
-    top: 50%;
-    left: 50%;
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
     width: 120vmax;
     height: 120vmax;
-    max-width: 1800px;
-    max-height: 1800px;
+    max-width: 1600px;
+    max-height: 1600px;
     object-fit: contain;
     opacity: 0.05;
     pointer-events: none;
@@ -34,8 +34,8 @@
     animation: spin-clockwise 50s linear infinite;
 }
 
-/* Regla EXCLUSIVA para Móvil Vertical (Portrait): Aplica el tamaño 250vw */
-@media screen and (max-width: 767px) and (orientation: portrait) {
+/* Regla restringida EXCLUSIVAMENTE para teléfono móvil en posición vertical (portrait) */
+@media screen and (orientation: portrait) and (max-width: 600px) {
     .bg-spinning-swirl {
         width: 250vw;
         height: 250vw;
@@ -46,7 +46,10 @@
 
 .glow-orange { box-shadow: 0 0 20px rgba(249, 115, 22, 0.2); }
 .glow-fuchsia { box-shadow: 0 0 20px rgba(217, 70, 239, 0.2); }
-.glow-gold { box-shadow: 0 0 10px rgba(250, 204, 21, 0.25); border-color: rgba(250, 204, 21, 0.5) !important; }
+.glow-gold { 
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.25); 
+    border-color: rgba(250, 204, 21, 0.5) !important; 
+}
 .glow-red { box-shadow: 0 0 15px rgba(239, 68, 68, 0.8); border-color: #ef4444 !important; background-color: #ef4444 !important; color: #000000 !important; }
 .glow-green { box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); border-color: #10b981 !important; color: #10b981 !important; }
 
