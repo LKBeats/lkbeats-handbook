@@ -12,19 +12,20 @@
     }
 }
 
+/* Base predeterminada para PC, Tabletas y Horizontal (Tamaño original que no se agranda) */
 .bg-spinning-swirl {
     position: fixed;
     top: 50%;
     left: 50%;
-    /* Tamaño optimizado para móvil vertical (Portrait) */
-    width: 250vw;
-    height: 250vw;
+    width: 120vmax;
+    height: 120vmax;
+    max-width: 1800px;
+    max-height: 1800px;
     object-fit: contain;
     opacity: 0.05;
     pointer-events: none;
     z-index: 0;
     
-    /* Rendimiento suave sin parpadeos ni saltos */
     transform: translate3d(-50%, -50%, 0);
     will-change: transform;
     -webkit-backface-visibility: hidden;
@@ -33,13 +34,13 @@
     animation: spin-clockwise 50s linear infinite;
 }
 
-/* En PC, Tabletas y pantallas más anchas se regresa al tamaño original */
-@media (min-width: 768px), (orientation: landscape) {
+/* Regla EXCLUSIVA para Móvil Vertical (Portrait): Aplica el tamaño 250vw */
+@media screen and (max-width: 767px) and (orientation: portrait) {
     .bg-spinning-swirl {
-        width: 120vmax;
-        height: 120vmax;
-        max-width: 1800px;
-        max-height: 1800px;
+        width: 250vw;
+        height: 250vw;
+        max-width: none;
+        max-height: none;
     }
 }
 
