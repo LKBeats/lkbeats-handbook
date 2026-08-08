@@ -143,6 +143,27 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
 
     banner.classList.remove('hidden');
 
+    // Remover cualquier botón X previo adjuntado directo al banner
+    document.getElementById('btn-banner-delete-x')?.remove();
+
+    // Inyectar el botón "X" directamente en el contenedor padre (#home-notification-banner)
+    if (isCreatorMode) {
+        const deleteBtn = document.createElement('button');
+        deleteBtn.id = 'btn-banner-delete-x';
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'absolute top-3 right-3 w-7 h-7 bg-red-950/80 border border-red-800/80 text-red-400 hover:bg-red-900 hover:text-white rounded-full flex items-center justify-center font-black text-xs transition shadow-lg z-30';
+        deleteBtn.title = currentLanguage === 'en' ? 'Delete Notification' : 'Eliminar Notificación';
+        deleteBtn.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+        
+        deleteBtn.addEventListener('click', () => {
+            stateForModules.requestUserDeleteConfirmation(() => {
+                deleteNotificationManually(activeNotif.category);
+            });
+        });
+
+        banner.appendChild(deleteBtn);
+    }
+
     const isEn = currentLanguage === 'en';
     
     let notifTitle = '';
@@ -156,18 +177,10 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
             : (isEn ? 'Skin Available' : 'Skin Disponible');
     }
 
-    // Botón "X" posicionado de forma absoluta en la esquina superior derecha del banner
-    const deleteBtnMarkup = isCreatorMode ? `
-        <button id="btn-banner-delete-x" type="button" class="absolute top-3 right-3 w-7 h-7 bg-red-950/80 border border-red-800/80 text-red-400 hover:bg-red-900 hover:text-white rounded-full flex items-center justify-center font-black text-xs transition shadow-lg z-30" title="${isEn ? 'Delete Notification' : 'Eliminar Notificación'}">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-    ` : '';
-
-    // Botones de cambio de notificación con margen superior (mt-3) para desplazarlos más abajo
     let manualNavMarkup = '';
     if (isCreatorMode && meta.totalActive === 2) {
         manualNavMarkup = `
-            <div class="flex items-center gap-2 mt-3 z-20">
+            <div class="flex items-center gap-2 mt-2 sm:mt-0 z-20">
                 <button id="btn-notif-prev" type="button" class="w-7 h-7 bg-zinc-900 border border-fuchsia-800/60 text-fuchsia-400 hover:bg-fuchsia-950 rounded-lg flex items-center justify-center text-xs transition">
                     <i class="fa-solid fa-chevron-left"></i>
                 </button>
@@ -181,8 +194,7 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
 
     if (activeNotif.category === 'chart') {
         content.innerHTML = `
-            ${deleteBtnMarkup}
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full pr-10">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full pr-8">
                 <div class="flex items-center gap-3.5">
                     <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-orange-500/40 shadow-lg shrink-0">
                     <div>
@@ -191,7 +203,7 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
                         <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
                     </div>
                 </div>
-                <div class="flex flex-col sm:items-end gap-1 w-full sm:w-auto">
+                <div class="flex flex-col sm:items-end gap-2 w-full sm:w-auto">
                     <div class="flex items-center gap-2 flex-wrap justify-start sm:justify-end">
                         ${renderNotifGenresBadgesHtml(activeNotif.genre)}
                         ${renderNotifDiffTagHtml(activeNotif.diff)}
@@ -204,8 +216,7 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
     } else if (activeNotif.category === 'skin') {
         const platformLogo = activeNotif.platform === 'TapWave' ? 'TapWaveWhiteLogo.png' : 'BeatstarWhiteLogo.png';
         content.innerHTML = `
-            ${deleteBtnMarkup}
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full pr-10">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full pr-8">
                 <div class="flex items-center gap-3.5">
                     <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-fuchsia-500/40 shadow-lg shrink-0">
                     <div>
@@ -214,7 +225,7 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
                         <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
                     </div>
                 </div>
-                <div class="flex flex-col sm:items-end gap-1 w-full sm:w-auto">
+                <div class="flex flex-col sm:items-end gap-2 w-full sm:w-auto">
                     <div class="flex items-center gap-2">
                         <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-7 object-contain">
                     </div>
@@ -222,14 +233,6 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
                 </div>
             </div>
         `;
-    }
-
-    if (isCreatorMode) {
-        document.getElementById('btn-banner-delete-x')?.addEventListener('click', () => {
-            stateForModules.requestUserDeleteConfirmation(() => {
-                deleteNotificationManually(activeNotif.category);
-            });
-        });
     }
 
     document.getElementById('btn-notif-prev')?.addEventListener('click', () => previousNotification());
