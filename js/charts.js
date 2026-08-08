@@ -451,26 +451,28 @@ export function initChartsModule(state) {
             const targetAudioThemeColor = isDeluxeActive ? "#facc15" : "#d946ef";
 
             tr.innerHTML = `
-                <td class="p-2 sm:p-4 text-center align-middle">
-                    <div class="flex flex-col items-center justify-center relative">
-                        <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
-                            <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
-                            <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} ${artShapeClass} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
-                                <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
-                                ${artOverlayBadgeDesktop}
-                            </div>
+    <td class="p-2 sm:p-4 text-center align-middle">
+        <div class="flex flex-col items-center justify-center relative">
+            <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
+                <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
+                
+                <!-- Contenedor con paddings y fondo idénticos a las Skins -->
+                <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} ${artShapeClass} w-20 h-20 sm:w-36 sm:h-36 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1 shrink-0 relative z-10 shadow-lg">
+                    <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover rounded-lg bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
+                    ${artOverlayBadgeDesktop}
+                </div>
 
-                            ${explicitButtonMarkup}
+                ${explicitButtonMarkup}
 
-                            ${hasAudio ? `
-                                <button class="btn-play-audio-preview absolute bottom-1 right-1 w-7 h-7 sm:w-8 sm:h-8 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
-                                    <i class="fa-solid ${audioBtnIcon} text-[10px]"></i>
-                                </button>
-                            ` : ''}
-                        </div>
-                        ${artOverlayBadgeMobileExternal}
-                    </div>
-                </td>
+                ${hasAudio ? `
+                    <button class="btn-play-audio-preview absolute bottom-1 right-1 w-7 h-7 sm:w-8 sm:h-8 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
+                        <i class="fa-solid ${audioBtnIcon} text-[10px]"></i>
+                    </button>
+                ` : ''}
+            </div>
+            ${artOverlayBadgeMobileExternal}
+        </div>
+    </td>
                 <td class="p-2 sm:p-4 min-w-[220px] sm:min-w-[320px] flex-1 align-middle">
                     <ul class="space-y-2 list-none text-zinc-300 whitespace-normal break-words">
                         <li class="flex flex-col sm:flex-row sm:items-baseline">
