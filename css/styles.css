@@ -12,15 +12,16 @@
     }
 }
 
-/* Base original para PC, Laptops, Tablets y Móviles en Horizontal */
+/* Configuración para PC, Laptops, Tablets y Móvil Horizontal:
+   Garantiza que los bordes laterales (izquierdo y derecho) siempre estén en pantalla */
 .bg-spinning-swirl {
     position: fixed !important;
     top: 50% !important;
     left: 50% !important;
-    width: 120vmax;
-    height: 120vmax;
-    max-width: 1600px;
-    max-height: 1600px;
+    width: 100vw;
+    height: 100vw;
+    max-width: none;
+    max-height: none;
     object-fit: contain;
     opacity: 0.05;
     pointer-events: none;
@@ -34,13 +35,11 @@
     animation: spin-clockwise 50s linear infinite;
 }
 
-/* Regla restringida EXCLUSIVAMENTE para teléfono móvil en posición vertical (portrait) */
+/* Regla EXCLUSIVA para Móvil Vertical (Portrait) que ya funciona bien */
 @media screen and (orientation: portrait) and (max-width: 600px) {
     .bg-spinning-swirl {
         width: 250vw;
         height: 250vw;
-        max-width: none;
-        max-height: none;
     }
 }
 
