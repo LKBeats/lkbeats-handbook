@@ -427,11 +427,8 @@ export function initChartsModule(state) {
                 </div>
             ` : '';
 
-            // Aplicación dinámica del marco por edición (Standard / Deluxe / Ninguno)
-            let artBoxBorderClass = "border border-fuchsia-950/80";
-            if (!isDeluxeActive) {
-                artBoxBorderClass = "border-edition-standard";
-            }
+            // Aplicación dinámica del marco por edición (Deluxe -> border-edition-deluxe / Standard -> border-edition-standard)
+            let artBoxBorderClass = isDeluxeActive ? "border-edition-deluxe" : "border-edition-standard";
 
             const artOverlayBadgeDesktop = isDeluxeActive 
                 ? `<div class="hidden sm:block absolute bottom-1 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">DELUXE</div>`
