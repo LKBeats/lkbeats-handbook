@@ -70,7 +70,7 @@ let latestNotifMeta = { totalActive: 0, currentIndex: 0 };
 // =========================================================
 
 function renderNotifGenresBadgesHtml(rawGenre) {
-    if (!rawGenre) return `<span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-300 text-[10px] sm:text-[11px] font-black uppercase">General</span>`;
+    if (!rawGenre) return `<span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-300 text-[10px] sm:text-[11px] font-black uppercase"><span class="hidden sm:inline">General</span></span>`;
     
     return rawGenre.split(' / ').map(g => {
         const trimmed = g.trim();
@@ -81,13 +81,13 @@ function renderNotifGenresBadgesHtml(rawGenre) {
         const dynamicAssetSrc = globalVisualAssets[`genre_${safeKey}`] || globalVisualAssets[`genre_${trimmed}`];
         
         const graphicElement = dynamicAssetSrc 
-            ? `<span class="dynamic-color-mask w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
-            : `<span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
+            ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
+            : `<span class="w-2.5 h-2.5 sm:w-2.5 sm:h-2.5 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
 
         return `
-            <div class="inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
+            <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15" title="${trimmed}">
                 ${graphicElement}
-                <span>${trimmed}</span>
+                <span class="hidden sm:inline">${trimmed}</span>
             </div>
         `;
     }).join(' ');
@@ -102,13 +102,13 @@ function renderNotifDiffTagHtml(diffVal) {
 
     const dynamicAsset = globalVisualAssets[`diff_${diffVal}`];
     const graphicMarkup = dynamicAsset
-        ? `<span class="dynamic-color-mask w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
-        : `<i class="fa-solid fa-layer-group text-[9px] sm:text-[10px]"></i>`;
+        ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
+        : `<i class="fa-solid fa-layer-group text-[10px]"></i>`;
 
     return `
-        <div class="inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
+        <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15" title="${label}">
             ${graphicMarkup}
-            <span>${label}</span>
+            <span class="hidden sm:inline">${label}</span>
         </div>
     `;
 }
@@ -120,13 +120,13 @@ function renderNotifEditionTagHtml(editionVal) {
 
     const dynamicAsset = globalVisualAssets[`edit_${editionVal}`];
     const graphicMarkup = dynamicAsset
-        ? `<span class="dynamic-color-mask w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
-        : `<i class="fa-solid fa-star text-[9px] sm:text-[10px]"></i>`;
+        ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
+        : `<i class="fa-solid fa-star text-[10px]"></i>`;
 
     return `
-        <div class="inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
+        <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15" title="${label}">
             ${graphicMarkup}
-            <span>${label}</span>
+            <span class="hidden sm:inline">${label}</span>
         </div>
     `;
 }
@@ -194,7 +194,7 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
     if (activeNotif.category === 'chart') {
         content.innerHTML = `
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 w-full pr-6 sm:pr-8">
-                <div class="flex items-start sm:items-center justify-between w-full sm:w-auto gap-3.5">
+                <div class="flex items-start sm:items-center justify-between w-full sm:w-auto gap-3">
                     <div class="flex items-center gap-3.5 flex-1 min-w-0">
                         <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-orange-500/40 shadow-lg shrink-0">
                         <div class="truncate">
@@ -204,7 +204,6 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
                         </div>
                     </div>
                     
-                    <!-- En móvil queda a la misma altura alineado a la derecha -->
                     <div class="flex sm:hidden flex-col items-end gap-1 shrink-0 pt-0.5">
                         <div class="flex items-center gap-1 flex-wrap justify-end">
                             ${renderNotifGenresBadgesHtml(activeNotif.genre)}
@@ -214,7 +213,6 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
                     </div>
                 </div>
 
-                <!-- En pantallas sm+ (escritorio/horizontal) mantiene la distribución habitual -->
                 <div class="hidden sm:flex flex-col items-end gap-2 w-auto">
                     <div class="flex items-center gap-2 flex-wrap justify-end">
                         ${renderNotifGenresBadgesHtml(activeNotif.genre)}
@@ -224,7 +222,6 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
                     ${manualNavMarkup}
                 </div>
 
-                <!-- Controles manuales en móvil si aplica -->
                 <div class="flex sm:hidden justify-end w-full">
                     ${manualNavMarkup}
                 </div>
@@ -234,7 +231,7 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
         const platformLogo = activeNotif.platform === 'TapWave' ? 'TapWaveWhiteLogo.png' : 'BeatstarWhiteLogo.png';
         content.innerHTML = `
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 w-full pr-6 sm:pr-8">
-                <div class="flex items-start sm:items-center justify-between w-full sm:w-auto gap-3.5">
+                <div class="flex items-start sm:items-center justify-between w-full sm:w-auto gap-3">
                     <div class="flex items-center gap-3.5 flex-1 min-w-0">
                         <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-fuchsia-500/40 shadow-lg shrink-0">
                         <div class="truncate">
@@ -244,13 +241,11 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
                         </div>
                     </div>
 
-                    <!-- En móvil el logo de TapWave / Beatstar queda alineado a la derecha a la misma altura -->
                     <div class="flex sm:hidden items-center justify-end shrink-0 pt-1">
                         <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-5 object-contain">
                     </div>
                 </div>
 
-                <!-- Distribución para pantallas sm+ -->
                 <div class="hidden sm:flex flex-col items-end gap-2 w-auto">
                     <div class="flex items-center justify-end gap-2">
                         <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-7 object-contain">
@@ -258,7 +253,6 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
                     ${manualNavMarkup}
                 </div>
 
-                <!-- Controles manuales en móvil si aplica -->
                 <div class="flex sm:hidden justify-end w-full">
                     ${manualNavMarkup}
                 </div>
