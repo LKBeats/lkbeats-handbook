@@ -523,6 +523,7 @@ function openBeatstarEditionSelectionModal(lvl) {
     const badgeDlx = document.getElementById('modal-edition-deluxe-badge');
     const checkStd = document.getElementById('modal-check-standard');
     const checkDlx = document.getElementById('modal-check-deluxe');
+    const modalArtContainer = document.getElementById('modal-edition-art-container');
 
     if (imgEl) imgEl.src = lvl.art || 'free_song_Image.png';
     if (titleEl) titleEl.innerText = lvl.song || '';
@@ -542,6 +543,18 @@ function openBeatstarEditionSelectionModal(lvl) {
     }
 
     const currentSelected = activeChartSelectedEditions[lvl.id] || 'Standard';
+
+    // Aplicar dinámicamente la clase de borde según la edición seleccionada
+    if (modalArtContainer) {
+        modalArtContainer.classList.remove('border-4', 'border-fuchsia-500');
+        if (currentSelected === 'Deluxe') {
+            modalArtContainer.classList.remove('border-edition-standard');
+            modalArtContainer.classList.add('border-edition-deluxe');
+        } else {
+            modalArtContainer.classList.remove('border-edition-deluxe');
+            modalArtContainer.classList.add('border-edition-standard');
+        }
+    }
 
     if (currentSelected === 'Deluxe') {
         badgeDlx?.classList.remove('hidden');
@@ -1097,6 +1110,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (activeModalBeatstarChart) {
             activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Standard';
             
+            const modalArtContainer = document.getElementById('modal-edition-art-container');
+            if (modalArtContainer) {
+                modalArtContainer.classList.remove('border-edition-deluxe');
+                modalArtContainer.classList.add('border-edition-standard');
+            }
+
             const activeAudio = getActiveAudioElement();
             if (activeAudio) activeAudio.loop = false;
             
@@ -1109,6 +1128,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (activeModalBeatstarChart) {
             activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Deluxe';
             
+            const modalArtContainer = document.getElementById('modal-edition-art-container');
+            if (modalArtContainer) {
+                modalArtContainer.classList.remove('border-edition-standard');
+                modalArtContainer.classList.add('border-edition-deluxe');
+            }
+
             const activeAudio = getActiveAudioElement();
             if (activeAudio) activeAudio.loop = false;
             
