@@ -427,8 +427,11 @@ export function initChartsModule(state) {
                 </div>
             ` : '';
 
-            // Aplicación dinámica del borde por edición (Standard / Deluxe)
-            const artBoxBorderClass = isDeluxeActive ? "border-edition-deluxe" : "border-edition-standard";
+            // Aplicación dinámica del marco por edición (Standard / Deluxe / Ninguno)
+            let artBoxBorderClass = "border border-fuchsia-950/80";
+            if (!isDeluxeActive) {
+                artBoxBorderClass = "border-edition-standard";
+            }
 
             const artOverlayBadgeDesktop = isDeluxeActive 
                 ? `<div class="hidden sm:block absolute bottom-1 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">DELUXE</div>`
@@ -456,8 +459,8 @@ export function initChartsModule(state) {
             <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
                 <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
                 
-                <!-- Contenedor con paddings y fondo idénticos a las Skins -->
-                <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} ${artShapeClass} w-20 h-20 sm:w-36 sm:h-36 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1 shrink-0 relative z-10 shadow-lg">
+                <!-- Contenedor con marco aplicado dinámicamente según la edición -->
+                <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} ${artShapeClass} w-20 h-20 sm:w-36 sm:h-36 ${artBoxBorderClass} rounded-xl overflow-hidden bg-zinc-950 p-1 shrink-0 relative z-10 shadow-lg">
                     <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover rounded-lg bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
                     ${artOverlayBadgeDesktop}
                 </div>
