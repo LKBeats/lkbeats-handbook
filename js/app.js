@@ -899,6 +899,26 @@ function applyLanguagePack() {
         if (translations[currentLanguage][key]) el.placeholder = translations[currentLanguage][key];
     });
 
+    // Actualizar el texto dinámico por defecto del botón selector cuando no hay filtro o cambia el idioma
+    const allTxt = translations[currentLanguage].filterAll;
+    const btnLabelsMap = [
+        { btn: 'btn-custom-lvl-genre', label: 'label-custom-lvl-genre' },
+        { btn: 'btn-custom-lvl-diff', label: 'label-custom-lvl-diff' },
+        { btn: 'btn-custom-lvl-edition', label: 'label-custom-lvl-edition' },
+        { btn: 'btn-custom-skin-genre', label: 'label-custom-skin-genre' }
+    ];
+
+    btnLabelsMap.forEach(item => {
+        const labelEl = document.getElementById(item.label);
+        const btnEl = document.getElementById(item.btn);
+        if (labelEl && btnEl) {
+            const currentTxt = labelEl.innerText.trim();
+            if (currentTxt === 'Todos' || currentTxt === 'All') {
+                labelEl.innerHTML = `<span>${allTxt}</span>`;
+            }
+        }
+    });
+
     applyRoleUIVisibility();
     buildCustomDropdownMenus();
 }
