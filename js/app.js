@@ -238,7 +238,8 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
 
                 <div class="flex flex-col items-end gap-1 sm:gap-2 shrink-0">
                     <div class="flex items-center justify-end">
-                        <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-5 sm:h-7 object-contain">
+                        <!-- En móvil vertical conserva h-5, mientras que en horizontal y PC (sm:) sube a h-10 -->
+                        <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-5 sm:h-10 object-contain">
                     </div>
                     ${manualNavMarkup}
                 </div>
