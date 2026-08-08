@@ -427,7 +427,8 @@ export function initChartsModule(state) {
                 </div>
             ` : '';
 
-            const artBoxBorderClass = isDeluxeActive ? "glow-gold border-2 border-yellow-400" : "border border-fuchsia-500/30";
+            // Aplicación dinámica del borde por edición (Standard / Deluxe)
+            const artBoxBorderClass = isDeluxeActive ? "border-edition-deluxe" : "border-edition-standard";
 
             const artOverlayBadgeDesktop = isDeluxeActive 
                 ? `<div class="hidden sm:block absolute bottom-1 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">DELUXE</div>`
