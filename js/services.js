@@ -12,7 +12,11 @@ export const s3 = new AWS.S3({
     secretAccessKey: "1844d769d83b70306c08a08b8d31d28589c496ed7cc0f308da2414c2804adaeb",
     signatureVersion: 'v4',
     region: 'auto',
-    s3ForcePathStyle: true
+    s3ForcePathStyle: true,
+    httpOptions: {
+        timeout: 300000,        // 5 minutos de tiempo de espera total
+        connectTimeout: 300000  // 5 minutos para establecer conexión
+    }
 });
 
 export async function uploadFileToCloudflareR2(fileObject, subfolderName) {
@@ -35,8 +39,13 @@ export async function uploadFileToCloudflareR2(fileObject, subfolderName) {
         CacheControl: "public, max-age=31536000, immutable"
     };
 
+    const uploadOptions = {
+        partSize: 5 * 1024 * 1024, // Fragmentos de 5 MB
+        queueSize: 1              // Enviar 1 fragmento a la vez para máxima estabilidad
+    };
+
     try {
-        await s3.upload(params).promise();
+        await s3.upload(params, uploadOptions).promise();
         return `${R2_PUBLIC_DOMAIN}/${fileKey}`;
     } catch (e) {
         console.error("Error al subir archivo a Cloudflare R2:", e);
