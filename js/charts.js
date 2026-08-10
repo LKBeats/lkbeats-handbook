@@ -752,10 +752,13 @@ export function initChartsModule(state) {
                             // 3. Eliminar de Firebase
                             await remove(ref(db, 'levels/' + lvl.id));
 
-                            // 4. Eliminar notificación si el registro eliminado contaba con una activa
+                            // 4. ACTUALIZAR FECHA DE ÚLTIMA ACTUALIZACIÓN AUTOMÁTICAMENTE
+                            await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
+
+                            // 5 Eliminar notificación si el registro eliminado contaba con una activa
                             await checkAndDeleteNotifOnRecordDelete('chart');
 
-                            // 5. Reiniciar formulario
+                            // 6. Reiniciar formulario
                             resetLevelFormState();
                         } catch (err) {
                             console.error("Error al borrar el chart y sus archivos:", err);
@@ -904,6 +907,9 @@ export function initChartsModule(state) {
             };
 
             await set(ref(db, 'levels/' + id), payload);
+
+            // ACTUALIZAR FECHA DE ÚLTIMA ACTUALIZACIÓN AUTOMÁTICAMENTE
+            await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
 
             // Eliminar notificación de tipo ZIP si se borró el archivo .zip de un chart
             if (isZipDeleted) {

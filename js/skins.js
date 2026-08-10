@@ -556,10 +556,13 @@ export function initSkinsModule(state) {
                             // 3. Eliminar de Firebase
                             await remove(ref(db, 'cosmetics/' + cos.id));
 
-                            // 4. Eliminar notificación si la skin borrada contaba con una activa
+                            // 4. ACTUALIZAR FECHA DE ÚLTIMA ACTUALIZACIÓN AUTOMÁTICAMENTE
+                            await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
+
+                            // 5. Eliminar notificación si la skin borrada contaba con una activa
                             await checkAndDeleteNotifOnRecordDelete('skin');
 
-                            // 5. Reiniciar formulario
+                            // 6. Reiniciar formulario
                             resetCosmeticFormState();
                         } catch (err) {
                             console.error("Error al borrar la skin y sus archivos:", err);
