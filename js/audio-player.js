@@ -134,8 +134,23 @@ export function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canva
         return;
     }
 
-    // Si es un audio nuevo, detener el anterior
+    // Detener cualquier preview de audio activo previo
     stopGlobalAudioPreview();
+
+    // DETENER Y RESETEAR TODOS LOS VIDEOS ACTIVOS EN LA PÁGINA
+    document.querySelectorAll('video').forEach(vid => {
+        vid.pause();
+        vid.currentTime = 0;
+    });
+    document.querySelectorAll('.custom-native-video-wrapper').forEach(wrapper => {
+        const iconEl = wrapper.querySelector('.video-play-icon');
+        const controlsOverlay = wrapper.querySelector('.video-controls-overlay');
+        const loaderEl = wrapper.querySelector('.video-loading-overlay');
+
+        if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
+        if (controlsOverlay) controlsOverlay.classList.remove('opacity-0', 'hidden');
+        if (loaderEl) loaderEl.classList.add('hidden');
+    });
 
     if (btnElement) btnElement.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-[10px]"></i>`;
 

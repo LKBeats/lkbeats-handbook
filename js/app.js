@@ -484,14 +484,36 @@ function setupNativeVideoBehavior(vidWrapper) {
 
     vidWrapper.addEventListener('click', () => {
         if (videoEl.paused) {
-            if (activeVideoElement && activeVideoElement !== videoEl) stopAllMedia();
-            else stopGlobalAudioPreview();
+            // 1. Detener preview de audio completamente
+            stopGlobalAudioPreview();
+
+            // 2. Pausar y resetear todos los demás videos en la página
+            document.querySelectorAll('video').forEach(otherVid => {
+                if (otherVid !== videoEl) {
+                    otherVid.pause();
+                    otherVid.currentTime = 0;
+                }
+            });
+
+            // 3. Resetear overlays e iconos de los demás reproductores de video
+            document.querySelectorAll('.custom-native-video-wrapper').forEach(wrapper => {
+                if (wrapper !== vidWrapper) {
+                    const otherIcon = wrapper.querySelector('.video-play-icon');
+                    const otherControls = wrapper.querySelector('.video-controls-overlay');
+                    const otherLoader = wrapper.querySelector('.video-loading-overlay');
+
+                    if (otherIcon) otherIcon.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
+                    if (otherControls) otherControls.classList.remove('opacity-0', 'hidden');
+                    if (otherLoader) otherLoader.classList.add('hidden');
+                }
+            });
 
             activeVideoElement = videoEl;
             if (loaderEl && videoEl.readyState < 4) loaderEl.classList.remove('hidden');
             videoEl.play().then(() => controlsOverlay?.classList.add('hidden')).catch(err => loaderEl?.classList.add('hidden'));
         } else {
             videoEl.pause();
+            videoEl.currentTime = 0; // Se reinicia desde cero al pausar manualmente
             if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
             controlsOverlay?.classList.remove('hidden');
         }
