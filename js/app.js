@@ -118,7 +118,7 @@ function renderNotifDiffTagHtml(diffVal, editionVal, diffDeluxeVal) {
 
     if (isDual) {
         const stdDiff = diffVal || 'Normal';
-        const dlxDiff = diffDeluxeVal || 'Extreme';
+        const dlxDiff = diffDeluxeVal || diffVal || 'Hard';
 
         return `
             <div class="inline-flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
@@ -128,7 +128,7 @@ function renderNotifDiffTagHtml(diffVal, editionVal, diffDeluxeVal) {
         `;
     }
 
-    const currentDiff = (editionVal === 'Deluxe') ? (diffDeluxeVal || diffVal || 'Extreme') : (diffVal || 'Normal');
+    const currentDiff = (editionVal === 'Deluxe') ? (diffDeluxeVal || diffVal || 'Hard') : (diffVal || 'Normal');
     return getSingleDiffTagHtml(currentDiff);
 }
 
@@ -249,6 +249,16 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
     }
 
     if (activeNotif.category === 'chart') {
+        // Búsqueda de respaldo en el arreglo global levels por si la notificación no traía diffDeluxe
+        const matchedLevel = levels.find(l => 
+            l.song?.toLowerCase() === activeNotif.song?.toLowerCase() && 
+            l.artist?.toLowerCase() === activeNotif.artist?.toLowerCase()
+        );
+
+        const finalDiff = activeNotif.diff || (matchedLevel ? matchedLevel.diff : 'Normal');
+        const finalDiffDeluxe = activeNotif.diffDeluxe || (matchedLevel ? matchedLevel.diffDeluxe : null) || finalDiff;
+        const finalEdition = activeNotif.edition || (matchedLevel ? (matchedLevel.hasBothEditions ? 'Both' : matchedLevel.edition) : 'Standard');
+
         content.innerHTML = `
             <div class="flex flex-row items-center justify-between gap-2 sm:gap-4 w-full pr-6 sm:pr-8">
                 <!-- Información principal de la canción (Izquierda) -->
@@ -267,13 +277,13 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
                     <div class="flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
                         ${renderNotifGenresBadgesHtml(activeNotif.genre)}
                     </div>
-                    <!-- Fila 2: Dificultad (Standard / Deluxe si aplica) -->
+                    <!-- Fila 2: Dificultad (Standard / Deluxe correspondiente) -->
                     <div class="flex items-center justify-end gap-1 sm:gap-1.5">
-                        ${renderNotifDiffTagHtml(activeNotif.diff, activeNotif.edition, activeNotif.diffDeluxe)}
+                        ${renderNotifDiffTagHtml(finalDiff, finalEdition, finalDiffDeluxe)}
                     </div>
                     <!-- Fila 3: Ediciones -->
                     <div class="flex items-center justify-end gap-1 sm:gap-1.5">
-                        ${renderNotifEditionTagHtml(activeNotif.edition)}
+                        ${renderNotifEditionTagHtml(finalEdition)}
                     </div>
 
                     ${manualNavMarkup}
@@ -430,7 +440,6 @@ function navigateTo(view, pushState = true) {
         shortcuts?.classList.add('hidden');
         sep?.classList.add('hidden');
         
-        // El botón solo debe mostrarse en pantallas md+ (PC/Tablet grandes)
         if (footerBoogieBox) {
             footerBoogieBox.classList.remove('hidden');
             footerBoogieBox.classList.add('hidden', 'md:flex');
@@ -530,10 +539,8 @@ function setupNativeVideoBehavior(vidWrapper) {
 
     vidWrapper.addEventListener('click', () => {
         if (videoEl.paused) {
-            // 1. Detener preview de audio completamente
             stopGlobalAudioPreview();
 
-            // 2. Pausar y resetear todos los demás videos en la página
             document.querySelectorAll('video').forEach(otherVid => {
                 if (otherVid !== videoEl) {
                     otherVid.pause();
@@ -541,7 +548,6 @@ function setupNativeVideoBehavior(vidWrapper) {
                 }
             });
 
-            // 3. Resetear overlays e iconos de los demás reproductores de video
             document.querySelectorAll('.custom-native-video-wrapper').forEach(wrapper => {
                 if (wrapper !== vidWrapper) {
                     const otherIcon = wrapper.querySelector('.video-play-icon');
@@ -559,7 +565,7 @@ function setupNativeVideoBehavior(vidWrapper) {
             videoEl.play().then(() => controlsOverlay?.classList.add('hidden')).catch(err => loaderEl?.classList.add('hidden'));
         } else {
             videoEl.pause();
-            videoEl.currentTime = 0; // Se reinicia desde cero al pausar manualmente
+            videoEl.currentTime = 0;
             if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
             controlsOverlay?.classList.remove('hidden');
         }
@@ -612,7 +618,6 @@ function openBeatstarEditionSelectionModal(lvl) {
 
     const currentSelected = activeChartSelectedEditions[lvl.id] || 'Standard';
 
-    // Aplicar dinámicamente la clase de borde según la edición seleccionada
     if (modalArtContainer) {
         modalArtContainer.classList.remove('border-4', 'border-fuchsia-500');
         if (currentSelected === 'Deluxe') {
@@ -805,7 +810,6 @@ function syncFooterLinks() {
     const aS = document.getElementById('footer-link-bscm'); if (aS) aS.href = globalFooterLinks.bscm || '#';
     const aC = document.getElementById('footer-link-beatcharts'); if (aC) aC.href = globalFooterLinks.beatcharts || '#';
 
-    // ASIGNAR LA URL AL BOTÓN DE BEATCLONE DENTRO DEL MODAL
     const modalBeatcloneBtn = document.getElementById('download-modal-btn-beatclone');
     if (modalBeatcloneBtn) {
         modalBeatcloneBtn.href = globalFooterLinks.beatclone && globalFooterLinks.beatclone.trim() !== "" 
@@ -988,7 +992,6 @@ function applyLanguagePack() {
         if (translations[currentLanguage][key]) el.placeholder = translations[currentLanguage][key];
     });
 
-    // Actualizar el texto dinámico por defecto del botón selector cuando no hay filtro o cambia el idioma
     const allTxt = translations[currentLanguage].filterAll;
     const btnLabelsMap = [
         { btn: 'btn-custom-lvl-genre', label: 'label-custom-lvl-genre' },
@@ -1022,6 +1025,11 @@ try {
         levels = snap.val() ? Object.values(snap.val()) : [];
         chartsModule.renderLevelsTable();
         updateDashboardCounts();
+        
+        // Re-dibujar notificación cuando cargan o se actualizan los niveles para reflejar dificultades reales
+        if (latestActiveNotification) {
+            drawNotificationBanner(latestActiveNotification);
+        }
         hideLoadingOverlay();
     });
     onValue(ref(db, 'cosmetics'), (snap) => {
