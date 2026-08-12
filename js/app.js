@@ -114,9 +114,36 @@ function renderNotifDiffTagHtml(diffVal) {
 }
 
 function renderNotifEditionTagHtml(editionVal) {
+    if (editionVal === 'Both' || editionVal === 'Standard + Deluxe') {
+        const stdAsset = globalVisualAssets[`edit_Standard`];
+        const dlxAsset = globalVisualAssets[`edit_Deluxe`];
+
+        const stdMarkup = stdAsset
+            ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: #71717a; -webkit-mask-image: url('${stdAsset}'); mask-image: url('${stdAsset}');"></span>`
+            : `<i class="fa-solid fa-star text-[10px]"></i>`;
+
+        const dlxMarkup = dlxAsset
+            ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: #facc15; -webkit-mask-image: url('${dlxAsset}'); mask-image: url('${dlxAsset}');"></span>`
+            : `<i class="fa-solid fa-star text-[10px]"></i>`;
+
+        return `
+            <div class="inline-flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
+                <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:#71717a; border-color:#71717a50; background:#71717a15" title="Standard">
+                    ${stdMarkup}
+                    <span class="hidden sm:inline">Standard</span>
+                </div>
+                <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider glow-gold" style="color:#facc15; border-color:#facc1550; background:#facc1515" title="Deluxe">
+                    ${dlxMarkup}
+                    <span class="hidden sm:inline">Deluxe</span>
+                </div>
+            </div>
+        `;
+    }
+
     const isDeluxe = editionVal === 'Deluxe';
     const color = isDeluxe ? '#facc15' : '#71717a';
     const label = editionVal || 'Standard';
+    const glowClass = isDeluxe ? 'glow-gold' : '';
 
     const dynamicAsset = globalVisualAssets[`edit_${editionVal}`];
     const graphicMarkup = dynamicAsset
@@ -124,7 +151,7 @@ function renderNotifEditionTagHtml(editionVal) {
         : `<i class="fa-solid fa-star text-[10px]"></i>`;
 
     return `
-        <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15" title="${label}">
+        <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider ${glowClass}" style="color:${color}; border-color:${color}50; background:${color}15" title="${label}">
             ${graphicMarkup}
             <span class="hidden sm:inline">${label}</span>
         </div>
@@ -759,7 +786,7 @@ function syncFooterLinks() {
     const aS = document.getElementById('footer-link-bscm'); if (aS) aS.href = globalFooterLinks.bscm || '#';
     const aC = document.getElementById('footer-link-beatcharts'); if (aC) aC.href = globalFooterLinks.beatcharts || '#';
 
-// ASIGNAR LA URL AL BOTÓN DE BEATCLONE DENTRO DEL MODAL
+    // ASIGNAR LA URL AL BOTÓN DE BEATCLONE DENTRO DEL MODAL
     const modalBeatcloneBtn = document.getElementById('download-modal-btn-beatclone');
     if (modalBeatcloneBtn) {
         modalBeatcloneBtn.href = globalFooterLinks.beatclone && globalFooterLinks.beatclone.trim() !== "" 
