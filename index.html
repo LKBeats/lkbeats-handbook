@@ -146,6 +146,8 @@
                     </div>
                 </div>
 
+                <p id="boogie-auth-error-msg" class="text-xs font-black text-red-500 text-center uppercase tracking-wide my-2" style="display: none;"></p>
+
                 <div class="pt-2 flex gap-3">
                     <button type="button" id="btn-close-boogie-modal" class="flex-1 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-black uppercase text-zinc-400 hover:text-white transition" data-i18n="btnClose">Cerrar</button>
                     <button type="submit" class="flex-1 py-3 bg-gradient-to-r from-fuchsia-500 to-pink-500 text-black rounded-xl text-xs font-black uppercase shadow hover:opacity-90 transition" data-i18n="btnSend">Enviar</button>
@@ -237,37 +239,13 @@
         
         <section id="view-home" class="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col justify-center flex-grow w-full relative z-10">
 
-         <!-- BANNER DE NOTIFICACIÓN EN LA PÁGINA DE INICIO -->
-<div id="home-notification-banner" class="hidden w-full max-w-5xl mx-auto -mt-8 mb-8 relative overflow-hidden rounded-2xl bg-[#11091c] border border-fuchsia-500/40 p-4 shadow-2xl transition-all duration-300">
-    <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 via-fuchsia-500 to-yellow-500"></div>
-    <div id="notif-banner-content" class="flex flex-col sm:flex-row items-center justify-between gap-4"></div>
-        <!-- El contenido dinámico se inyectará mediante JS -->
-    </div>
-</div>
-
-<!-- CONTROL DE NOTIFICACIONES (MODO CREADOR) -->
-<div id="notifications-management-box" class="hidden bg-[#11091c] border border-fuchsia-500/40 rounded-2xl p-6 shadow-xl relative w-full mb-10">
-    <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-fuchsia-500 to-orange-500"></div>
-    <h2 class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60">Gestión de Notificaciones Activas</h2>
-    
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-        <div class="bg-black/30 p-3 rounded-xl border border-zinc-800 flex items-center justify-between">
-            <div>
-                <div class="font-extrabold text-orange-400 uppercase">Notificación Chart</div>
-                <div id="creator-notif-chart-status" class="text-zinc-400 text-[11px]">Sin notificación activa</div>
+            <!-- BANNER DE NOTIFICACIÓN EN LA PÁGINA DE INICIO -->
+            <div id="home-notification-banner" class="hidden w-full max-w-5xl mx-auto -mt-8 mb-8 relative overflow-hidden rounded-2xl bg-[#11091c] border border-fuchsia-500/40 p-4 shadow-2xl transition-all duration-300">
+                <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 via-fuchsia-500 to-yellow-500"></div>
+                <div id="notif-banner-content" class="relative w-full flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <!-- El contenido dinámico y los controles manuales/X se inyectan mediante app.js -->
+                </div>
             </div>
-            <button id="btn-delete-notif-chart" class="hidden px-3 py-1.5 bg-red-950 border border-red-800 text-red-400 hover:bg-red-900 hover:text-white rounded-lg font-black uppercase transition">Eliminar</button>
-        </div>
-
-        <div class="bg-black/30 p-3 rounded-xl border border-zinc-800 flex items-center justify-between">
-            <div>
-                <div class="font-extrabold text-fuchsia-400 uppercase">Notificación Skin</div>
-                <div id="creator-notif-skin-status" class="text-zinc-400 text-[11px]">Sin notificación activa</div>
-            </div>
-            <button id="btn-delete-notif-skin" class="hidden px-3 py-1.5 bg-red-950 border border-red-800 text-red-400 hover:bg-red-900 hover:text-white rounded-lg font-black uppercase transition">Eliminar</button>
-        </div>
-    </div>
-</div>
 
             <div class="text-center mb-12 flex flex-col items-center">
                 <span class="px-4 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-xs font-black tracking-widest uppercase mb-6 inline-block">
@@ -320,10 +298,11 @@
                 </div>
             </div>
 
-            <div class="bg-[#11091c] border border-red-500/30 rounded-2xl p-6 mb-10 text-center max-w-4xl mx-auto w-full">
-                <h2 class="text-red-500 font-display font-black text-3xl tracking-widest uppercase mb-4" data-i18n="disclaimerTitle">DISCLAIMER</h2>
-                <p class="text-zinc-300 text-sm leading-relaxed font-medium" data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos y de entretenimiento para la comunidad. Todas las marcas registradas, canciones, logos, e imágenes pertenecen a sus respectivos propietarios y desarrolladores.</p>
-            </div>
+<!-- Versión con espacio reducido -->
+<div class="bg-[#11091c] border border-red-500/30 rounded-2xl p-6 -mb-3 text-center max-w-4xl mx-auto w-full">
+    <h2 class="text-red-500 font-display font-black text-3xl tracking-widest uppercase mb-4" data-i18n="disclaimerTitle">DISCLAIMER</h2>
+    <p class="text-zinc-300 text-sm leading-relaxed font-medium" data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos...</p>
+</div>
 
             <div id="thanks-videos-panel-box" class="hidden bg-[#11091c] border border-orange-500/40 rounded-2xl p-6 shadow-2xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-fuchsia-500"></div>
@@ -454,7 +433,7 @@
 
         <!-- ================= VIEW 2: CHARTS REGISTRY ================= -->
         <section id="view-levels" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
-            <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-orange-500/30 rounded-2xl mb-6 w-max">
+            <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-orange-500/30 rounded-2xl -mt-5 mb-4 w-max">
                 <i class="fa-solid fa-chevron-left text-orange-500"></i> <span data-i18n="backHome">Volver</span>
             </button>
             
@@ -777,19 +756,19 @@
         </section>
 
         <!-- ================= VIEW 3: COSMETICS ================= -->
-        <section id="view-cosmetics" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
-            <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-fuchsia-500/30 rounded-2xl mb-6 w-max">
+        <section id="view-cosmetics" class="hidden pt-2 pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
+            <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-fuchsia-500/30 rounded-2xl mt-1 mb-4 w-max">
                 <i class="fa-solid fa-chevron-left text-fuchsia-500"></i> <span data-i18n="backHome">Volver</span>
             </button>
 
-            <div id="cosmetics-submenu" class="w-full max-w-4xl mx-auto py-6 flex flex-col items-center">
+            <div id="cosmetics-submenu" class="w-full max-w-4xl mx-auto py-1 flex flex-col items-center">
                 <div class="text-center mb-8 flex flex-col items-center w-full">
                     <div class="mb-4 max-w-full w-[450px]">
                         <img src="Agregar un título (1).png" alt="Handbook Main Title" class="w-full object-contain mx-auto">
                     </div>
                 </div>
 
-                <h2 class="font-display font-black text-2xl uppercase tracking-wider mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500" data-i18n="selectSubmenuSkin">Selecciona una Plataforma</h2>
+                <h2 class="font-display font-black text-2xl uppercase tracking-wider -mt-6 mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500" data-i18n="selectSubmenuSkin">Selecciona una Plataforma</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 landscape-grid-cols-2 gap-8 w-full">
                     <div id="submenu-card-beatstar" class="cursor-pointer border border-fuchsia-950/80 bg-[#11091c] rounded-2xl p-8 flex flex-col items-center justify-center text-center transform hover:-translate-y-1 transition shadow-xl glow-fuchsia">
                         <div class="h-16 mb-4 flex items-center justify-center">
@@ -908,7 +887,7 @@
                     </form>
                 </div>
 
-                <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-6 flex-grow">
+                <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-3 flex-grow">
                     <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex flex-col sm:flex-row landscape-pc-flex-row items-start sm:items-center justify-between gap-4">
                         <div class="text-base sm:text-lg font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500 shrink-0" data-i18n="navCosmetics">Skins</div>
                         
