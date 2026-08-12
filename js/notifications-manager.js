@@ -76,7 +76,6 @@ export async function checkAndDeleteNotifOnRecordDelete(category, recordIdentifi
         const snapshot = await get(targetRef);
         if (snapshot.exists()) {
             const notifData = snapshot.val();
-            // Si coincide la canción, el nombre de la skin o el ID del registro
             if (
                 !recordIdentifier ||
                 notifData.song === recordIdentifier ||
@@ -88,6 +87,25 @@ export async function checkAndDeleteNotifOnRecordDelete(category, recordIdentifi
         }
     } catch (err) {
         console.error("Error al verificar/eliminar notificación asociada:", err);
+    }
+}
+
+export async function checkAndDeleteNotifOnZipDelete(category, recordIdentifier) {
+    if (!category) return;
+    try {
+        const targetRef = ref(db, `notifications/${category}`);
+        const snapshot = await get(targetRef);
+        if (snapshot.exists()) {
+            const notifData = snapshot.val();
+            if (
+                notifData.type === 'available' &&
+                (!recordIdentifier || notifData.song === recordIdentifier || notifData.skinName === recordIdentifier)
+            ) {
+                await remove(targetRef);
+            }
+        }
+    } catch (err) {
+        console.error("Error al verificar/eliminar notificación de zip:", err);
     }
 }
 
