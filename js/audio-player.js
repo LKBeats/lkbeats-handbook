@@ -29,6 +29,14 @@ export function stopGlobalAudioPreview() {
         activeAudioButton.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
         activeAudioButton = null;
     }
+
+    // RESETEAR CUALQUIER BOTÓN DE AUDIO QUE HAYA QUEDADO EN "STOP" O "LOADING"
+    document.querySelectorAll('.btn-preview-audio, [id^="btn-play-"], [id^="btn-preview-"]').forEach(btn => {
+        if (btn.querySelector('.fa-stop') || btn.querySelector('.fa-circle-notch')) {
+            btn.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
+        }
+    });
+
     if (activeAudioImg) {
         activeAudioImg.classList.add('bg-zinc-900');
         activeAudioImg = null;
