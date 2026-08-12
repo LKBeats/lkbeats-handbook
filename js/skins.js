@@ -1,7 +1,11 @@
 import { ref, set, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 import { db, uploadFileToCloudflareR2, deleteFileFromCloudflareR2 } from "./services.js";
 import { translations } from "./i18n.js";
-import { createOrUpdateNotification } from "./notifications-manager.js";
+import { 
+    createOrUpdateNotification, 
+    checkAndDeleteNotifOnRecordDelete, 
+    checkAndDeleteNotifOnZipDelete 
+} from "./notifications-manager.js";
 
 export function initSkinsModule(state) {
     const {
@@ -552,7 +556,13 @@ export function initSkinsModule(state) {
                             // 3. Eliminar de Firebase
                             await remove(ref(db, 'cosmetics/' + cos.id));
 
-                            // 4. Reiniciar formulario
+                            // 4. ACTUALIZAR FECHA DE ÚLTIMA ACTUALIZACIÓN AUTOMÁTICAMENTE
+                            await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
+
+                            // 5. Eliminar notificación si la skin borrada contaba con una activa
+                            await checkAndDeleteNotifOnRecordDelete('skin');
+
+                            // 6. Reiniciar formulario
                             resetCosmeticFormState();
                         } catch (err) {
                             console.error("Error al borrar la skin y sus archivos:", err);
@@ -674,6 +684,9 @@ export function initSkinsModule(state) {
             const cosmetics = getCosmetics();
             let existingCos = cosmetics.find(c => c.id === id) || {};
 
+            // Evaluamos si el archivo ZIP fue eliminado
+            const isZipDeleted = pendingSkinDeletes.zip;
+
             // Executar borrados en R2
             if (pendingSkinDeletes.icon && existingCos.icon) { await deleteFileFromCloudflareR2(existingCos.icon); existingCos.icon = "BoxSprite_MerchSkin2.png"; }
             if (pendingSkinDeletes.video && existingCos.video) { await deleteFileFromCloudflareR2(existingCos.video); existingCos.video = ""; }
@@ -750,6 +763,11 @@ export function initSkinsModule(state) {
             if (db) {
                 await set(ref(db, 'cosmetics/' + id), data);
                 await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
+
+                // Eliminar notificación de tipo ZIP si se eliminó el archivo .zip de la skin
+                if (isZipDeleted) {
+                    await checkAndDeleteNotifOnZipDelete('skin');
+                }
 
                 // Registro automático de notificación
                 const isNewRecord = !document.getElementById('editingCosId').value.trim();

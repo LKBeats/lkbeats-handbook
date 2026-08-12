@@ -8,147 +8,19 @@ import {
     getAudioAnalyser, 
     startRadialCanvasVisualizer 
 } from "./audio-player.js";
-import { subscribeToNotifications, deleteNotificationManually } from "./notifications-manager.js";
+import { 
+    subscribeToNotifications, 
+    deleteNotificationManually, 
+    setCreatorModeInNotifications,
+    nextNotification,
+    previousNotification
+} from "./notifications-manager.js";
 import { initChartsModule } from "./charts.js";
 import { initSkinsModule } from "./skins.js";
 
-// Variable global para mantener la última notificación activa y re-renderizarla al cargar assets
-let latestActiveNotification = null;
-
-// Funciones auxiliares para renderizar badges dinámicos con iconos en las notificaciones
-function renderNotifGenresBadgesHtml(rawGenre) {
-    if (!rawGenre) return `<span class="px-2 py-1 rounded bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-300 text-[10px] font-black uppercase">General</span>`;
-    
-    return rawGenre.split(' / ').map(g => {
-        const trimmed = g.trim();
-        const matched = genreList.find(item => item.label.toLowerCase() === trimmed.toLowerCase());
-        const color = matched ? matched.color : '#f97316';
-        
-        const safeKey = trimmed.replace('/', '');
-        const dynamicAssetSrc = globalVisualAssets[`genre_${safeKey}`] || globalVisualAssets[`genre_${trimmed}`];
-        
-        const graphicElement = dynamicAssetSrc 
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
-            : `<span class="w-2.5 h-2.5 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
-
-        return `
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
-                ${graphicElement}
-                <span>${trimmed}</span>
-            </div>
-        `;
-    }).join(' ');
-}
-
-function renderNotifDiffTagHtml(diffVal) {
-    let color = '#71717a';
-    let label = diffVal || 'Normal';
-
-    if (diffVal === 'Hard') color = '#f97316';
-    else if (diffVal === 'Extreme') color = '#ef4444';
-
-    const dynamicAsset = globalVisualAssets[`diff_${diffVal}`];
-    const graphicMarkup = dynamicAsset
-        ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
-        : `<i class="fa-solid fa-layer-group text-[10px]"></i>`;
-
-    return `
-        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
-            ${graphicMarkup}
-            <span>${label}</span>
-        </div>
-    `;
-}
-
-function renderNotifEditionTagHtml(editionVal) {
-    const isDeluxe = editionVal === 'Deluxe';
-    const color = isDeluxe ? '#facc15' : '#71717a';
-    const label = editionVal || 'Standard';
-
-    const dynamicAsset = globalVisualAssets[`edit_${editionVal}`];
-    const graphicMarkup = dynamicAsset
-        ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
-        : `<i class="fa-solid fa-star text-[10px]"></i>`;
-
-    return `
-        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15">
-            ${graphicMarkup}
-            <span>${label}</span>
-        </div>
-    `;
-}
-
-// Función para renderizar o actualizar el DOM del banner de notificación
-function drawNotificationBanner(activeNotif) {
-    const banner = document.getElementById('home-notification-banner');
-    const content = document.getElementById('notif-banner-content');
-    
-    if (!banner || !content) return;
-
-    if (!activeNotif) {
-        banner.classList.add('hidden');
-        return;
-    }
-
-    banner.classList.remove('hidden');
-
-    const isEn = currentLanguage === 'en';
-    
-    let notifTitle = '';
-    if (activeNotif.type === 'new') {
-        notifTitle = activeNotif.category === 'chart' 
-            ? (isEn ? 'New Chart' : 'Nuevo Chart') 
-            : (isEn ? 'New Skin' : 'Nueva Skin');
-    } else {
-        notifTitle = activeNotif.category === 'chart' 
-            ? (isEn ? 'Chart Available' : 'Chart Disponible') 
-            : (isEn ? 'Skin Available' : 'Skin Disponible');
-    }
-
-    if (activeNotif.category === 'chart') {
-        content.innerHTML = `
-            <div class="flex items-center gap-3.5">
-                <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-orange-500/40 shadow-lg shrink-0">
-                <div>
-                    <span class="text-xs font-black uppercase tracking-widest text-orange-400 block mb-0.5">${notifTitle}</span>
-                    <h3 class="text-sm sm:text-base font-black text-white leading-tight tracking-wide">${activeNotif.song}</h3>
-                    <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-2 flex-wrap justify-start sm:justify-end">
-                ${renderNotifGenresBadgesHtml(activeNotif.genre)}
-                ${renderNotifDiffTagHtml(activeNotif.diff)}
-                ${renderNotifEditionTagHtml(activeNotif.edition)}
-            </div>
-        `;
-    } else if (activeNotif.category === 'skin') {
-        const platformLogo = activeNotif.platform === 'TapWave' ? 'TapWaveWhiteLogo.png' : 'BeatstarWhiteLogo.png';
-        content.innerHTML = `
-            <div class="flex items-center gap-3.5">
-                <img src="${activeNotif.artOrIcon}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-fuchsia-500/40 shadow-lg shrink-0">
-                <div>
-                    <span class="text-xs font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">${notifTitle}</span>
-                    <h3 class="text-sm sm:text-base font-black text-white leading-tight tracking-wide">${activeNotif.skinName}</h3>
-                    <p class="text-xs sm:text-sm text-zinc-400 font-bold">${activeNotif.artist}</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-7 object-contain">
-            </div>
-        `;
-    }
-}
-
-// Inicialización del banner de notificaciones
-subscribeToNotifications((activeNotif) => {
-    latestActiveNotification = activeNotif;
-    drawNotificationBanner(activeNotif);
-});
-
-// Eventos de borrado manual desde el panel del creador
-document.getElementById('btn-delete-notif-chart')?.addEventListener('click', () => deleteNotificationManually('chart'));
-document.getElementById('btn-delete-notif-skin')?.addEventListener('click', () => deleteNotificationManually('skin'));
-
+// =========================================================
+// 1. DECLARACIÓN DE CONSTANTES Y VARIABLES DE ESTADO GLOBALES
+// =========================================================
 const genreList = [
     { color: "#bf2726", label: "Rock" },
     { color: "#da6128", label: "Alternative" },
@@ -189,6 +61,281 @@ let activeVideoElement = null;
 let pendingDeleteActionCallback = null;
 let activeModalBeatstarChart = null;
 
+// Mantener la última notificación activa
+let latestActiveNotification = null;
+let latestNotifMeta = { totalActive: 0, currentIndex: 0 };
+
+// =========================================================
+// 2. FUNCIONES AUXILIARES DE RENDERIZADO PARA BANNER
+// =========================================================
+
+function renderNotifGenresBadgesHtml(rawGenre) {
+    if (!rawGenre) return `<span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-300 text-[10px] sm:text-[11px] font-black uppercase"><span class="hidden sm:inline">General</span></span>`;
+    
+    return rawGenre.split(' / ').map(g => {
+        const trimmed = g.trim();
+        const matched = genreList.find(item => item.label.toLowerCase() === trimmed.toLowerCase());
+        const color = matched ? matched.color : '#f97316';
+        
+        const safeKey = trimmed.replace('/', '');
+        const dynamicAssetSrc = globalVisualAssets[`genre_${safeKey}`] || globalVisualAssets[`genre_${trimmed}`];
+        
+        const graphicElement = dynamicAssetSrc 
+            ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
+            : `<span class="w-2.5 h-2.5 sm:w-2.5 sm:h-2.5 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
+
+        return `
+            <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15" title="${trimmed}">
+                ${graphicElement}
+                <span class="hidden sm:inline">${trimmed}</span>
+            </div>
+        `;
+    }).join(' ');
+}
+
+function getSingleDiffTagHtml(diffVal) {
+    let color = '#71717a';
+    let label = diffVal || 'Normal';
+
+    if (diffVal === 'Hard') color = '#f97316';
+    else if (diffVal === 'Extreme') color = '#ef4444';
+
+    const dynamicAsset = globalVisualAssets[`diff_${diffVal}`];
+    const graphicMarkup = dynamicAsset
+        ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
+        : `<i class="fa-solid fa-layer-group text-[10px]"></i>`;
+
+    return `
+        <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15" title="${label}">
+            ${graphicMarkup}
+            <span class="hidden sm:inline">${label}</span>
+        </div>
+    `;
+}
+
+function renderNotifDiffTagHtml(diffVal, editionVal, diffDeluxeVal) {
+    const isDual = editionVal === 'Both' || editionVal === 'Standard + Deluxe';
+
+    if (isDual) {
+        const stdDiff = diffVal || 'Normal';
+        const dlxDiff = diffDeluxeVal || diffVal || 'Hard';
+
+        return `
+            <div class="inline-flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
+                ${getSingleDiffTagHtml(stdDiff)}
+                ${getSingleDiffTagHtml(dlxDiff)}
+            </div>
+        `;
+    }
+
+    const currentDiff = (editionVal === 'Deluxe') ? (diffDeluxeVal || diffVal || 'Hard') : (diffVal || 'Normal');
+    return getSingleDiffTagHtml(currentDiff);
+}
+
+function renderNotifEditionTagHtml(editionVal) {
+    if (editionVal === 'Both' || editionVal === 'Standard + Deluxe') {
+        const stdAsset = globalVisualAssets[`edit_Standard`];
+        const dlxAsset = globalVisualAssets[`edit_Deluxe`];
+
+        const stdMarkup = stdAsset
+            ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: #71717a; -webkit-mask-image: url('${stdAsset}'); mask-image: url('${stdAsset}');"></span>`
+            : `<i class="fa-solid fa-star text-[10px]"></i>`;
+
+        const dlxMarkup = dlxAsset
+            ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: #facc15; -webkit-mask-image: url('${dlxAsset}'); mask-image: url('${dlxAsset}');"></span>`
+            : `<i class="fa-solid fa-star text-[10px]"></i>`;
+
+        return `
+            <div class="inline-flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
+                <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:#71717a; border-color:#71717a50; background:#71717a15" title="Standard">
+                    ${stdMarkup}
+                    <span class="hidden sm:inline">Standard</span>
+                </div>
+                <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider glow-gold" style="color:#facc15; border-color:#facc1550; background:#facc1515" title="Deluxe">
+                    ${dlxMarkup}
+                    <span class="hidden sm:inline">Deluxe</span>
+                </div>
+            </div>
+        `;
+    }
+
+    const isDeluxe = editionVal === 'Deluxe';
+    const color = isDeluxe ? '#facc15' : '#71717a';
+    const label = editionVal || 'Standard';
+    const glowClass = isDeluxe ? 'glow-gold' : '';
+
+    const dynamicAsset = globalVisualAssets[`edit_${editionVal}`];
+    const graphicMarkup = dynamicAsset
+        ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
+        : `<i class="fa-solid fa-star text-[10px]"></i>`;
+
+    return `
+        <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider ${glowClass}" style="color:${color}; border-color:${color}50; background:${color}15" title="${label}">
+            ${graphicMarkup}
+            <span class="hidden sm:inline">${label}</span>
+        </div>
+    `;
+}
+
+function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
+    const banner = document.getElementById('home-notification-banner');
+    const content = document.getElementById('notif-banner-content');
+    
+    if (!banner || !content) return;
+
+    if (!activeNotif) {
+        banner.classList.add('hidden');
+        return;
+    }
+
+    banner.classList.remove('hidden');
+
+    // Remover elementos previos adjuntos directo al banner (botón X y barra de progreso)
+    document.getElementById('btn-banner-delete-x')?.remove();
+    document.getElementById('notif-progress-container')?.remove();
+
+    if (isCreatorMode) {
+        const deleteBtn = document.createElement('button');
+        deleteBtn.id = 'btn-banner-delete-x';
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'absolute top-3 right-3 w-7 h-7 bg-red-950/80 border border-red-800/80 text-red-400 hover:bg-red-900 hover:text-white rounded-full flex items-center justify-center font-black text-xs transition shadow-lg z-30';
+        deleteBtn.title = currentLanguage === 'en' ? 'Delete Notification' : 'Eliminar Notificación';
+        deleteBtn.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+        
+        deleteBtn.addEventListener('click', () => {
+            stateForModules.requestUserDeleteConfirmation(() => {
+                deleteNotificationManually(activeNotif.category);
+            });
+        });
+
+        banner.appendChild(deleteBtn);
+    }
+
+    // Inyectar la barra de progreso al borde inferior del banner contenedor
+    if (meta.totalActive === 2) {
+        const progressBox = document.createElement('div');
+        progressBox.id = 'notif-progress-container';
+        progressBox.className = 'absolute bottom-0 left-0 w-full bg-zinc-800/40 h-[2px] overflow-hidden rounded-b-xl pointer-events-none z-10';
+        progressBox.innerHTML = `<div id="notif-progress-fill" class="notif-progress-bar"></div>`;
+        banner.appendChild(progressBox);
+    }
+
+    const isEn = currentLanguage === 'en';
+    
+    let notifTitle = '';
+    if (activeNotif.type === 'new') {
+        notifTitle = activeNotif.category === 'chart' 
+            ? (isEn ? 'New Chart' : 'Nuevo Chart') 
+            : (isEn ? 'New Skin' : 'Nueva Skin');
+    } else {
+        notifTitle = activeNotif.category === 'chart' 
+            ? (isEn ? 'Chart Available' : 'Chart Disponible') 
+            : (isEn ? 'Skin Available' : 'Skin Disponible');
+    }
+
+    let manualNavMarkup = '';
+    if (isCreatorMode && meta.totalActive === 2) {
+        manualNavMarkup = `
+            <div class="flex items-center gap-2 mt-2 sm:mt-0 z-20">
+                <button id="btn-notif-prev" type="button" class="w-7 h-7 bg-zinc-900 border border-fuchsia-800/60 text-fuchsia-400 hover:bg-fuchsia-950 rounded-lg flex items-center justify-center text-xs transition">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <span class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">${meta.currentIndex + 1} / 2</span>
+                <button id="btn-notif-next" type="button" class="w-7 h-7 bg-zinc-900 border border-fuchsia-800/60 text-fuchsia-400 hover:bg-fuchsia-950 rounded-lg flex items-center justify-center text-xs transition">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    if (activeNotif.category === 'chart') {
+        // Búsqueda de respaldo en el arreglo global levels por si la notificación no traía diffDeluxe
+        const matchedLevel = levels.find(l => 
+            l.song?.toLowerCase() === activeNotif.song?.toLowerCase() && 
+            l.artist?.toLowerCase() === activeNotif.artist?.toLowerCase()
+        );
+
+        const finalDiff = activeNotif.diff || (matchedLevel ? matchedLevel.diff : 'Normal');
+        const finalDiffDeluxe = activeNotif.diffDeluxe || (matchedLevel ? matchedLevel.diffDeluxe : null) || finalDiff;
+        const finalEdition = activeNotif.edition || (matchedLevel ? (matchedLevel.hasBothEditions ? 'Both' : matchedLevel.edition) : 'Standard');
+
+        content.innerHTML = `
+            <div class="flex flex-row items-center justify-between gap-2 sm:gap-4 w-full pr-6 sm:pr-8">
+                <!-- Información principal de la canción (Izquierda) -->
+                <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1">
+                    <img src="${activeNotif.artOrIcon}" class="w-14 h-14 sm:w-20 sm:h-20 rounded-xl object-cover border border-orange-500/40 shadow-lg shrink-0">
+                    <div class="min-w-0 flex-1">
+                        <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-orange-400 block mb-0.5">${notifTitle}</span>
+                        <h3 class="text-xs sm:text-base font-black text-white leading-tight tracking-wide truncate">${activeNotif.song}</h3>
+                        <p class="text-[11px] sm:text-sm text-zinc-400 font-bold truncate">${activeNotif.artist}</p>
+                    </div>
+                </div>
+
+                <!-- Etiquetas organizadas en 3 filas alineadas a la derecha (Derecha) -->
+                <div class="flex flex-col items-end gap-1 sm:gap-1.5 shrink-0">
+                    <!-- Fila 1: Géneros -->
+                    <div class="flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
+                        ${renderNotifGenresBadgesHtml(activeNotif.genre)}
+                    </div>
+                    <!-- Fila 2: Dificultad (Standard / Deluxe correspondiente) -->
+                    <div class="flex items-center justify-end gap-1 sm:gap-1.5">
+                        ${renderNotifDiffTagHtml(finalDiff, finalEdition, finalDiffDeluxe)}
+                    </div>
+                    <!-- Fila 3: Ediciones -->
+                    <div class="flex items-center justify-end gap-1 sm:gap-1.5">
+                        ${renderNotifEditionTagHtml(finalEdition)}
+                    </div>
+
+                    ${manualNavMarkup}
+                </div>
+            </div>
+        `;
+    } else if (activeNotif.category === 'skin') {
+        const platformLogo = activeNotif.platform === 'TapWave' ? 'TapWaveWhiteLogo.png' : 'BeatstarWhiteLogo.png';
+        content.innerHTML = `
+            <div class="flex flex-row items-center justify-between gap-2 sm:gap-4 w-full pr-6 sm:pr-8">
+                <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1">
+                    <img src="${activeNotif.artOrIcon}" class="w-14 h-14 sm:w-20 sm:h-20 rounded-xl object-cover border border-fuchsia-500/40 shadow-lg shrink-0">
+                    <div class="min-w-0 flex-1">
+                        <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">${notifTitle}</span>
+                        <h3 class="text-xs sm:text-base font-black text-white leading-tight tracking-wide truncate">${activeNotif.skinName}</h3>
+                        <p class="text-[11px] sm:text-sm text-zinc-400 font-bold truncate">${activeNotif.artist}</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-end gap-1 sm:gap-2 shrink-0">
+                    <div class="flex items-center justify-end">
+                        <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-5 sm:h-10 object-contain">
+                    </div>
+                    ${manualNavMarkup}
+                </div>
+            </div>
+        `;
+    }
+
+    document.getElementById('btn-notif-prev')?.addEventListener('click', () => previousNotification());
+    document.getElementById('btn-notif-next')?.addEventListener('click', () => nextNotification());
+}
+
+// =========================================================
+// 3. INICIALIZACIÓN DE NOTIFICACIONES Y EVENTOS MANUALES
+// =========================================================
+subscribeToNotifications((activeNotif, meta) => {
+    latestActiveNotification = activeNotif;
+    latestNotifMeta = meta;
+    drawNotificationBanner(activeNotif, meta);
+}, isCreatorMode);
+
+document.getElementById('btn-delete-notif-chart')?.addEventListener('click', () => {
+    stateForModules.requestUserDeleteConfirmation(() => deleteNotificationManually('chart'));
+});
+document.getElementById('btn-delete-notif-skin')?.addEventListener('click', () => {
+    stateForModules.requestUserDeleteConfirmation(() => deleteNotificationManually('skin'));
+});
+
+// =========================================================
+// 4. FUNCIONES UTILITARIAS Y DE NAVEGACIÓN
+// =========================================================
 function sanitizeFirebaseKey(key) {
     return btoa(key).replace(/=/g, '').replace(/\//g, '_').replace(/\+/g, '-');
 }
@@ -286,18 +433,25 @@ function navigateTo(view, pushState = true) {
     document.getElementById(`view-${view}`)?.classList.remove('hidden');
 
     const shortcuts = document.getElementById('nav-shortcuts');
-    const sep = document.getElementById('nav-separator');
+    const sep = document.getElementById('nav-[#nav-separator]');
     const footerBoogieBox = document.getElementById('footer-boogie-admin-box');
 
     if (view === 'home') {
         shortcuts?.classList.add('hidden');
         sep?.classList.add('hidden');
-        footerBoogieBox?.classList.remove('hidden');
+        
+        if (footerBoogieBox) {
+            footerBoogieBox.classList.remove('hidden');
+            footerBoogieBox.classList.add('hidden', 'md:flex');
+        }
     } else {
         shortcuts?.classList.remove('hidden');
         shortcuts?.classList.add('flex');
         sep?.classList.remove('hidden');
-        footerBoogieBox?.classList.add('hidden');
+        if (footerBoogieBox) {
+            footerBoogieBox.classList.add('hidden');
+            footerBoogieBox.classList.remove('md:flex');
+        }
     }
 
     if (view === 'cosmetics') resetCosmeticsSubmenuWorkspace();
@@ -385,14 +539,33 @@ function setupNativeVideoBehavior(vidWrapper) {
 
     vidWrapper.addEventListener('click', () => {
         if (videoEl.paused) {
-            if (activeVideoElement && activeVideoElement !== videoEl) stopAllMedia();
-            else stopGlobalAudioPreview();
+            stopGlobalAudioPreview();
+
+            document.querySelectorAll('video').forEach(otherVid => {
+                if (otherVid !== videoEl) {
+                    otherVid.pause();
+                    otherVid.currentTime = 0;
+                }
+            });
+
+            document.querySelectorAll('.custom-native-video-wrapper').forEach(wrapper => {
+                if (wrapper !== vidWrapper) {
+                    const otherIcon = wrapper.querySelector('.video-play-icon');
+                    const otherControls = wrapper.querySelector('.video-controls-overlay');
+                    const otherLoader = wrapper.querySelector('.video-loading-overlay');
+
+                    if (otherIcon) otherIcon.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
+                    if (otherControls) otherControls.classList.remove('opacity-0', 'hidden');
+                    if (otherLoader) otherLoader.classList.add('hidden');
+                }
+            });
 
             activeVideoElement = videoEl;
             if (loaderEl && videoEl.readyState < 4) loaderEl.classList.remove('hidden');
             videoEl.play().then(() => controlsOverlay?.classList.add('hidden')).catch(err => loaderEl?.classList.add('hidden'));
         } else {
             videoEl.pause();
+            videoEl.currentTime = 0;
             if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
             controlsOverlay?.classList.remove('hidden');
         }
@@ -424,6 +597,7 @@ function openBeatstarEditionSelectionModal(lvl) {
     const badgeDlx = document.getElementById('modal-edition-deluxe-badge');
     const checkStd = document.getElementById('modal-check-standard');
     const checkDlx = document.getElementById('modal-check-deluxe');
+    const modalArtContainer = document.getElementById('modal-edition-art-container');
 
     if (imgEl) imgEl.src = lvl.art || 'free_song_Image.png';
     if (titleEl) titleEl.innerText = lvl.song || '';
@@ -443,6 +617,17 @@ function openBeatstarEditionSelectionModal(lvl) {
     }
 
     const currentSelected = activeChartSelectedEditions[lvl.id] || 'Standard';
+
+    if (modalArtContainer) {
+        modalArtContainer.classList.remove('border-4', 'border-fuchsia-500');
+        if (currentSelected === 'Deluxe') {
+            modalArtContainer.classList.remove('border-edition-standard');
+            modalArtContainer.classList.add('border-edition-deluxe');
+        } else {
+            modalArtContainer.classList.remove('border-edition-deluxe');
+            modalArtContainer.classList.add('border-edition-standard');
+        }
+    }
 
     if (currentSelected === 'Deluxe') {
         badgeDlx?.classList.remove('hidden');
@@ -521,6 +706,22 @@ function buildVisualAssetsGenresList() {
     });
 }
 
+function resetBoogieAuthModal() {
+    document.getElementById('boogie-auth-modal')?.classList.add('hidden');
+    const errorMsgEl = document.getElementById('boogie-auth-error-msg');
+    if (errorMsgEl) {
+        errorMsgEl.style.display = 'none';
+        errorMsgEl.innerText = '';
+    }
+    ['boogieCred1', 'boogieCred2', 'boogieCred3'].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) input.value = '';
+    });
+}
+
+// =========================================================
+// 5. INICIALIZACIÓN DE MÓDULOS DE VISTA
+// =========================================================
 const stateForModules = {
     genreList,
     skinUniversalGenreList,
@@ -572,6 +773,11 @@ function applyRoleUIVisibility() {
         cosGrid?.classList.add('flex-col');
     }
 
+    setCreatorModeInNotifications(isCreatorMode);
+    if (latestActiveNotification) {
+        drawNotificationBanner(latestActiveNotification);
+    }
+
     chartsModule.renderLevelsTable();
     skinsModule.renderCosmeticsTables();
 }
@@ -603,6 +809,13 @@ function syncFooterLinks() {
     const aB = document.getElementById('footer-link-beatclone'); if (aB) aB.href = globalFooterLinks.beatclone || '#';
     const aS = document.getElementById('footer-link-bscm'); if (aS) aS.href = globalFooterLinks.bscm || '#';
     const aC = document.getElementById('footer-link-beatcharts'); if (aC) aC.href = globalFooterLinks.beatcharts || '#';
+
+    const modalBeatcloneBtn = document.getElementById('download-modal-btn-beatclone');
+    if (modalBeatcloneBtn) {
+        modalBeatcloneBtn.href = globalFooterLinks.beatclone && globalFooterLinks.beatclone.trim() !== "" 
+            ? globalFooterLinks.beatclone.trim() 
+            : '#';
+    }
 
     const tapNoticeBox = document.getElementById('tapwave-discord-notice-box');
     const tapJoinBtn = document.getElementById('btn-join-tapwave-discord');
@@ -779,10 +992,32 @@ function applyLanguagePack() {
         if (translations[currentLanguage][key]) el.placeholder = translations[currentLanguage][key];
     });
 
+    const allTxt = translations[currentLanguage].filterAll;
+    const btnLabelsMap = [
+        { btn: 'btn-custom-lvl-genre', label: 'label-custom-lvl-genre' },
+        { btn: 'btn-custom-lvl-diff', label: 'label-custom-lvl-diff' },
+        { btn: 'btn-custom-lvl-edition', label: 'label-custom-lvl-edition' },
+        { btn: 'btn-custom-skin-genre', label: 'label-custom-skin-genre' }
+    ];
+
+    btnLabelsMap.forEach(item => {
+        const labelEl = document.getElementById(item.label);
+        const btnEl = document.getElementById(item.btn);
+        if (labelEl && btnEl) {
+            const currentTxt = labelEl.innerText.trim();
+            if (currentTxt === 'Todos' || currentTxt === 'All') {
+                labelEl.innerHTML = `<span>${allTxt}</span>`;
+            }
+        }
+    });
+
     applyRoleUIVisibility();
     buildCustomDropdownMenus();
 }
 
+// =========================================================
+// 6. SUSCRIPCIONES A BASE DE DATOS FIREBASE
+// =========================================================
 try {
     showLoadingOverlay();
 
@@ -790,6 +1025,11 @@ try {
         levels = snap.val() ? Object.values(snap.val()) : [];
         chartsModule.renderLevelsTable();
         updateDashboardCounts();
+        
+        // Re-dibujar notificación cuando cargan o se actualizan los niveles para reflejar dificultades reales
+        if (latestActiveNotification) {
+            drawNotificationBanner(latestActiveNotification);
+        }
         hideLoadingOverlay();
     });
     onValue(ref(db, 'cosmetics'), (snap) => {
@@ -816,7 +1056,6 @@ try {
         updateCMSHeaderIcons();
         chartsModule.renderLevelsTable();
         
-        // Re-renderizar la notificación si ya había una activa cuando se cargan los assets de Firebase
         if (latestActiveNotification) {
             drawNotificationBanner(latestActiveNotification);
         }
@@ -838,6 +1077,9 @@ try {
     hideLoadingOverlay();
 }
 
+// =========================================================
+// 7. LISTENERS DE EVENTOS DOM
+// =========================================================
 document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('nav-logo')?.addEventListener('click', () => navigateTo('home'));
@@ -865,7 +1107,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnBoogieTrigger = document.getElementById('btn-boogie-admin-trigger');
     btnBoogieTrigger?.addEventListener('click', () => {
         if (isCreatorMode) document.getElementById('boogie-exit-modal')?.classList.remove('hidden');
-        else document.getElementById('boogie-auth-modal')?.classList.remove('hidden');
+        else {
+            resetBoogieAuthModal();
+            document.getElementById('boogie-auth-modal')?.classList.remove('hidden');
+        }
     });
 
     document.getElementById('btn-confirm-exit-creator')?.addEventListener('click', () => {
@@ -877,11 +1122,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('boogie-auth-form')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (document.getElementById('boogieCred1').value === "BeatstarTest") {
+        const inputVal = document.getElementById('boogieCred1').value;
+        const errorMsgEl = document.getElementById('boogie-auth-error-msg');
+
+        if (inputVal === "BeatstarTest") {
             isCreatorMode = true;
             btnBoogieTrigger?.classList.add('glow-green');
             applyRoleUIVisibility();
-            document.getElementById('boogie-auth-modal')?.classList.add('hidden');
+            resetBoogieAuthModal();
+        } else {
+            if (errorMsgEl) {
+                errorMsgEl.innerText = translations[currentLanguage].invalidCredentials || "Credenciales incorrectas";
+                errorMsgEl.style.display = 'block';
+            }
         }
     });
 
@@ -895,8 +1148,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('thanks-custom-modal')?.classList.add('hidden');
     });
     
-    document.getElementById('btn-close-boogie-modal')?.addEventListener('click', () => document.getElementById('boogie-auth-modal')?.classList.add('hidden'));
-    document.getElementById('btn-close-boogie-modal-x')?.addEventListener('click', () => document.getElementById('boogie-auth-modal')?.classList.add('hidden'));
+    document.getElementById('btn-close-boogie-modal')?.addEventListener('click', resetBoogieAuthModal);
+    document.getElementById('btn-close-boogie-modal-x')?.addEventListener('click', resetBoogieAuthModal);
     document.getElementById('btn-cancel-exit-creator')?.addEventListener('click', () => document.getElementById('boogie-exit-modal')?.classList.add('hidden'));
     document.getElementById('btn-cancel-delete')?.addEventListener('click', () => document.getElementById('confirm-delete-modal')?.classList.add('hidden'));
     document.getElementById('btn-cancel-explicit')?.addEventListener('click', () => document.getElementById('explicit-warning-modal')?.classList.add('hidden'));
@@ -941,6 +1194,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (activeModalBeatstarChart) {
             activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Standard';
             
+            const modalArtContainer = document.getElementById('modal-edition-art-container');
+            if (modalArtContainer) {
+                modalArtContainer.classList.remove('border-edition-deluxe');
+                modalArtContainer.classList.add('border-edition-standard');
+            }
+
             const activeAudio = getActiveAudioElement();
             if (activeAudio) activeAudio.loop = false;
             
@@ -953,6 +1212,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (activeModalBeatstarChart) {
             activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Deluxe';
             
+            const modalArtContainer = document.getElementById('modal-edition-art-container');
+            if (modalArtContainer) {
+                modalArtContainer.classList.remove('border-edition-standard');
+                modalArtContainer.classList.add('border-edition-deluxe');
+            }
+
             const activeAudio = getActiveAudioElement();
             if (activeAudio) activeAudio.loop = false;
             
@@ -961,7 +1226,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Evento de selección universal para selectores de fecha
     document.querySelectorAll('button[id^="btn-picker-"]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
