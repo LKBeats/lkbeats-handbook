@@ -2,7 +2,11 @@ import { ref, set, push, remove } from "https://www.gstatic.com/firebasejs/10.8.
 import { db, uploadFileToCloudflareR2, deleteFileFromCloudflareR2 } from "./services.js";
 import { translations } from "./i18n.js";
 import { toggleAudioPreviewEngine } from "./audio-player.js";
-import { createOrUpdateNotification } from "./notifications-manager.js";
+import { 
+    createOrUpdateNotification, 
+    checkAndDeleteNotifOnRecordDelete, 
+    checkAndDeleteNotifOnZipDelete 
+} from "./notifications-manager.js";
 
 export function initChartsModule(context) {
     let lvlGenreFilter = "";
@@ -58,13 +62,13 @@ export function initChartsModule(context) {
     }
 
     function buildGenresSelector() {
-        const container = document.getElementById('lvl-genre-tags-container');
+        const container = document.getElementById('genres-container');
         if (!container) return;
         container.innerHTML = '';
         context.genreList.forEach(g => {
             const btn = document.createElement('button');
             btn.type = 'button';
-            btn.className = 'genre-pill-btn px-3 py-1 rounded-full text-xs font-black transition border border-zinc-700 bg-zinc-900 text-zinc-400 select-none';
+            btn.className = 'genre-pill-btn px-3 py-1 rounded-full text-xs font-black transition border border-zinc-700 bg-zinc-900 text-zinc-400 select-none m-0.5';
             btn.innerText = g.label;
             btn.style.color = g.color;
             btn.dataset.genre = g.label;
@@ -90,7 +94,7 @@ export function initChartsModule(context) {
     }
 
     function renderLevelsTable() {
-        const tbody = document.getElementById('levels-table-body');
+        const tbody = document.getElementById('levels-tbody');
         if (!tbody) return;
         tbody.innerHTML = '';
 
@@ -99,8 +103,9 @@ export function initChartsModule(context) {
         const globalVisualAssets = context.getGlobalVisualAssets();
         const activeChartSelectedEditions = context.getActiveChartSelectedEditions();
         const activeChartExplicitStates = context.getActiveChartExplicitStates();
+        const allLevels = context.getLevels();
 
-        const filtered = context.getLevels().filter(lvl => {
+        const filtered = allLevels.filter(lvl => {
             let passGenre = true;
             if (lvlGenreFilter) {
                 const genres = (lvl.genre || '').split(' / ');
@@ -127,6 +132,26 @@ export function initChartsModule(context) {
 
             return passGenre && passDiff && passEdition;
         });
+
+        const counterEl = document.getElementById('lbl-counter-charts');
+        if (counterEl) {
+            const hasFilter = !!(lvlGenreFilter || lvlDiffFilter || lvlEditionFilter);
+            counterEl.innerText = hasFilter ? `Charts: ${filtered.length}` : `Total: ${allLevels.length} Charts`;
+        }
+
+        if (filtered.length === 0) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td colspan="5" class="p-8 text-center">
+                    <div class="flex flex-col items-center justify-center gap-3">
+                        <img src="1455064703448645786.gif" alt="Boogie" class="w-28 h-auto">
+                        <p class="text-sm font-extrabold text-zinc-300 font-sans tracking-wide">${translations[currentLanguage].noChartsBoogie || "No hay charts registrados."}</p>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+            return;
+        }
 
         filtered.forEach(lvl => {
             const tr = document.createElement('tr');
@@ -326,6 +351,7 @@ export function initChartsModule(context) {
                             if (matched.zip) await deleteFileFromCloudflareR2(matched.zip);
                             if (matched.zipDeluxe) await deleteFileFromCloudflareR2(matched.zipDeluxe);
                             await remove(ref(db, `levels/${chartId}`));
+                            await checkAndDeleteNotifOnRecordDelete('chart', matched.song);
                         } catch (err) {
                             console.error(err);
                         } finally {
@@ -346,13 +372,18 @@ export function initChartsModule(context) {
     }
 
     function loadChartIntoForm(lvl) {
-        document.getElementById('lvlId').value = lvl.id || '';
+        document.getElementById('editingLvlId').value = lvl.id || '';
         document.getElementById('lvlSong').value = lvl.song || '';
         document.getElementById('lvlArtist').value = lvl.artist || '';
         document.getElementById('lvlDiff').value = lvl.diff || 'Normal';
-        document.getElementById('lvlDiffDeluxe').value = lvl.diffDeluxe || 'Extreme';
+        
+        const dlxDiffInput = document.getElementById('lvlDiffDeluxe');
+        if (dlxDiffInput) dlxDiffInput.value = lvl.diffDeluxe || 'Extreme';
+
         document.getElementById('lvlDate').value = lvl.date || '';
-        document.getElementById('lvlExplicit').checked = !!lvl.isExplicit;
+        
+        const expCheck = document.getElementById('lvlHasExplicit');
+        if (expCheck) expCheck.checked = !!lvl.isExplicit;
 
         const editionSelect = document.getElementById('lvlEditionMode');
         if (editionSelect) {
@@ -360,7 +391,7 @@ export function initChartsModule(context) {
             editionSelect.dispatchEvent(new Event('change'));
         }
 
-        const container = document.getElementById('lvl-genre-tags-container');
+        const container = document.getElementById('genres-container');
         if (container) {
             const currentGenres = (lvl.genre || '').split(' / ');
             container.querySelectorAll('.genre-pill-btn').forEach(btn => {
@@ -384,22 +415,11 @@ export function initChartsModule(context) {
     // Listener del selector de modo de edición en formulario de creación
     document.getElementById('lvlEditionMode')?.addEventListener('change', (e) => {
         const val = e.target.value;
-        const boxDeluxeDiff = document.getElementById('box-deluxe-diff-input');
-        const boxDeluxeZip = document.getElementById('box-deluxe-zip-input');
-        const labelStandardZip = document.getElementById('label-standard-zip');
-
-        if (val === 'Both') {
-            boxDeluxeDiff?.classList.remove('hidden');
-            boxDeluxeZip?.classList.remove('hidden');
-            if (labelStandardZip) labelStandardZip.innerText = "ZIP Chart (Standard)";
-        } else if (val === 'Deluxe') {
-            boxDeluxeDiff?.classList.remove('hidden');
-            boxDeluxeZip?.classList.add('hidden');
-            if (labelStandardZip) labelStandardZip.innerText = "ZIP Chart (Deluxe)";
+        const sectionDeluxe = document.getElementById('section-deluxe-fields');
+        if (val === 'Both' || val === 'Deluxe') {
+            sectionDeluxe?.classList.remove('hidden');
         } else {
-            boxDeluxeDiff?.classList.add('hidden');
-            boxDeluxeZip?.classList.add('hidden');
-            if (labelStandardZip) labelStandardZip.innerText = "ZIP Chart (Standard)";
+            sectionDeluxe?.classList.add('hidden');
         }
     });
 
@@ -409,25 +429,25 @@ export function initChartsModule(context) {
         context.showLoadingOverlay();
 
         try {
-            const lvlId = document.getElementById('lvlId').value;
+            const lvlId = document.getElementById('editingLvlId').value;
             const song = document.getElementById('lvlSong').value.trim();
             const artist = document.getElementById('lvlArtist').value.trim();
             const diff = document.getElementById('lvlDiff').value;
-            const diffDeluxe = document.getElementById('lvlDiffDeluxe').value;
+            const diffDeluxe = document.getElementById('lvlDiffDeluxe')?.value || 'Extreme';
             const date = document.getElementById('lvlDate').value;
-            const isExplicit = document.getElementById('lvlExplicit').checked;
+            const isExplicit = document.getElementById('lvlHasExplicit')?.checked || false;
             const editionMode = document.getElementById('lvlEditionMode').value;
 
-            const selectedGenres = Array.from(document.querySelectorAll('#lvl-genre-tags-container .active-genre-pill'))
+            const selectedGenres = Array.from(document.querySelectorAll('#genres-container .active-genre-pill'))
                 .map(el => el.dataset.genre)
                 .join(' / ');
 
             const existingLevel = lvlId ? context.getLevels().find(l => l.id === lvlId) : null;
 
-            const artFile = document.getElementById('lvlArtFile').files[0];
-            const audioFile = document.getElementById('lvlAudioFile').files[0];
-            const zipFile = document.getElementById('lvlZipFile').files[0];
-            const zipDeluxeFile = document.getElementById('lvlZipDeluxeFile')?.files[0];
+            const artFile = document.getElementById('lvlArtFile')?.files[0];
+            const audioFile = document.getElementById('lvlAudioFile')?.files[0];
+            const zipFile = document.getElementById('lvlChartZipFile')?.files[0];
+            const zipDeluxeFile = document.getElementById('lvlChartZipFileDeluxe')?.files[0];
 
             let artUrl = existingLevel ? existingLevel.art : '';
             let audioUrl = existingLevel ? existingLevel.audio : '';
@@ -487,12 +507,12 @@ export function initChartsModule(context) {
                     genre: selectedGenres,
                     diff: diff,
                     diffDeluxe: diffDeluxe,
-                    edition: editionMode
+                    edition: isBoth ? 'Both' : editionMode
                 });
             }
 
             document.getElementById('level-form').reset();
-            document.getElementById('lvlId').value = '';
+            document.getElementById('editingLvlId').value = '';
             buildGenresSelector();
             document.getElementById('lvlEditionMode').dispatchEvent(new Event('change'));
 
