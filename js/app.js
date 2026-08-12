@@ -93,7 +93,7 @@ function renderNotifGenresBadgesHtml(rawGenre) {
     }).join(' ');
 }
 
-function renderNotifDiffTagHtml(diffVal) {
+function getSingleDiffTagHtml(diffVal) {
     let color = '#71717a';
     let label = diffVal || 'Normal';
 
@@ -111,6 +111,25 @@ function renderNotifDiffTagHtml(diffVal) {
             <span class="hidden sm:inline">${label}</span>
         </div>
     `;
+}
+
+function renderNotifDiffTagHtml(diffVal, editionVal, diffDeluxeVal) {
+    const isDual = editionVal === 'Both' || editionVal === 'Standard + Deluxe';
+
+    if (isDual) {
+        const stdDiff = diffVal || 'Normal';
+        const dlxDiff = diffDeluxeVal || 'Extreme';
+
+        return `
+            <div class="inline-flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
+                ${getSingleDiffTagHtml(stdDiff)}
+                ${getSingleDiffTagHtml(dlxDiff)}
+            </div>
+        `;
+    }
+
+    const currentDiff = (editionVal === 'Deluxe') ? (diffDeluxeVal || diffVal || 'Extreme') : (diffVal || 'Normal');
+    return getSingleDiffTagHtml(currentDiff);
 }
 
 function renderNotifEditionTagHtml(editionVal) {
@@ -248,9 +267,9 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
                     <div class="flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
                         ${renderNotifGenresBadgesHtml(activeNotif.genre)}
                     </div>
-                    <!-- Fila 2: Dificultad -->
+                    <!-- Fila 2: Dificultad (Standard / Deluxe si aplica) -->
                     <div class="flex items-center justify-end gap-1 sm:gap-1.5">
-                        ${renderNotifDiffTagHtml(activeNotif.diff)}
+                        ${renderNotifDiffTagHtml(activeNotif.diff, activeNotif.edition, activeNotif.diffDeluxe)}
                     </div>
                     <!-- Fila 3: Ediciones -->
                     <div class="flex items-center justify-end gap-1 sm:gap-1.5">
