@@ -10,7 +10,6 @@ let activeAudioImg = null;
 let activeCanvas = null;
 let activeArtContainer = null;
 let audioDataArray = null;
-let activeOnEndCallback = null;
 
 export function stopGlobalAudioPreview() {
     if (canvasAnimationId) {
@@ -26,23 +25,10 @@ export function stopGlobalAudioPreview() {
     if (audioCtx && audioCtx.state === 'running') {
         audioCtx.suspend();
     }
-
     if (activeAudioButton) {
         activeAudioButton.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
         activeAudioButton = null;
     }
-
-    if (activeOnEndCallback) {
-        try { activeOnEndCallback(); } catch(e) {}
-        activeOnEndCallback = null;
-    }
-
-    document.querySelectorAll('button').forEach(btn => {
-        if (btn.querySelector('.fa-stop') || btn.querySelector('.fa-circle-notch')) {
-            btn.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
-        }
-    });
-
     if (activeAudioImg) {
         activeAudioImg.classList.add('bg-zinc-900');
         activeAudioImg = null;
@@ -92,6 +78,7 @@ export function startRadialCanvasVisualizer(canvas, analyser, containerElement, 
         analyser.getByteFrequencyData(audioDataArray);
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Velocidad de rotación fija sincronizada para todos los canvas
         currentRotationAngle += 0.008;
 
         const barCount = 64;
@@ -147,21 +134,8 @@ export function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canva
         return;
     }
 
+    // Si es un audio nuevo, detener el anterior
     stopGlobalAudioPreview();
-
-    document.querySelectorAll('video').forEach(vid => {
-        vid.pause();
-        vid.currentTime = 0;
-    });
-    document.querySelectorAll('.custom-native-video-wrapper').forEach(wrapper => {
-        const iconEl = wrapper.querySelector('.video-play-icon');
-        const controlsOverlay = wrapper.querySelector('.video-controls-overlay');
-        const loaderEl = wrapper.querySelector('.video-loading-overlay');
-
-        if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
-        if (controlsOverlay) controlsOverlay.classList.remove('opacity-0', 'hidden');
-        if (loaderEl) loaderEl.classList.add('hidden');
-    });
 
     if (btnElement) btnElement.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-[10px]"></i>`;
 
@@ -216,14 +190,13 @@ export function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canva
     activeAudioButton = btnElement;
     activeAudioImg = imgElement;
     activeArtContainer = containerElement;
-    activeOnEndCallback = onEndCallback;
 
     audio.load();
 
     audio.onended = () => {
         if (!audio.loop) {
-            if (btnElement) btnElement.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i>`;
             stopGlobalAudioPreview();
+            if (onEndCallback) onEndCallback();
         }
     };
 }
