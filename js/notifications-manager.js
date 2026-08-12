@@ -1,4 +1,4 @@
-import { ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { ref, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 import { db } from "./services.js";
 
 let notificationsList = [];
@@ -67,6 +67,28 @@ export async function deleteNotificationManually(category) {
     if (!category) return;
     const targetRef = ref(db, `notifications/${category}`);
     await remove(targetRef);
+}
+
+export async function checkAndDeleteNotifOnRecordDelete(category, recordIdentifier) {
+    if (!category) return;
+    try {
+        const targetRef = ref(db, `notifications/${category}`);
+        const snapshot = await get(targetRef);
+        if (snapshot.exists()) {
+            const notifData = snapshot.val();
+            // Si coincide la canción, el nombre de la skin o el ID del registro
+            if (
+                !recordIdentifier ||
+                notifData.song === recordIdentifier ||
+                notifData.skinName === recordIdentifier ||
+                notifData.artOrIcon === recordIdentifier
+            ) {
+                await remove(targetRef);
+            }
+        }
+    } catch (err) {
+        console.error("Error al verificar/eliminar notificación asociada:", err);
+    }
 }
 
 export function nextNotification() {
