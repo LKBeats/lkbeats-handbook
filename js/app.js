@@ -71,15 +71,15 @@ let latestNotifMeta = { totalActive: 0, currentIndex: 0 };
 
 function renderNotifGenresBadgesHtml(rawGenre) {
     if (!rawGenre) return `<span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded bg-fuchsia-950/40 border border-fuchsia-800/40 text-fuchsia-300 text-[10px] sm:text-[11px] font-black uppercase"><span class="hidden sm:inline">General</span></span>`;
-    
+
     return rawGenre.split(' / ').map(g => {
         const trimmed = g.trim();
         const matched = genreList.find(item => item.label.toLowerCase() === trimmed.toLowerCase());
         const color = matched ? matched.color : '#f97316';
-        
+
         const safeKey = trimmed.replace('/', '');
         const dynamicAssetSrc = globalVisualAssets[`genre_${safeKey}`] || globalVisualAssets[`genre_${trimmed}`];
-        
+
         const graphicElement = dynamicAssetSrc 
             ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
             : `<span class="w-2.5 h-2.5 sm:w-2.5 sm:h-2.5 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
@@ -93,7 +93,7 @@ function renderNotifGenresBadgesHtml(rawGenre) {
     }).join(' ');
 }
 
-function getSingleDiffTagHtml(diffVal) {
+function renderNotifDiffTagHtml(diffVal) {
     let color = '#71717a';
     let label = diffVal || 'Normal';
 
@@ -113,56 +113,10 @@ function getSingleDiffTagHtml(diffVal) {
     `;
 }
 
-function renderNotifDiffTagHtml(diffVal, editionVal, diffDeluxeVal) {
-    const isDual = editionVal === 'Both' || editionVal === 'Standard + Deluxe';
-
-    if (isDual) {
-        const stdDiff = diffVal || 'Normal';
-        const dlxDiff = diffDeluxeVal || diffVal || 'Hard';
-
-        return `
-            <div class="inline-flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
-                ${getSingleDiffTagHtml(stdDiff)}
-                ${getSingleDiffTagHtml(dlxDiff)}
-            </div>
-        `;
-    }
-
-    const currentDiff = (editionVal === 'Deluxe') ? (diffDeluxeVal || diffVal || 'Hard') : (diffVal || 'Normal');
-    return getSingleDiffTagHtml(currentDiff);
-}
-
 function renderNotifEditionTagHtml(editionVal) {
-    if (editionVal === 'Both' || editionVal === 'Standard + Deluxe') {
-        const stdAsset = globalVisualAssets[`edit_Standard`];
-        const dlxAsset = globalVisualAssets[`edit_Deluxe`];
-
-        const stdMarkup = stdAsset
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: #71717a; -webkit-mask-image: url('${stdAsset}'); mask-image: url('${stdAsset}');"></span>`
-            : `<i class="fa-solid fa-star text-[10px]"></i>`;
-
-        const dlxMarkup = dlxAsset
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: #facc15; -webkit-mask-image: url('${dlxAsset}'); mask-image: url('${dlxAsset}');"></span>`
-            : `<i class="fa-solid fa-star text-[10px]"></i>`;
-
-        return `
-            <div class="inline-flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
-                <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:#71717a; border-color:#71717a50; background:#71717a15" title="Standard">
-                    ${stdMarkup}
-                    <span class="hidden sm:inline">Standard</span>
-                </div>
-                <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider glow-gold" style="color:#facc15; border-color:#facc1550; background:#facc1515" title="Deluxe">
-                    ${dlxMarkup}
-                    <span class="hidden sm:inline">Deluxe</span>
-                </div>
-            </div>
-        `;
-    }
-
     const isDeluxe = editionVal === 'Deluxe';
     const color = isDeluxe ? '#facc15' : '#71717a';
     const label = editionVal || 'Standard';
-    const glowClass = isDeluxe ? 'glow-gold' : '';
 
     const dynamicAsset = globalVisualAssets[`edit_${editionVal}`];
     const graphicMarkup = dynamicAsset
@@ -170,7 +124,7 @@ function renderNotifEditionTagHtml(editionVal) {
         : `<i class="fa-solid fa-star text-[10px]"></i>`;
 
     return `
-        <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider ${glowClass}" style="color:${color}; border-color:${color}50; background:${color}15" title="${label}">
+        <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15" title="${label}">
             ${graphicMarkup}
             <span class="hidden sm:inline">${label}</span>
         </div>
@@ -180,7 +134,7 @@ function renderNotifEditionTagHtml(editionVal) {
 function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
     const banner = document.getElementById('home-notification-banner');
     const content = document.getElementById('notif-banner-content');
-    
+
     if (!banner || !content) return;
 
     if (!activeNotif) {
@@ -201,7 +155,7 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
         deleteBtn.className = 'absolute top-3 right-3 w-7 h-7 bg-red-950/80 border border-red-800/80 text-red-400 hover:bg-red-900 hover:text-white rounded-full flex items-center justify-center font-black text-xs transition shadow-lg z-30';
         deleteBtn.title = currentLanguage === 'en' ? 'Delete Notification' : 'Eliminar Notificación';
         deleteBtn.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
-        
+
         deleteBtn.addEventListener('click', () => {
             stateForModules.requestUserDeleteConfirmation(() => {
                 deleteNotificationManually(activeNotif.category);
@@ -221,7 +175,7 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
     }
 
     const isEn = currentLanguage === 'en';
-    
+
     let notifTitle = '';
     if (activeNotif.type === 'new') {
         notifTitle = activeNotif.category === 'chart' 
@@ -249,16 +203,6 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
     }
 
     if (activeNotif.category === 'chart') {
-        // Búsqueda de respaldo en el arreglo global levels por si la notificación no traía diffDeluxe
-        const matchedLevel = levels.find(l => 
-            l.song?.toLowerCase() === activeNotif.song?.toLowerCase() && 
-            l.artist?.toLowerCase() === activeNotif.artist?.toLowerCase()
-        );
-
-        const finalDiff = activeNotif.diff || (matchedLevel ? matchedLevel.diff : 'Normal');
-        const finalDiffDeluxe = activeNotif.diffDeluxe || (matchedLevel ? matchedLevel.diffDeluxe : null) || finalDiff;
-        const finalEdition = activeNotif.edition || (matchedLevel ? (matchedLevel.hasBothEditions ? 'Both' : matchedLevel.edition) : 'Standard');
-
         content.innerHTML = `
             <div class="flex flex-row items-center justify-between gap-2 sm:gap-4 w-full pr-6 sm:pr-8">
                 <!-- Información principal de la canción (Izquierda) -->
@@ -277,13 +221,13 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
                     <div class="flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
                         ${renderNotifGenresBadgesHtml(activeNotif.genre)}
                     </div>
-                    <!-- Fila 2: Dificultad (Standard / Deluxe correspondiente) -->
+                    <!-- Fila 2: Dificultad -->
                     <div class="flex items-center justify-end gap-1 sm:gap-1.5">
-                        ${renderNotifDiffTagHtml(finalDiff, finalEdition, finalDiffDeluxe)}
+                        ${renderNotifDiffTagHtml(activeNotif.diff)}
                     </div>
                     <!-- Fila 3: Ediciones -->
                     <div class="flex items-center justify-end gap-1 sm:gap-1.5">
-                        ${renderNotifEditionTagHtml(finalEdition)}
+                        ${renderNotifEditionTagHtml(activeNotif.edition)}
                     </div>
 
                     ${manualNavMarkup}
@@ -439,7 +383,8 @@ function navigateTo(view, pushState = true) {
     if (view === 'home') {
         shortcuts?.classList.add('hidden');
         sep?.classList.add('hidden');
-        
+
+        // El botón solo debe mostrarse en pantallas md+ (PC/Tablet grandes)
         if (footerBoogieBox) {
             footerBoogieBox.classList.remove('hidden');
             footerBoogieBox.classList.add('hidden', 'md:flex');
@@ -539,8 +484,11 @@ function setupNativeVideoBehavior(vidWrapper) {
 
     vidWrapper.addEventListener('click', () => {
         if (videoEl.paused) {
+
+            // 1. Detener preview de audio completamente
             stopGlobalAudioPreview();
 
+            // 2. Pausar y resetear todos los demás videos en la página
             document.querySelectorAll('video').forEach(otherVid => {
                 if (otherVid !== videoEl) {
                     otherVid.pause();
@@ -548,6 +496,7 @@ function setupNativeVideoBehavior(vidWrapper) {
                 }
             });
 
+            // 3. Resetear overlays e iconos de los demás reproductores de video
             document.querySelectorAll('.custom-native-video-wrapper').forEach(wrapper => {
                 if (wrapper !== vidWrapper) {
                     const otherIcon = wrapper.querySelector('.video-play-icon');
@@ -565,7 +514,7 @@ function setupNativeVideoBehavior(vidWrapper) {
             videoEl.play().then(() => controlsOverlay?.classList.add('hidden')).catch(err => loaderEl?.classList.add('hidden'));
         } else {
             videoEl.pause();
-            videoEl.currentTime = 0;
+            videoEl.currentTime = 0; // Se reinicia desde cero al pausar manualmente
             if (iconEl) iconEl.className = 'fa-solid fa-play text-white text-xl drop-shadow-lg video-play-icon';
             controlsOverlay?.classList.remove('hidden');
         }
@@ -618,6 +567,7 @@ function openBeatstarEditionSelectionModal(lvl) {
 
     const currentSelected = activeChartSelectedEditions[lvl.id] || 'Standard';
 
+    // Aplicar dinámicamente la clase de borde según la edición seleccionada
     if (modalArtContainer) {
         modalArtContainer.classList.remove('border-4', 'border-fuchsia-500');
         if (currentSelected === 'Deluxe') {
@@ -810,6 +760,7 @@ function syncFooterLinks() {
     const aS = document.getElementById('footer-link-bscm'); if (aS) aS.href = globalFooterLinks.bscm || '#';
     const aC = document.getElementById('footer-link-beatcharts'); if (aC) aC.href = globalFooterLinks.beatcharts || '#';
 
+// ASIGNAR LA URL AL BOTÓN DE BEATCLONE DENTRO DEL MODAL
     const modalBeatcloneBtn = document.getElementById('download-modal-btn-beatclone');
     if (modalBeatcloneBtn) {
         modalBeatcloneBtn.href = globalFooterLinks.beatclone && globalFooterLinks.beatclone.trim() !== "" 
@@ -888,7 +839,7 @@ function updateCustomDropdownButtonUI(btnId, labelId, val, categoryType) {
 
 function buildCustomDropdownMenus() {
     const allTxt = translations[currentLanguage].filterAll;
-    
+
     const dLvlGenre = document.getElementById('dropdown-custom-lvl-genre');
     if (dLvlGenre) {
         dLvlGenre.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlGenre" data-value=""><span>${allTxt}</span></div>`;
@@ -992,6 +943,7 @@ function applyLanguagePack() {
         if (translations[currentLanguage][key]) el.placeholder = translations[currentLanguage][key];
     });
 
+    // Actualizar el texto dinámico por defecto del botón selector cuando no hay filtro o cambia el idioma
     const allTxt = translations[currentLanguage].filterAll;
     const btnLabelsMap = [
         { btn: 'btn-custom-lvl-genre', label: 'label-custom-lvl-genre' },
@@ -1025,11 +977,6 @@ try {
         levels = snap.val() ? Object.values(snap.val()) : [];
         chartsModule.renderLevelsTable();
         updateDashboardCounts();
-        
-        // Re-dibujar notificación cuando cargan o se actualizan los niveles para reflejar dificultades reales
-        if (latestActiveNotification) {
-            drawNotificationBanner(latestActiveNotification);
-        }
         hideLoadingOverlay();
     });
     onValue(ref(db, 'cosmetics'), (snap) => {
@@ -1055,7 +1002,7 @@ try {
         buildVisualAssetsGenresList();
         updateCMSHeaderIcons();
         chartsModule.renderLevelsTable();
-        
+
         if (latestActiveNotification) {
             drawNotificationBanner(latestActiveNotification);
         }
@@ -1142,22 +1089,22 @@ document.addEventListener('DOMContentLoaded', () => {
         stopAllMedia();
         document.getElementById('download-custom-modal')?.classList.add('hidden');
     });
-    
+
     document.getElementById('thanks-modal-btn-close')?.addEventListener('click', () => {
         stopAllMedia();
         document.getElementById('thanks-custom-modal')?.classList.add('hidden');
     });
-    
+
     document.getElementById('btn-close-boogie-modal')?.addEventListener('click', resetBoogieAuthModal);
     document.getElementById('btn-close-boogie-modal-x')?.addEventListener('click', resetBoogieAuthModal);
     document.getElementById('btn-cancel-exit-creator')?.addEventListener('click', () => document.getElementById('boogie-exit-modal')?.classList.add('hidden'));
     document.getElementById('btn-cancel-delete')?.addEventListener('click', () => document.getElementById('confirm-delete-modal')?.classList.add('hidden'));
     document.getElementById('btn-cancel-explicit')?.addEventListener('click', () => document.getElementById('explicit-warning-modal')?.classList.add('hidden'));
-    
+
     document.getElementById('btn-close-beatstar-modal')?.addEventListener('click', () => {
         const activeAudio = getActiveAudioElement();
         if (activeAudio) activeAudio.loop = false;
-        
+
         document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
         chartsModule.renderLevelsTable();
     });
@@ -1193,7 +1140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-opt-standard')?.addEventListener('click', () => {
         if (activeModalBeatstarChart) {
             activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Standard';
-            
+
             const modalArtContainer = document.getElementById('modal-edition-art-container');
             if (modalArtContainer) {
                 modalArtContainer.classList.remove('border-edition-deluxe');
@@ -1202,7 +1149,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const activeAudio = getActiveAudioElement();
             if (activeAudio) activeAudio.loop = false;
-            
+
             document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
             chartsModule.renderLevelsTable();
         }
@@ -1211,7 +1158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-opt-deluxe')?.addEventListener('click', () => {
         if (activeModalBeatstarChart) {
             activeChartSelectedEditions[activeModalBeatstarChart.id] = 'Deluxe';
-            
+
             const modalArtContainer = document.getElementById('modal-edition-art-container');
             if (modalArtContainer) {
                 modalArtContainer.classList.remove('border-edition-standard');
@@ -1220,7 +1167,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const activeAudio = getActiveAudioElement();
             if (activeAudio) activeAudio.loop = false;
-            
+
             document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
             chartsModule.renderLevelsTable();
         }
@@ -1231,7 +1178,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const parentSection = btn.parentElement.parentElement;
             const dateInput = parentSection?.querySelector('input[type="date"]');
-            
+
             if (dateInput) {
                 if (typeof dateInput.showPicker === 'function') {
                     dateInput.showPicker();
@@ -1300,4 +1247,3 @@ window.toggleBoogiePassword = function(inputId, btnElement) {
             }
         }
     }
-};
