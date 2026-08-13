@@ -18,6 +18,16 @@ import {
 import { initChartsModule } from "./charts.js";
 import { initSkinsModule } from "./skins.js";
 
+// Desactivar la restauración automática de scroll del navegador para esta sesión
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
+
+// Desplazar la ventana al inicio de forma inmediata al cargar la página
+window.addEventListener('load', () => {
+    window.scrollTo(0, 0);
+});
+
 // =========================================================
 // 1. DECLARACIÓN DE CONSTANTES Y VARIABLES DE ESTADO GLOBALES
 // =========================================================
@@ -501,7 +511,9 @@ function navigateTo(view, pushState = true) {
 
     if (view === 'cosmetics') resetCosmeticsSubmenuWorkspace();
     if (pushState) history.pushState({ view: view }, '', '');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Garantizar que la ventana y el scroll se muevan arriba inmediatamente
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 }
 
 function resetCosmeticsSubmenuWorkspace() {
