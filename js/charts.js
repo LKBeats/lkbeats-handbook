@@ -58,7 +58,7 @@ export function initChartsModule(context) {
     }
 
     function buildGenresSelector() {
-        const container = document.getElementById('lvl-genre-tags-container');
+        const container = document.getElementById('genres-container');
         if (!container) return;
         container.innerHTML = '';
         context.genreList.forEach(g => {
@@ -90,7 +90,7 @@ export function initChartsModule(context) {
     }
 
     function renderLevelsTable() {
-        const tbody = document.getElementById('levels-table-body');
+        const tbody = document.getElementById('levels-tbody');
         if (!tbody) return;
         tbody.innerHTML = '';
 
@@ -346,13 +346,13 @@ export function initChartsModule(context) {
     }
 
     function loadChartIntoForm(lvl) {
-        document.getElementById('lvlId').value = lvl.id || '';
+        document.getElementById('editingLvlId').value = lvl.id || '';
         document.getElementById('lvlSong').value = lvl.song || '';
         document.getElementById('lvlArtist').value = lvl.artist || '';
         document.getElementById('lvlDiff').value = lvl.diff || 'Normal';
         document.getElementById('lvlDiffDeluxe').value = lvl.diffDeluxe || 'Extreme';
         document.getElementById('lvlDate').value = lvl.date || '';
-        document.getElementById('lvlExplicit').checked = !!lvl.isExplicit;
+        document.getElementById('lvlHasExplicit').checked = !!lvl.isExplicit;
 
         const editionSelect = document.getElementById('lvlEditionMode');
         if (editionSelect) {
@@ -360,7 +360,7 @@ export function initChartsModule(context) {
             editionSelect.dispatchEvent(new Event('change'));
         }
 
-        const container = document.getElementById('lvl-genre-tags-container');
+        const container = document.getElementById('genres-container');
         if (container) {
             const currentGenres = (lvl.genre || '').split(' / ');
             container.querySelectorAll('.genre-pill-btn').forEach(btn => {
@@ -409,16 +409,16 @@ export function initChartsModule(context) {
         context.showLoadingOverlay();
 
         try {
-            const lvlId = document.getElementById('lvlId').value;
+            const lvlId = document.getElementById('editingLvlId').value;
             const song = document.getElementById('lvlSong').value.trim();
             const artist = document.getElementById('lvlArtist').value.trim();
             const diff = document.getElementById('lvlDiff').value;
             const diffDeluxe = document.getElementById('lvlDiffDeluxe').value;
             const date = document.getElementById('lvlDate').value;
-            const isExplicit = document.getElementById('lvlExplicit').checked;
+            const isExplicit = document.getElementById('lvlHasExplicit').checked;
             const editionMode = document.getElementById('lvlEditionMode').value;
 
-            const selectedGenres = Array.from(document.querySelectorAll('#lvl-genre-tags-container .active-genre-pill'))
+            const selectedGenres = Array.from(document.querySelectorAll('#genres-container .active-genre-pill'))
                 .map(el => el.dataset.genre)
                 .join(' / ');
 
@@ -426,8 +426,8 @@ export function initChartsModule(context) {
 
             const artFile = document.getElementById('lvlArtFile').files[0];
             const audioFile = document.getElementById('lvlAudioFile').files[0];
-            const zipFile = document.getElementById('lvlZipFile').files[0];
-            const zipDeluxeFile = document.getElementById('lvlZipDeluxeFile')?.files[0];
+            const zipFile = document.getElementById('lvlChartZipFile').files[0];
+            const zipDeluxeFile = document.getElementById('lvlChartZipFileDeluxe')?.files[0];
 
             let artUrl = existingLevel ? existingLevel.art : '';
             let audioUrl = existingLevel ? existingLevel.audio : '';
@@ -492,7 +492,7 @@ export function initChartsModule(context) {
             }
 
             document.getElementById('level-form').reset();
-            document.getElementById('lvlId').value = '';
+            document.getElementById('editingLvlId').value = '';
             buildGenresSelector();
             document.getElementById('lvlEditionMode').dispatchEvent(new Event('change'));
 
