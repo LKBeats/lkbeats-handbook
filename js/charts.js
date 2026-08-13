@@ -311,7 +311,21 @@ export function initChartsModule(state) {
         let filtered = sortAscendingByDate(levels);
 
         if (activeLvlGenreFilter) filtered = filtered.filter(l => l.genre && l.genre.toLowerCase().includes(activeLvlGenreFilter.toLowerCase()));
-        if (activeLvlDiffFilter) filtered = filtered.filter(l => (l.diff === activeLvlDiffFilter) || (l.diffDeluxe === activeLvlDiffFilter));
+        if (activeLvlDiffFilter) {
+            filtered = filtered.filter(l => {
+                const stdDiff = l.diff || 'Normal';
+                const dlxDiff = l.diffDeluxe || 'Extreme';
+                const editionMode = l.editionMode || (l.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
+
+                if (editionMode === 'Both') {
+                    return stdDiff === activeLvlDiffFilter || dlxDiff === activeLvlDiffFilter;
+                } else if (editionMode === 'Deluxe') {
+                    return dlxDiff === activeLvlDiffFilter;
+                } else {
+                    return stdDiff === activeLvlDiffFilter;
+                }
+            });
+        }
         if (activeLvlEditionFilter) filtered = filtered.filter(l => (l.editionMode === activeLvlEditionFilter) || (l.editionMode === 'Both') || (l.edition === activeLvlEditionFilter));
 
         const hasActiveFilters = activeLvlGenreFilter || activeLvlDiffFilter || activeLvlEditionFilter;
