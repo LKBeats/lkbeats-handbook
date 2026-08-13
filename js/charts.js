@@ -2,7 +2,11 @@ import { ref, set, remove } from "https://www.gstatic.com/firebasejs/10.8.0/fire
 import { db, uploadFileToCloudflareR2, deleteFileFromCloudflareR2 } from "./services.js";
 import { translations } from "./i18n.js";
 import { toggleAudioPreviewEngine } from "./audio-player.js";
-import { createOrUpdateNotification } from "./notifications-manager.js";
+import { 
+         createOrUpdateNotification, 
+         checkAndDeleteNotifOnRecordDelete, 
+         checkAndDeleteNotifOnZipDelete 
+} from "./notifications-manager.js";
 
 export function initChartsModule(state) {
     const {
@@ -779,6 +783,12 @@ export function initChartsModule(state) {
                             // 3. Eliminar de Firebase
                             await remove(ref(db, 'levels/' + lvl.id));
 
+                            // 4. ACTUALIZAR FECHA DE ÚLTIMA ACTUALIZACIÓN AUTOMÁTICAMENTE
+                            await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
+
+                            // 5. Eliminar notificación si el chart borrado contaba con una activa
+                            await checkAndDeleteNotifOnRecordDelete('chart');
+
                             // 4. Reiniciar formulario
                             resetLevelFormState();
                         } catch (err) {
@@ -818,18 +828,42 @@ export function initChartsModule(state) {
             const genre = selectedGenres.join(' / ');
 
             // 1. Borrados reales en Cloudflare R2 si se confirmó el botón "Borrar Archivo"
-            if (pendingDeletes.art && existingLvl.art) { await deleteFileFromCloudflareR2(existingLvl.art); existingLvl.art = ""; }
-            if (pendingDeletes.audio && existingLvl.audioDirectUrl) { await deleteFileFromCloudflareR2(existingLvl.audioDirectUrl); existingLvl.audioDirectUrl = ""; }
-            if (pendingDeletes.videoStd && existingLvl.video) { await deleteFileFromCloudflareR2(existingLvl.video); existingLvl.video = ""; }
-            if (pendingDeletes.zipStd && existingLvl.chartDirectUrl) { await deleteFileFromCloudflareR2(existingLvl.chartDirectUrl); existingLvl.chartDirectUrl = ""; }
-            if (pendingDeletes.videoDlx && existingLvl.videoDeluxe) { await deleteFileFromCloudflareR2(existingLvl.videoDeluxe); existingLvl.videoDeluxe = ""; }
-            if (pendingDeletes.zipDlx && existingLvl.chartDirectUrlDeluxe) { await deleteFileFromCloudflareR2(existingLvl.chartDirectUrlDeluxe); existingLvl.chartDirectUrlDeluxe = ""; }
+            if (pendingDeletes.art && existingLvl.art) {
+                await deleteFileFromCloudflareR2(existingLvl.art); existingLvl.art = ""; }
 
-            if (pendingDeletes.audioExp && existingLvl.audioExplicit) { await deleteFileFromCloudflareR2(existingLvl.audioExplicit); existingLvl.audioExplicit = ""; }
-            if (pendingDeletes.videoExpStd && existingLvl.videoExplicit) { await deleteFileFromCloudflareR2(existingLvl.videoExplicit); existingLvl.videoExplicit = ""; }
-            if (pendingDeletes.zipExpStd && existingLvl.zipExplicit) { await deleteFileFromCloudflareR2(existingLvl.zipExplicit); existingLvl.zipExplicit = ""; }
-            if (pendingDeletes.videoExpDlx && existingLvl.videoDeluxeExplicit) { await deleteFileFromCloudflareR2(existingLvl.videoDeluxeExplicit); existingLvl.videoDeluxeExplicit = ""; }
-            if (pendingDeletes.zipExpDlx && existingLvl.zipDeluxeExplicit) { await deleteFileFromCloudflareR2(existingLvl.zipDeluxeExplicit); existingLvl.zipDeluxeExplicit = ""; }
+            if (pendingDeletes.audio && existingLvl.audioDirectUrl) {
+                await deleteFileFromCloudflareR2(existingLvl.audioDirectUrl); existingLvl.audioDirectUrl = ""; }
+
+            if (pendingDeletes.videoStd && existingLvl.video) {
+                await deleteFileFromCloudflareR2(existingLvl.video); existingLvl.video = ""; }
+
+            if (pendingDeletes.zipStd && existingLvl.chartDirectUrl) {
+                await deleteFileFromCloudflareR2(existingLvl.chartDirectUrl); existingLvl.chartDirectUrl = "";
+                await checkAndDeleteNotifOnZipDelete('chart'); }
+
+            if (pendingDeletes.videoDlx && existingLvl.videoDeluxe) {
+                await deleteFileFromCloudflareR2(existingLvl.videoDeluxe); existingLvl.videoDeluxe = ""; }
+
+            if (pendingDeletes.zipDlx && existingLvl.chartDirectUrlDeluxe) {
+                await deleteFileFromCloudflareR2(existingLvl.chartDirectUrlDeluxe); existingLvl.chartDirectUrlDeluxe = "";
+                await checkAndDeleteNotifOnZipDelete('chart'); }
+
+            if (pendingDeletes.audioExp && existingLvl.audioExplicit) {
+                await deleteFileFromCloudflareR2(existingLvl.audioExplicit); existingLvl.audioExplicit = ""; }
+
+            if (pendingDeletes.videoExpStd && existingLvl.videoExplicit) {
+                await deleteFileFromCloudflareR2(existingLvl.videoExplicit); existingLvl.videoExplicit = ""; }
+
+            if (pendingDeletes.zipExpStd && existingLvl.zipExplicit) {
+                await deleteFileFromCloudflareR2(existingLvl.zipExplicit); existingLvl.zipExplicit = "";
+                await checkAndDeleteNotifOnZipDelete('chart'); }
+
+            if (pendingDeletes.videoExpDlx && existingLvl.videoDeluxeExplicit) {
+                await deleteFileFromCloudflareR2(existingLvl.videoDeluxeExplicit); existingLvl.videoDeluxeExplicit = ""; }
+
+            if (pendingDeletes.zipExpDlx && existingLvl.zipDeluxeExplicit) {
+                await deleteFileFromCloudflareR2(existingLvl.zipDeluxeExplicit); existingLvl.zipDeluxeExplicit = "";
+                await checkAndDeleteNotifOnZipDelete('chart'); }
 
             // 2. Subida de nuevos archivos si fueron seleccionados
             let art = existingLvl.art || '';
