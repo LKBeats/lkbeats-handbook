@@ -66,6 +66,11 @@ export function stopGlobalAudioPreview() {
 export function startRadialCanvasVisualizer(canvas, analyser, containerElement, themeColor = "#d946ef") {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+
+    if (analyser) {
+        analyser.smoothingTimeConstant = 0.82;
+    }
+
     const bufferLength = analyser.frequencyBinCount;
     if (!audioDataArray || audioDataArray.length !== bufferLength) {
         audioDataArray = new Uint8Array(bufferLength);
@@ -92,7 +97,9 @@ export function startRadialCanvasVisualizer(canvas, analyser, containerElement, 
         analyser.getByteFrequencyData(audioDataArray);
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        currentRotationAngle += 0.008;
+        
+        // Velocidad de giro reducida a 0.0035 para igualar la rotación suave de Beatstar
+        currentRotationAngle += 0.0035;
 
         const barCount = 64;
         for (let i = 0; i < barCount; i++) {
@@ -102,11 +109,12 @@ export function startRadialCanvasVisualizer(canvas, analyser, containerElement, 
             const dataIndex = Math.floor((targetIndex / (barCount / 2)) * (bufferLength * 0.7));
             const rawValue = audioDataArray[dataIndex] || 0;
 
+            // Ajuste de sensibilidad contenido proporcional al video de Beatstar
             let barHeight = (rawValue / 255);
             if (dataIndex < 8) {
-                barHeight = Math.pow(barHeight, 1.2) * 16;
+                barHeight = Math.pow(barHeight, 1.2) * 11;
             } else {
-                barHeight = Math.pow(barHeight, 1.3) * 14;
+                barHeight = Math.pow(barHeight, 1.3) * 9.5;
             }
 
             const startX = centerX + Math.cos(angle) * radius;
