@@ -326,9 +326,9 @@ function updateBannerContent(activeNotif, meta, banner, content) {
                     </div>
                 </div>
 
-                <div class="flex flex-col items-end gap-1 sm:gap-2 shrink-0">
+                <div class="flex flex-col items-end gap-1 sm:gap-2 shrink-0 -mr-2 sm:-mr-4">
                     <div class="flex items-center justify-end">
-                        <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-5 sm:h-10 object-contain">
+                        <img src="${platformLogo}" alt="${activeNotif.platform}" class="h-7 sm:h-14 object-contain">
                     </div>
                     ${manualNavMarkup}
                 </div>
