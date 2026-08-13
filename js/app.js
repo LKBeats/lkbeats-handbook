@@ -93,12 +93,19 @@ function renderNotifGenresBadgesHtml(rawGenre) {
     }).join(' ');
 }
 
-function getSingleDiffTagHtml(diffVal) {
+function getSingleDiffTagHtml(diffVal, isEn = false) {
     let color = '#71717a';
     let label = diffVal || 'Normal';
 
-    if (diffVal === 'Hard') color = '#f97316';
-    else if (diffVal === 'Extreme') color = '#ef4444';
+    if (diffVal === 'Hard') {
+        color = '#f97316';
+        label = isEn ? 'Hard' : 'Difícil';
+    } else if (diffVal === 'Extreme') {
+        color = '#ef4444';
+        label = isEn ? 'Extreme' : 'Extremo';
+    } else if (diffVal === 'Normal') {
+        label = isEn ? 'Normal' : 'Normal';
+    }
 
     const dynamicAsset = globalVisualAssets[`diff_${diffVal}`];
     const graphicMarkup = dynamicAsset
@@ -113,7 +120,7 @@ function getSingleDiffTagHtml(diffVal) {
     `;
 }
 
-function renderNotifDiffTagHtml(diffVal, editionVal, diffDeluxeVal) {
+function renderNotifDiffTagHtml(diffVal, editionVal, diffDeluxeVal, isEn = false) {
     const isDual = editionVal === 'Both' || editionVal === 'Standard + Deluxe';
 
     if (isDual) {
@@ -122,14 +129,14 @@ function renderNotifDiffTagHtml(diffVal, editionVal, diffDeluxeVal) {
 
         return `
             <div class="inline-flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
-                ${getSingleDiffTagHtml(stdDiff)}
-                ${getSingleDiffTagHtml(dlxDiff)}
+                ${getSingleDiffTagHtml(stdDiff, isEn)}
+                ${getSingleDiffTagHtml(dlxDiff, isEn)}
             </div>
         `;
     }
 
     const currentDiff = (editionVal === 'Deluxe') ? (diffDeluxeVal || diffVal || 'Hard') : (diffVal || 'Normal');
-    return getSingleDiffTagHtml(currentDiff);
+    return getSingleDiffTagHtml(currentDiff, isEn);
 }
 
 function renderNotifEditionTagHtml(editionVal) {
@@ -317,7 +324,7 @@ function updateBannerContent(activeNotif, meta, banner, content) {
                     </div>
                     <!-- Fila 2: Dificultad (Standard / Deluxe correspondiente) -->
                     <div class="flex items-center justify-end gap-1 sm:gap-1.5">
-                        ${renderNotifDiffTagHtml(finalDiff, finalEdition, finalDiffDeluxe)}
+                        ${renderNotifDiffTagHtml(finalDiff, finalEdition, finalDiffDeluxe, isEn)}
                     </div>
                     <!-- Fila 3: Ediciones -->
                     <div class="flex items-center justify-end gap-1 sm:gap-1.5">
