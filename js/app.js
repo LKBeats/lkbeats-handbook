@@ -190,6 +190,11 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
 
     banner.classList.remove('hidden');
 
+    // Reaccionar con la animación CSS de entrada
+    content.classList.remove('anim-notif-enter');
+    void content.offsetWidth; // Forzar reflow del DOM
+    content.classList.add('anim-notif-enter');
+
     // Remover elementos previos adjuntos directo al banner (botón X y barra de progreso)
     document.getElementById('btn-banner-delete-x')?.remove();
     document.getElementById('notif-progress-container')?.remove();
