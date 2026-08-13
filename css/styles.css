@@ -111,11 +111,16 @@
     animation: slideDownIn 0.35s ease-out forwards;
 }
 
+@keyframes notifProgress {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
 .notif-progress-bar {
-    height: 2px;
-    background-color: rgba(255, 255, 255, 0.9);
     width: 0%;
-    transition: width 0.1s linear;
+    height: 100%;
+    background: linear-gradient(to right, #f97316, #d946ef, #facc15);
+    animation: notifProgress 15s linear infinite;
 }
 
 /* Modales ajustados para evitar cubrir toda la pantalla y espacio muerto */
