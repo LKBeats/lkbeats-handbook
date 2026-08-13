@@ -119,7 +119,7 @@
 .notif-progress-bar {
     width: 0%;
     height: 100%;
-    background: linear-gradient(to right, #f97316, #d946ef, #facc15);
+    background: #ffffff;
     animation: notifProgress 15s linear infinite;
 }
 
