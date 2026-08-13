@@ -57,7 +57,7 @@ export const translations = {
         skinExclusiveLabel: "Exclusivo del Handbook",
         btnMoreInfo: "Más información",
         btnShowLess: "Mostrar menos",
-        selectEditionPrompt: "EDITIONS",
+        selectEditionPrompt: "EDICIONES",
         explicitModalTitle: "¿Habilitar versión sin censura?",
         explicitModalNotice: "AVISO: Esta canción puede incluir contenido sensible no apto para todo público.",
         btnActivate: "Habilitar",
