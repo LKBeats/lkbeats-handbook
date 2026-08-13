@@ -888,7 +888,7 @@ function updateCustomDropdownButtonUI(btnId, labelId, val, categoryType) {
 
         const imgAsset = globalVisualAssets[`diff_${val}`];
         const graphicEl = imgAsset
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${color}'); mask-image: url('${imgAsset}');"></span>`
+            ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
             : `<i class="fa-solid fa-layer-group text-[10px]"></i>`;
 
         label.innerHTML = `${graphicEl} <span class="truncate">${displayLabel}</span>`;
@@ -1197,6 +1197,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('download-modal-btn-confirm')?.addEventListener('click', () => {
+        // Detiene todos los audios/videos activos en charts y skins
+        stopAllMedia();
+
         if (currentActiveDownloadUrl) {
             window.open(currentActiveDownloadUrl, '_blank');
         }
