@@ -177,6 +177,9 @@ function renderNotifEditionTagHtml(editionVal) {
     `;
 }
 
+// Constante de 7 días en milisegundos
+const SEVEN_DAYS_IN_MS = 7 * 24 * 60 * 60 * 1000;
+
 function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
     const banner = document.getElementById('home-notification-banner');
     const content = document.getElementById('notif-banner-content');
@@ -188,6 +191,18 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
         return;
     }
 
+    // Verificar si la notificación sobrepasó los 7 días desde su creación
+    const rawDate = activeNotif.createdAt || activeNotif.timestamp;
+    if (rawDate) {
+        const notifTime = typeof rawDate === 'number' ? rawDate : new Date(rawDate).getTime();
+        const now = Date.now();
+
+        if (!isNaN(notifTime) && (now - notifTime > SEVEN_DAYS_IN_MS)) {
+            banner.classList.add('hidden');
+            return;
+        }
+    }
+
     banner.classList.remove('hidden');
 
     // Aplicar animación de salida antes de cambiar el contenido si ya tenía elementos
@@ -197,7 +212,7 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
         
         setTimeout(() => {
             updateBannerContent(activeNotif, meta, banner, content);
-        }, 300); // Espera a que termine la animación de salida (300ms)
+        }, 300);
         return;
     }
 
