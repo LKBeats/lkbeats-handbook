@@ -190,6 +190,24 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
 
     banner.classList.remove('hidden');
 
+    // Aplicar animación de salida antes de cambiar el contenido si ya tenía elementos
+    if (content.innerHTML.trim() !== "") {
+        content.classList.remove('anim-notif-enter');
+        content.classList.add('anim-notif-leave');
+        
+        setTimeout(() => {
+            updateBannerContent(activeNotif, meta, banner, content);
+        }, 300); // Espera a que termine la animación de salida (300ms)
+        return;
+    }
+
+    updateBannerContent(activeNotif, meta, banner, content);
+}
+
+function updateBannerContent(activeNotif, meta, banner, content) {
+    content.classList.remove('anim-notif-leave');
+    content.classList.add('anim-notif-enter');
+
     // Reaccionar con la animación CSS de entrada
     content.classList.remove('anim-notif-enter');
     void content.offsetWidth; // Forzar reflow del DOM
