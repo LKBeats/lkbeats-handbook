@@ -596,19 +596,21 @@
                             </div>
                         </div>
 
+                        <!-- SECCIÓN EXPLÍCITA CORREGIDA CON IDs COMPLETOS Y DESACOPLADOS -->
                         <div id="section-explicit-fields" class="hidden space-y-3 bg-red-950/20 p-2.5 rounded-xl border border-red-500/40">
                             <div class="font-black text-red-400 uppercase tracking-wider text-[11px] pb-1 border-b border-red-500/30 flex items-center gap-1.5">
                                 <span class="w-3.5 h-3.5 bg-red-600 text-white rounded flex items-center justify-center text-[9px] font-black">E</span> <span data-i18n="lblExplicitSectionHeader">Datos Sin Censura / Explicit</span>
                             </div>
 
-                            <div class="space-y-1 bg-black/40 p-2 rounded-lg border border-red-950">
+                            <div id="sub-section-explicit-audio" class="space-y-1 bg-black/40 p-2 rounded-lg border border-red-950">
                                 <label class="text-[10px] font-bold text-red-400 block mb-1" data-i18n="lblExpAudioStd">Upload Audio Preview (Uncensored)</label>
                                 <div id="slot-lvl-audio-exp">
                                     <input type="file" id="lvlAudioFileExplicit" accept="audio/*" class="w-full bg-[#05020a] border border-red-950 p-1 rounded text-zinc-400">
                                 </div>
                             </div>
 
-                            <div class="space-y-2 border-b border-red-950/60 pb-2">
+                            <!-- SUBSECCIÓN STANDARD EXPLÍCITA CON ID ASIGNADA -->
+                            <div id="sub-section-explicit-standard" class="space-y-2 border-b border-red-950/60 pb-2">
                                 <span class="font-extrabold text-zinc-300 text-[10px] uppercase">Standard (Explicit)</span>
                                 <div class="grid grid-cols-2 gap-2">
                                     <input type="number" id="lvlNotesExplicit" placeholder="Notas" data-i18n-ph="formNotes" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-zinc-100">
@@ -643,6 +645,7 @@
                                 <input type="url" id="lvlDl3Explicit" class="w-full bg-[#05020a] border border-red-950 p-1.5 rounded text-[10px]" placeholder="beatcharts Explicit URL">
                             </div>
 
+                            <!-- SUBSECCIÓN DELUXE EXPLÍCITA -->
                             <div id="sub-section-explicit-deluxe" class="space-y-2">
                                 <span class="font-extrabold text-yellow-400 text-[10px] uppercase">Deluxe (Explicit)</span>
                                 <div class="grid grid-cols-2 gap-2">
@@ -930,7 +933,7 @@
                                         <th class="p-4 text-center w-48 sm:w-64 align-middle" data-i18n="thPreview">Preview</th>
                                         <th class="p-4 text-center w-60 sm:w-64 min-w-[170px] align-middle" data-i18n="thDlLinks">Descarga</th>
                                         <th class="p-4 text-center w-24 creator-action-header hidden align-middle" data-i18n="thActions">Acciones</th>
-                                    </tr>
+                                </tr>
                                 </thead>
                                 <tbody id="tbody-beatstar" class="divide-y-2 divide-fuchsia-900/40 text-xs"></tbody>
                             </table>
