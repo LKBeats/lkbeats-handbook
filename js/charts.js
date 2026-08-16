@@ -118,7 +118,7 @@ export function initChartsModule(state) {
         }
     }
 
-    // Sincroniza la visibilidad de los campos explícitos según el modo de edición seleccionado y el checkbox de explícito
+    // Sincroniza estrictamente la visibilidad de las subsecciones de contenido explícito según el modo de edición seleccionado
     function syncExplicitFieldsVisibility() {
         const editionMode = document.getElementById('lvlEditionMode')?.value || 'Standard';
         const hasExplicit = document.getElementById('lvlHasExplicit')?.checked || false;
@@ -141,6 +141,7 @@ export function initChartsModule(state) {
             subSectionExplicitStd?.classList.remove('hidden');
             subSectionExplicitDlx?.classList.remove('hidden');
         } else {
+            // Modo Standard
             subSectionExplicitStd?.classList.remove('hidden');
             subSectionExplicitDlx?.classList.add('hidden');
         }
