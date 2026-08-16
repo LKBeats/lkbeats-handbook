@@ -118,6 +118,34 @@ export function initChartsModule(state) {
         }
     }
 
+    // Sincroniza la visibilidad de los campos explícitos según el modo de edición seleccionado y el checkbox de explícito
+    function syncExplicitFieldsVisibility() {
+        const editionMode = document.getElementById('lvlEditionMode')?.value || 'Standard';
+        const hasExplicit = document.getElementById('lvlHasExplicit')?.checked || false;
+
+        const sectionExplicit = document.getElementById('section-explicit-fields');
+        const subSectionExplicitStd = document.getElementById('sub-section-explicit-standard');
+        const subSectionExplicitDlx = document.getElementById('sub-section-explicit-deluxe');
+
+        if (!hasExplicit) {
+            sectionExplicit?.classList.add('hidden');
+            return;
+        }
+
+        sectionExplicit?.classList.remove('hidden');
+
+        if (editionMode === 'Deluxe') {
+            subSectionExplicitStd?.classList.add('hidden');
+            subSectionExplicitDlx?.classList.remove('hidden');
+        } else if (editionMode === 'Both') {
+            subSectionExplicitStd?.classList.remove('hidden');
+            subSectionExplicitDlx?.classList.remove('hidden');
+        } else {
+            subSectionExplicitStd?.classList.remove('hidden');
+            subSectionExplicitDlx?.classList.add('hidden');
+        }
+    }
+
     function resetLevelFormState() {
         const form = document.getElementById('level-form');
         if (form) form.reset();
@@ -150,7 +178,8 @@ export function initChartsModule(state) {
 
         document.getElementById('section-standard-fields')?.classList.remove('hidden');
         document.getElementById('section-deluxe-fields')?.classList.add('hidden');
-        document.getElementById('section-explicit-fields')?.classList.add('hidden');
+
+        syncExplicitFieldsVisibility();
 
         // Limpiar botones de borrado dinámicos
         document.querySelectorAll('.btn-slot-delete').forEach(btn => btn.remove());
@@ -641,7 +670,6 @@ export function initChartsModule(state) {
                 const editionModeSelect = document.getElementById('lvlEditionMode');
                 const sectionStandard = document.getElementById('section-standard-fields');
                 const sectionDeluxe = document.getElementById('section-deluxe-fields');
-                const subSectionExplicitDeluxe = document.getElementById('sub-section-explicit-deluxe');
 
                 // Regla de bloqueo de versión registrada
                 const currentEditMode = lvl.editionMode || (lvl.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
@@ -661,15 +689,12 @@ export function initChartsModule(state) {
                 if (currentEditMode === 'Deluxe') {
                     sectionStandard?.classList.add('hidden');
                     sectionDeluxe?.classList.remove('hidden');
-                    subSectionExplicitDeluxe?.classList.remove('hidden');
                 } else if (currentEditMode === 'Both') {
                     sectionStandard?.classList.remove('hidden');
                     sectionDeluxe?.classList.remove('hidden');
-                    subSectionExplicitDeluxe?.classList.remove('hidden');
                 } else {
                     sectionStandard?.classList.remove('hidden');
                     sectionDeluxe?.classList.add('hidden');
-                    subSectionExplicitDeluxe?.classList.add('hidden');
                 }
 
                 document.getElementById('lvlDiff').value = lvl.diff || 'Hard';
@@ -693,9 +718,7 @@ export function initChartsModule(state) {
                 document.getElementById('lvlIsExclusive').checked = !!lvl.isExclusive;
                 document.getElementById('lvlHasExplicit').checked = !!lvl.hasExplicit;
                 
-                const sectionExplicit = document.getElementById('section-explicit-fields');
                 if (lvl.hasExplicit) {
-                    sectionExplicit?.classList.remove('hidden');
                     document.getElementById('lvlNotesExplicit').value = lvl.notesExplicit || '';
                     document.getElementById('lvlDurationExplicit').value = lvl.durationExplicit || '';
                     document.getElementById('lvlDateExplicit').value = lvl.dateExplicit || '';
@@ -709,9 +732,9 @@ export function initChartsModule(state) {
                     document.getElementById('lvlDl1DeluxeExplicit').value = lvl.dl1DeluxeExplicit || '';
                     document.getElementById('lvlDl2DeluxeExplicit').value = lvl.dl2DeluxeExplicit || '';
                     document.getElementById('lvlDl3DeluxeExplicit').value = lvl.dl3DeluxeExplicit || '';
-                } else {
-                    sectionExplicit?.classList.add('hidden');
                 }
+
+                syncExplicitFieldsVisibility();
 
                 // Configuración de slots para los botones de Borrar Archivo / Borrar Fecha
                 setupFileOrDeleteSlot('slot-lvl-art', !!lvl.art, 'art');
@@ -1006,28 +1029,24 @@ export function initChartsModule(state) {
         const val = e.target.value;
         const sectionStandard = document.getElementById('section-standard-fields');
         const sectionDeluxe = document.getElementById('section-deluxe-fields');
-        const subSectionExplicitDeluxe = document.getElementById('sub-section-explicit-deluxe');
 
         if (val === 'Deluxe') {
             sectionStandard?.classList.add('hidden');
             sectionDeluxe?.classList.remove('hidden');
-            subSectionExplicitDeluxe?.classList.remove('hidden');
         } else if (val === 'Both') {
             sectionStandard?.classList.remove('hidden');
             sectionDeluxe?.classList.remove('hidden');
-            subSectionExplicitDeluxe?.classList.remove('hidden');
         } else {
             sectionStandard?.classList.remove('hidden');
             sectionDeluxe?.classList.add('hidden');
-            subSectionExplicitDeluxe?.classList.add('hidden');
         }
+
+        syncExplicitFieldsVisibility();
         validateFormStateAndCheckChanges();
     });
 
-    document.getElementById('lvlHasExplicit')?.addEventListener('change', (e) => {
-        const sectionExplicit = document.getElementById('section-explicit-fields');
-        if (e.target.checked) sectionExplicit?.classList.remove('hidden');
-        else sectionExplicit?.classList.add('hidden');
+    document.getElementById('lvlHasExplicit')?.addEventListener('change', () => {
+        syncExplicitFieldsVisibility();
         validateFormStateAndCheckChanges();
     });
 
