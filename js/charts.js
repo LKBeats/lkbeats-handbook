@@ -118,7 +118,7 @@ export function initChartsModule(state) {
         }
     }
 
-    // Sincroniza estrictamente la visibilidad de las subsecciones de contenido explícito según el modo de edición seleccionado
+    // Sincroniza de forma estricta e incondicional las subsecciones explícitas según el modo de edición activo
     function syncExplicitFieldsVisibility() {
         const editionMode = document.getElementById('lvlEditionMode')?.value || 'Standard';
         const hasExplicit = document.getElementById('lvlHasExplicit')?.checked || false;
@@ -135,15 +135,33 @@ export function initChartsModule(state) {
         sectionExplicit?.classList.remove('hidden');
 
         if (editionMode === 'Deluxe') {
-            subSectionExplicitStd?.classList.add('hidden');
-            subSectionExplicitDlx?.classList.remove('hidden');
+            if (subSectionExplicitStd) {
+                subSectionExplicitStd.classList.add('hidden');
+                subSectionExplicitStd.style.display = 'none';
+            }
+            if (subSectionExplicitDlx) {
+                subSectionExplicitDlx.classList.remove('hidden');
+                subSectionExplicitDlx.style.display = '';
+            }
         } else if (editionMode === 'Both') {
-            subSectionExplicitStd?.classList.remove('hidden');
-            subSectionExplicitDlx?.classList.remove('hidden');
+            if (subSectionExplicitStd) {
+                subSectionExplicitStd.classList.remove('hidden');
+                subSectionExplicitStd.style.display = '';
+            }
+            if (subSectionExplicitDlx) {
+                subSectionExplicitDlx.classList.remove('hidden');
+                subSectionExplicitDlx.style.display = '';
+            }
         } else {
             // Modo Standard
-            subSectionExplicitStd?.classList.remove('hidden');
-            subSectionExplicitDlx?.classList.add('hidden');
+            if (subSectionExplicitStd) {
+                subSectionExplicitStd.classList.remove('hidden');
+                subSectionExplicitStd.style.display = '';
+            }
+            if (subSectionExplicitDlx) {
+                subSectionExplicitDlx.classList.add('hidden');
+                subSectionExplicitDlx.style.display = 'none';
+            }
         }
     }
 
