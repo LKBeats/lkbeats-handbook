@@ -1029,6 +1029,7 @@ export function initChartsModule(state) {
                     artOrIcon: art || 'free_song_Image.png',
                     genre: genre,
                     diff: document.getElementById('lvlDiff').value,
+                    diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
                     edition: editionMode
                 });
             } else if (zipAddedToExisting) {
@@ -1040,6 +1041,7 @@ export function initChartsModule(state) {
                     artOrIcon: art || 'free_song_Image.png',
                     genre: genre,
                     diff: document.getElementById('lvlDiff').value,
+                    diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
                     edition: editionMode
                 });
             }

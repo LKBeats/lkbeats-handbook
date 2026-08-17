@@ -41,26 +41,57 @@ export function setCreatorModeInNotifications(isCreator) {
 export async function createOrUpdateNotification(category, data) {
     if (!category || !data) return;
 
-    const notifPayload = {
-        id: category,
-        category: category,
-        type: data.type || 'new',
-        artOrIcon: data.artOrIcon || '',
-        timestamp: Date.now(),
-        // Específico para charts
-        song: data.song || null,
-        artist: data.artist || null,
-        genre: data.genre || null,
-        diff: data.diff || null,
-        diffDeluxe: data.diffDeluxe || null,
-        edition: data.edition || null,
-        // Específico para skins
-        skinName: data.skinName || null,
-        platform: data.platform || null
-    };
+    try {
+        const notifRef = ref(db, 'notifications');
+        const snapshot = await get(notifRef);
+        const existingData = snapshot.val() || {};
 
-    const targetRef = ref(db, `notifications/${category}`);
-    await set(targetRef, notifPayload);
+        let targetId = null;
+
+        // Si es una actualización de ZIP, buscamos si existe una notificación activa previa para el mismo elemento
+        if (data.type === 'zip') {
+            for (const key of Object.keys(existingData)) {
+                const item = existingData[key];
+                if (item.category === category) {
+                    if (category === 'chart' && item.song === data.song && item.artist === data.artist) {
+                        targetId = key;
+                        break;
+                    } else if (category === 'skin' && item.skinName === data.skinName && item.platform === data.platform) {
+                        targetId = key;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Si no se encontró una notificación activa que corresponda (o es de tipo 'new'), se crea un ID único
+        if (!targetId) {
+            targetId = `${category}_${Date.now()}`;
+        }
+
+    const notifPayload = {
+            id: targetId,
+            category: category,
+            type: data.type || 'new',
+            artOrIcon: data.artOrIcon || '',
+            timestamp: Date.now(),
+            // Específico para charts
+            song: data.song || null,
+            artist: data.artist || null,
+            genre: data.genre || null,
+            diff: data.diff || null,
+            diffDeluxe: data.diffDeluxe || null,
+            edition: data.edition || null,
+            // Específico para skins
+            skinName: data.skinName || null,
+            platform: data.platform || null
+        };
+
+        const targetRef = ref(db, `notifications/${targetId}`);
+        await set(targetRef, notifPayload);
+    } catch (err) {
+        console.error("Error al crear/actualizar notificación:", err);
+    }
 }
 
 export async function deleteNotificationManually(category) {
