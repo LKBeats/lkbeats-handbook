@@ -1,43 +1,9 @@
-import { ref, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { ref, set, get, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 import { db } from "./services.js";
 
-let notificationsList = [];
-let currentIndex = 0;
-let rotationIntervalId = null;
-let onNotificationChangeCallback = null;
-let isCreatorModeActive = false;
-
-export function subscribeToNotifications(callback, isCreatorMode = false) {
-    onNotificationChangeCallback = callback;
-    isCreatorModeActive = isCreatorMode;
-
-    const notifRef = ref(db, 'notifications');
-    onValue(notifRef, (snapshot) => {
-        const data = snapshot.val();
-        if (!data) {
-            notificationsList = [];
-            currentIndex = 0;
-            triggerCallback();
-            stopRotationTimer();
-            return;
-        }
-
-        notificationsList = Object.values(data);
-        if (currentIndex >= notificationsList.length) {
-            currentIndex = 0;
-        }
-
-        triggerCallback();
-        manageRotationTimer();
-    });
-}
-
-export function setCreatorModeInNotifications(isCreator) {
-    isCreatorModeActive = isCreator;
-    manageRotationTimer();
-    triggerCallback();
-}
-
+/**
+ * Crea o actualiza una notificación activa en Firebase.
+ */
 export async function createOrUpdateNotification(category, data) {
     if (!category || !data) return;
 
@@ -48,7 +14,7 @@ export async function createOrUpdateNotification(category, data) {
 
         let targetId = null;
 
-        // Si es una actualización de ZIP, buscamos si existe una notificación activa previa para el mismo elemento
+        // Si es una actualización de ZIP, buscamos la notificación activa del MISMO elemento
         if (data.type === 'zip') {
             for (const key of Object.keys(existingData)) {
                 const item = existingData[key];
@@ -64,25 +30,23 @@ export async function createOrUpdateNotification(category, data) {
             }
         }
 
-        // Si no se encontró una notificación activa que corresponda (o es de tipo 'new'), se crea un ID único
+        // Si no se encontró o es un nuevo registro, generamos un ID único
         if (!targetId) {
             targetId = `${category}_${Date.now()}`;
         }
 
-    const notifPayload = {
+        const notifPayload = {
             id: targetId,
             category: category,
             type: data.type || 'new',
             artOrIcon: data.artOrIcon || '',
             timestamp: Date.now(),
-            // Específico para charts
             song: data.song || null,
             artist: data.artist || null,
             genre: data.genre || null,
             diff: data.diff || null,
             diffDeluxe: data.diffDeluxe || null,
             edition: data.edition || null,
-            // Específico para skins
             skinName: data.skinName || null,
             platform: data.platform || null
         };
@@ -94,97 +58,74 @@ export async function createOrUpdateNotification(category, data) {
     }
 }
 
-export async function deleteNotificationManually(category) {
-    if (!category) return;
-    const targetRef = ref(db, `notifications/${category}`);
-    await remove(targetRef);
-}
+/**
+ * Elimina la notificación específica vinculada a un registro cuando este es borrado.
+ */
+export async function checkAndDeleteNotifOnRecordDelete(category, recordData = {}) {
+    if (!category || !db) return;
 
-export async function checkAndDeleteNotifOnRecordDelete(category, recordIdentifier) {
-    if (!category) return;
     try {
-        const targetRef = ref(db, `notifications/${category}`);
-        const snapshot = await get(targetRef);
-        if (snapshot.exists()) {
-            const notifData = snapshot.val();
-            if (
-                !recordIdentifier ||
-                notifData.song === recordIdentifier ||
-                notifData.skinName === recordIdentifier ||
-                notifData.artOrIcon === recordIdentifier
-            ) {
-                await remove(targetRef);
+        const notifRef = ref(db, 'notifications');
+        const snapshot = await get(notifRef);
+        const existingData = snapshot.val() || {};
+
+        for (const key of Object.keys(existingData)) {
+            const item = existingData[key];
+            if (item.category === category) {
+                let matches = false;
+
+                if (category === 'chart' && recordData.song && recordData.artist) {
+                    if (item.song === recordData.song && item.artist === recordData.artist) {
+                        matches = true;
+                    }
+                } else if (category === 'skin' && recordData.skinName && recordData.platform) {
+                    if (item.skinName === recordData.skinName && item.platform === recordData.platform) {
+                        matches = true;
+                    }
+                }
+
+                if (matches) {
+                    await remove(ref(db, `notifications/${key}`));
+                }
             }
         }
     } catch (err) {
-        console.error("Error al verificar/eliminar notificación asociada:", err);
+        console.error("Error al eliminar notificación asociada al registro:", err);
     }
 }
 
-export async function checkAndDeleteNotifOnZipDelete(category, recordIdentifier) {
-    if (!category) return;
+/**
+ * Elimina la notificación de tipo 'zip' asociada únicamente al registro cuyo archivo ZIP fue borrado.
+ */
+export async function checkAndDeleteNotifOnZipDelete(category, recordData = {}) {
+    if (!category || !db) return;
+
     try {
-        const targetRef = ref(db, `notifications/${category}`);
-        const snapshot = await get(targetRef);
-        if (snapshot.exists()) {
-            const notifData = snapshot.val();
-            if (
-                notifData.type === 'available' &&
-                (!recordIdentifier || notifData.song === recordIdentifier || notifData.skinName === recordIdentifier)
-            ) {
-                await remove(targetRef);
+        const notifRef = ref(db, 'notifications');
+        const snapshot = await get(notifRef);
+        const existingData = snapshot.val() || {};
+
+        for (const key of Object.keys(existingData)) {
+            const item = existingData[key];
+            if (item.category === category && item.type === 'zip') {
+                let matches = false;
+
+                if (category === 'chart' && recordData.song && recordData.artist) {
+                    if (item.song === recordData.song && item.artist === recordData.artist) {
+                        matches = true;
+                    }
+                } else if (category === 'skin' && recordData.skinName && recordData.platform) {
+                    if (item.skinName === recordData.skinName && item.platform === recordData.platform) {
+                        matches = true;
+                    }
+                }
+
+                if (matches) {
+                    await remove(ref(db, `notifications/${key}`));
+                }
             }
         }
     } catch (err) {
-        console.error("Error al verificar/eliminar notificación de zip:", err);
+        console.error("Error al eliminar notificación ZIP:", err);
     }
-}
-
-export function nextNotification() {
-    if (notificationsList.length <= 1) return;
-    currentIndex = (currentIndex + 1) % notificationsList.length;
-    triggerCallback();
-    if (!isCreatorModeActive) restartRotationTimer();
-}
-
-export function previousNotification() {
-    if (notificationsList.length <= 1) return;
-    currentIndex = (currentIndex - 1 + notificationsList.length) % notificationsList.length;
-    triggerCallback();
-    if (!isCreatorModeActive) restartRotationTimer();
-}
-
-function triggerCallback() {
-    if (typeof onNotificationChangeCallback === 'function') {
-        const activeNotif = notificationsList.length > 0 ? notificationsList[currentIndex] : null;
-        onNotificationChangeCallback(activeNotif, {
-            totalActive: notificationsList.length,
-            currentIndex: currentIndex
-        });
-    }
-}
-
-function manageRotationTimer() {
-    stopRotationTimer();
-    if (!isCreatorModeActive && notificationsList.length > 1) {
-        startRotationTimer();
-    }
-}
-
-function startRotationTimer() {
-    rotationIntervalId = setInterval(() => {
-        nextNotification();
-    }, 15000);
-}
-
-function stopRotationTimer() {
-    if (rotationIntervalId) {
-        clearInterval(rotationIntervalId);
-        rotationIntervalId = null;
-    }
-}
-
-function restartRotationTimer() {
-    stopRotationTimer();
-    startRotationTimer();
 }

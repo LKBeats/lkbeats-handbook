@@ -559,8 +559,11 @@ export function initSkinsModule(state) {
                             // 4. ACTUALIZAR FECHA DE ÚLTIMA ACTUALIZACIÓN AUTOMÁTICAMENTE
                             await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
 
-                            // 5. Eliminar notificación si la skin borrada contaba con una activa
-                            await checkAndDeleteNotifOnRecordDelete('skin');
+                            // 5. Eliminar notificación específica vinculada a esta skin borrada
+                            await checkAndDeleteNotifOnRecordDelete('skin', {
+                                skinName: cos.name,
+                                platform: cos.platform
+                            });
 
                             // 6. Reiniciar formulario
                             resetCosmeticFormState();
@@ -764,9 +767,12 @@ export function initSkinsModule(state) {
                 await set(ref(db, 'cosmetics/' + id), data);
                 await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
 
-                // Eliminar notificación de tipo ZIP si se eliminó el archivo .zip de la skin
+                // Eliminar notificación de tipo ZIP específica si se eliminó el archivo .zip de esta skin
                 if (isZipDeleted) {
-                    await checkAndDeleteNotifOnZipDelete('skin');
+                    await checkAndDeleteNotifOnZipDelete('skin', {
+                        skinName: data.name,
+                        platform: currentSelectedSkinSubPlatform
+                    });
                 }
 
                 // Registro automático de notificación
