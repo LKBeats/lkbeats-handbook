@@ -1,56 +1,85 @@
 import { ref, set, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 import { db, uploadFileToCloudflareR2, deleteFileFromCloudflareR2 } from "./services.js";
 import { translations } from "./i18n.js";
+import { toggleAudioPreviewEngine } from "./audio-player.js";
 import { 
-    createOrUpdateNotification, 
-    checkAndDeleteNotifOnRecordDelete, 
-    checkAndDeleteNotifOnZipDelete,
-    getActiveNotificationsList
+         createOrUpdateNotification, 
+         checkAndDeleteNotifOnRecordDelete, 
+         checkAndDeleteNotifOnZipDelete 
 } from "./notifications-manager.js";
 
 export function initChartsModule(state) {
     const {
+        genreList,
         getLevels,
         getCurrentLanguage,
         getIsCreatorMode,
         getGlobalVisualAssets,
-        getCurrentEditionModeFilter,
+        getActiveChartSelectedEditions,
+        getActiveChartExplicitStates,
+        getActiveAudioElement,
+        getAudioAnalyser,
+        startRadialCanvasVisualizer,
         showLoadingOverlay,
         hideLoadingOverlay,
+        stopAllMedia,
         triggerDownloadAlert,
+        openBeatstarEditionSelectionModal,
         formatStringToDMY,
         renderVideoPlayerMarkup,
         setupNativeVideoBehavior,
-        requestUserDeleteConfirmation,
-        audioPlayer,
-        currentPlayingSongId,
-        setCurrentPlayingSongId,
-        updateSongPlayButtons
+        requestUserDeleteConfirmation
     } = state;
 
-    let activeGenreFilter = "";
-    let isDeluxeModeActiveInTable = false;
-    let isExplicitModeActiveInTable = false;
+    let activeLvlGenreFilter = "";
+    let activeLvlDiffFilter = "";
+    let activeLvlEditionFilter = "";
 
+    let pendingExplicitActivationChartId = null;
+
+    // Estado para gestionar los borrados diferidos de archivos y fechas
     let pendingDeletes = {
         art: false,
-        dateStd: false,
-        dateDlx: false,
-        dateExpStd: false,
-        dateExpDlx: false,
-        audioStd: false,
-        zipStd: false,
+        audio: false,
         videoStd: false,
-        audioExp: false,
-        zipExp: false,
-        videoExp: false,
-        zipDlx: false,
+        zipStd: false,
+        dateStd: false,
         videoDlx: false,
+        zipDlx: false,
+        dateDlx: false,
+        audioExp: false,
+        videoExpStd: false,
+        zipExpStd: false,
+        dateExpStd: false,
+        videoExpDlx: false,
         zipExpDlx: false,
-        videoExpDlx: false
+        dateExpDlx: false
     };
 
-    function setupChartFileOrDeleteSlot(slotId, hasExisting, keyName, isDate = false) {
+    function buildGenresSelector() {
+        const container = document.getElementById('genres-container');
+        if (!container) return;
+        container.innerHTML = '';
+
+        genreList.forEach(g => {
+            const item = document.createElement('label');
+            item.className = "flex items-center gap-3 p-1.5 hover:bg-zinc-900 rounded cursor-pointer text-zinc-300";
+            item.innerHTML = `
+                <input type="checkbox" name="lvlGenres" value="${g.label}" class="genre-checkbox accent-fuchsia-500">
+                <span class="w-3.5 h-3.5 rounded-full inline-block shrink-0 shadow" style="background-color: ${g.color}"></span>
+                <span class="font-extrabold text-sm text-zinc-200">${g.label}</span>
+            `;
+            item.querySelector('input').addEventListener('change', (e) => {
+                const checked = document.querySelectorAll('.genre-checkbox:checked');
+                if (checked.length > 2) e.target.checked = false;
+                validateFormStateAndCheckChanges();
+            });
+            container.appendChild(item);
+        });
+    }
+
+    // Configura un slot para alternar entre el file/date input y el botón de borrado diferido
+    function setupFileOrDeleteSlot(slotId, hasExisting, keyName, isDate = false) {
         const slot = document.getElementById(slotId);
         if (!slot) return;
 
@@ -89,15 +118,63 @@ export function initChartsModule(state) {
         }
     }
 
+    // Sincroniza de forma estricta e incondicional las subsecciones explícitas según el modo de edición activo
+    function syncExplicitFieldsVisibility() {
+        const editionMode = document.getElementById('lvlEditionMode')?.value || 'Standard';
+        const hasExplicit = document.getElementById('lvlHasExplicit')?.checked || false;
+
+        const sectionExplicit = document.getElementById('section-explicit-fields');
+        const subSectionExplicitStd = document.getElementById('sub-section-explicit-standard');
+        const subSectionExplicitDlx = document.getElementById('sub-section-explicit-deluxe');
+
+        if (!hasExplicit) {
+            sectionExplicit?.classList.add('hidden');
+            return;
+        }
+
+        sectionExplicit?.classList.remove('hidden');
+
+        if (editionMode === 'Deluxe') {
+            if (subSectionExplicitStd) {
+                subSectionExplicitStd.classList.add('hidden');
+                subSectionExplicitStd.style.display = 'none';
+            }
+            if (subSectionExplicitDlx) {
+                subSectionExplicitDlx.classList.remove('hidden');
+                subSectionExplicitDlx.style.display = '';
+            }
+        } else if (editionMode === 'Both') {
+            if (subSectionExplicitStd) {
+                subSectionExplicitStd.classList.remove('hidden');
+                subSectionExplicitStd.style.display = '';
+            }
+            if (subSectionExplicitDlx) {
+                subSectionExplicitDlx.classList.remove('hidden');
+                subSectionExplicitDlx.style.display = '';
+            }
+        } else {
+            // Modo Standard
+            if (subSectionExplicitStd) {
+                subSectionExplicitStd.classList.remove('hidden');
+                subSectionExplicitStd.style.display = '';
+            }
+            if (subSectionExplicitDlx) {
+                subSectionExplicitDlx.classList.add('hidden');
+                subSectionExplicitDlx.style.display = 'none';
+            }
+        }
+    }
+
     function resetLevelFormState() {
         const form = document.getElementById('level-form');
         if (form) form.reset();
 
-        document.getElementById('editingId').value = '';
+        document.getElementById('editingLvlId').value = '';
+        
         Object.keys(pendingDeletes).forEach(k => pendingDeletes[k] = false);
 
+        const submitBtn = document.getElementById('lvlSubmitBtn');
         const lang = getCurrentLanguage();
-        const submitBtn = document.getElementById('submitBtn');
         if (submitBtn) {
             const textSpan = submitBtn.querySelector('span');
             if (textSpan) textSpan.innerText = translations[lang].btnRegister;
@@ -106,30 +183,43 @@ export function initChartsModule(state) {
             submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
         }
 
+        document.getElementById('lvlArtPreviewBox')?.classList.add('hidden');
         document.getElementById('lvlIsComingSoon').value = "false";
         document.getElementById('lvlIsExclusive').checked = false;
-        document.getElementById('hasExplicitToggle').checked = false;
+        document.getElementById('lvlHasExplicit').checked = false;
         
-        document.getElementById('section-deluxe-fields').classList.add('hidden');
-        document.getElementById('section-explicit-fields').classList.add('hidden');
-        document.getElementById('sub-section-explicit-deluxe').classList.add('hidden');
+        const editionModeSelect = document.getElementById('lvlEditionMode');
+        if (editionModeSelect) {
+            editionModeSelect.value = "Standard";
+            editionModeSelect.disabled = false;
+            Array.from(editionModeSelect.options).forEach(opt => opt.disabled = false);
+        }
 
+        document.getElementById('section-standard-fields')?.classList.remove('hidden');
+        document.getElementById('section-deluxe-fields')?.classList.add('hidden');
+
+        syncExplicitFieldsVisibility();
+
+        // Limpiar botones de borrado dinámicos
         document.querySelectorAll('.btn-slot-delete').forEach(btn => btn.remove());
         document.querySelectorAll('#level-form input[type="file"], #level-form input[type="date"]').forEach(inp => inp.classList.remove('hidden'));
+
+        buildGenresSelector();
     }
 
-    function validateFormStateAndCheckChanges() {
-        const submitBtn = document.getElementById('submitBtn');
+        function validateFormStateAndCheckChanges() {
+        const submitBtn = document.getElementById('lvlSubmitBtn');
         if (!submitBtn) return;
 
-        const editingId = document.getElementById('editingId').value;
+        const editingId = document.getElementById('editingLvlId').value;
         const song = document.getElementById('lvlSong').value.trim();
         const artist = document.getElementById('lvlArtist').value.trim();
-        const genre = document.getElementById('lvlGenre').value.trim();
+        const selectedGenres = document.querySelectorAll('.genre-checkbox:checked');
 
-        const hasRequired = song !== "" && artist !== "" && genre !== "";
+        const hasRequired = song !== "" && artist !== "" && selectedGenres.length > 0;
 
         if (!editingId) {
+            // Modo Registrar
             if (hasRequired) {
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -138,6 +228,7 @@ export function initChartsModule(state) {
                 submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
             }
         } else {
+            // Modo Guardar Cambios: evaluar si cambió respecto a la base de datos
             const existingLvl = getLevels().find(l => l.id === editingId);
             if (!existingLvl || !hasRequired) {
                 submitBtn.disabled = true;
@@ -151,31 +242,37 @@ export function initChartsModule(state) {
             const changed = hasPendingDelete || hasNewFile ||
                 song !== (existingLvl.song || '') ||
                 artist !== (existingLvl.artist || '') ||
-                genre !== (existingLvl.genre || '') ||
                 document.getElementById('lvlEditionMode').value !== (existingLvl.editionMode || 'Standard') ||
-                document.getElementById('lvlIsExclusive').checked !== !!existingLvl.isExclusive ||
-                document.getElementById('hasExplicitToggle').checked !== !!existingLvl.hasExplicit ||
-                document.getElementById('lvlDiff').value !== (existingLvl.diff || '') ||
+                document.getElementById('lvlDiff').value !== (existingLvl.diff || 'Hard') ||
                 document.getElementById('lvlNotes').value !== (existingLvl.notes || '') ||
                 document.getElementById('lvlDuration').value !== (existingLvl.duration || '') ||
                 document.getElementById('lvlDate').value !== (existingLvl.date || '') ||
                 document.getElementById('lvlDl1').value !== (existingLvl.dl1 || '') ||
                 document.getElementById('lvlDl2').value !== (existingLvl.dl2 || '') ||
                 document.getElementById('lvlDl3').value !== (existingLvl.dl3 || '') ||
-                document.getElementById('lvlDiffDeluxe').value !== (existingLvl.diffDeluxe || '') ||
+                document.getElementById('lvlDiffDeluxe').value !== (existingLvl.diffDeluxe || 'Extreme') ||
                 document.getElementById('lvlNotesDeluxe').value !== (existingLvl.notesDeluxe || '') ||
                 document.getElementById('lvlDurationDeluxe').value !== (existingLvl.durationDeluxe || '') ||
                 document.getElementById('lvlDateDeluxe').value !== (existingLvl.dateDeluxe || '') ||
                 document.getElementById('lvlDl1Deluxe').value !== (existingLvl.dl1Deluxe || '') ||
                 document.getElementById('lvlDl2Deluxe').value !== (existingLvl.dl2Deluxe || '') ||
                 document.getElementById('lvlDl3Deluxe').value !== (existingLvl.dl3Deluxe || '') ||
-                // Corrección 1: Evaluación de campos explícitos sin URLs de descarga explícitas
+                document.getElementById('lvlIsExclusive').checked !== !!existingLvl.isExclusive ||
+                document.getElementById('lvlHasExplicit').checked !== !!existingLvl.hasExplicit ||
+                // --- EVALUACIÓN DE CAMPOS EXPLÍCITOS STANDARD ---
                 (document.getElementById('lvlNotesExplicit')?.value || '') !== (existingLvl.notesExplicit || '') ||
                 (document.getElementById('lvlDurationExplicit')?.value || '') !== (existingLvl.durationExplicit || '') ||
                 (document.getElementById('lvlDateExplicit')?.value || '') !== (existingLvl.dateExplicit || '') ||
+                (document.getElementById('lvlDl1Explicit')?.value || '') !== (existingLvl.dl1Explicit || '') ||
+                (document.getElementById('lvlDl2Explicit')?.value || '') !== (existingLvl.dl2Explicit || '') ||
+                (document.getElementById('lvlDl3Explicit')?.value || '') !== (existingLvl.dl3Explicit || '') ||
+                // --- EVALUACIÓN DE CAMPOS EXPLÍCITOS DELUXE ---
                 (document.getElementById('lvlNotesDeluxeExplicit')?.value || '') !== (existingLvl.notesDeluxeExplicit || '') ||
                 (document.getElementById('lvlDurationDeluxeExplicit')?.value || '') !== (existingLvl.durationDeluxeExplicit || '') ||
-                (document.getElementById('lvlDateDeluxeExplicit')?.value || '') !== (existingLvl.dateDeluxeExplicit || '');
+                (document.getElementById('lvlDateDeluxeExplicit')?.value || '') !== (existingLvl.dateDeluxeExplicit || '') ||
+                (document.getElementById('lvlDl1DeluxeExplicit')?.value || '') !== (existingLvl.dl1DeluxeExplicit || '') ||
+                (document.getElementById('lvlDl2DeluxeExplicit')?.value || '') !== (existingLvl.dl2DeluxeExplicit || '') ||
+                (document.getElementById('lvlDl3DeluxeExplicit')?.value || '') !== (existingLvl.dl3DeluxeExplicit || '');
 
             if (changed) {
                 submitBtn.disabled = false;
@@ -187,194 +284,331 @@ export function initChartsModule(state) {
         }
     }
 
+    function renderGenresBadgesHtml(raw) {
+        if (!raw) return '';
+        const globalVisualAssets = getGlobalVisualAssets();
+        return raw.split(' / ').map(g => {
+            const trimmed = g.trim();
+            const matched = genreList.find(item => item.label.toLowerCase() === trimmed.toLowerCase());
+            const color = matched ? matched.color : '#f97316';
+            
+            const safeKey = trimmed.replace('/', '');
+            const dynamicAssetSrc = globalVisualAssets[`genre_${safeKey}`];
+            
+            const graphicElement = dynamicAssetSrc 
+                ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
+                : `<span class="w-2 h-2 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
+
+            return `
+                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-black" style="color:${color}; border-color:${color}40; background:${color}10">
+                    ${graphicElement}
+                    <span class="inline truncate">${trimmed}</span>
+                </div>
+            `;
+        }).join(' ');
+    }
+
+    function renderDifficultyTagMarkup(diffVal) {
+        const lang = getCurrentLanguage();
+        let label = translations[lang].diffNormal;
+        let color = '#71717a';
+        let styleClass = 'bg-zinc-500/10 border-zinc-500/30 text-zinc-400';
+
+        if (diffVal === 'Hard') {
+            label = translations[lang].diffHard;
+            color = '#f97316';
+            styleClass = 'bg-orange-500/10 border-orange-500/30 text-orange-400';
+        } else if (diffVal === 'Extreme') {
+            label = translations[lang].diffExtreme;
+            color = '#ef4444';
+            styleClass = 'bg-red-500/10 border-red-500/30 text-red-500';
+        }
+
+        const globalVisualAssets = getGlobalVisualAssets();
+        const dynamicAsset = globalVisualAssets[`diff_${diffVal}`];
+        const graphicMarkup = dynamicAsset
+            ? `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
+            : `<i class="fa-solid fa-layer-group"></i>`;
+
+        return `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${styleClass} font-black uppercase text-[10px]">${graphicMarkup} <span>${label}</span></div>`;
+    }
+
+    function renderEditionTagMarkup(editionVal) {
+        const globalVisualAssets = getGlobalVisualAssets();
+        const isDeluxe = editionVal === 'Deluxe';
+        const color = isDeluxe ? '#facc15' : '#71717a';
+        const label = editionVal || 'Standard';
+        const glowClass = isDeluxe ? 'glow-gold' : '';
+
+        const dynamicAsset = globalVisualAssets[`edit_${editionVal}`];
+        const graphicMarkup = dynamicAsset
+            ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
+            : `<i class="fa-solid fa-star text-[10px]"></i>`;
+
+        return `
+            <div class="inline-flex items-center justify-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-black uppercase tracking-wider ${glowClass}" style="color:${color}; border-color:${color}50; background:${color}15" title="${label}">
+                ${graphicMarkup}
+                <span>${label}</span>
+            </div>
+        `;
+    }
+
+    function sortAscendingByDate(arr) {
+        return [...arr].sort((a, b) => {
+            if (!a.date && !b.date) return 0;
+            if (!a.date) return 1;  
+            if (!b.date) return -1; 
+            return new Date(a.date) - new Date(b.date);
+        });
+    }
+
     function renderLevelsTable() {
-        const tbody = document.getElementById('tbody-levels');
-        if (!tbody) return;
+        const tbody = document.getElementById('levels-tbody');
+        if (!tbody) return; 
 
         const lang = getCurrentLanguage();
         const isCreatorMode = getIsCreatorMode();
         const globalVisualAssets = getGlobalVisualAssets();
-        const currentEditionModeFilter = getCurrentEditionModeFilter();
+        const activeChartSelectedEditions = getActiveChartSelectedEditions();
+        const activeChartExplicitStates = getActiveChartExplicitStates();
         const levels = getLevels();
 
-        // Corrección 4: Obtener notificaciones activas para comparar e inyectar insignia
-        const activeNotifications = (typeof getActiveNotificationsList === 'function') ? getActiveNotificationsList() : [];
+        const fragment = document.createDocumentFragment();
+        let filtered = sortAscendingByDate(levels);
 
-        let filtered = [...levels];
+        if (activeLvlGenreFilter) filtered = filtered.filter(l => l.genre && l.genre.toLowerCase().includes(activeLvlGenreFilter.toLowerCase()));
+        if (activeLvlDiffFilter) {
+            filtered = filtered.filter(l => {
+                const stdDiff = l.diff || 'Normal';
+                const dlxDiff = l.diffDeluxe || 'Extreme';
+                const editionMode = l.editionMode || (l.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
 
-        if (currentEditionModeFilter !== 'All') {
-            filtered = filtered.filter(l => (l.editionMode || 'Standard') === currentEditionModeFilter);
+                if (editionMode === 'Both') {
+                    return stdDiff === activeLvlDiffFilter || dlxDiff === activeLvlDiffFilter;
+                } else if (editionMode === 'Deluxe') {
+                    return dlxDiff === activeLvlDiffFilter;
+                } else {
+                    return stdDiff === activeLvlDiffFilter;
+                }
+            });
         }
+        if (activeLvlEditionFilter) filtered = filtered.filter(l => (l.editionMode === activeLvlEditionFilter) || (l.editionMode === 'Both') || (l.edition === activeLvlEditionFilter));
 
-        if (activeGenreFilter) {
-            filtered = filtered.filter(l => l.genre && l.genre.toLowerCase().includes(activeGenreFilter.toLowerCase()));
-        }
-
-        const counterEl = document.getElementById('counter-levels');
-        if (counterEl) {
-            const hasFilter = currentEditionModeFilter !== 'All' || activeGenreFilter;
-            counterEl.innerText = hasFilter ? `Charts: ${filtered.length}` : `Total: ${levels.length} Charts`;
+        const hasActiveFilters = activeLvlGenreFilter || activeLvlDiffFilter || activeLvlEditionFilter;
+        const counterLbl = document.getElementById('lbl-counter-charts');
+        if (counterLbl) {
+            counterLbl.innerText = hasActiveFilters ? `Charts: ${filtered.length}` : `Total: ${levels.length} Charts`;
         }
 
         if (filtered.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="6" class="p-8 text-center">
-                        <div class="flex flex-col items-center justify-center gap-3">
-                            <img src="1455064703448645786.gif" alt="Boogie" class="w-28 h-auto">
-                            <p class="text-sm font-extrabold text-zinc-300 font-sans tracking-wide">${translations[lang].noSongsBoogie}</p>
-                        </div>
-                    </td>
-                </tr>
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td colspan="5" class="p-8 text-center">
+                    <div class="flex flex-col items-center justify-center gap-3">
+                        <img src="1455064703448645786.gif" alt="Boogie" class="w-28 h-auto">
+                        <p class="text-sm font-extrabold text-zinc-300 font-sans tracking-wide">${translations[lang].noChartsBoogie}</p>
+                    </div>
+                </td>
             `;
+            tbody.innerHTML = '';
+            tbody.appendChild(tr);
             return;
         }
 
-        const frag = document.createDocumentFragment();
-
         filtered.forEach((lvl) => {
-            const isDeluxeActive = isDeluxeModeActiveInTable && (lvl.editionMode === 'Deluxe');
-            const isExplicitActive = isExplicitModeActiveInTable && lvl.hasExplicit;
-
-            // Corrección 4: Determinar si el chart tiene notificación activa
-            const hasActiveNotif = activeNotifications.some(n => 
-                n.category === 'chart' && 
-                n.song?.toLowerCase() === lvl.song?.toLowerCase() && 
-                n.artist?.toLowerCase() === lvl.artist?.toLowerCase()
-            );
-
-            const newBadgeImage = lang === 'en' ? 'New.png' : 'Nuevo.png';
-            const newBadgeMarkup = hasActiveNotif ? `
-                <img src="${newBadgeImage}" alt="New" class="absolute -top-2 -left-2 w-7 h-7 sm:w-9 sm:h-9 object-contain z-30 drop-shadow-lg pointer-events-none">
-            ` : '';
-
-            // Selección de datos según combinación de switches en tabla
-            let currentDiff = lvl.diff;
-            let currentNotes = lvl.notes;
-            let currentDuration = lvl.duration;
-            let currentDate = lvl.date;
-            let currentVideo = lvl.video;
-            let currentZip = lvl.chartDirectUrl;
-
-            // Corrección 1: Asignación limpia de links de descarga utilizando los principales
-            let currentDl1 = isDeluxeActive ? (lvl.dl1Deluxe || lvl.dl1) : lvl.dl1;
-            let currentDl2 = isDeluxeActive ? (lvl.dl2Deluxe || lvl.dl2) : lvl.dl2;
-            let currentDl3 = isDeluxeActive ? (lvl.dl3Deluxe || lvl.dl3) : lvl.dl3;
-
-            if (isDeluxeActive) {
-                currentDiff = lvl.diffDeluxe || lvl.diff;
-                currentNotes = lvl.notesDeluxe || lvl.notes;
-                currentDuration = lvl.durationDeluxe || lvl.duration;
-                currentDate = lvl.dateDeluxe || lvl.date;
-                currentVideo = lvl.videoDeluxe || lvl.video;
-                currentZip = lvl.chartDirectUrlDeluxe || lvl.chartDirectUrl;
+            const isDual = (lvl.editionMode === 'Both');
+            
+            if (!activeChartSelectedEditions[lvl.id]) {
+                activeChartSelectedEditions[lvl.id] = (lvl.editionMode === 'Deluxe') ? 'Deluxe' : 'Standard';
             }
 
-            if (isExplicitActive) {
-                if (isDeluxeActive) {
-                    currentNotes = lvl.notesDeluxeExplicit || currentNotes;
-                    currentDuration = lvl.durationDeluxeExplicit || currentDuration;
-                    currentDate = lvl.dateDeluxeExplicit || currentDate;
-                    currentVideo = lvl.videoDeluxeExplicit || currentVideo;
-                    currentZip = lvl.zipDeluxeExplicit || currentZip;
-                } else {
-                    currentNotes = lvl.notesExplicit || currentNotes;
-                    currentDuration = lvl.durationExplicit || currentDuration;
-                    currentDate = lvl.dateExplicit || currentDate;
-                    currentVideo = lvl.videoExplicit || currentVideo;
-                    currentZip = lvl.zipExplicit || currentZip;
-                }
-            }
+            const currentSelectedEdition = activeChartSelectedEditions[lvl.id];
+            const isDeluxeActive = (currentSelectedEdition === 'Deluxe');
+            const isExplicitActive = !!activeChartExplicitStates[lvl.id];
 
-            let activeAudioUrl = lvl.audioDirectUrl || '';
-            if (isExplicitActive && lvl.audioExplicit) {
-                activeAudioUrl = lvl.audioExplicit;
-            }
+            let currentDiffVal = isDeluxeActive ? (lvl.diffDeluxe || 'Extreme') : (lvl.diff || 'Normal');
+            let currentNotesVal = isExplicitActive 
+                ? (isDeluxeActive ? (lvl.notesDeluxeExplicit || lvl.notesExplicit || lvl.notesDeluxe || lvl.notes) : (lvl.notesExplicit || lvl.notes))
+                : (isDeluxeActive ? (lvl.notesDeluxe || lvl.notes) : lvl.notes);
+
+            let currentDurationVal = isExplicitActive
+                ? (isDeluxeActive ? (lvl.durationDeluxeExplicit || lvl.durationExplicit || lvl.durationDeluxe || lvl.duration) : (lvl.durationExplicit || lvl.duration))
+                : (isDeluxeActive ? (lvl.durationDeluxe || lvl.duration) : lvl.duration);
+
+            let currentDateVal = isExplicitActive
+                ? (isDeluxeActive ? (lvl.dateDeluxeExplicit || lvl.dateExplicit || lvl.dateDeluxe || lvl.date) : (lvl.dateExplicit || lvl.date))
+                : (isDeluxeActive ? (lvl.dateDeluxe || lvl.date) : lvl.date);
+
+            let currentAudioUrl = isExplicitActive
+                ? (lvl.audioExplicit || lvl.audioDirectUrl)
+                : lvl.audioDirectUrl;
+
+            let currentVideoUrl = isExplicitActive
+                ? (isDeluxeActive ? (lvl.videoDeluxeExplicit || lvl.videoExplicit || lvl.videoDeluxe || lvl.video) : (lvl.videoExplicit || lvl.video))
+                : (isDeluxeActive ? (lvl.videoDeluxe || lvl.video) : lvl.video);
+
+            let currentChartZip = isExplicitActive
+                ? (isDeluxeActive ? (lvl.zipDeluxeExplicit || lvl.zipExplicit || lvl.chartDirectUrlDeluxe || lvl.chartDirectUrl) : (lvl.zipExplicit || lvl.chartDirectUrl))
+                : (isDeluxeActive ? (lvl.chartDirectUrlDeluxe || lvl.chartDirectUrl) : lvl.chartDirectUrl);
+
+            let currentDl1 = isExplicitActive
+                ? (isDeluxeActive ? (lvl.dl1DeluxeExplicit || lvl.dl1Explicit || lvl.dl1Deluxe || lvl.dl1) : (lvl.dl1Explicit || lvl.dl1))
+                : (isDeluxeActive ? (lvl.dl1Deluxe || lvl.dl1) : lvl.dl1);
+
+            let currentDl2 = isExplicitActive
+                ? (isDeluxeActive ? (lvl.dl2DeluxeExplicit || lvl.dl2Explicit || lvl.dl2Deluxe || lvl.dl2) : (lvl.dl2Explicit || lvl.dl2))
+                : (isDeluxeActive ? (lvl.dl2Deluxe || lvl.dl2) : lvl.dl2);
+
+            let currentDl3 = isExplicitActive
+                ? (isDeluxeActive ? (lvl.dl3DeluxeExplicit || lvl.dl3Explicit || lvl.dl3Deluxe || lvl.dl3) : (lvl.dl3Explicit || lvl.dl3))
+                : (isDeluxeActive ? (lvl.dl3Deluxe || lvl.dl3) : lvl.dl3);
+
+            const activeAudio = (typeof getActiveAudioElement === 'function') ? getActiveAudioElement() : null;
+            const isThisAudioPlaying = activeAudio && !activeAudio.paused && activeAudio.dataset.url === currentAudioUrl;
+
+            const audioBtnIcon = isThisAudioPlaying ? 'fa-stop' : 'fa-play';
+            const artShapeClass = isThisAudioPlaying ? 'art-circle-shape art-container-circular' : '';
 
             const tr = document.createElement('tr');
-            tr.className = "hover:bg-purple-950/20 transition border-b-2 border-purple-900/50 shadow-sm";
+            tr.className = "hover:bg-fuchsia-950/20 transition border-b-2 border-fuchsia-900/50 shadow-sm";
 
-            let pMarkup = renderVideoPlayerMarkup(currentVideo, true);
+            let editionGraphicMarkup = '';
+            if (isDual) {
+                const dynamicStdAsset = globalVisualAssets[`edit_Standard`];
+                const dynamicDlxAsset = globalVisualAssets[`edit_Deluxe`];
 
-            const hasAnyLinks = currentZip || currentDl1 || currentDl2 || currentDl3;
-            let linksLayout = `<div class="flex flex-col gap-1 sm:gap-1.5 max-w-[150px] sm:max-w-[240px] mx-auto">`;
-            if (hasAnyLinks) {
-                if (currentZip) {
-                    linksLayout += `<button class="btn-direct-chart-download bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black uppercase flex items-center justify-center gap-1 sm:gap-1.5 shadow"><i class="fa-solid fa-circle-down"></i>${translations[lang].downloadDirectBtn}</button>`;
-                }
-                if (currentDl1) linksLayout += `<a href="${currentDl1}" target="_blank" class="bg-zinc-900 px-2 sm:px-4 py-1 sm:py-2 text-center rounded-lg sm:rounded-xl text-[9px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 sm:gap-1.5 hover:border-purple-500/40 transition"><img src="Discord_Logo.png" class="w-3 sm:w-3.5 h-3 sm:h-3.5 force-white-icon">Discord</a>`;
-                if (currentDl2) linksLayout += `<a href="${currentDl2}" target="_blank" class="bg-zinc-900 px-2 sm:px-4 py-1 sm:py-2 text-center rounded-lg sm:rounded-xl text-[9px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 sm:gap-1.5 hover:border-purple-500/40 transition"><img src="BSCM_Logo.png" class="w-3 sm:w-3.5 h-3 sm:h-3.5 force-white-icon">BSCM</a>`;
-                if (currentDl3) linksLayout += `<a href="${currentDl3}" target="_blank" class="bg-zinc-900 px-2 sm:px-4 py-1 sm:py-2 text-center rounded-lg sm:rounded-xl text-[9px] sm:text-xs font-black border border-zinc-800 flex items-center justify-center gap-1 sm:gap-1.5 hover:border-purple-500/40 transition"><img src="beatcharts_Logo.png" class="w-3 sm:w-3.5 h-3 sm:h-3.5 force-white-icon">beatcharts</a>`;
+                editionGraphicMarkup = `
+                    <div class="inline-flex items-center gap-1.5 flex-wrap">
+                        <div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400 font-black text-[10px] uppercase truncate">
+                            ${dynamicStdAsset ? `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: #71717a; -webkit-mask-image: url('${dynamicStdAsset}'); mask-image: url('${dynamicStdAsset}');"></span>` : ''}
+                            <span>Standard</span>
+                        </div>
+                        <div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded glow-gold bg-yellow-500/10 text-yellow-400 border border-yellow-500/40 font-black text-[10px] uppercase truncate">
+                            ${dynamicDlxAsset ? `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: #facc15; -webkit-mask-image: url('${dynamicDlxAsset}'); mask-image: url('${dynamicDlxAsset}');"></span>` : ''}
+                            <span>Deluxe</span>
+                        </div>
+                    </div>
+                `;
             } else {
-                linksLayout += `<span class="text-[9px] sm:text-[10px] font-extrabold text-zinc-500 text-center block px-1.5 py-1.5 bg-zinc-950 border border-zinc-900 rounded-lg sm:rounded-xl">${translations[lang].noDownloadsAvailable}</span>`;
+                const targetEditionHex = isDeluxeActive ? "#facc15" : "#71717a";
+                const editionContainerClass = isDeluxeActive ? "glow-gold bg-yellow-500/10 text-yellow-400 border border-yellow-500/40" : "bg-zinc-900 border border-zinc-800 text-zinc-400";
+                const dynamicEditionAsset = globalVisualAssets[isDeluxeActive ? `edit_Deluxe` : `edit_Standard`];
+
+                editionGraphicMarkup = dynamicEditionAsset
+                    ? `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${editionContainerClass} font-black text-[10px] uppercase truncate"><span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${targetEditionHex}; -webkit-mask-image: url('${dynamicEditionAsset}'); mask-image: url('${dynamicEditionAsset}');"></span><span>${isDeluxeActive ? 'Deluxe' : 'Standard'}</span></div>`
+                    : `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${editionContainerClass} font-black text-[10px] uppercase truncate"><span>${isDeluxeActive ? 'Deluxe' : 'Standard'}</span></div>`;
+            }
+
+            const hasAudio = !!currentAudioUrl;
+            const hasAnyLinks = currentChartZip || currentDl1 || currentDl2 || currentDl3;
+
+            let linksLayout = `<div class="flex flex-col gap-1 max-w-[130px] sm:max-w-[160px] mx-auto">`;
+            if (hasAnyLinks) {
+                if (currentChartZip) {
+                    linksLayout += `<button class="btn-direct-download-trigger bg-gradient-to-r from-emerald-500 to-teal-500 text-black px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-[11px] font-black uppercase flex items-center justify-center gap-1 shadow"><i class="fa-solid fa-circle-down"></i>${translations[lang].downloadDirectBtn}</button>`;
+                }
+                if (currentDl1) linksLayout += `<a href="${currentDl1}" target="_blank" class="bg-zinc-900 px-1.5 sm:px-2 py-0.5 sm:py-1 text-center rounded-lg text-[9px] sm:text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="Discord_Logo.png" class="w-2.5 sm:w-3 h-2.5 sm:h-3 force-white-icon">Discord</a>`;
+                if (currentDl2) linksLayout += `<a href="${currentDl2}" target="_blank" class="bg-zinc-900 px-1.5 sm:px-2 py-0.5 sm:py-1 text-center rounded-lg text-[9px] sm:text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="BSCM_Logo.png" class="w-2.5 sm:w-3 h-2.5 sm:h-3 force-white-icon">BSCM</a>`;
+                if (currentDl3) linksLayout += `<a href="${currentDl3}" target="_blank" class="bg-zinc-900 px-1.5 sm:px-2 py-0.5 sm:py-1 text-center rounded-lg text-[9px] sm:text-[10px] font-extrabold border border-zinc-800 flex items-center justify-center gap-1 hover:border-orange-500/40 transition"><img src="beatcharts_Logo.png" class="w-2.5 sm:w-3 h-2.5 sm:h-3 force-white-icon">beatcharts</a>`;
+            } else {
+                linksLayout += `<span class="text-[9px] sm:text-[10px] font-extrabold text-zinc-500 text-center block px-1.5 py-1 bg-zinc-950 border border-zinc-900 rounded-lg">${translations[lang].noDownloadsAvailable}</span>`;
             }
             linksLayout += `</div>`;
 
+            let pMarkup = renderVideoPlayerMarkup(currentVideoUrl, false);
+
             const exclusiveBadge = lvl.isExclusive ? `
-                <div class="mt-1 text-[10px] font-black text-amber-400 uppercase tracking-wider flex items-center gap-1 bg-amber-950/40 border border-amber-800/40 px-2 py-0.5 rounded-md w-max">
-                    <i class="fa-solid fa-star text-amber-400"></i> ${translations[lang].skinExclusiveLabel}
+                <div class="mt-1 text-[10px] font-black text-orange-400 uppercase tracking-wider flex items-center gap-1 bg-orange-950/40 border border-orange-800/40 px-2 py-0.5 rounded-md w-max">
+                    <i class="fa-solid fa-star text-orange-400"></i> ${translations[lang].chartExclusiveLabel}
                 </div>
             ` : '';
 
-            const isCurrentPlaying = (currentPlayingSongId === lvl.id);
-            const playIconClass = isCurrentPlaying ? 'fa-pause' : 'fa-play';
-            const playBtnColor = isCurrentPlaying ? 'bg-purple-600 text-white' : 'bg-black/70 text-white hover:bg-purple-600';
+            const artBoxBorderClass = isDeluxeActive ? "glow-gold border-2 border-yellow-400" : "border border-fuchsia-500/30";
 
-            const safeGenreKey = (lvl.genre || '').replace('/', '');
-            const genreAsset = globalVisualAssets[`genre_${safeGenreKey}`];
-            const genreGraphic = genreAsset 
-                ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: #a855f7; -webkit-mask-image: url('${genreAsset}'); mask-image: url('${genreAsset}');"></span>`
-                : `<span class="w-2 h-2 rounded-full inline-block shrink-0 bg-purple-500"></span>`;
+            const artOverlayBadgeDesktop = isDeluxeActive 
+                ? `<div class="hidden sm:block absolute bottom-1 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">DELUXE</div>`
+                : `<div class="hidden sm:block absolute bottom-1 left-1/2 -translate-x-1/2 bg-zinc-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-20 tracking-wider">STANDARD</div>`;
+
+            const artOverlayBadgeMobileExternal = isDeluxeActive
+                ? `<div class="block sm:hidden mt-1.5 text-center bg-yellow-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-md tracking-wider w-max mx-auto relative z-20">DELUXE</div>`
+                : `<div class="block sm:hidden mt-1.5 text-center bg-zinc-400 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-md tracking-wider w-max mx-auto relative z-20">STANDARD</div>`;
+
+            const explicitBtnStyle = isExplicitActive 
+                ? "bg-red-600 text-black border-red-500 glow-red" 
+                : "bg-black/80 text-zinc-400 border-zinc-700 hover:text-white";
+
+            const explicitButtonMarkup = (lvl.hasExplicit || isExplicitActive) ? `
+                <button class="btn-toggle-explicit-trigger absolute bottom-1 left-1 w-7 h-7 sm:w-8 sm:h-8 ${explicitBtnStyle} border rounded-full font-black text-xs sm:text-sm flex items-center justify-center shadow-2xl transition hover:scale-110 z-20" title="Versión sin censura">
+                    E
+                </button>
+            ` : '';
+
+            const targetAudioThemeColor = isDeluxeActive ? "#facc15" : "#d946ef";
 
             tr.innerHTML = `
                 <td class="p-2 sm:p-4 text-center align-middle">
-                    <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto shrink-0">
-                        <div class="w-full h-full border border-purple-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1">
-                            <img src="${lvl.art}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='free_song_Image.png'">
+                    <div class="flex flex-col items-center justify-center relative">
+                        <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto flex items-center justify-center shrink-0">
+                            <canvas class="absolute -inset-5 w-[calc(100%+2.5rem)] h-[calc(100%+2.5rem)] pointer-events-none z-0"></canvas>
+                            <div class="target-art-outer-container art-beatstar-transform ${isDual ? 'cursor-pointer hover:scale-105' : ''} ${artShapeClass} w-full h-full relative z-10 overflow-hidden rounded-xl ${artBoxBorderClass} shadow-lg shrink-0">
+                                <img src="${lvl.art}" class="target-lvl-art-img w-full h-full object-cover bg-zinc-900 transition-colors" onerror="this.src='free_song_Image.png'">
+                                ${artOverlayBadgeDesktop}
+                            </div>
+
+                            ${explicitButtonMarkup}
+
+                            ${hasAudio ? `
+                                <button class="btn-play-audio-preview absolute bottom-1 right-1 w-7 h-7 sm:w-8 sm:h-8 bg-black/90 border border-fuchsia-500 rounded-full text-fuchsia-400 flex items-center justify-center shadow-2xl transition hover:scale-110 z-20">
+                                    <i class="fa-solid ${audioBtnIcon} text-[10px]"></i>
+                                </button>
+                            ` : ''}
                         </div>
-                        ${newBadgeMarkup}
-                        ${activeAudioUrl ? `
-                            <button data-song-id="${lvl.id}" data-audio-url="${activeAudioUrl}" class="btn-play-preview absolute inset-0 m-auto w-10 h-10 sm:w-12 sm:h-12 ${playBtnColor} rounded-full flex items-center justify-center text-sm sm:text-base shadow-xl transition backdrop-blur-sm border border-white/20 z-20">
-                                <i class="fa-solid ${playIconClass}"></i>
-                            </button>
-                        ` : ''}
+                        ${artOverlayBadgeMobileExternal}
                     </div>
                 </td>
-                <td class="p-2 sm:p-4 min-w-[200px] sm:min-w-[320px] flex-1 align-middle">
+                <td class="p-2 sm:p-4 min-w-[220px] sm:min-w-[320px] flex-1 align-middle">
                     <ul class="space-y-2 list-none text-zinc-300 whitespace-normal break-words">
                         <li class="flex flex-col sm:flex-row sm:items-baseline">
-                            <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[lang].listName}:</span> 
+                            <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[lang].formSong} / ${translations[lang].formArtist}:</span> 
                             <div class="inline-block flex-1">
-                                <span class="text-white font-black tracking-wide text-base sm:text-xl">${lvl.song}</span>
+                                <span class="text-white font-black tracking-wide text-base sm:text-lg">${lvl.song}</span> 
+                                <span class="text-zinc-400 text-xs sm:text-sm font-medium"> - ${lvl.artist}</span>
                                 ${exclusiveBadge}
                             </div>
                         </li>
                         <li class="flex flex-col sm:flex-row sm:items-baseline">
-                            <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[lang].listArtist}:</span> 
-                            <span class="text-zinc-200 font-bold inline-block">${lvl.artist}</span>
+                            <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[lang].formGenre}:</span> 
+                            <div class="inline-flex flex-wrap gap-1">${renderGenresBadgesHtml(lvl.genre)}</div>
                         </li>
                         <li class="flex flex-col sm:flex-row sm:items-baseline">
-                            <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[lang].formGenre}:</span> 
-                            <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-black text-purple-400 border-purple-900/40 bg-purple-950/20">
-                                ${genreGraphic}
-                                <span class="inline truncate">${lvl.genre}</span>
+                            <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[lang].formDifficulty}:</span> 
+                            ${renderDifficultyTagMarkup(currentDiffVal)}
+                        </li>
+                        <li class="flex flex-col sm:flex-row sm:items-baseline">
+                            <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[lang].formEdition}:</span> 
+                            ${editionGraphicMarkup}
+                        </li>
+
+                        <li class="pt-1">
+                            <button type="button" class="btn-toggle-more-info text-[10px] sm:text-xs font-extrabold text-orange-400 hover:text-orange-300 flex items-center gap-1 bg-orange-950/30 border border-orange-900/40 px-2 py-1 rounded-lg transition">
+                                <span class="btn-more-info-label">${translations[lang].btnMoreInfo}</span>
+                                <i class="fa-solid fa-chevron-down text-[9px] transition-transform duration-200"></i>
+                            </button>
+                            <div class="extra-info-box hidden space-y-1.5 mt-2 bg-black/40 p-2.5 rounded-xl border border-fuchsia-950/40">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs w-20 shrink-0">${translations[lang].listNotes}:</span> 
+                                    <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${currentNotesVal || translations[lang].textComingSoon}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs w-20 shrink-0">${translations[lang].listDuration}:</span> 
+                                    <span class="text-zinc-200 font-extrabold text-xs sm:text-sm">${currentDurationVal || translations[lang].textComingSoon}</span>
+                                </div>
                             </div>
                         </li>
+
                         <li class="flex flex-col sm:flex-row sm:items-baseline">
-                            <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[lang].listDiff}:</span> 
-                            <span class="text-purple-400 font-black">${currentDiff || 'N/A'}</span>
-                        </li>
-                        <li class="flex flex-col sm:flex-row sm:items-baseline">
-                            <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[lang].listNotes}:</span> 
-                            <span class="text-zinc-300 font-bold">${currentNotes || 'N/A'}</span>
-                        </li>
-                        <li class="flex flex-col sm:flex-row sm:items-baseline">
-                            <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[lang].listDuration}:</span> 
-                            <span class="font-mono text-zinc-400 text-xs sm:text-sm">${currentDuration || 'N/A'}</span>
-                        </li>
-                        <li class="flex flex-col sm:flex-row sm:items-baseline">
-                            <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[lang].listRelease}:</span> 
-                            <span class="font-sans font-bold text-zinc-400 text-xs sm:text-sm">${formatStringToDMY(currentDate)}</span>
+                            <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[lang].formRelease}:</span> 
+                            <span class="font-sans font-bold text-zinc-400 text-xs sm:text-sm">${formatStringToDMY(currentDateVal)}</span>
                         </li>
                     </ul>
                 </td>
@@ -388,102 +622,191 @@ export function initChartsModule(state) {
                 </td>
             `;
 
-            setupNativeVideoBehavior(tr.querySelector('.custom-native-video-wrapper'));
-
-            if (currentZip) {
-                tr.querySelector('.btn-direct-chart-download')?.addEventListener('click', () => triggerDownloadAlert(currentZip));
+            if (isThisAudioPlaying) {
+                const canvas = tr.querySelector('canvas');
+                const containerBox = tr.querySelector('.target-art-outer-container');
+                const analyser = (typeof getAudioAnalyser === 'function') ? getAudioAnalyser() : null;
+                if (canvas && analyser && typeof startRadialCanvasVisualizer === 'function') {
+                    startRadialCanvasVisualizer(canvas, analyser, containerBox, targetAudioThemeColor);
+                }
             }
 
-            const playBtn = tr.querySelector('.btn-play-preview');
-            if (playBtn) {
-                playBtn.addEventListener('click', () => {
-                    const songId = playBtn.getAttribute('data-song-id');
-                    const url = playBtn.getAttribute('data-audio-url');
+            if (isDual) {
+                const artBox = tr.querySelector('.target-art-outer-container');
+                artBox?.addEventListener('click', () => {
+                    openBeatstarEditionSelectionModal(lvl);
+                    
+                    if (currentAudioUrl) {
+                        const modalCanvas = document.getElementById('modal-edition-canvas');
+                        const modalImg = document.getElementById('modal-edition-art-img');
+                        const modalContainer = document.getElementById('modal-edition-art-container');
+                        const targetColor = isDeluxeActive ? "#facc15" : "#d946ef";
 
-                    if (currentPlayingSongId === songId) {
-                        audioPlayer.pause();
-                        setCurrentPlayingSongId(null);
-                        updateSongPlayButtons();
-                    } else {
-                        audioPlayer.src = url;
-                        audioPlayer.play().then(() => {
-                            setCurrentPlayingSongId(songId);
-                            updateSongPlayButtons();
-                        }).catch(err => console.error("Error reproduciendo audio preview:", err));
+                        toggleAudioPreviewEngine(currentAudioUrl, null, modalImg, modalCanvas, modalContainer, true, targetColor, true);
                     }
                 });
             }
 
-            // Corrección 1: Carga limpia de datos al editar un chart
+            const explicitBtn = tr.querySelector('.btn-toggle-explicit-trigger');
+            explicitBtn?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (activeChartExplicitStates[lvl.id]) {
+                    activeChartExplicitStates[lvl.id] = false;
+                    renderLevelsTable();
+                } else {
+                    pendingExplicitActivationChartId = lvl.id;
+                    document.getElementById('explicit-warning-modal')?.classList.remove('hidden');
+                }
+            });
+
+            setupNativeVideoBehavior(tr.querySelector('.custom-native-video-wrapper'));
+
+            const toggleBtn = tr.querySelector('.btn-toggle-more-info');
+            const extraBox = tr.querySelector('.extra-info-box');
+            const toggleLabel = tr.querySelector('.btn-more-info-label');
+            const toggleIcon = toggleBtn?.querySelector('i');
+
+            toggleBtn?.addEventListener('click', () => {
+                const isHidden = extraBox.classList.contains('hidden');
+                if (isHidden) {
+                    extraBox.classList.remove('hidden');
+                    toggleLabel.innerText = translations[lang].btnShowLess;
+                    if (toggleIcon) toggleIcon.style.transform = 'rotate(180deg)';
+                } else {
+                    extraBox.classList.add('hidden');
+                    toggleLabel.innerText = translations[lang].btnMoreInfo;
+                    if (toggleIcon) toggleIcon.style.transform = 'rotate(0deg)';
+                }
+            });
+
+            if (hasAudio) {
+                const btn = tr.querySelector('.btn-play-audio-preview');
+                const img = tr.querySelector('.target-lvl-art-img');
+                const canvas = tr.querySelector('canvas');
+                const containerBox = tr.querySelector('.target-art-outer-container');
+
+                btn.addEventListener('click', () => toggleAudioPreviewEngine(currentAudioUrl, btn, img, canvas, containerBox, false, targetAudioThemeColor, false));
+            }
+
+            if (currentChartZip) {
+                tr.querySelector('.btn-direct-download-trigger')?.addEventListener('click', () => triggerDownloadAlert(currentChartZip));
+            }
+
+            // EDICIÓN DE UN CHART REGISTRADO
             tr.querySelector('.btn-edit-lvl')?.addEventListener('click', () => {
                 resetLevelFormState();
 
-                document.getElementById('editingId').value = lvl.id;
-                document.getElementById('lvlSong').value = lvl.song || '';
-                document.getElementById('lvlArtist').value = lvl.artist || '';
-                document.getElementById('lvlGenre').value = lvl.genre || '';
-                document.getElementById('lvlEditionMode').value = lvl.editionMode || 'Standard';
-                document.getElementById('lvlIsExclusive').checked = !!lvl.isExclusive;
-                document.getElementById('lvlDiff').value = lvl.diff || '';
+                document.getElementById('editingLvlId').value = lvl.id;
+                document.getElementById('lvlSong').value = lvl.song;
+                document.getElementById('lvlArtist').value = lvl.artist;
+                
+                const editionModeSelect = document.getElementById('lvlEditionMode');
+                const sectionStandard = document.getElementById('section-standard-fields');
+                const sectionDeluxe = document.getElementById('section-deluxe-fields');
+
+                // Regla de bloqueo de versión registrada
+                const currentEditMode = lvl.editionMode || (lvl.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
+                if (editionModeSelect) {
+                    editionModeSelect.value = currentEditMode;
+                    if (currentEditMode === 'Standard') {
+                        Array.from(editionModeSelect.options).forEach(opt => {
+                            if (opt.value === 'Deluxe') opt.disabled = true;
+                        });
+                    } else if (currentEditMode === 'Deluxe') {
+                        Array.from(editionModeSelect.options).forEach(opt => {
+                            if (opt.value === 'Standard') opt.disabled = true;
+                        });
+                    }
+                }
+
+                if (currentEditMode === 'Deluxe') {
+                    sectionStandard?.classList.add('hidden');
+                    sectionDeluxe?.classList.remove('hidden');
+                } else if (currentEditMode === 'Both') {
+                    sectionStandard?.classList.remove('hidden');
+                    sectionDeluxe?.classList.remove('hidden');
+                } else {
+                    sectionStandard?.classList.remove('hidden');
+                    sectionDeluxe?.classList.add('hidden');
+                }
+
+                document.getElementById('lvlDiff').value = lvl.diff || 'Hard';
                 document.getElementById('lvlNotes').value = lvl.notes || '';
                 document.getElementById('lvlDuration').value = lvl.duration || '';
                 document.getElementById('lvlDate').value = lvl.date || '';
+
                 document.getElementById('lvlDl1').value = lvl.dl1 || '';
                 document.getElementById('lvlDl2').value = lvl.dl2 || '';
                 document.getElementById('lvlDl3').value = lvl.dl3 || '';
 
-                if (lvl.editionMode === 'Deluxe') {
-                    document.getElementById('section-deluxe-fields').classList.remove('hidden');
-                    document.getElementById('lvlDiffDeluxe').value = lvl.diffDeluxe || '';
-                    document.getElementById('lvlNotesDeluxe').value = lvl.notesDeluxe || '';
-                    document.getElementById('lvlDurationDeluxe').value = lvl.durationDeluxe || '';
-                    document.getElementById('lvlDateDeluxe').value = lvl.dateDeluxe || '';
-                    document.getElementById('lvlDl1Deluxe').value = lvl.dl1Deluxe || '';
-                    document.getElementById('lvlDl2Deluxe').value = lvl.dl2Deluxe || '';
-                    document.getElementById('lvlDl3Deluxe').value = lvl.dl3Deluxe || '';
-                }
+                document.getElementById('lvlDiffDeluxe').value = lvl.diffDeluxe || 'Extreme';
+                document.getElementById('lvlNotesDeluxe').value = lvl.notesDeluxe || '';
+                document.getElementById('lvlDurationDeluxe').value = lvl.durationDeluxe || '';
+                document.getElementById('lvlDateDeluxe').value = lvl.dateDeluxe || '';
 
-                const hasExp = !!lvl.hasExplicit;
-                document.getElementById('hasExplicitToggle').checked = hasExp;
-                if (hasExp) {
-                    document.getElementById('section-explicit-fields').classList.remove('hidden');
+                document.getElementById('lvlDl1Deluxe').value = lvl.dl1Deluxe || '';
+                document.getElementById('lvlDl2Deluxe').value = lvl.dl2Deluxe || '';
+                document.getElementById('lvlDl3Deluxe').value = lvl.dl3Deluxe || '';
+
+                document.getElementById('lvlIsExclusive').checked = !!lvl.isExclusive;
+                document.getElementById('lvlHasExplicit').checked = !!lvl.hasExplicit;
+                
+                if (lvl.hasExplicit) {
                     document.getElementById('lvlNotesExplicit').value = lvl.notesExplicit || '';
                     document.getElementById('lvlDurationExplicit').value = lvl.durationExplicit || '';
                     document.getElementById('lvlDateExplicit').value = lvl.dateExplicit || '';
+                    document.getElementById('lvlDl1Explicit').value = lvl.dl1Explicit || '';
+                    document.getElementById('lvlDl2Explicit').value = lvl.dl2Explicit || '';
+                    document.getElementById('lvlDl3Explicit').value = lvl.dl3Explicit || '';
 
-                    if (lvl.editionMode === 'Deluxe') {
-                        document.getElementById('sub-section-explicit-deluxe').classList.remove('hidden');
-                        document.getElementById('lvlNotesDeluxeExplicit').value = lvl.notesDeluxeExplicit || '';
-                        document.getElementById('lvlDurationDeluxeExplicit').value = lvl.durationDeluxeExplicit || '';
-                        document.getElementById('lvlDateDeluxeExplicit').value = lvl.dateDeluxeExplicit || '';
-                    }
+                    document.getElementById('lvlNotesDeluxeExplicit').value = lvl.notesDeluxeExplicit || '';
+                    document.getElementById('lvlDurationDeluxeExplicit').value = lvl.durationDeluxeExplicit || '';
+                    document.getElementById('lvlDateDeluxeExplicit').value = lvl.dateDeluxeExplicit || '';
+                    document.getElementById('lvlDl1DeluxeExplicit').value = lvl.dl1DeluxeExplicit || '';
+                    document.getElementById('lvlDl2DeluxeExplicit').value = lvl.dl2DeluxeExplicit || '';
+                    document.getElementById('lvlDl3DeluxeExplicit').value = lvl.dl3DeluxeExplicit || '';
                 }
 
-                setupChartFileOrDeleteSlot('slot-lvl-art', !!lvl.art && lvl.art !== 'free_song_Image.png', 'art');
-                setupChartFileOrDeleteSlot('slot-lvl-date', !!lvl.date, 'dateStd', true);
-                setupChartFileOrDeleteSlot('slot-lvl-audio', !!lvl.audioDirectUrl, 'audioStd');
-                setupChartFileOrDeleteSlot('slot-lvl-zip', !!lvl.chartDirectUrl, 'zipStd');
-                setupChartFileOrDeleteSlot('slot-lvl-video', !!lvl.video, 'videoStd');
+                syncExplicitFieldsVisibility();
 
-                setupChartFileOrDeleteSlot('slot-lvl-date-deluxe', !!lvl.dateDeluxe, 'dateDlx', true);
-                setupChartFileOrDeleteSlot('slot-lvl-zip-deluxe', !!lvl.chartDirectUrlDeluxe, 'zipDlx');
-                setupChartFileOrDeleteSlot('slot-lvl-video-deluxe', !!lvl.videoDeluxe, 'videoDlx');
+                // Configuración de slots para los botones de Borrar Archivo / Borrar Fecha
+                setupFileOrDeleteSlot('slot-lvl-art', !!lvl.art, 'art');
+                setupFileOrDeleteSlot('slot-lvl-audio', !!lvl.audioDirectUrl, 'audio');
+                setupFileOrDeleteSlot('slot-lvl-video-std', !!lvl.video, 'videoStd');
+                setupFileOrDeleteSlot('slot-lvl-zip-std', !!lvl.chartDirectUrl, 'zipStd');
+                setupFileOrDeleteSlot('slot-lvl-date-std', !!lvl.date, 'dateStd', true);
 
-                setupChartFileOrDeleteSlot('slot-lvl-date-explicit', !!lvl.dateExplicit, 'dateExpStd', true);
-                setupChartFileOrDeleteSlot('slot-lvl-audio-explicit', !!lvl.audioExplicit, 'audioExp');
-                setupChartFileOrDeleteSlot('slot-lvl-zip-explicit', !!lvl.zipExplicit, 'zipExp');
-                setupChartFileOrDeleteSlot('slot-lvl-video-explicit', !!lvl.videoExplicit, 'videoExp');
+                setupFileOrDeleteSlot('slot-lvl-video-dlx', !!lvl.videoDeluxe, 'videoDlx');
+                setupFileOrDeleteSlot('slot-lvl-zip-dlx', !!lvl.chartDirectUrlDeluxe, 'zipDlx');
+                setupFileOrDeleteSlot('slot-lvl-date-dlx', !!lvl.dateDeluxe, 'dateDlx', true);
 
-                setupChartFileOrDeleteSlot('slot-lvl-date-deluxe-explicit', !!lvl.dateDeluxeExplicit, 'dateExpDlx', true);
-                setupChartFileOrDeleteSlot('slot-lvl-zip-deluxe-explicit', !!lvl.zipDeluxeExplicit, 'zipExpDlx');
-                setupChartFileOrDeleteSlot('slot-lvl-video-deluxe-explicit', !!lvl.videoDeluxeExplicit, 'videoExpDlx');
+                setupFileOrDeleteSlot('slot-lvl-audio-exp', !!lvl.audioExplicit, 'audioExp');
+                setupFileOrDeleteSlot('slot-lvl-video-exp-std', !!lvl.videoExplicit, 'videoExpStd');
+                setupFileOrDeleteSlot('slot-lvl-zip-exp-std', !!lvl.zipExplicit, 'zipExpStd');
+                setupFileOrDeleteSlot('slot-lvl-date-exp-std', !!lvl.dateExplicit, 'dateExpStd', true);
 
-                const submitBtn = document.getElementById('submitBtn');
+                setupFileOrDeleteSlot('slot-lvl-video-exp-dlx', !!lvl.videoDeluxeExplicit, 'videoExpDlx');
+                setupFileOrDeleteSlot('slot-lvl-zip-exp-dlx', !!lvl.zipDeluxeExplicit, 'zipExpDlx');
+                setupFileOrDeleteSlot('slot-lvl-date-exp-dlx', !!lvl.dateDeluxeExplicit, 'dateExpDlx', true);
+
+                const submitBtn = document.getElementById('lvlSubmitBtn');
                 if (submitBtn) {
                     const span = submitBtn.querySelector('span');
                     if (span) span.innerText = translations[lang].btnSaveChanges;
                     else submitBtn.innerText = translations[lang].btnSaveChanges;
                 }
+                
+                const pBox = document.getElementById('lvlArtPreviewBox');
+                const pImg = document.getElementById('lvlArtPreviewImg');
+                if (lvl.art && !pendingDeletes.art) {
+                    pImg.src = lvl.art;
+                    pBox.classList.remove('hidden');
+                } else { pBox.classList.add('hidden'); }
+
+                const currentGenresArray = lvl.genre ? lvl.genre.split(' / ').map(g => g.trim().toLowerCase()) : [];
+                document.querySelectorAll('.genre-checkbox').forEach(cb => {
+                    cb.checked = currentGenresArray.includes(cb.value.trim().toLowerCase());
+                });
 
                 validateFormStateAndCheckChanges();
             });
@@ -493,32 +816,40 @@ export function initChartsModule(state) {
                     if (db) {
                         showLoadingOverlay();
                         try {
+                            // 1. Recopilar todos los archivos vinculados (Standard, Deluxe y Explicit)
                             const filesToDelete = [
                                 lvl.art,
                                 lvl.audioDirectUrl,
-                                lvl.chartDirectUrl,
                                 lvl.video,
-                                lvl.chartDirectUrlDeluxe,
+                                lvl.chartDirectUrl,
                                 lvl.videoDeluxe,
+                                lvl.chartDirectUrlDeluxe,
                                 lvl.audioExplicit,
-                                lvl.zipExplicit,
                                 lvl.videoExplicit,
-                                lvl.zipDeluxeExplicit,
-                                lvl.videoDeluxeExplicit
-                            ].filter(url => url && url.trim() !== "" && url !== "free_song_Image.png");
+                                lvl.zipExplicit,
+                                lvl.videoDeluxeExplicit,
+                                lvl.zipDeluxeExplicit
+                            ].filter(url => url && url.trim() !== "");
 
+                            // 2. Eliminarlos de Cloudflare R2 en paralelo
                             if (filesToDelete.length > 0) {
                                 await Promise.all(filesToDelete.map(url => deleteFileFromCloudflareR2(url)));
                             }
 
+                            // 3. Eliminar de Firebase
                             await remove(ref(db, 'levels/' + lvl.id));
+
+                            // 4. ACTUALIZAR FECHA DE ÚLTIMA ACTUALIZACIÓN AUTOMÁTICAMENTE
                             await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
 
+                            // 5. Eliminar notificación si el chart borrado contaba con una activa
                             await checkAndDeleteNotifOnRecordDelete('chart');
+
+                            // 4. Reiniciar formulario
                             resetLevelFormState();
                         } catch (err) {
-                            console.error("Error eliminando chart y sus archivos R2:", err);
-                            alert("Ocurrió un error al intentar eliminar los archivos del chart.");
+                            console.error("Error al borrar el chart y sus archivos:", err);
+                            alert("Ocurrió un error al intentar eliminar todos los archivos vinculados.");
                         } finally {
                             hideLoadingOverlay();
                         }
@@ -526,140 +857,115 @@ export function initChartsModule(state) {
                 });
             });
 
-            frag.appendChild(tr);
+            fragment.appendChild(tr);
         });
 
         tbody.innerHTML = '';
-        tbody.appendChild(frag);
+        tbody.appendChild(fragment);
     }
 
-    document.getElementById('btn-cancel-lvl-form')?.addEventListener('click', resetLevelFormState);
-
-    document.getElementById('lvlEditionMode')?.addEventListener('change', (e) => {
-        const mode = e.target.value;
-        const delSec = document.getElementById('section-deluxe-fields');
-        const delExpSub = document.getElementById('sub-section-explicit-deluxe');
-        const hasExp = document.getElementById('hasExplicitToggle').checked;
-
-        if (mode === 'Deluxe') {
-            delSec?.classList.remove('hidden');
-            if (hasExp) delExpSub?.classList.remove('hidden');
-        } else {
-            delSec?.classList.add('hidden');
-            delExpSub?.classList.add('hidden');
-        }
-        validateFormStateAndCheckChanges();
-    });
-
-    document.getElementById('hasExplicitToggle')?.addEventListener('change', (e) => {
-        const active = e.target.checked;
-        const expSec = document.getElementById('section-explicit-fields');
-        const delExpSub = document.getElementById('sub-section-explicit-deluxe');
-        const mode = document.getElementById('lvlEditionMode').value;
-
-        if (active) {
-            expSec?.classList.remove('hidden');
-            if (mode === 'Deluxe') delExpSub?.classList.remove('hidden');
-        } else {
-            expSec?.classList.add('hidden');
-            delExpSub?.classList.add('hidden');
-
-            // Corrección Bug Audio Preview: Detener audio al desactivar versión explícita en el formulario
-            if (audioPlayer && !audioPlayer.paused) {
-                audioPlayer.pause();
-                audioPlayer.currentTime = 0;
-                setCurrentPlayingSongId(null);
-                updateSongPlayButtons();
-            }
-        }
-        validateFormStateAndCheckChanges();
-    });
-
+    // FORM SUBMIT Y PROCESAMIENTO DIFERIDO
     document.getElementById('level-form')?.addEventListener('submit', async (e) => {
         e.preventDefault();
-
         showLoadingOverlay();
 
         try {
-            let id = document.getElementById('editingId').value.trim() || Date.now().toString();
-            const levels = getLevels();
-            let existingLvl = levels.find(l => l.id === id) || {};
+            const editingId = document.getElementById('editingLvlId').value;
+            const id = editingId || 'lvl_' + Date.now();
+            const existingLvl = getLevels().find(l => l.id === id) || {};
 
-            const isZipDeleted = pendingDeletes.zipStd || pendingDeletes.zipDlx || pendingDeletes.zipExp || pendingDeletes.zipExpDlx;
-
-            // Borrado preventivo en R2
-            if (pendingDeletes.art && existingLvl.art) { await deleteFileFromCloudflareR2(existingLvl.art); existingLvl.art = "free_song_Image.png"; }
-            if (pendingDeletes.audioStd && existingLvl.audioDirectUrl) { await deleteFileFromCloudflareR2(existingLvl.audioDirectUrl); existingLvl.audioDirectUrl = ""; }
-            if (pendingDeletes.zipStd && existingLvl.chartDirectUrl) { await deleteFileFromCloudflareR2(existingLvl.chartDirectUrl); existingLvl.chartDirectUrl = ""; }
-            if (pendingDeletes.videoStd && existingLvl.video) { await deleteFileFromCloudflareR2(existingLvl.video); existingLvl.video = ""; }
-
-            if (pendingDeletes.zipDlx && existingLvl.chartDirectUrlDeluxe) { await deleteFileFromCloudflareR2(existingLvl.chartDirectUrlDeluxe); existingLvl.chartDirectUrlDeluxe = ""; }
-            if (pendingDeletes.videoDlx && existingLvl.videoDeluxe) { await deleteFileFromCloudflareR2(existingLvl.videoDeluxe); existingLvl.videoDeluxe = ""; }
-
-            if (pendingDeletes.audioExp && existingLvl.audioExplicit) { await deleteFileFromCloudflareR2(existingLvl.audioExplicit); existingLvl.audioExplicit = ""; }
-            if (pendingDeletes.zipExp && existingLvl.zipExplicit) { await deleteFileFromCloudflareR2(existingLvl.zipExplicit); existingLvl.zipExplicit = ""; }
-            if (pendingDeletes.videoExp && existingLvl.videoExplicit) { await deleteFileFromCloudflareR2(existingLvl.videoExplicit); existingLvl.videoExplicit = ""; }
-
-            if (pendingDeletes.zipExpDlx && existingLvl.zipDeluxeExplicit) { await deleteFileFromCloudflareR2(existingLvl.zipDeluxeExplicit); existingLvl.zipDeluxeExplicit = ""; }
-            if (pendingDeletes.videoExpDlx && existingLvl.videoDeluxeExplicit) { await deleteFileFromCloudflareR2(existingLvl.videoDeluxeExplicit); existingLvl.videoDeluxeExplicit = ""; }
-
-            // Subida de nuevos archivos
-            let art = existingLvl.art || "free_song_Image.png";
-            let audioDirectUrl = existingLvl.audioDirectUrl || "";
-            let chartDirectUrl = existingLvl.chartDirectUrl || "";
-            let video = existingLvl.video || "";
-
-            let chartDirectUrlDeluxe = existingLvl.chartDirectUrlDeluxe || "";
-            let videoDeluxe = existingLvl.videoDeluxe || "";
-
-            let audioExplicit = existingLvl.audioExplicit || "";
-            let zipExplicit = existingLvl.zipExplicit || "";
-            let videoExplicit = existingLvl.videoExplicit || "";
-
-            let zipDeluxeExplicit = existingLvl.zipDeluxeExplicit || "";
-            let videoDeluxeExplicit = existingLvl.videoDeluxeExplicit || "";
-
-            const artInput = document.getElementById('lvlArtFile');
-            if (artInput?.files?.[0]) { const u = await uploadFileToCloudflareR2(artInput.files[0], 'artworks'); if (u) art = u; }
-
-            const audioInput = document.getElementById('lvlAudioFile');
-            if (audioInput?.files?.[0]) { const u = await uploadFileToCloudflareR2(audioInput.files[0], 'audios'); if (u) audioDirectUrl = u; }
-
-            const zipInput = document.getElementById('lvlChartZipFile');
-            if (zipInput?.files?.[0]) { const u = await uploadFileToCloudflareR2(zipInput.files[0], 'charts'); if (u) chartDirectUrl = u; }
-
-            const videoInput = document.getElementById('lvlVideoFile');
-            if (videoInput?.files?.[0]) { const u = await uploadFileToCloudflareR2(videoInput.files[0], 'prevsongs'); if (u) video = u; }
-
-            const zipDeluxeInput = document.getElementById('lvlChartZipFileDeluxe');
-            if (zipDeluxeInput?.files?.[0]) { const u = await uploadFileToCloudflareR2(zipDeluxeInput.files[0], 'charts'); if (u) chartDirectUrlDeluxe = u; }
-
-            const videoDeluxeInput = document.getElementById('lvlVideoFileDeluxe');
-            if (videoDeluxeInput?.files?.[0]) { const u = await uploadFileToCloudflareR2(videoDeluxeInput.files[0], 'prevsongs'); if (u) videoDeluxe = u; }
-
-            const audioExpInput = document.getElementById('lvlAudioExplicitFile');
-            if (audioExpInput?.files?.[0]) { const u = await uploadFileToCloudflareR2(audioExpInput.files[0], 'audios'); if (u) audioExplicit = u; }
-
-            const zipExpInput = document.getElementById('lvlChartZipExplicitFile');
-            if (zipExpInput?.files?.[0]) { const u = await uploadFileToCloudflareR2(zipExpInput.files[0], 'charts'); if (u) zipExplicit = u; }
-
-            const videoExpInput = document.getElementById('lvlVideoExplicitFile');
-            if (videoExpInput?.files?.[0]) { const u = await uploadFileToCloudflareR2(videoExpInput.files[0], 'prevsongs'); if (u) videoExplicit = u; }
-
-            const zipExpDeluxeInput = document.getElementById('lvlChartZipDeluxeExplicitFile');
-            if (zipExpDeluxeInput?.files?.[0]) { const u = await uploadFileToCloudflareR2(zipExpDeluxeInput.files[0], 'charts'); if (u) zipDeluxeExplicit = u; }
-
-            const videoExpDeluxeInput = document.getElementById('lvlVideoDeluxeExplicitFile');
-            if (videoExpDeluxeInput?.files?.[0]) { const u = await uploadFileToCloudflareR2(videoExpDeluxeInput.files[0], 'prevsongs'); if (u) videoDeluxeExplicit = u; }
-
-            const editionMode = document.getElementById('lvlEditionMode').value;
             const song = document.getElementById('lvlSong').value.trim();
             const artist = document.getElementById('lvlArtist').value.trim();
-            const genre = document.getElementById('lvlGenre').value.trim();
+            const editionMode = document.getElementById('lvlEditionMode').value;
             const isExclusive = document.getElementById('lvlIsExclusive').checked;
-            const hasExplicit = document.getElementById('hasExplicitToggle').checked;
+            const hasExplicit = document.getElementById('lvlHasExplicit').checked;
 
-            // Corrección 1: Payload limpio de enlaces de descarga redundantes
+            const selectedGenres = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(cb => cb.value);
+            const genre = selectedGenres.join(' / ');
+
+            // 1. Borrados reales en Cloudflare R2 si se confirmó el botón "Borrar Archivo"
+            if (pendingDeletes.art && existingLvl.art) {
+                await deleteFileFromCloudflareR2(existingLvl.art); existingLvl.art = ""; }
+
+            if (pendingDeletes.audio && existingLvl.audioDirectUrl) {
+                await deleteFileFromCloudflareR2(existingLvl.audioDirectUrl); existingLvl.audioDirectUrl = ""; }
+
+            if (pendingDeletes.videoStd && existingLvl.video) {
+                await deleteFileFromCloudflareR2(existingLvl.video); existingLvl.video = ""; }
+
+            if (pendingDeletes.zipStd && existingLvl.chartDirectUrl) {
+                await deleteFileFromCloudflareR2(existingLvl.chartDirectUrl); existingLvl.chartDirectUrl = "";
+                await checkAndDeleteNotifOnZipDelete('chart'); }
+
+            if (pendingDeletes.videoDlx && existingLvl.videoDeluxe) {
+                await deleteFileFromCloudflareR2(existingLvl.videoDeluxe); existingLvl.videoDeluxe = ""; }
+
+            if (pendingDeletes.zipDlx && existingLvl.chartDirectUrlDeluxe) {
+                await deleteFileFromCloudflareR2(existingLvl.chartDirectUrlDeluxe); existingLvl.chartDirectUrlDeluxe = "";
+                await checkAndDeleteNotifOnZipDelete('chart'); }
+
+            if (pendingDeletes.audioExp && existingLvl.audioExplicit) {
+                await deleteFileFromCloudflareR2(existingLvl.audioExplicit); existingLvl.audioExplicit = ""; }
+
+            if (pendingDeletes.videoExpStd && existingLvl.videoExplicit) {
+                await deleteFileFromCloudflareR2(existingLvl.videoExplicit); existingLvl.videoExplicit = ""; }
+
+            if (pendingDeletes.zipExpStd && existingLvl.zipExplicit) {
+                await deleteFileFromCloudflareR2(existingLvl.zipExplicit); existingLvl.zipExplicit = "";
+                await checkAndDeleteNotifOnZipDelete('chart'); }
+
+            if (pendingDeletes.videoExpDlx && existingLvl.videoDeluxeExplicit) {
+                await deleteFileFromCloudflareR2(existingLvl.videoDeluxeExplicit); existingLvl.videoDeluxeExplicit = ""; }
+
+            if (pendingDeletes.zipExpDlx && existingLvl.zipDeluxeExplicit) {
+                await deleteFileFromCloudflareR2(existingLvl.zipDeluxeExplicit); existingLvl.zipDeluxeExplicit = "";
+                await checkAndDeleteNotifOnZipDelete('chart'); }
+
+            // 2. Subida de nuevos archivos si fueron seleccionados
+            let art = existingLvl.art || '';
+            const artFile = document.getElementById('lvlArtFile')?.files[0];
+            if (artFile) art = await uploadFileToCloudflareR2(artFile, 'charts_art');
+
+            let audioDirectUrl = existingLvl.audioDirectUrl || '';
+            const audioFile = document.getElementById('lvlAudioFile')?.files[0];
+            if (audioFile) audioDirectUrl = await uploadFileToCloudflareR2(audioFile, 'audio');
+
+            let video = existingLvl.video || '';
+            const videoFile = document.getElementById('lvlVideoFile')?.files[0];
+            if (videoFile) video = await uploadFileToCloudflareR2(videoFile, 'prevchart');
+
+            let chartDirectUrl = existingLvl.chartDirectUrl || '';
+            const zipFile = document.getElementById('lvlChartZipFile')?.files[0];
+            if (zipFile) chartDirectUrl = await uploadFileToCloudflareR2(zipFile, 'charts_zip');
+
+            let videoDeluxe = existingLvl.videoDeluxe || '';
+            const videoDeluxeFile = document.getElementById('lvlVideoFileDeluxe')?.files[0];
+            if (videoDeluxeFile) videoDeluxe = await uploadFileToCloudflareR2(videoDeluxeFile, 'prevchart');
+
+            let chartDirectUrlDeluxe = existingLvl.chartDirectUrlDeluxe || '';
+            const zipDeluxeFile = document.getElementById('lvlChartZipFileDeluxe')?.files[0];
+            if (zipDeluxeFile) chartDirectUrlDeluxe = await uploadFileToCloudflareR2(zipDeluxeFile, 'charts_zip');
+
+            let audioExplicit = existingLvl.audioExplicit || '';
+            const audioExplicitFile = document.getElementById('lvlAudioFileExplicit')?.files[0];
+            if (audioExplicitFile) audioExplicit = await uploadFileToCloudflareR2(audioExplicitFile, 'audio');
+
+            let videoExplicit = existingLvl.videoExplicit || '';
+            const videoExplicitFile = document.getElementById('lvlVideoFileExplicit')?.files[0];
+            if (videoExplicitFile) videoExplicit = await uploadFileToCloudflareR2(videoExplicitFile, 'prevchart');
+
+            let zipExplicit = existingLvl.zipExplicit || '';
+            const zipExplicitFile = document.getElementById('lvlChartZipFileExplicit')?.files[0];
+            if (zipExplicitFile) zipExplicit = await uploadFileToCloudflareR2(zipExplicitFile, 'charts_zip');
+
+            let videoDeluxeExplicit = existingLvl.videoDeluxeExplicit || '';
+            const videoDeluxeExplicitFile = document.getElementById('lvlVideoFileDeluxeExplicit')?.files[0];
+            if (videoDeluxeExplicitFile) videoDeluxeExplicit = await uploadFileToCloudflareR2(videoDeluxeExplicitFile, 'prevchart');
+
+            let zipDeluxeExplicit = existingLvl.zipDeluxeExplicit || '';
+            const zipDeluxeExplicitFile = document.getElementById('lvlChartZipFileDeluxeExplicit')?.files[0];
+            if (zipDeluxeExplicitFile) zipDeluxeExplicit = await uploadFileToCloudflareR2(zipDeluxeExplicitFile, 'charts_zip');
+
             const payload = {
                 id,
                 song,
@@ -693,69 +999,105 @@ export function initChartsModule(state) {
                 notesExplicit: document.getElementById('lvlNotesExplicit').value,
                 durationExplicit: document.getElementById('lvlDurationExplicit').value,
                 dateExplicit: pendingDeletes.dateExpStd ? "" : document.getElementById('lvlDateExplicit').value,
+                dl1Explicit: document.getElementById('lvlDl1Explicit').value,
+                dl2Explicit: document.getElementById('lvlDl2Explicit').value,
+                dl3Explicit: document.getElementById('lvlDl3Explicit').value,
                 videoExplicit,
                 zipExplicit,
                 notesDeluxeExplicit: document.getElementById('lvlNotesDeluxeExplicit').value,
                 durationDeluxeExplicit: document.getElementById('lvlDurationDeluxeExplicit').value,
-                dateDeluxeExplicit: pendingDeletes.dateExpDlx ? "" : document.getElementById('lvlDateExplicit').value,
+                dateDeluxeExplicit: pendingDeletes.dateExpDlx ? "" : document.getElementById('lvlDateDeluxeExplicit').value,
+                dl1DeluxeExplicit: document.getElementById('lvlDl1DeluxeExplicit').value,
+                dl2DeluxeExplicit: document.getElementById('lvlDl2DeluxeExplicit').value,
+                dl3DeluxeExplicit: document.getElementById('lvlDl3DeluxeExplicit').value,
                 videoDeluxeExplicit,
                 zipDeluxeExplicit
             };
 
-            if (db) {
-                await set(ref(db, 'levels/' + id), payload);
-                await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
+            await set(ref(db, 'levels/' + id), payload);
 
-                if (isZipDeleted) {
-                    await checkAndDeleteNotifOnZipDelete('chart');
-                }
+            // Registro automático de notificación
+            const isNewRecord = !editingId;
+            const zipAddedToExisting = !!editingId && !existingLvl.chartDirectUrl && !!chartDirectUrl;
 
-                // Corrección 3: Registro automático de notificación con IDs únicas
-                const isNewRecord = !document.getElementById('editingId').value.trim();
-                const zipAddedToExisting = !isNewRecord && !existingLvl.chartDirectUrl && !!chartDirectUrl;
-
-                if (isNewRecord) {
-                    await createOrUpdateNotification('chart', {
-                        type: 'new',
-                        title: 'Nuevo Chart',
-                        song: song,
-                        artist: artist,
-                        artOrIcon: art || 'free_song_Image.png',
-                        genre: genre,
-                        diff: document.getElementById('lvlDiff').value,
-                        edition: editionMode
-                    });
-                } else if (zipAddedToExisting) {
-                    await createOrUpdateNotification('chart', {
-                        type: 'zip',
-                        title: 'Chart Disponible',
-                        song: song,
-                        artist: artist,
-                        artOrIcon: art || 'free_song_Image.png',
-                        genre: genre,
-                        diff: document.getElementById('lvlDiff').value,
-                        edition: editionMode
-                    });
-                }
-
-                resetLevelFormState();
+            if (isNewRecord) {
+                await createOrUpdateNotification('chart', {
+                    type: 'new',
+                    title: 'Nuevo Chart',
+                    song: song,
+                    artist: artist,
+                    artOrIcon: art || 'free_song_Image.png',
+                    genre: genre,
+                    diff: document.getElementById('lvlDiff').value,
+                    edition: editionMode
+                });
+            } else if (zipAddedToExisting) {
+                await createOrUpdateNotification('chart', {
+                    type: 'zip',
+                    title: 'Chart Disponible',
+                    song: song,
+                    artist: artist,
+                    artOrIcon: art || 'free_song_Image.png',
+                    genre: genre,
+                    diff: document.getElementById('lvlDiff').value,
+                    edition: editionMode
+                });
             }
+
+            resetLevelFormState();
         } catch (err) {
-            console.error("Error guardando el chart:", err);
-            alert("Ocurrió un error al guardar el chart.");
+            console.error("Error al registrar chart:", err);
+            alert("Ocurrió un error al guardar el registro.");
         } finally {
             hideLoadingOverlay();
         }
     });
 
+    document.getElementById('btn-cancel-lvl-form')?.addEventListener('click', () => {
+        resetLevelFormState();
+    });
+
+    // Escuchadores dinámicos para visibilidad de Standard/Deluxe y Explicit
+    document.getElementById('lvlEditionMode')?.addEventListener('change', (e) => {
+        const val = e.target.value;
+        const sectionStandard = document.getElementById('section-standard-fields');
+        const sectionDeluxe = document.getElementById('section-deluxe-fields');
+
+        if (val === 'Deluxe') {
+            sectionStandard?.classList.add('hidden');
+            sectionDeluxe?.classList.remove('hidden');
+        } else if (val === 'Both') {
+            sectionStandard?.classList.remove('hidden');
+            sectionDeluxe?.classList.remove('hidden');
+        } else {
+            sectionStandard?.classList.remove('hidden');
+            sectionDeluxe?.classList.add('hidden');
+        }
+
+        syncExplicitFieldsVisibility();
+        validateFormStateAndCheckChanges();
+    });
+
+    document.getElementById('lvlHasExplicit')?.addEventListener('change', () => {
+        syncExplicitFieldsVisibility();
+        validateFormStateAndCheckChanges();
+    });
+
+    // Añadir escuchador universal a las entradas para habilitar/deshabilitar el botón Submit
     document.getElementById('level-form')?.addEventListener('input', validateFormStateAndCheckChanges);
     document.getElementById('level-form')?.addEventListener('change', validateFormStateAndCheckChanges);
 
     return {
+        buildGenresSelector,
         resetLevelFormState,
         renderLevelsTable,
-        setGenreFilter: (val) => { activeGenreFilter = val; },
-        setIsDeluxeModeActiveInTable: (val) => { isDeluxeModeActiveInTable = val; },
-        setIsExplicitModeActiveInTable: (val) => { isExplicitModeActiveInTable = val; }
+        renderDifficultyTagMarkup,
+        renderEditionTagMarkup,
+        openBeatstarEditionSelectionModal,
+        getPendingExplicitActivationChartId: () => pendingExplicitActivationChartId,
+        setPendingExplicitActivationChartId: (val) => { pendingExplicitActivationChartId = val; },
+        setLvlGenreFilter: (val) => { activeLvlGenreFilter = val; },
+        setLvlDiffFilter: (val) => { activeLvlDiffFilter = val; },
+        setLvlEditionFilter: (val) => { activeLvlEditionFilter = val; }
     };
 }
