@@ -842,13 +842,10 @@ export function initChartsModule(state) {
                             // 4. ACTUALIZAR FECHA DE ÚLTIMA ACTUALIZACIÓN AUTOMÁTICAMENTE
                             await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
 
-                            // 5. Eliminar notificación específica asociada a este chart borrado
-                            await checkAndDeleteNotifOnRecordDelete('chart', {
-                                song: lvl.song,
-                                artist: lvl.artist
-                            });
+                            // 5. Eliminar notificación si el chart borrado contaba con una activa
+                            await checkAndDeleteNotifOnRecordDelete('chart');
 
-                            // 6. Reiniciar formulario
+                            // 4. Reiniciar formulario
                             resetLevelFormState();
                         } catch (err) {
                             console.error("Error al borrar el chart y sus archivos:", err);
@@ -898,14 +895,14 @@ export function initChartsModule(state) {
 
             if (pendingDeletes.zipStd && existingLvl.chartDirectUrl) {
                 await deleteFileFromCloudflareR2(existingLvl.chartDirectUrl); existingLvl.chartDirectUrl = "";
-                await checkAndDeleteNotifOnZipDelete('chart', { song: existingLvl.song || song, artist: existingLvl.artist || artist }); }
+                await checkAndDeleteNotifOnZipDelete('chart'); }
 
             if (pendingDeletes.videoDlx && existingLvl.videoDeluxe) {
                 await deleteFileFromCloudflareR2(existingLvl.videoDeluxe); existingLvl.videoDeluxe = ""; }
 
             if (pendingDeletes.zipDlx && existingLvl.chartDirectUrlDeluxe) {
                 await deleteFileFromCloudflareR2(existingLvl.chartDirectUrlDeluxe); existingLvl.chartDirectUrlDeluxe = "";
-                await checkAndDeleteNotifOnZipDelete('chart', { song: existingLvl.song || song, artist: existingLvl.artist || artist }); }
+                await checkAndDeleteNotifOnZipDelete('chart'); }
 
             if (pendingDeletes.audioExp && existingLvl.audioExplicit) {
                 await deleteFileFromCloudflareR2(existingLvl.audioExplicit); existingLvl.audioExplicit = ""; }
@@ -915,14 +912,14 @@ export function initChartsModule(state) {
 
             if (pendingDeletes.zipExpStd && existingLvl.zipExplicit) {
                 await deleteFileFromCloudflareR2(existingLvl.zipExplicit); existingLvl.zipExplicit = "";
-                await checkAndDeleteNotifOnZipDelete('chart', { song: existingLvl.song || song, artist: existingLvl.artist || artist }); }
+                await checkAndDeleteNotifOnZipDelete('chart'); }
 
             if (pendingDeletes.videoExpDlx && existingLvl.videoDeluxeExplicit) {
                 await deleteFileFromCloudflareR2(existingLvl.videoDeluxeExplicit); existingLvl.videoDeluxeExplicit = ""; }
 
             if (pendingDeletes.zipExpDlx && existingLvl.zipDeluxeExplicit) {
                 await deleteFileFromCloudflareR2(existingLvl.zipDeluxeExplicit); existingLvl.zipDeluxeExplicit = "";
-                await checkAndDeleteNotifOnZipDelete('chart', { song: existingLvl.song || song, artist: existingLvl.artist || artist }); }
+                await checkAndDeleteNotifOnZipDelete('chart'); }
 
             // 2. Subida de nuevos archivos si fueron seleccionados
             let art = existingLvl.art || '';
@@ -1032,7 +1029,6 @@ export function initChartsModule(state) {
                     artOrIcon: art || 'free_song_Image.png',
                     genre: genre,
                     diff: document.getElementById('lvlDiff').value,
-                    diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
                     edition: editionMode
                 });
             } else if (zipAddedToExisting) {
@@ -1044,7 +1040,6 @@ export function initChartsModule(state) {
                     artOrIcon: art || 'free_song_Image.png',
                     genre: genre,
                     diff: document.getElementById('lvlDiff').value,
-                    diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
                     edition: editionMode
                 });
             }
