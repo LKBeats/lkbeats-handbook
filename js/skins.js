@@ -4,7 +4,8 @@ import { translations } from "./i18n.js";
 import { 
     createOrUpdateNotification, 
     checkAndDeleteNotifOnRecordDelete, 
-    checkAndDeleteNotifOnZipDelete 
+    checkAndDeleteNotifOnZipDelete,
+    getActiveNotificationsList
 } from "./notifications-manager.js";
 
 export function initSkinsModule(state) {
@@ -351,6 +352,8 @@ export function initSkinsModule(state) {
         const currentSelectedSkinSubPlatform = getCurrentSelectedSkinSubPlatform();
         const cosmetics = getCosmetics();
 
+        const activeNotifications = (typeof getActiveNotificationsList === 'function') ? getActiveNotificationsList() : [];
+
         const fragB = document.createDocumentFragment();
         const fragT = document.createDocumentFragment();
 
@@ -390,6 +393,18 @@ export function initSkinsModule(state) {
 
         filtered.forEach((cos) => {
             const isT = (cos.platform === 'TapWave');
+
+            // Corrección 4: Determinar si la skin cuenta con una notificación activa
+            const hasActiveNotif = activeNotifications.some(n => 
+                n.category === 'skin' && 
+                n.skinName?.toLowerCase() === cos.name?.toLowerCase() && 
+                n.artist?.toLowerCase() === cos.artist?.toLowerCase()
+            );
+
+            const newBadgeImage = lang === 'en' ? 'New.png' : 'Nuevo.png';
+            const newBadgeMarkup = hasActiveNotif ? `
+                <img src="${newBadgeImage}" alt="New" class="absolute -top-2 -left-2 w-7 h-7 sm:w-9 sm:h-9 object-contain z-30 drop-shadow-lg pointer-events-none">
+            ` : '';
 
             const tr = document.createElement('tr');
             tr.className = "hover:bg-fuchsia-950/20 transition border-b-2 border-fuchsia-900/50 shadow-sm";
@@ -434,10 +449,14 @@ export function initSkinsModule(state) {
                 </div>
             ` : '';
 
+            // Corrección 2 y 4 aplicadas al layout de la tabla
             tr.innerHTML = `
                 <td class="p-2 sm:p-4 text-center align-middle">
-                    <div class="w-20 h-20 sm:w-36 sm:h-36 border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1 shrink-0 mx-auto">
-                        <img src="${cos.icon}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'">
+                    <div class="relative w-20 h-20 sm:w-36 sm:h-36 mx-auto shrink-0">
+                        <div class="w-full h-full border border-fuchsia-950/80 rounded-xl overflow-hidden bg-zinc-950 p-1">
+                            <img src="${cos.icon}" class="w-full h-full object-cover rounded-lg bg-zinc-900" onerror="this.src='BoxSprite_MerchSkin2.png'">
+                        </div>
+                        ${newBadgeMarkup}
                     </div>
                 </td>
                 <td class="p-2 sm:p-4 min-w-[200px] sm:min-w-[320px] flex-1 align-middle">
@@ -541,28 +560,20 @@ export function initSkinsModule(state) {
                     if (db) {
                         showLoadingOverlay();
                         try {
-                            // 1. Recopilar icono, video y archivo ZIP de la skin
                             const filesToDelete = [
                                 cos.icon,
                                 cos.video,
                                 cos.skinDirectUrl
                             ].filter(url => url && url.trim() !== "" && url !== "BoxSprite_MerchSkin2.png");
 
-                            // 2. Eliminarlos de Cloudflare R2 en paralelo
                             if (filesToDelete.length > 0) {
                                 await Promise.all(filesToDelete.map(url => deleteFileFromCloudflareR2(url)));
                             }
 
-                            // 3. Eliminar de Firebase
                             await remove(ref(db, 'cosmetics/' + cos.id));
+                            await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
 
-                            // 4. ACTUALIZAR FECHA DE ÚLTIMA ACTUALIZACIÓN AUTOMÁTICAMENTE
-                            await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
-
-                            // 5. Eliminar notificación si la skin borrada contaba con una activa
                             await checkAndDeleteNotifOnRecordDelete('skin');
-
-                            // 6. Reiniciar formulario
                             resetCosmeticFormState();
                         } catch (err) {
                             console.error("Error al borrar la skin y sus archivos:", err);
@@ -684,10 +695,8 @@ export function initSkinsModule(state) {
             const cosmetics = getCosmetics();
             let existingCos = cosmetics.find(c => c.id === id) || {};
 
-            // Evaluamos si el archivo ZIP fue eliminado
             const isZipDeleted = pendingSkinDeletes.zip;
 
-            // Executar borrados en R2
             if (pendingSkinDeletes.icon && existingCos.icon) { await deleteFileFromCloudflareR2(existingCos.icon); existingCos.icon = "BoxSprite_MerchSkin2.png"; }
             if (pendingSkinDeletes.video && existingCos.video) { await deleteFileFromCloudflareR2(existingCos.video); existingCos.video = ""; }
             if (pendingSkinDeletes.zip && existingCos.skinDirectUrl) { await deleteFileFromCloudflareR2(existingCos.skinDirectUrl); existingCos.skinDirectUrl = ""; }
@@ -764,12 +773,11 @@ export function initSkinsModule(state) {
                 await set(ref(db, 'cosmetics/' + id), data);
                 await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]); 
 
-                // Eliminar notificación de tipo ZIP si se eliminó el archivo .zip de la skin
                 if (isZipDeleted) {
                     await checkAndDeleteNotifOnZipDelete('skin');
                 }
 
-                // Registro automático de notificación
+                // Corrección 3: Registro automático de notificación
                 const isNewRecord = !document.getElementById('editingCosId').value.trim();
                 const zipAddedToExisting = !isNewRecord && !existingCos.skinDirectUrl && !!finalSkinDirectUrl;
 

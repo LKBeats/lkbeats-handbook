@@ -7,6 +7,10 @@ let rotationIntervalId = null;
 let onNotificationChangeCallback = null;
 let isCreatorModeActive = false;
 
+export function getActiveNotificationsList() {
+    return notificationsList;
+}
+
 export function subscribeToNotifications(callback, isCreatorMode = false) {
     onNotificationChangeCallback = callback;
     isCreatorModeActive = isCreatorMode;
@@ -41,8 +45,11 @@ export function setCreatorModeInNotifications(isCreator) {
 export async function createOrUpdateNotification(category, data) {
     if (!category || !data) return;
 
+    // Genera una ID única si no viene una explícita (para no sobreescribir la categoría entera)
+    const notifId = data.notifId || `${category}_${Date.now()}`;
+
     const notifPayload = {
-        id: category,
+        id: notifId,
         category: category,
         type: data.type || 'new',
         artOrIcon: data.artOrIcon || '',
@@ -59,30 +66,35 @@ export async function createOrUpdateNotification(category, data) {
         platform: data.platform || null
     };
 
-    const targetRef = ref(db, `notifications/${category}`);
+    const targetRef = ref(db, `notifications/${notifId}`);
     await set(targetRef, notifPayload);
 }
 
-export async function deleteNotificationManually(category) {
-    if (!category) return;
-    const targetRef = ref(db, `notifications/${category}`);
+export async function deleteNotificationManually(notifIdOrCategory) {
+    if (!notifIdOrCategory) return;
+    const targetRef = ref(db, `notifications/${notifIdOrCategory}`);
     await remove(targetRef);
 }
 
 export async function checkAndDeleteNotifOnRecordDelete(category, recordIdentifier) {
     if (!category) return;
     try {
-        const targetRef = ref(db, `notifications/${category}`);
+        const targetRef = ref(db, 'notifications');
         const snapshot = await get(targetRef);
         if (snapshot.exists()) {
-            const notifData = snapshot.val();
-            if (
-                !recordIdentifier ||
-                notifData.song === recordIdentifier ||
-                notifData.skinName === recordIdentifier ||
-                notifData.artOrIcon === recordIdentifier
-            ) {
-                await remove(targetRef);
+            const allNotifs = snapshot.val();
+            for (const key in allNotifs) {
+                const notifData = allNotifs[key];
+                if (notifData.category === category) {
+                    if (
+                        !recordIdentifier ||
+                        notifData.song === recordIdentifier ||
+                        notifData.skinName === recordIdentifier ||
+                        notifData.artOrIcon === recordIdentifier
+                    ) {
+                        await remove(ref(db, `notifications/${key}`));
+                    }
+                }
             }
         }
     } catch (err) {
@@ -93,15 +105,21 @@ export async function checkAndDeleteNotifOnRecordDelete(category, recordIdentifi
 export async function checkAndDeleteNotifOnZipDelete(category, recordIdentifier) {
     if (!category) return;
     try {
-        const targetRef = ref(db, `notifications/${category}`);
+        const targetRef = ref(db, 'notifications');
         const snapshot = await get(targetRef);
         if (snapshot.exists()) {
-            const notifData = snapshot.val();
-            if (
-                notifData.type === 'available' &&
-                (!recordIdentifier || notifData.song === recordIdentifier || notifData.skinName === recordIdentifier)
-            ) {
-                await remove(targetRef);
+            const allNotifs = snapshot.val();
+            for (const key in allNotifs) {
+                const notifData = allNotifs[key];
+                if (notifData.category === category && notifData.type === 'zip') {
+                    if (
+                        !recordIdentifier ||
+                        notifData.song === recordIdentifier ||
+                        notifData.skinName === recordIdentifier
+                    ) {
+                        await remove(ref(db, `notifications/${key}`));
+                    }
+                }
             }
         }
     } catch (err) {
