@@ -445,7 +445,7 @@ export function initSkinsModule(state) {
                         <li class="flex flex-col sm:flex-row sm:items-baseline">
                             <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[lang].listName}:</span> 
                             <div class="inline-block flex-1">
-                                <h4 class="text-white font-black tracking-wide text-base sm:text-xl inline-block">${cos.name}</h4>
+                                <span class="text-white font-black tracking-wide text-base sm:text-xl">${cos.name}</span>
                                 ${exclusiveBadge}
                             </div>
                         </li>
