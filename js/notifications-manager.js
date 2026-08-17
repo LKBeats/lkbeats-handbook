@@ -41,12 +41,8 @@ export function setCreatorModeInNotifications(isCreator) {
 export async function createOrUpdateNotification(category, data) {
     if (!category || !data) return;
 
-    // Si es un nuevo registro, se genera una ID única para tener múltiples notificaciones
-    // Si viene una notifId previa (por ejemplo, al subir un ZIP a un registro existente), se reutiliza para reemplazarla
-    const notifId = data.notifId || `${category}_${Date.now()}`;
-
     const notifPayload = {
-        id: notifId,
+        id: category,
         category: category,
         type: data.type || 'new',
         artOrIcon: data.artOrIcon || '',
@@ -63,7 +59,7 @@ export async function createOrUpdateNotification(category, data) {
         platform: data.platform || null
     };
 
-    const targetRef = ref(db, `notifications/${notifId}`);
+    const targetRef = ref(db, `notifications/${category}`);
     await set(targetRef, notifPayload);
 }
 
@@ -125,10 +121,6 @@ export function previousNotification() {
     currentIndex = (currentIndex - 1 + notificationsList.length) % notificationsList.length;
     triggerCallback();
     if (!isCreatorModeActive) restartRotationTimer();
-}
-
-export function getActiveNotificationsList() {
-    return notificationsList;
 }
 
 function triggerCallback() {

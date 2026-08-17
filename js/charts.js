@@ -263,11 +263,16 @@ export function initChartsModule(state) {
                 (document.getElementById('lvlNotesExplicit')?.value || '') !== (existingLvl.notesExplicit || '') ||
                 (document.getElementById('lvlDurationExplicit')?.value || '') !== (existingLvl.durationExplicit || '') ||
                 (document.getElementById('lvlDateExplicit')?.value || '') !== (existingLvl.dateExplicit || '') ||
+                (document.getElementById('lvlDl1Explicit')?.value || '') !== (existingLvl.dl1Explicit || '') ||
+                (document.getElementById('lvlDl2Explicit')?.value || '') !== (existingLvl.dl2Explicit || '') ||
+                (document.getElementById('lvlDl3Explicit')?.value || '') !== (existingLvl.dl3Explicit || '') ||
                 // --- EVALUACIÓN DE CAMPOS EXPLÍCITOS DELUXE ---
                 (document.getElementById('lvlNotesDeluxeExplicit')?.value || '') !== (existingLvl.notesDeluxeExplicit || '') ||
                 (document.getElementById('lvlDurationDeluxeExplicit')?.value || '') !== (existingLvl.durationDeluxeExplicit || '') ||
                 (document.getElementById('lvlDateDeluxeExplicit')?.value || '') !== (existingLvl.dateDeluxeExplicit || '') ||
-                
+                (document.getElementById('lvlDl1DeluxeExplicit')?.value || '') !== (existingLvl.dl1DeluxeExplicit || '') ||
+                (document.getElementById('lvlDl2DeluxeExplicit')?.value || '') !== (existingLvl.dl2DeluxeExplicit || '') ||
+                (document.getElementById('lvlDl3DeluxeExplicit')?.value || '') !== (existingLvl.dl3DeluxeExplicit || '');
 
             if (changed) {
                 submitBtn.disabled = false;
@@ -438,13 +443,25 @@ export function initChartsModule(state) {
                 ? (lvl.audioExplicit || lvl.audioDirectUrl)
                 : lvl.audioDirectUrl;
 
-            let currentChartZip = isExplicitActive
-    ? (isDeluxeActive ? (lvl.zipDeluxeExplicit || lvl.zipExplicit || lvl.chartDirectUrlDeluxe || lvl.chartDirectUrl) : (lvl.zipExplicit || lvl.chartDirectUrl))
-    : (isDeluxeActive ? (lvl.chartDirectUrlDeluxe || lvl.chartDirectUrl) : lvl.chartDirectUrl);
+            let currentVideoUrl = isExplicitActive
+                ? (isDeluxeActive ? (lvl.videoDeluxeExplicit || lvl.videoExplicit || lvl.videoDeluxe || lvl.video) : (lvl.videoExplicit || lvl.video))
+                : (isDeluxeActive ? (lvl.videoDeluxe || lvl.video) : lvl.video);
 
-let currentDl1 = isDeluxeActive ? (lvl.dl1Deluxe || lvl.dl1) : lvl.dl1;
-let currentDl2 = isDeluxeActive ? (lvl.dl2Deluxe || lvl.dl2) : lvl.dl2;
-let currentDl3 = isDeluxeActive ? (lvl.dl3Deluxe || lvl.dl3) : lvl.dl3;
+            let currentChartZip = isExplicitActive
+                ? (isDeluxeActive ? (lvl.zipDeluxeExplicit || lvl.zipExplicit || lvl.chartDirectUrlDeluxe || lvl.chartDirectUrl) : (lvl.zipExplicit || lvl.chartDirectUrl))
+                : (isDeluxeActive ? (lvl.chartDirectUrlDeluxe || lvl.chartDirectUrl) : lvl.chartDirectUrl);
+
+            let currentDl1 = isExplicitActive
+                ? (isDeluxeActive ? (lvl.dl1DeluxeExplicit || lvl.dl1Explicit || lvl.dl1Deluxe || lvl.dl1) : (lvl.dl1Explicit || lvl.dl1))
+                : (isDeluxeActive ? (lvl.dl1Deluxe || lvl.dl1) : lvl.dl1);
+
+            let currentDl2 = isExplicitActive
+                ? (isDeluxeActive ? (lvl.dl2DeluxeExplicit || lvl.dl2Explicit || lvl.dl2Deluxe || lvl.dl2) : (lvl.dl2Explicit || lvl.dl2))
+                : (isDeluxeActive ? (lvl.dl2Deluxe || lvl.dl2) : lvl.dl2);
+
+            let currentDl3 = isExplicitActive
+                ? (isDeluxeActive ? (lvl.dl3DeluxeExplicit || lvl.dl3Explicit || lvl.dl3Deluxe || lvl.dl3) : (lvl.dl3Explicit || lvl.dl3))
+                : (isDeluxeActive ? (lvl.dl3Deluxe || lvl.dl3) : lvl.dl3);
 
             const activeAudio = (typeof getActiveAudioElement === 'function') ? getActiveAudioElement() : null;
             const isThisAudioPlaying = activeAudio && !activeAudio.paused && activeAudio.dataset.url === currentAudioUrl;
@@ -738,11 +755,16 @@ let currentDl3 = isDeluxeActive ? (lvl.dl3Deluxe || lvl.dl3) : lvl.dl3;
                     document.getElementById('lvlNotesExplicit').value = lvl.notesExplicit || '';
                     document.getElementById('lvlDurationExplicit').value = lvl.durationExplicit || '';
                     document.getElementById('lvlDateExplicit').value = lvl.dateExplicit || '';
-                    
+                    document.getElementById('lvlDl1Explicit').value = lvl.dl1Explicit || '';
+                    document.getElementById('lvlDl2Explicit').value = lvl.dl2Explicit || '';
+                    document.getElementById('lvlDl3Explicit').value = lvl.dl3Explicit || '';
+
                     document.getElementById('lvlNotesDeluxeExplicit').value = lvl.notesDeluxeExplicit || '';
                     document.getElementById('lvlDurationDeluxeExplicit').value = lvl.durationDeluxeExplicit || '';
                     document.getElementById('lvlDateDeluxeExplicit').value = lvl.dateDeluxeExplicit || '';
-                    
+                    document.getElementById('lvlDl1DeluxeExplicit').value = lvl.dl1DeluxeExplicit || '';
+                    document.getElementById('lvlDl2DeluxeExplicit').value = lvl.dl2DeluxeExplicit || '';
+                    document.getElementById('lvlDl3DeluxeExplicit').value = lvl.dl3DeluxeExplicit || '';
                 }
 
                 syncExplicitFieldsVisibility();
@@ -944,80 +966,83 @@ let currentDl3 = isDeluxeActive ? (lvl.dl3Deluxe || lvl.dl3) : lvl.dl3;
             const zipDeluxeExplicitFile = document.getElementById('lvlChartZipFileDeluxeExplicit')?.files[0];
             if (zipDeluxeExplicitFile) zipDeluxeExplicit = await uploadFileToCloudflareR2(zipDeluxeExplicitFile, 'charts_zip');
 
-const payload = {
-    id,
-    song,
-    artist,
-    genre,
-    art,
-    audioDirectUrl,
-    editionMode,
-    edition: editionMode === 'Deluxe' ? 'Deluxe' : 'Standard',
-    isExclusive,
-    hasExplicit,
-    diff: document.getElementById('lvlDiff').value,
-    notes: document.getElementById('lvlNotes').value,
-    duration: document.getElementById('lvlDuration').value,
-    date: pendingDeletes.dateStd ? "" : document.getElementById('lvlDate').value,
-    dl1: document.getElementById('lvlDl1').value,
-    dl2: document.getElementById('lvlDl2').value,
-    dl3: document.getElementById('lvlDl3').value,
-    video,
-    chartDirectUrl,
-    diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
-    notesDeluxe: document.getElementById('lvlNotesDeluxe').value,
-    durationDeluxe: document.getElementById('lvlDurationDeluxe').value,
-    dateDeluxe: pendingDeletes.dateDlx ? "" : document.getElementById('lvlDateDeluxe').value,
-    dl1Deluxe: document.getElementById('lvlDl1Deluxe').value,
-    dl2Deluxe: document.getElementById('lvlDl2Deluxe').value,
-    dl3Deluxe: document.getElementById('lvlDl3Deluxe').value,
-    videoDeluxe,
-    chartDirectUrlDeluxe,
-    audioExplicit,
-    notesExplicit: document.getElementById('lvlNotesExplicit').value,
-    durationExplicit: document.getElementById('lvlDurationExplicit').value,
-    dateExplicit: pendingDeletes.dateExpStd ? "" : document.getElementById('lvlDateExplicit').value,
-    videoExplicit,
-    zipExplicit,
-    notesDeluxeExplicit: document.getElementById('lvlNotesDeluxeExplicit').value,
-    durationDeluxeExplicit: document.getElementById('lvlDurationDeluxeExplicit').value,
-    dateDeluxeExplicit: pendingDeletes.dateExpDlx ? "" : document.getElementById('lvlDateDeluxeExplicit').value,
-    videoDeluxeExplicit,
-    zipDeluxeExplicit
-};
+            const payload = {
+                id,
+                song,
+                artist,
+                genre,
+                art,
+                audioDirectUrl,
+                editionMode,
+                edition: editionMode === 'Deluxe' ? 'Deluxe' : 'Standard',
+                isExclusive,
+                hasExplicit,
+                diff: document.getElementById('lvlDiff').value,
+                notes: document.getElementById('lvlNotes').value,
+                duration: document.getElementById('lvlDuration').value,
+                date: pendingDeletes.dateStd ? "" : document.getElementById('lvlDate').value,
+                dl1: document.getElementById('lvlDl1').value,
+                dl2: document.getElementById('lvlDl2').value,
+                dl3: document.getElementById('lvlDl3').value,
+                video,
+                chartDirectUrl,
+                diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
+                notesDeluxe: document.getElementById('lvlNotesDeluxe').value,
+                durationDeluxe: document.getElementById('lvlDurationDeluxe').value,
+                dateDeluxe: pendingDeletes.dateDlx ? "" : document.getElementById('lvlDateDeluxe').value,
+                dl1Deluxe: document.getElementById('lvlDl1Deluxe').value,
+                dl2Deluxe: document.getElementById('lvlDl2Deluxe').value,
+                dl3Deluxe: document.getElementById('lvlDl3Deluxe').value,
+                videoDeluxe,
+                chartDirectUrlDeluxe,
+                audioExplicit,
+                notesExplicit: document.getElementById('lvlNotesExplicit').value,
+                durationExplicit: document.getElementById('lvlDurationExplicit').value,
+                dateExplicit: pendingDeletes.dateExpStd ? "" : document.getElementById('lvlDateExplicit').value,
+                dl1Explicit: document.getElementById('lvlDl1Explicit').value,
+                dl2Explicit: document.getElementById('lvlDl2Explicit').value,
+                dl3Explicit: document.getElementById('lvlDl3Explicit').value,
+                videoExplicit,
+                zipExplicit,
+                notesDeluxeExplicit: document.getElementById('lvlNotesDeluxeExplicit').value,
+                durationDeluxeExplicit: document.getElementById('lvlDurationDeluxeExplicit').value,
+                dateDeluxeExplicit: pendingDeletes.dateExpDlx ? "" : document.getElementById('lvlDateDeluxeExplicit').value,
+                dl1DeluxeExplicit: document.getElementById('lvlDl1DeluxeExplicit').value,
+                dl2DeluxeExplicit: document.getElementById('lvlDl2DeluxeExplicit').value,
+                dl3DeluxeExplicit: document.getElementById('lvlDl3DeluxeExplicit').value,
+                videoDeluxeExplicit,
+                zipDeluxeExplicit
+            };
 
             await set(ref(db, 'levels/' + id), payload);
 
-// Registro automático de notificación
-const isNewRecord = !editingId;
-const zipAddedToExisting = !!editingId && !existingLvl.chartDirectUrl && !!chartDirectUrl;
+            // Registro automático de notificación
+            const isNewRecord = !editingId;
+            const zipAddedToExisting = !!editingId && !existingLvl.chartDirectUrl && !!chartDirectUrl;
 
-if (isNewRecord) {
-    await createOrUpdateNotification('chart', {
-        type: 'new',
-        title: 'Nuevo Chart',
-        song: song,
-        artist: artist,
-        artOrIcon: art || 'free_song_Image.png',
-        genre: genre,
-        diff: document.getElementById('lvlDiff').value,
-        edition: editionMode
-    });
-} else if (zipAddedToExisting) {
-    // Si se agrega un ZIP a una canción existente, buscamos si tenía una notificación previa para reemplazarla
-    const notifIdToReplace = existingLvl.notifId || null;
-    await createOrUpdateNotification('chart', {
-        notifId: notifIdToReplace,
-        type: 'zip',
-        title: 'Chart Disponible',
-        song: song,
-        artist: artist,
-        artOrIcon: art || 'free_song_Image.png',
-        genre: genre,
-        diff: document.getElementById('lvlDiff').value,
-        edition: editionMode
-    });
-}
+            if (isNewRecord) {
+                await createOrUpdateNotification('chart', {
+                    type: 'new',
+                    title: 'Nuevo Chart',
+                    song: song,
+                    artist: artist,
+                    artOrIcon: art || 'free_song_Image.png',
+                    genre: genre,
+                    diff: document.getElementById('lvlDiff').value,
+                    edition: editionMode
+                });
+            } else if (zipAddedToExisting) {
+                await createOrUpdateNotification('chart', {
+                    type: 'zip',
+                    title: 'Chart Disponible',
+                    song: song,
+                    artist: artist,
+                    artOrIcon: art || 'free_song_Image.png',
+                    genre: genre,
+                    diff: document.getElementById('lvlDiff').value,
+                    edition: editionMode
+                });
+            }
 
             resetLevelFormState();
         } catch (err) {

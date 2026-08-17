@@ -443,9 +443,9 @@ export function initSkinsModule(state) {
                 <td class="p-2 sm:p-4 min-w-[200px] sm:min-w-[320px] flex-1 align-middle">
                     <ul class="space-y-2 list-none text-zinc-300 whitespace-normal break-words">
                         <li class="flex flex-col sm:flex-row sm:items-baseline">
-                            <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[lang].listName}:</span>
+                            <span class="text-zinc-500 font-bold uppercase text-[10px] sm:text-xs block sm:inline-block w-full sm:w-28 shrink-0 mb-0.5 sm:mb-0">${translations[lang].listName}:</span> 
                             <div class="inline-block flex-1">
-                                <span class="text-white font-black tracking-wide text-base sm:text-xl">${cos.name}</span>
+                                <h4 class="text-white font-black tracking-wide text-base sm:text-xl inline-block">${cos.name}</h4>
                                 ${exclusiveBadge}
                             </div>
                         </li>
@@ -769,31 +769,29 @@ export function initSkinsModule(state) {
                     await checkAndDeleteNotifOnZipDelete('skin');
                 }
 
-// Registro automático de notificación
-const isNewRecord = !document.getElementById('editingCosId').value.trim();
-const zipAddedToExisting = !isNewRecord && !existingCos.skinDirectUrl && !!finalSkinDirectUrl;
+                // Registro automático de notificación
+                const isNewRecord = !document.getElementById('editingCosId').value.trim();
+                const zipAddedToExisting = !isNewRecord && !existingCos.skinDirectUrl && !!finalSkinDirectUrl;
 
-if (isNewRecord) {
-    await createOrUpdateNotification('skin', {
-        type: 'new',
-        title: 'Nueva Skin',
-        skinName: data.name,
-        artist: data.artist,
-        artOrIcon: finalIconUrl,
-        platform: currentSelectedSkinSubPlatform
-    });
-} else if (zipAddedToExisting) {
-    const notifIdToReplace = existingCos.notifId || null;
-    await createOrUpdateNotification('skin', {
-        notifId: notifIdToReplace,
-        type: 'zip',
-        title: 'Skin Disponible',
-        skinName: data.name,
-        artist: data.artist,
-        artOrIcon: finalIconUrl,
-        platform: currentSelectedSkinSubPlatform
-    });
-}
+                if (isNewRecord) {
+                    await createOrUpdateNotification('skin', {
+                        type: 'new',
+                        title: 'Nueva Skin',
+                        skinName: data.name,
+                        artist: data.artist,
+                        artOrIcon: finalIconUrl,
+                        platform: currentSelectedSkinSubPlatform
+                    });
+                } else if (zipAddedToExisting) {
+                    await createOrUpdateNotification('skin', {
+                        type: 'zip',
+                        title: 'Skin Disponible',
+                        skinName: data.name,
+                        artist: data.artist,
+                        artOrIcon: finalIconUrl,
+                        platform: currentSelectedSkinSubPlatform
+                    });
+                }
 
                 resetCosmeticFormState();
             }
