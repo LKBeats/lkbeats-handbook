@@ -207,7 +207,7 @@ export function initChartsModule(state) {
         buildGenresSelector();
     }
 
-    function validateFormStateAndCheckChanges() {
+        function validateFormStateAndCheckChanges() {
         const submitBtn = document.getElementById('lvlSubmitBtn');
         if (!submitBtn) return;
 
@@ -258,7 +258,21 @@ export function initChartsModule(state) {
                 document.getElementById('lvlDl2Deluxe').value !== (existingLvl.dl2Deluxe || '') ||
                 document.getElementById('lvlDl3Deluxe').value !== (existingLvl.dl3Deluxe || '') ||
                 document.getElementById('lvlIsExclusive').checked !== !!existingLvl.isExclusive ||
-                document.getElementById('lvlHasExplicit').checked !== !!existingLvl.hasExplicit;
+                document.getElementById('lvlHasExplicit').checked !== !!existingLvl.hasExplicit ||
+                // --- EVALUACIÓN DE CAMPOS EXPLÍCITOS STANDARD ---
+                (document.getElementById('lvlNotesExplicit')?.value || '') !== (existingLvl.notesExplicit || '') ||
+                (document.getElementById('lvlDurationExplicit')?.value || '') !== (existingLvl.durationExplicit || '') ||
+                (document.getElementById('lvlDateExplicit')?.value || '') !== (existingLvl.dateExplicit || '') ||
+                (document.getElementById('lvlDl1Explicit')?.value || '') !== (existingLvl.dl1Explicit || '') ||
+                (document.getElementById('lvlDl2Explicit')?.value || '') !== (existingLvl.dl2Explicit || '') ||
+                (document.getElementById('lvlDl3Explicit')?.value || '') !== (existingLvl.dl3Explicit || '') ||
+                // --- EVALUACIÓN DE CAMPOS EXPLÍCITOS DELUXE ---
+                (document.getElementById('lvlNotesDeluxeExplicit')?.value || '') !== (existingLvl.notesDeluxeExplicit || '') ||
+                (document.getElementById('lvlDurationDeluxeExplicit')?.value || '') !== (existingLvl.durationDeluxeExplicit || '') ||
+                (document.getElementById('lvlDateDeluxeExplicit')?.value || '') !== (existingLvl.dateDeluxeExplicit || '') ||
+                (document.getElementById('lvlDl1DeluxeExplicit')?.value || '') !== (existingLvl.dl1DeluxeExplicit || '') ||
+                (document.getElementById('lvlDl2DeluxeExplicit')?.value || '') !== (existingLvl.dl2DeluxeExplicit || '') ||
+                (document.getElementById('lvlDl3DeluxeExplicit')?.value || '') !== (existingLvl.dl3DeluxeExplicit || '');
 
             if (changed) {
                 submitBtn.disabled = false;
