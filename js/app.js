@@ -28,18 +28,6 @@ window.addEventListener('load', () => {
     window.scrollTo(0, 0);
 });
 
-// Configurar el estado inicial en el historial al cargar la página
-history.replaceState({ view: 'home' }, '', '');
-
-// Escuchar los eventos de retroceso / avance del navegador y dispositivos móviles
-window.addEventListener('popstate', (e) => {
-    if (e.state && e.state.view) {
-        navigateTo(e.state.view, false);
-    } else {
-        navigateTo('home', false);
-    }
-});
-
 // =========================================================
 // 1. DECLARACIÓN DE CONSTANTES Y VARIABLES DE ESTADO GLOBALES
 // =========================================================
@@ -522,10 +510,7 @@ function navigateTo(view, pushState = true) {
     }
 
     if (view === 'cosmetics') resetCosmeticsSubmenuWorkspace();
-    
-    if (pushState) {
-        history.pushState({ view: view }, '', '');
-    }
+    if (pushState) history.pushState({ view: view }, '', '');
 
     // Garantizar que la ventana y el scroll se muevan arriba inmediatamente
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
