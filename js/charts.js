@@ -651,6 +651,7 @@ export function initChartsModule(state) {
             explicitBtn?.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (activeChartExplicitStates[lvl.id]) {
+                    stopAllMedia(); // Detiene el preview de audio de inmediato al desactivar la versión explícita
                     activeChartExplicitStates[lvl.id] = false;
                     renderLevelsTable();
                 } else {
