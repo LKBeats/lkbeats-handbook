@@ -41,8 +41,44 @@ export function setCreatorModeInNotifications(isCreator) {
 export async function createOrUpdateNotification(category, data) {
     if (!category || !data) return;
 
+    // 1. Si es actualización de ZIP, buscamos si ya existe una notificación de este elemento para actualizarla
+    if (data.type === 'zip' || data.type === 'available') {
+        const notifRef = ref(db, 'notifications');
+        try {
+            const snapshot = await get(notifRef);
+            if (snapshot.exists()) {
+                const allNotifs = snapshot.val();
+                // Buscar coincidencia por nombre de canción o skin
+                const targetEntry = Object.entries(allNotifs).find(([_, notif]) => {
+                    if (category === 'chart') {
+                        return notif.category === 'chart' && notif.song === data.song && notif.artist === data.artist;
+                    } else if (category === 'skin') {
+                        return notif.category === 'skin' && notif.skinName === data.skinName;
+                    }
+                    return false;
+                });
+
+                if (targetEntry) {
+                    const [targetId, existingNotif] = targetEntry;
+                    const updatedPayload = {
+                        ...existingNotif,
+                        type: 'available',
+                        timestamp: Date.now()
+                    };
+                    await set(ref(db, `notifications/${targetId}`), updatedPayload);
+                    return;
+                }
+            }
+        } catch (err) {
+            console.error("Error al buscar notificación existente para actualizar ZIP:", err);
+        }
+    }
+
+    // 2. Si es una notificación nueva o no se encontró una previa para actualizar, generamos un ID único
+    const uniqueId = `${category}_${Date.now()}`;
+
     const notifPayload = {
-        id: category,
+        id: uniqueId,
         category: category,
         type: data.type || 'new',
         artOrIcon: data.artOrIcon || '',
@@ -59,30 +95,43 @@ export async function createOrUpdateNotification(category, data) {
         platform: data.platform || null
     };
 
-    const targetRef = ref(db, `notifications/${category}`);
+    const targetRef = ref(db, `notifications/${uniqueId}`);
     await set(targetRef, notifPayload);
 }
 
-export async function deleteNotificationManually(category) {
-    if (!category) return;
-    const targetRef = ref(db, `notifications/${category}`);
+export async function deleteNotificationManually(notifIdOrCategory) {
+    if (!notifIdOrCategory) return;
+
+    // Si nos pasa la categoría ('chart' o 'skin'), buscamos el ID de la notificación activa en ese momento
+    let targetId = notifIdOrCategory;
+    if (notifIdOrCategory === 'chart' || notifIdOrCategory === 'skin') {
+        const activeNotif = notificationsList[currentIndex];
+        if (activeNotif && activeNotif.category === notifIdOrCategory) {
+            targetId = activeNotif.id;
+        }
+    }
+
+    const targetRef = ref(db, `notifications/${targetId}`);
     await remove(targetRef);
 }
 
 export async function checkAndDeleteNotifOnRecordDelete(category, recordIdentifier) {
     if (!category) return;
     try {
-        const targetRef = ref(db, `notifications/${category}`);
-        const snapshot = await get(targetRef);
+        const notifRef = ref(db, 'notifications');
+        const snapshot = await get(notifRef);
         if (snapshot.exists()) {
-            const notifData = snapshot.val();
-            if (
-                !recordIdentifier ||
-                notifData.song === recordIdentifier ||
-                notifData.skinName === recordIdentifier ||
-                notifData.artOrIcon === recordIdentifier
-            ) {
-                await remove(targetRef);
+            const allNotifs = snapshot.val();
+            // Buscar todas las notificaciones que pertenezcan a este elemento borrado
+            for (const [id, notif] of Object.entries(allNotifs)) {
+                if (notif.category === category) {
+                    const matchesChart = category === 'chart' && (notif.song === recordIdentifier || !recordIdentifier);
+                    const matchesSkin = category === 'skin' && (notif.skinName === recordIdentifier || !recordIdentifier);
+                    
+                    if (matchesChart || matchesSkin || notif.artOrIcon === recordIdentifier) {
+                        await remove(ref(db, `notifications/${id}`));
+                    }
+                }
             }
         }
     } catch (err) {
@@ -93,15 +142,19 @@ export async function checkAndDeleteNotifOnRecordDelete(category, recordIdentifi
 export async function checkAndDeleteNotifOnZipDelete(category, recordIdentifier) {
     if (!category) return;
     try {
-        const targetRef = ref(db, `notifications/${category}`);
-        const snapshot = await get(targetRef);
+        const notifRef = ref(db, 'notifications');
+        const snapshot = await get(notifRef);
         if (snapshot.exists()) {
-            const notifData = snapshot.val();
-            if (
-                notifData.type === 'available' &&
-                (!recordIdentifier || notifData.song === recordIdentifier || notifData.skinName === recordIdentifier)
-            ) {
-                await remove(targetRef);
+            const allNotifs = snapshot.val();
+            for (const [id, notif] of Object.entries(allNotifs)) {
+                if (notif.category === category && (notif.type === 'available' || notif.type === 'zip')) {
+                    const matchesChart = category === 'chart' && (notif.song === recordIdentifier || !recordIdentifier);
+                    const matchesSkin = category === 'skin' && (notif.skinName === recordIdentifier || !recordIdentifier);
+
+                    if (matchesChart || matchesSkin) {
+                        await remove(ref(db, `notifications/${id}`));
+                    }
+                }
             }
         }
     } catch (err) {

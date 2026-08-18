@@ -216,6 +216,10 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
 
         if (!isNaN(notifTime) && (now - notifTime > SEVEN_DAYS_IN_MS)) {
             banner.classList.add('hidden');
+            // Elimina la notificación expirada directamente en la base de datos de Firebase
+            if (activeNotif.id) {
+                deleteNotificationManually(activeNotif.id);
+            }
             return;
         }
     }
