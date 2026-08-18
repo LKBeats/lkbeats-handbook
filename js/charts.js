@@ -452,16 +452,16 @@ export function initChartsModule(state) {
                 : (isDeluxeActive ? (lvl.chartDirectUrlDeluxe || lvl.chartDirectUrl) : lvl.chartDirectUrl);
 
             let currentDl1 = isExplicitActive
-                ? (isDeluxeActive ? (lvl.dl1DeluxeExplicit || lvl.dl1Explicit || lvl.dl1Deluxe || lvl.dl1) : (lvl.dl1Explicit || lvl.dl1))
-                : (isDeluxeActive ? (lvl.dl1Deluxe || lvl.dl1) : lvl.dl1);
+                ? (isDeluxeActive ? lvl.dl1DeluxeExplicit : lvl.dl1Explicit)
+                : (isDeluxeActive ? lvl.dl1Deluxe : lvl.dl1);
 
             let currentDl2 = isExplicitActive
-                ? (isDeluxeActive ? (lvl.dl2DeluxeExplicit || lvl.dl2Explicit || lvl.dl2Deluxe || lvl.dl2) : (lvl.dl2Explicit || lvl.dl2))
-                : (isDeluxeActive ? (lvl.dl2Deluxe || lvl.dl2) : lvl.dl2);
+                ? (isDeluxeActive ? lvl.dl2DeluxeExplicit : lvl.dl2Explicit)
+                : (isDeluxeActive ? lvl.dl2Deluxe : lvl.dl2);
 
             let currentDl3 = isExplicitActive
-                ? (isDeluxeActive ? (lvl.dl3DeluxeExplicit || lvl.dl3Explicit || lvl.dl3Deluxe || lvl.dl3) : (lvl.dl3Explicit || lvl.dl3))
-                : (isDeluxeActive ? (lvl.dl3Deluxe || lvl.dl3) : lvl.dl3);
+                ? (isDeluxeActive ? lvl.dl3DeluxeExplicit : lvl.dl3Explicit)
+                : (isDeluxeActive ? lvl.dl3Deluxe : lvl.dl3);
 
             const activeAudio = (typeof getActiveAudioElement === 'function') ? getActiveAudioElement() : null;
             const isThisAudioPlaying = activeAudio && !activeAudio.paused && activeAudio.dataset.url === currentAudioUrl;
