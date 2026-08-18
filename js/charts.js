@@ -427,29 +427,30 @@ export function initChartsModule(state) {
             const isExplicitActive = !!activeChartExplicitStates[lvl.id];
 
             let currentDiffVal = isDeluxeActive ? (lvl.diffDeluxe || 'Extreme') : (lvl.diff || 'Normal');
+
             let currentNotesVal = isExplicitActive 
-                ? (isDeluxeActive ? (lvl.notesDeluxeExplicit || lvl.notesExplicit || lvl.notesDeluxe || lvl.notes) : (lvl.notesExplicit || lvl.notes))
-                : (isDeluxeActive ? (lvl.notesDeluxe || lvl.notes) : lvl.notes);
+                ? (isDeluxeActive ? lvl.notesDeluxeExplicit : lvl.notesExplicit)
+                : (isDeluxeActive ? lvl.notesDeluxe : lvl.notes);
 
             let currentDurationVal = isExplicitActive
-                ? (isDeluxeActive ? (lvl.durationDeluxeExplicit || lvl.durationExplicit || lvl.durationDeluxe || lvl.duration) : (lvl.durationExplicit || lvl.duration))
-                : (isDeluxeActive ? (lvl.durationDeluxe || lvl.duration) : lvl.duration);
+                ? (isDeluxeActive ? lvl.durationDeluxeExplicit : lvl.durationExplicit)
+                : (isDeluxeActive ? lvl.durationDeluxe : lvl.duration);
 
             let currentDateVal = isExplicitActive
-                ? (isDeluxeActive ? (lvl.dateDeluxeExplicit || lvl.dateExplicit || lvl.dateDeluxe || lvl.date) : (lvl.dateExplicit || lvl.date))
-                : (isDeluxeActive ? (lvl.dateDeluxe || lvl.date) : lvl.date);
+                ? (isDeluxeActive ? lvl.dateDeluxeExplicit : lvl.dateExplicit)
+                : (isDeluxeActive ? lvl.dateDeluxe : lvl.date);
 
             let currentAudioUrl = isExplicitActive
-                ? (lvl.audioExplicit || lvl.audioDirectUrl)
+                ? lvl.audioExplicit
                 : lvl.audioDirectUrl;
 
             let currentVideoUrl = isExplicitActive
-                ? (isDeluxeActive ? (lvl.videoDeluxeExplicit || lvl.videoExplicit || lvl.videoDeluxe || lvl.video) : (lvl.videoExplicit || lvl.video))
-                : (isDeluxeActive ? (lvl.videoDeluxe || lvl.video) : lvl.video);
+                ? (isDeluxeActive ? lvl.videoDeluxeExplicit : lvl.videoExplicit)
+                : (isDeluxeActive ? lvl.videoDeluxe : lvl.video);
 
             let currentChartZip = isExplicitActive
-                ? (isDeluxeActive ? (lvl.zipDeluxeExplicit || lvl.zipExplicit || lvl.chartDirectUrlDeluxe || lvl.chartDirectUrl) : (lvl.zipExplicit || lvl.chartDirectUrl))
-                : (isDeluxeActive ? (lvl.chartDirectUrlDeluxe || lvl.chartDirectUrl) : lvl.chartDirectUrl);
+                ? (isDeluxeActive ? lvl.zipDeluxeExplicit : lvl.zipExplicit)
+                : (isDeluxeActive ? lvl.chartDirectUrlDeluxe : lvl.chartDirectUrl);
 
             let currentDl1 = isExplicitActive
                 ? (isDeluxeActive ? lvl.dl1DeluxeExplicit : lvl.dl1Explicit)
