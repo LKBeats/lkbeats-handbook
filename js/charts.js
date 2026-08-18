@@ -844,7 +844,7 @@ export function initChartsModule(state) {
                             await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
 
                             // 5. Eliminar notificación si el chart borrado contaba con una activa
-                            await checkAndDeleteNotifOnRecordDelete('chart');
+                            await checkAndDeleteNotifOnRecordDelete('chart', lvl.song);
 
                             // 4. Reiniciar formulario
                             resetLevelFormState();
@@ -896,14 +896,14 @@ export function initChartsModule(state) {
 
             if (pendingDeletes.zipStd && existingLvl.chartDirectUrl) {
                 await deleteFileFromCloudflareR2(existingLvl.chartDirectUrl); existingLvl.chartDirectUrl = "";
-                await checkAndDeleteNotifOnZipDelete('chart'); }
+                await checkAndDeleteNotifOnZipDelete('chart', existingLvl.song); }
 
             if (pendingDeletes.videoDlx && existingLvl.videoDeluxe) {
                 await deleteFileFromCloudflareR2(existingLvl.videoDeluxe); existingLvl.videoDeluxe = ""; }
 
             if (pendingDeletes.zipDlx && existingLvl.chartDirectUrlDeluxe) {
                 await deleteFileFromCloudflareR2(existingLvl.chartDirectUrlDeluxe); existingLvl.chartDirectUrlDeluxe = "";
-                await checkAndDeleteNotifOnZipDelete('chart'); }
+                await checkAndDeleteNotifOnZipDelete('chart', existingLvl.song); }
 
             if (pendingDeletes.audioExp && existingLvl.audioExplicit) {
                 await deleteFileFromCloudflareR2(existingLvl.audioExplicit); existingLvl.audioExplicit = ""; }
@@ -913,14 +913,14 @@ export function initChartsModule(state) {
 
             if (pendingDeletes.zipExpStd && existingLvl.zipExplicit) {
                 await deleteFileFromCloudflareR2(existingLvl.zipExplicit); existingLvl.zipExplicit = "";
-                await checkAndDeleteNotifOnZipDelete('chart'); }
+                await checkAndDeleteNotifOnZipDelete('chart', existingLvl.song); }
 
             if (pendingDeletes.videoExpDlx && existingLvl.videoDeluxeExplicit) {
                 await deleteFileFromCloudflareR2(existingLvl.videoDeluxeExplicit); existingLvl.videoDeluxeExplicit = ""; }
 
             if (pendingDeletes.zipExpDlx && existingLvl.zipDeluxeExplicit) {
                 await deleteFileFromCloudflareR2(existingLvl.zipDeluxeExplicit); existingLvl.zipDeluxeExplicit = "";
-                await checkAndDeleteNotifOnZipDelete('chart'); }
+                await checkAndDeleteNotifOnZipDelete('chart', existingLvl.song); }
 
             // 2. Subida de nuevos archivos si fueron seleccionados
             let art = existingLvl.art || '';

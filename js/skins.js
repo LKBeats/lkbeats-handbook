@@ -560,7 +560,7 @@ export function initSkinsModule(state) {
                             await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
 
                             // 5. Eliminar notificación si la skin borrada contaba con una activa
-                            await checkAndDeleteNotifOnRecordDelete('skin');
+                            await checkAndDeleteNotifOnRecordDelete('skin', cos.name);
 
                             // 6. Reiniciar formulario
                             resetCosmeticFormState();
@@ -766,7 +766,7 @@ export function initSkinsModule(state) {
 
                 // Eliminar notificación de tipo ZIP si se eliminó el archivo .zip de la skin
                 if (isZipDeleted) {
-                    await checkAndDeleteNotifOnZipDelete('skin');
+                    await checkAndDeleteNotifOnZipDelete('skin', cos.name);
                 }
 
                 // Registro automático de notificación

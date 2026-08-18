@@ -116,19 +116,18 @@ export async function deleteNotificationManually(notifIdOrCategory) {
 }
 
 export async function checkAndDeleteNotifOnRecordDelete(category, recordIdentifier) {
-    if (!category) return;
+    if (!category || !recordIdentifier) return;
     try {
         const notifRef = ref(db, 'notifications');
         const snapshot = await get(notifRef);
         if (snapshot.exists()) {
             const allNotifs = snapshot.val();
-            // Buscar todas las notificaciones que pertenezcan a este elemento borrado
             for (const [id, notif] of Object.entries(allNotifs)) {
                 if (notif.category === category) {
-                    const matchesChart = category === 'chart' && (notif.song === recordIdentifier || !recordIdentifier);
-                    const matchesSkin = category === 'skin' && (notif.skinName === recordIdentifier || !recordIdentifier);
+                    const matchesChart = category === 'chart' && (notif.song === recordIdentifier || notif.artOrIcon === recordIdentifier);
+                    const matchesSkin = category === 'skin' && (notif.skinName === recordIdentifier || notif.artOrIcon === recordIdentifier);
                     
-                    if (matchesChart || matchesSkin || notif.artOrIcon === recordIdentifier) {
+                    if (matchesChart || matchesSkin) {
                         await remove(ref(db, `notifications/${id}`));
                     }
                 }
@@ -140,7 +139,7 @@ export async function checkAndDeleteNotifOnRecordDelete(category, recordIdentifi
 }
 
 export async function checkAndDeleteNotifOnZipDelete(category, recordIdentifier) {
-    if (!category) return;
+    if (!category || !recordIdentifier) return;
     try {
         const notifRef = ref(db, 'notifications');
         const snapshot = await get(notifRef);
@@ -148,8 +147,8 @@ export async function checkAndDeleteNotifOnZipDelete(category, recordIdentifier)
             const allNotifs = snapshot.val();
             for (const [id, notif] of Object.entries(allNotifs)) {
                 if (notif.category === category && (notif.type === 'available' || notif.type === 'zip')) {
-                    const matchesChart = category === 'chart' && (notif.song === recordIdentifier || !recordIdentifier);
-                    const matchesSkin = category === 'skin' && (notif.skinName === recordIdentifier || !recordIdentifier);
+                    const matchesChart = category === 'chart' && (notif.song === recordIdentifier);
+                    const matchesSkin = category === 'skin' && (notif.skinName === recordIdentifier);
 
                     if (matchesChart || matchesSkin) {
                         await remove(ref(db, `notifications/${id}`));
