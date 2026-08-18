@@ -271,7 +271,7 @@ function updateBannerContent(activeNotif, meta, banner, content) {
     }
 
     // Inyectar la barra de progreso al borde inferior del banner contenedor
-    if (meta.totalActive === 2) {
+    if (meta.totalActive > 1) {
         const progressBox = document.createElement('div');
         progressBox.id = 'notif-progress-container';
         progressBox.className = 'absolute bottom-0 left-0 w-full bg-zinc-800/40 h-[2px] overflow-hidden rounded-b-xl pointer-events-none z-10';
@@ -293,7 +293,7 @@ function updateBannerContent(activeNotif, meta, banner, content) {
     }
 
     let manualNavMarkup = '';
-    if (isCreatorMode && meta.totalActive === 2) {
+    if (isCreatorMode && meta.totalActive > 1) {
         manualNavMarkup = `
             <div class="flex items-center gap-2 mt-2 sm:mt-0 z-20">
                 <button id="btn-notif-prev" type="button" class="w-7 h-7 bg-zinc-900 border border-fuchsia-800/60 text-fuchsia-400 hover:bg-fuchsia-950 rounded-lg flex items-center justify-center text-xs transition">
