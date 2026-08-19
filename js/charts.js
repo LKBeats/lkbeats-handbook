@@ -53,7 +53,8 @@ export function initChartsModule(state) {
         dateExpStd: false,
         videoExpDlx: false,
         zipExpDlx: false,
-        dateExpDlx: false
+        dateExpDlx: false,
+        collabLogo: false
     };
 
     function buildGenresSelector() {
@@ -186,6 +187,9 @@ export function initChartsModule(state) {
         document.getElementById('lvlArtPreviewBox')?.classList.add('hidden');
         document.getElementById('lvlIsComingSoon').value = "false";
         document.getElementById('lvlIsExclusive').checked = false;
+        document.getElementById('lvlIsCollab').checked = false;
+        document.getElementById('lvlCollabAuthor').value = "";
+        document.getElementById('section-collab-fields')?.classList.add('hidden');
         document.getElementById('lvlHasExplicit').checked = false;
         
         const editionModeSelect = document.getElementById('lvlEditionMode');
@@ -257,7 +261,9 @@ export function initChartsModule(state) {
                 document.getElementById('lvlDl1Deluxe').value !== (existingLvl.dl1Deluxe || '') ||
                 document.getElementById('lvlDl2Deluxe').value !== (existingLvl.dl2Deluxe || '') ||
                 document.getElementById('lvlDl3Deluxe').value !== (existingLvl.dl3Deluxe || '') ||
-                document.getElementById('lvlIsExclusive').checked !== !!existingLvl.isExclusive ||
+                document.getElementById('lvlIsExclusive').checked !== !!existingLvl.isExclusive ||                
+                document.getElementById('lvlIsCollab').checked !== !!existingLvl.isCollab ||
+                (document.getElementById('lvlCollabAuthor')?.value || '') !== (existingLvl.collabAuthor || '') ||
                 document.getElementById('lvlHasExplicit').checked !== !!existingLvl.hasExplicit ||
                 // --- EVALUACIÓN DE CAMPOS EXPLÍCITOS STANDARD ---
                 (document.getElementById('lvlNotesExplicit')?.value || '') !== (existingLvl.notesExplicit || '') ||
@@ -518,11 +524,34 @@ export function initChartsModule(state) {
 
             let pMarkup = renderVideoPlayerMarkup(currentVideoUrl, false);
 
-            const exclusiveBadge = lvl.isExclusive ? `
-                <div class="mt-1 text-[10px] font-black text-orange-400 uppercase tracking-wider flex items-center gap-1 bg-orange-950/40 border border-orange-800/40 px-2 py-0.5 rounded-md w-max">
-                    <i class="fa-solid fa-star text-orange-400"></i> ${translations[lang].chartExclusiveLabel}
-                </div>
-            ` : '';
+            let badgesMarkup = '';
+
+            if (lvl.isExclusive) {
+                badgesMarkup += `
+                    <div class="mt-1 text-[10px] font-black text-orange-400 uppercase tracking-wider flex items-center gap-1 bg-orange-950/40 border border-orange-800/40 px-2 py-0.5 rounded-md w-max">
+                        <i class="fa-solid fa-star text-orange-400"></i> ${translations[lang].chartExclusiveLabel}
+                    </div>
+                `;
+            }
+
+            if (lvl.isCollab) {
+                let collabSubContent = '';
+                if (lvl.collabLogo) {
+                    collabSubContent = `<img src="${lvl.collabLogo}" class="h-4 w-auto object-contain max-w-[80px] rounded">`;
+                } else if (lvl.collabAuthor) {
+                    collabSubContent = `<span class="text-zinc-200 font-bold">${lvl.collabAuthor}</span>`;
+                }
+
+                badgesMarkup += `
+                    <div class="mt-1 text-[10px] font-black text-fuchsia-400 uppercase tracking-wider flex flex-col gap-1 bg-fuchsia-950/40 border border-fuchsia-800/40 px-2 py-1 rounded-md w-max">
+                        <div class="flex items-center gap-1">
+                            <i class="fa-solid fa-xmark text-fuchsia-400 font-black"></i>
+                            <span>${translations[lang].lblCollabMessage}</span>
+                        </div>
+                        ${collabSubContent ? `<div class="pt-0.5 border-t border-fuchsia-800/30">${collabSubContent}</div>` : ''}
+                    </div>
+                `;
+            }
 
             const artBoxBorderClass = isDeluxeActive ? "glow-gold border-2 border-yellow-400" : "border border-fuchsia-500/30";
 
@@ -574,7 +603,7 @@ export function initChartsModule(state) {
                             <div class="inline-block flex-1">
                                 <span class="text-white font-black tracking-wide text-base sm:text-lg">${lvl.song}</span> 
                                 <span class="text-zinc-400 text-xs sm:text-sm font-medium"> - ${lvl.artist}</span>
-                                ${exclusiveBadge}
+                                ${badgesMarkup}
                             </div>
                         </li>
                         <li class="flex flex-col sm:flex-row sm:items-baseline">
@@ -751,6 +780,16 @@ export function initChartsModule(state) {
                 document.getElementById('lvlDl3Deluxe').value = lvl.dl3Deluxe || '';
 
                 document.getElementById('lvlIsExclusive').checked = !!lvl.isExclusive;
+                document.getElementById('lvlIsCollab').checked = !!lvl.isCollab;
+                document.getElementById('lvlCollabAuthor').value = lvl.collabAuthor || '';
+                
+                const sectionCollab = document.getElementById('section-collab-fields');
+                if (lvl.isCollab) {
+                    sectionCollab?.classList.remove('hidden');
+                } else {
+                    sectionCollab?.classList.add('hidden');
+                }
+                setupFileOrDeleteSlot('slot-lvl-collab-logo', !!lvl.collabLogo, 'collabLogo');
                 document.getElementById('lvlHasExplicit').checked = !!lvl.hasExplicit;
                 
                 if (lvl.hasExplicit) {
@@ -821,6 +860,7 @@ export function initChartsModule(state) {
                             // 1. Recopilar todos los archivos vinculados (Standard, Deluxe y Explicit)
                             const filesToDelete = [
                                 lvl.art,
+                                lvl.collabLogo,
                                 lvl.audioDirectUrl,
                                 lvl.video,
                                 lvl.chartDirectUrl,
@@ -889,6 +929,9 @@ export function initChartsModule(state) {
             if (pendingDeletes.art && existingLvl.art) {
                 await deleteFileFromCloudflareR2(existingLvl.art); existingLvl.art = ""; }
 
+            if (pendingDeletes.collabLogo && existingLvl.collabLogo) {
+                await deleteFileFromCloudflareR2(existingLvl.collabLogo); existingLvl.collabLogo = ""; }
+
             if (pendingDeletes.audio && existingLvl.audioDirectUrl) {
                 await deleteFileFromCloudflareR2(existingLvl.audioDirectUrl); existingLvl.audioDirectUrl = ""; }
 
@@ -927,6 +970,10 @@ export function initChartsModule(state) {
             let art = existingLvl.art || '';
             const artFile = document.getElementById('lvlArtFile')?.files[0];
             if (artFile) art = await uploadFileToCloudflareR2(artFile, 'charts_art');
+
+            let collabLogo = existingLvl.collabLogo || '';
+            const collabLogoFile = document.getElementById('lvlCollabLogoFile')?.files[0];
+            if (collabLogoFile) collabLogo = await uploadFileToCloudflareR2(collabLogoFile, 'collab_logos');
 
             let audioDirectUrl = existingLvl.audioDirectUrl || '';
             const audioFile = document.getElementById('lvlAudioFile')?.files[0];
@@ -978,6 +1025,9 @@ export function initChartsModule(state) {
                 editionMode,
                 edition: editionMode === 'Deluxe' ? 'Deluxe' : 'Standard',
                 isExclusive,
+                isCollab: document.getElementById('lvlIsCollab').checked,
+                collabAuthor: document.getElementById('lvlCollabAuthor').value.trim(),
+                collabLogo,
                 hasExplicit,
                 diff: document.getElementById('lvlDiff').value,
                 notes: document.getElementById('lvlNotes').value,
@@ -1082,6 +1132,16 @@ export function initChartsModule(state) {
 
     document.getElementById('lvlHasExplicit')?.addEventListener('change', () => {
         syncExplicitFieldsVisibility();
+        validateFormStateAndCheckChanges();
+    });
+
+    document.getElementById('lvlIsCollab')?.addEventListener('change', (e) => {
+        const sectionCollab = document.getElementById('section-collab-fields');
+        if (e.target.checked) {
+            sectionCollab?.classList.remove('hidden');
+        } else {
+            sectionCollab?.classList.add('hidden');
+        }
         validateFormStateAndCheckChanges();
     });
 
