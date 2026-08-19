@@ -486,6 +486,27 @@
                                 <span class="font-extrabold text-orange-400 uppercase text-[11px]" data-i18n="btnExclusive">Exclusivo</span>
                             </label>
 
+                             <label class="flex items-center gap-2 cursor-pointer bg-[#05020a] p-2 rounded-lg border border-fuchsia-950">
+                                <input type="checkbox" id="lvlIsCollab" class="accent-fuchsia-500 w-4 h-4">
+                                <span class="font-extrabold text-fuchsia-400 uppercase text-[11px] flex items-center gap-1.5">
+                                    <i class="fa-solid fa-xmark text-fuchsia-400 font-black"></i>
+                                    <span>Collab</span>
+                                </span>
+                            </label>
+
+                            <div id="section-collab-fields" class="hidden bg-black/30 p-2.5 rounded-xl border border-fuchsia-950/60 space-y-2">
+                                <div>
+                                    <label class="block font-bold text-zinc-400 mb-1" data-i18n="lblCollabAuthor">Nombre del Colaborador</label>
+                                    <input type="text" id="lvlCollabAuthor" placeholder="ej. Artista / Chartmaker" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-100">
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-zinc-400 mb-1" data-i18n="lblCollabLogo">Logo de Colaboración (Opcional)</label>
+                                    <div id="slot-lvl-collab-logo">
+                                        <input type="file" id="lvlCollabLogoFile" accept="image/*" class="w-full bg-[#05020a] border border-fuchsia-950 p-2 rounded-lg text-zinc-400">
+                                    </div>
+                                </div>
+                            </div>
+
                             <label class="flex items-center gap-2 cursor-pointer bg-[#05020a] p-2 rounded-lg border border-red-950/60">
                                 <input type="checkbox" id="lvlHasExplicit" class="accent-red-500 w-4 h-4">
                                 <span class="font-black text-red-500 uppercase text-[11px] flex items-center gap-1">
