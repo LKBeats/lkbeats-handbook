@@ -68,7 +68,7 @@ export function startRadialCanvasVisualizer(canvas, analyser, containerElement, 
     const ctx = canvas.getContext('2d');
 
     if (analyser) {
-        analyser.smoothingTimeConstant = 0.82;
+        analyser.smoothingTimeConstant = 0.75;
     }
 
     const bufferLength = analyser.frequencyBinCount;
@@ -110,11 +110,12 @@ export function startRadialCanvasVisualizer(canvas, analyser, containerElement, 
             const rawValue = audioDataArray[dataIndex] || 0;
 
             // Ajuste de sensibilidad contenido proporcional al video de Beatstar
-            let barHeight = (rawValue / 255);
+            let normalized = Math.min(1, (rawValue / 255) * 1.4);
+            let barHeight = 0;
             if (dataIndex < 8) {
-                barHeight = Math.pow(barHeight, 1.2) * 11;
+                barHeight = Math.pow(barHeight, 1.1) * 16;
             } else {
-                barHeight = Math.pow(barHeight, 1.3) * 9.5;
+                barHeight = Math.pow(barHeight, 1.2) * 14;
             }
 
             const startX = centerX + Math.cos(angle) * radius;
@@ -177,6 +178,11 @@ export function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canva
         audioCtx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
         audioAnalyser = audioCtx.createAnalyser();
         audioAnalyser.fftSize = 64;
+
+// COMPENSACIÓN PARA AUDIOS CON -6 dB Y MAYOR REACTIVIDAD EN DROPS
+        audioAnalyser.minDecibels = -85;
+        audioAnalyser.maxDecibels = -12;
+        audioAnalyser.smoothingTimeConstant = 0.75;
     }
 
     const audio = new Audio();
