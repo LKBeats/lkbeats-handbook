@@ -68,7 +68,7 @@ export function startRadialCanvasVisualizer(canvas, analyser, containerElement, 
     const ctx = canvas.getContext('2d');
 
     if (analyser) {
-        analyser.smoothingTimeConstant = 0.65;
+        analyser.smoothingTimeConstant = 0.70;
     }
 
     const bufferLength = analyser.frequencyBinCount;
@@ -102,17 +102,21 @@ export function startRadialCanvasVisualizer(canvas, analyser, containerElement, 
         currentRotationAngle += 0.0035;
 
         const barCount = 64;
+        const minFreqRatio = 0.05; 
+        const maxFreqRatio = 0.60;
+
         for (let i = 0; i < barCount; i++) {
             const angle = ((i / barCount) * Math.PI * 2) + currentRotationAngle;
 
-            const targetIndex = i < barCount / 2 ? i : barCount - i;
-            const dataIndex = Math.floor((targetIndex / (barCount / 2)) * (bufferLength - 1));
+            const progress = i / barCount;
+            const targetRatio = minFreqRatio + (progress * (maxFreqRatio - minFreqRatio));
+            const dataIndex = Math.floor(targetRatio * (bufferLength - 1));
             const rawValue = audioDataArray[dataIndex] || 0;
 
             // Ajuste de sensibilidad contenido proporcional al video de Beatstar
-            let boostedValue = (rawValue / 255) * 2.2;
-            let barHeight = Math.min(24, Math.pow(boostedValue, 1.1) * 18);
-            if (rawValue > 5 && barHeight < 2) {
+            let normalized = Math.min(1, (rawValue / 255) * 1.55);
+            let barHeight = Math.min(15, Math.pow(normalized, 1.15) * 15);
+            if (rawValue > 8 && barHeight < 2) {
                 barHeight = 2;
             }
 
