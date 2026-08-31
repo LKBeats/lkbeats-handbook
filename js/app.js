@@ -330,8 +330,8 @@ function updateBannerContent(activeNotif, meta, banner, content) {
                     <img src="${activeNotif.artOrIcon}" class="w-14 h-14 sm:w-20 sm:h-20 rounded-xl object-cover border border-white shadow-lg shrink-0">
                     <div class="min-w-0 flex-1">
                         <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-orange-400 block mb-0.5">${notifTitle}</span>
-                        <h3 class="text-xs sm:text-base font-black text-white leading-tight tracking-wide truncate">${activeNotif.song}</h3>
-                        <p class="text-[11px] sm:text-sm text-zinc-400 font-bold truncate">${activeNotif.artist}</p>
+                        <h3 class="text-xs sm:text-base font-black text-white leading-snug tracking-wide whitespace-normal break-words">${activeNotif.song}</h3>
+<p class="text-[11px] sm:text-sm text-zinc-400 font-bold whitespace-normal break-words">${activeNotif.artist}</p>
                     </div>
                 </div>
 
@@ -362,8 +362,8 @@ function updateBannerContent(activeNotif, meta, banner, content) {
                     <img src="${activeNotif.artOrIcon}" class="w-14 h-14 sm:w-20 sm:h-20 rounded-xl object-cover border border-white shadow-lg shrink-0">
                     <div class="min-w-0 flex-1">
                         <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">${notifTitle}</span>
-                        <h3 class="text-xs sm:text-base font-black text-white leading-tight tracking-wide truncate">${activeNotif.skinName}</h3>
-                        <p class="text-[11px] sm:text-sm text-zinc-400 font-bold truncate">${activeNotif.artist}</p>
+                        <h3 class="text-xs sm:text-base font-black text-white leading-snug tracking-wide whitespace-normal break-words">${activeNotif.skinName}</h3>
+<p class="text-[11px] sm:text-sm text-zinc-400 font-bold whitespace-normal break-words">${activeNotif.artist}</p>
                     </div>
                 </div>
 
