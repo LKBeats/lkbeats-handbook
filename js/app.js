@@ -327,7 +327,7 @@ function updateBannerContent(activeNotif, meta, banner, content) {
             <div class="flex flex-row items-center justify-between gap-2 sm:gap-4 w-full pr-6 sm:pr-8">
                 <!-- Información principal de la canción (Izquierda) -->
                 <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1">
-                    <img src="${activeNotif.artOrIcon}" class="w-14 h-14 sm:w-20 sm:h-20 rounded-xl object-cover border border-orange-500/40 shadow-lg shrink-0">
+                    <img src="${activeNotif.artOrIcon}" class="w-14 h-14 sm:w-20 sm:h-20 rounded-xl object-cover border-2 border-white shadow-lg shrink-0">
                     <div class="min-w-0 flex-1">
                         <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-orange-400 block mb-0.5">${notifTitle}</span>
                         <h3 class="text-xs sm:text-base font-black text-white leading-tight tracking-wide truncate">${activeNotif.song}</h3>
@@ -359,7 +359,7 @@ function updateBannerContent(activeNotif, meta, banner, content) {
         content.innerHTML = `
             <div class="flex flex-row items-center justify-between gap-2 sm:gap-4 w-full pr-6 sm:pr-8">
                 <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1">
-                    <img src="${activeNotif.artOrIcon}" class="w-14 h-14 sm:w-20 sm:h-20 rounded-xl object-cover border border-fuchsia-500/40 shadow-lg shrink-0">
+                    <img src="${activeNotif.artOrIcon}" class="w-14 h-14 sm:w-20 sm:h-20 rounded-xl object-cover border-2 border-white shadow-lg shrink-0">
                     <div class="min-w-0 flex-1">
                         <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">${notifTitle}</span>
                         <h3 class="text-xs sm:text-base font-black text-white leading-tight tracking-wide truncate">${activeNotif.skinName}</h3>
