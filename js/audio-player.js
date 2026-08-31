@@ -68,7 +68,7 @@ export function startRadialCanvasVisualizer(canvas, analyser, containerElement, 
     const ctx = canvas.getContext('2d');
 
     if (analyser) {
-        analyser.smoothingTimeConstant = 0.70;
+        analyser.smoothingTimeConstant = 0.65;
     }
 
     const bufferLength = analyser.frequencyBinCount;
@@ -106,16 +106,14 @@ export function startRadialCanvasVisualizer(canvas, analyser, containerElement, 
             const angle = ((i / barCount) * Math.PI * 2) + currentRotationAngle;
 
             const targetIndex = i < barCount / 2 ? i : barCount - i;
-            const dataIndex = Math.floor((targetIndex / (barCount / 2)) * (bufferLength * 0.7));
+            const dataIndex = Math.floor((targetIndex / (barCount / 2)) * (bufferLength - 1));
             const rawValue = audioDataArray[dataIndex] || 0;
 
             // Ajuste de sensibilidad contenido proporcional al video de Beatstar
-            let normalized = Math.min(1, (rawValue / 255) * 1.6);
-            let barHeight = 0;
-            if (dataIndex < 8) {
-                barHeight = Math.pow(barHeight, 1.15) * 17;
-            } else {
-                barHeight = Math.pow(barHeight, 1.25) * 15;
+            let boostedValue = (rawValue / 255) * 2.2;
+            let barHeight = Math.min(24, Math.pow(boostedValue, 1.1) * 18);
+            if (rawValue > 5 && barHeight < 2) {
+                barHeight = 2;
             }
 
             const startX = centerX + Math.cos(angle) * radius;
@@ -177,12 +175,12 @@ export function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canva
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
         audioAnalyser = audioCtx.createAnalyser();
-        audioAnalyser.fftSize = 64;
+        audioAnalyser.fftSize = 128;
 
 // COMPENSACIÓN PARA AUDIOS CON -6 dB Y MAYOR REACTIVIDAD EN DROPS
         audioAnalyser.minDecibels = -80;
         audioAnalyser.maxDecibels = -3;
-        audioAnalyser.smoothingTimeConstant = 0.70;
+        audioAnalyser.smoothingTimeConstant = 0.65;
     }
 
     const audio = new Audio();
