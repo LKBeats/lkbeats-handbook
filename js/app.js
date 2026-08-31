@@ -137,6 +137,11 @@ function renderNotifDiffTagHtml(diffVal, editionVal, diffDeluxeVal, isEn = false
         const stdDiff = diffVal || 'Normal';
         const dlxDiff = diffDeluxeVal || diffVal || 'Hard';
 
+        // Si ambas dificultades son exactamente iguales, solo mostramos una etiqueta
+        if (stdDiff === dlxDiff) {
+            return getSingleDiffTagHtml(stdDiff, isEn);
+        }
+
         return `
             <div class="inline-flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
                 ${getSingleDiffTagHtml(stdDiff, isEn)}
