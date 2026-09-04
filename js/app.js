@@ -307,7 +307,7 @@ function updateBannerContent(activeNotif, meta, banner, content) {
                 <button id="btn-notif-prev" type="button" class="w-7 h-7 bg-zinc-900 border border-fuchsia-800/60 text-fuchsia-400 hover:bg-fuchsia-950 rounded-lg flex items-center justify-center text-xs transition">
                     <i class="fa-solid fa-chevron-left"></i>
                 </button>
-                <span class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">${meta.currentIndex + 1} / </span>
+                <span class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">${meta.currentIndex + 1} / ${totalNotifs}</span>
                 <button id="btn-notif-next" type="button" class="w-7 h-7 bg-zinc-900 border border-fuchsia-800/60 text-fuchsia-400 hover:bg-fuchsia-950 rounded-lg flex items-center justify-center text-xs transition">
                     <i class="fa-solid fa-chevron-right"></i>
                 </button>
