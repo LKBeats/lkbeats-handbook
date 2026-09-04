@@ -14,7 +14,6 @@ import {
     setCreatorModeInNotifications,
     nextNotification,
     previousNotification
-    getNotificationsCount
 } from "./notifications-manager.js";
 import { initChartsModule } from "./charts.js";
 import { initSkinsModule } from "./skins.js";
@@ -299,15 +298,13 @@ function updateBannerContent(activeNotif, meta, banner, content) {
     }
 
     let manualNavMarkup = '';
-    const totalNotifs = getNotificationsCount();
-
     if (isCreatorMode && meta.totalActive > 1) {
         manualNavMarkup = `
             <div class="flex items-center gap-2 mt-2 sm:mt-0 z-20">
                 <button id="btn-notif-prev" type="button" class="w-7 h-7 bg-zinc-900 border border-fuchsia-800/60 text-fuchsia-400 hover:bg-fuchsia-950 rounded-lg flex items-center justify-center text-xs transition">
                     <i class="fa-solid fa-chevron-left"></i>
                 </button>
-                <span class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">${meta.currentIndex + 1} / </span>
+                <span class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">${meta.currentIndex + 1} / 2</span>
                 <button id="btn-notif-next" type="button" class="w-7 h-7 bg-zinc-900 border border-fuchsia-800/60 text-fuchsia-400 hover:bg-fuchsia-950 rounded-lg flex items-center justify-center text-xs transition">
                     <i class="fa-solid fa-chevron-right"></i>
                 </button>
