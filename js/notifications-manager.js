@@ -209,3 +209,7 @@ function restartRotationTimer() {
     stopRotationTimer();
     startRotationTimer();
 }
+
+export function getNotificationsCount() {
+    return notificationsList.length;
+}
