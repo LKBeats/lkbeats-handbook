@@ -14,6 +14,7 @@ import {
     setCreatorModeInNotifications,
     nextNotification,
     previousNotification
+    getNotificationsCount
 } from "./notifications-manager.js";
 import { initChartsModule } from "./charts.js";
 import { initSkinsModule } from "./skins.js";
@@ -298,6 +299,8 @@ function updateBannerContent(activeNotif, meta, banner, content) {
     }
 
     let manualNavMarkup = '';
+    const totalNotifs = getNotificationsCount();
+
     if (isCreatorMode && meta.totalActive > 1) {
         manualNavMarkup = `
             <div class="flex items-center gap-2 mt-2 sm:mt-0 z-20">
