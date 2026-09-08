@@ -120,7 +120,7 @@
     width: 0%;
     height: 100%;
     background: #ffffff;
-    animation: notifProgress 15s linear infinite;
+    animation: notifProgress 10s linear infinite;
 }
 
 /* Modales ajustados para evitar cubrir toda la pantalla y espacio muerto */
