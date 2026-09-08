@@ -37,35 +37,32 @@
 
     <link rel="stylesheet" href="css/styles.css">
 
-<!-- HTML Meta Tags -->
-<title>LKBeats Handbook</title>
-<meta name="description" content="Official LKBeats page, check out all the content created for Beatclone/TapWave/BSCM/beatcharts
+    <!-- HTML Meta Tags -->
+    <title>LKBeats Handbook</title>
+    <meta name="description" content="Official LKBeats page, check out all the content created for Beatclone/TapWave/BSCM/beatcharts
 
 More content coming soon">
 
-<!-- Open Graph Meta Tags -->
-<meta property="og:url" content="https://lkbeats.github.io/lkbeats-handbook/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="LKBeats Handbook">
-<meta property="og:description" content="Official LKBeats page, check out all the content created for Beatclone/TapWave/BSCM/beatcharts
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:url" content="https://lkbeats.github.io/lkbeats-handbook/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="LKBeats Handbook">
+    <meta property="og:description" content="Official LKBeats page, check out all the content created for Beatclone/TapWave/BSCM/beatcharts
 
 More content coming soon">
-<meta property="og:image" content="https://pub-4fdb8147f49d431e8ee7060936e6e3ee.r2.dev/WebImage/LKBeats%20Handbook%20Web.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+    <meta property="og:image" content="https://pub-4fdb8147f49d431e8ee7060936e6e3ee.r2.dev/WebImage/LKBeats%20Handbook%20Web.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
 
-<!-- Twitter Meta Tags -->
-<meta name="twitter:card" content="summary_large_image">
-<meta property="twitter:domain" content="lkbeats.github.io">
-<meta property="twitter:url" content="https://lkbeats.github.io/lkbeats-handbook/">
-<meta name="twitter:title" content="LKBeats Handbook">
-<meta name="twitter:description" content="Official LKBeats page, check out all the content created for Beatclone/TapWave/BSCM/beatcharts
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:domain" content="lkbeats.github.io">
+    <meta property="twitter:url" content="https://lkbeats.github.io/lkbeats-handbook/">
+    <meta name="twitter:title" content="LKBeats Handbook">
+    <meta name="twitter:description" content="Official LKBeats page, check out all the content created for Beatclone/TapWave/BSCM/beatcharts
 
 More content coming soon">
-<meta name="twitter:image" content="https://pub-4fdb8147f49d431e8ee7060936e6e3ee.r2.dev/WebImage/LKBeats%20Handbook%20Web.png">
-
-<!-- Meta Tags Generated via https://opengraph.dev -->
-
+    <meta name="twitter:image" content="https://pub-4fdb8147f49d431e8ee7060936e6e3ee.r2.dev/WebImage/LKBeats%20Handbook%20Web.png">
 </head>
 <body class="bg-[#05020a] text-zinc-100 min-h-screen font-sans flex flex-col relative overflow-x-hidden">
 
@@ -237,6 +234,36 @@ More content coming soon">
         </div>
     </div>
 
+    <!-- Modal Tutorial Pop-up -->
+    <div id="tutorial-modal" class="fixed inset-0 z-[170] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-[#11091c] border border-fuchsia-900/60 rounded-2xl w-full max-w-lg p-5 flex flex-col gap-4 shadow-2xl relative">
+            <button id="btn-close-tutorial" class="absolute top-3 right-3 text-zinc-400 hover:text-white text-lg w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-900/80 border border-fuchsia-800/30">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="text-center pt-1">
+                <span id="tut-step-counter" class="text-[10px] font-black uppercase tracking-widest text-fuchsia-400">PASO 1 / 4</span>
+                <h3 id="tut-title" class="text-lg font-bold text-white mt-1"></h3>
+            </div>
+
+            <div class="w-full h-48 sm:h-56 bg-zinc-950 rounded-xl border border-fuchsia-950/80 overflow-hidden flex items-center justify-center">
+                <img id="tut-gif" src="GifWeb1.gif" alt="Tutorial GIF" class="w-full h-full object-contain">
+            </div>
+
+            <p id="tut-desc" class="text-xs sm:text-sm text-zinc-300 text-center min-h-[60px] flex items-center justify-center px-2 leading-relaxed"></p>
+
+            <div class="flex items-center justify-between gap-3 pt-2 border-t border-fuchsia-950/60">
+                <button id="btn-tut-prev" class="px-4 py-2 bg-zinc-900 border border-fuchsia-800/40 rounded-xl text-xs font-bold text-zinc-300 hover:text-white hover:bg-fuchsia-950 transition hidden" data-i18n="btnPrev">
+                    Anterior
+                </button>
+                <div class="flex-grow"></div>
+                <button id="btn-tut-next" class="px-5 py-2 bg-fuchsia-600 hover:bg-fuchsia-500 rounded-xl text-xs font-bold text-white transition shadow-lg shadow-fuchsia-950" data-i18n="btnNext">
+                    Siguiente
+                </button>
+            </div>
+        </div>
+    </div>
+
     <header class="border-b border-fuchsia-950/40 bg-[#11091c] backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
             <div class="max-w-[33%] w-1/3 md:max-w-none md:w-auto shrink-0 cursor-pointer" id="nav-logo">
@@ -266,14 +293,13 @@ More content coming soon">
 
     <main class="flex-grow flex flex-col relative">
         
+        <!-- ================= VIEW 1: HOME ================= -->
         <section id="view-home" class="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col justify-center flex-grow w-full relative z-10">
 
             <!-- BANNER DE NOTIFICACIÓN EN LA PÁGINA DE INICIO -->
             <div id="home-notification-banner" class="hidden w-full max-w-5xl mx-auto -mt-8 mb-8 relative overflow-hidden rounded-2xl bg-[#11091c] border border-fuchsia-500/40 p-4 shadow-2xl transition-all duration-300">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 via-fuchsia-500 to-yellow-500"></div>
-                <div id="notif-banner-content" class="relative w-full flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <!-- El contenido dinámico y los controles manuales/X se inyectan mediante app.js -->
-                </div>
+                <div id="notif-banner-content" class="relative w-full flex flex-col sm:flex-row items-center justify-between gap-4"></div>
             </div>
 
             <div class="text-center mb-12 flex flex-col items-center">
@@ -327,11 +353,10 @@ More content coming soon">
                 </div>
             </div>
 
-<!-- Versión con espacio reducido -->
-<div class="bg-[#11091c] border border-red-500/30 rounded-2xl p-6 mb-9 text-center max-w-4xl mx-auto w-full">
-    <h2 class="text-red-500 font-display font-black text-3xl tracking-widest uppercase mb-4" data-i18n="disclaimerTitle">DISCLAIMER</h2>
-    <p class="text-zinc-300 text-sm leading-relaxed font-medium" data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos...</p>
-</div>
+            <div class="bg-[#11091c] border border-red-500/30 rounded-2xl p-6 mb-9 text-center max-w-4xl mx-auto w-full">
+                <h2 class="text-red-500 font-display font-black text-3xl tracking-widest uppercase mb-4" data-i18n="disclaimerTitle">DISCLAIMER</h2>
+                <p class="text-zinc-300 text-sm leading-relaxed font-medium" data-i18n="disclaimerContent">Este contenido ha sido creado meramente con fines recreativos...</p>
+            </div>
 
             <div id="thanks-videos-panel-box" class="hidden bg-[#11091c] border border-orange-500/40 rounded-2xl p-6 shadow-2xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-fuchsia-500"></div>
@@ -462,9 +487,14 @@ More content coming soon">
 
         <!-- ================= VIEW 2: CHARTS REGISTRY ================= -->
         <section id="view-levels" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
-            <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-orange-500/30 rounded-2xl -mt-5 mb-4 w-max">
-                <i class="fa-solid fa-chevron-left text-orange-500"></i> <span data-i18n="backHome">Volver</span>
-            </button>
+            <div class="flex items-center justify-between -mt-5 mb-4">
+                <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-orange-500/30 rounded-2xl">
+                    <i class="fa-solid fa-chevron-left text-orange-500"></i> <span data-i18n="backHome">Volver</span>
+                </button>
+                <button id="btn-open-tutorial-charts" type="button" title="Tutorial" class="w-12 h-12 rounded-2xl bg-[#11091c] border border-orange-500/30 text-orange-400 hover:bg-orange-950/40 flex items-center justify-center font-black text-xl transition shadow-lg">
+                    ?
+                </button>
+            </div>
             
             <div id="levels-layout-grid" class="flex flex-col gap-6 items-start w-full relative">
                 <div id="level-form-container" class="hidden bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-5 shadow-xl w-full xl:w-[320px] shrink-0 xl:sticky xl:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto z-30">
@@ -646,7 +676,7 @@ More content coming soon">
                             </div>
                         </div>
 
-                        <!-- SECCIÓN EXPLÍCITA CORREGIDA CON IDs COMPLETOS Y DESACOPLADOS -->
+                        <!-- SECCIÓN EXPLÍCITA -->
                         <div id="section-explicit-fields" class="hidden space-y-3 bg-red-950/20 p-2.5 rounded-xl border border-red-500/40">
                             <div class="font-black text-red-400 uppercase tracking-wider text-[11px] pb-1 border-b border-red-500/30 flex items-center gap-1.5">
                                 <span class="w-3.5 h-3.5 bg-red-600 text-white rounded flex items-center justify-center text-[9px] font-black">E</span> <span data-i18n="lblExplicitSectionHeader">Datos Sin Censura / Explicit</span>
@@ -659,7 +689,7 @@ More content coming soon">
                                 </div>
                             </div>
 
-                            <!-- SUBSECCIÓN STANDARD EXPLÍCITA CON ID ASIGNADA -->
+                            <!-- SUBSECCIÓN STANDARD EXPLÍCITA -->
                             <div id="sub-section-explicit-standard" class="space-y-2 border-b border-red-950/60 pb-2">
                                 <span class="font-extrabold text-zinc-300 text-[10px] uppercase">Standard (Explicit)</span>
                                 <div class="grid grid-cols-2 gap-2">
@@ -747,8 +777,8 @@ More content coming soon">
                     <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex flex-col sm:flex-row landscape-pc-flex-row items-start sm:items-center justify-between gap-4">
                         <div class="flex flex-col items-start justify-center shrink-0">
                             <div class="text-xl sm:text-2xl font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">
-                            Charts / <span data-i18n="bannerSongs">Canciones</span>
-                        </div>
+                                Charts / <span data-i18n="bannerSongs">Canciones</span>
+                            </div>
                             <div class="block mt-0.5 text-[10px] sm:text-xs font-bold text-orange-400">
                                 <span id="lbl-counter-charts">Total: 0 Charts</span>
                             </div>
@@ -810,9 +840,14 @@ More content coming soon">
 
         <!-- ================= VIEW 3: COSMETICS ================= -->
         <section id="view-cosmetics" class="hidden pt-2 pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-grow flex flex-col z-10">
-            <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-fuchsia-500/30 rounded-2xl mt-1 mb-4 w-max">
-                <i class="fa-solid fa-chevron-left text-fuchsia-500"></i> <span data-i18n="backHome">Volver</span>
-            </button>
+            <div class="flex items-center justify-between mt-1 mb-4">
+                <button class="btn-back-to-home group text-zinc-100 hover:text-white text-base font-extrabold flex items-center gap-2.5 px-6 py-3 bg-[#11091c] border border-fuchsia-500/30 rounded-2xl">
+                    <i class="fa-solid fa-chevron-left text-fuchsia-500"></i> <span data-i18n="backHome">Volver</span>
+                </button>
+                <button id="btn-open-tutorial-skins" type="button" title="Tutorial" class="w-12 h-12 rounded-2xl bg-[#11091c] border border-fuchsia-500/30 text-fuchsia-400 hover:bg-fuchsia-950/40 flex items-center justify-center font-black text-xl transition shadow-lg">
+                    ?
+                </button>
+            </div>
 
             <div id="cosmetics-submenu" class="w-full max-w-4xl mx-auto py-1 flex flex-col items-center">
                 <div class="text-center mb-8 flex flex-col items-center w-full">
@@ -964,25 +999,23 @@ More content coming soon">
 
                     <div id="container-workspace-beatstar" class="hidden flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
-    <div class="flex flex-col items-start justify-center shrink-0">
-        <div class="h-10 w-full">
-            <img src="BeatstarWhiteLogo.png" alt="Beatstar" class="h-full w-auto object-contain object-left">
-        </div>
-        <!-- Texto debajo del logo únicamente en móvil vertical -->
-        <div class="block sm:hidden mt-0.5 text-[10px] font-bold text-fuchsia-400">
-            <span id="counter-beatstar-mobile">Total: 0 Skins</span>
-        </div>
-    </div>
-    <div class="flex items-center gap-3 shrink-0">
-        <!-- Insignia original para PC y Móvil Horizontal -->
-        <div class="text-xs font-bold bg-fuchsia-950/50 border border-fuchsia-800/40 px-3 py-1.5 rounded-xl text-fuchsia-400 hidden sm:block">
-            <span id="counter-beatstar">Total: 0 Skins</span>
-        </div>
-        <button id="btn-toggle-to-tapwave" class="px-3 py-1.5 bg-zinc-900 border border-orange-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
-            <span data-i18n="jumpToTxt">Ir a</span> <img src="TapWaveWhiteLogo.png" class="h-3.5 w-auto object-contain">
-        </button>
-    </div>
-</div>
+                            <div class="flex flex-col items-start justify-center shrink-0">
+                                <div class="h-10 w-full">
+                                    <img src="BeatstarWhiteLogo.png" alt="Beatstar" class="h-full w-auto object-contain object-left">
+                                </div>
+                                <div class="block sm:hidden mt-0.5 text-[10px] font-bold text-fuchsia-400">
+                                    <span id="counter-beatstar-mobile">Total: 0 Skins</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 shrink-0">
+                                <div class="text-xs font-bold bg-fuchsia-950/50 border border-fuchsia-800/40 px-3 py-1.5 rounded-xl text-fuchsia-400 hidden sm:block">
+                                    <span id="counter-beatstar">Total: 0 Skins</span>
+                                </div>
+                                <button id="btn-toggle-to-tapwave" class="px-3 py-1.5 bg-zinc-900 border border-orange-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
+                                    <span data-i18n="jumpToTxt">Ir a</span> <img src="TapWaveWhiteLogo.png" class="h-3.5 w-auto object-contain">
+                                </button>
+                            </div>
+                        </div>
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                             <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px] landscape-pc-table">
                                 <thead>
@@ -992,7 +1025,7 @@ More content coming soon">
                                         <th class="p-4 text-center w-48 sm:w-64 align-middle" data-i18n="thPreview">Preview</th>
                                         <th class="p-4 text-center w-60 sm:w-64 min-w-[170px] align-middle" data-i18n="thDlLinks">Descarga</th>
                                         <th class="p-4 text-center w-24 creator-action-header hidden align-middle" data-i18n="thActions">Acciones</th>
-                                </tr>
+                                    </tr>
                                 </thead>
                                 <tbody id="tbody-beatstar" class="divide-y-2 divide-fuchsia-900/40 text-xs"></tbody>
                             </table>
@@ -1011,25 +1044,23 @@ More content coming soon">
                         </div>
 
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
-    <div class="flex flex-col items-start justify-center shrink-0">
-        <div class="h-12 w-full flex items-center">
-            <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full w-auto object-contain object-left scale-110 origin-left">
-        </div>
-        <!-- Texto debajo del logo únicamente en móvil vertical -->
-        <div class="block sm:hidden mt-0.5 text-[10px] font-bold text-orange-400">
-            <span id="counter-tapwave-mobile">Total: 0 Skins</span>
-        </div>
-    </div>
-    <div class="flex items-center gap-3 shrink-0">
-        <!-- Insignia original para PC y Móvil Horizontal -->
-        <div class="text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400 hidden sm:block">
-            <span id="counter-tapwave">Total: 0 Skins</span>
-        </div>
-        <button id="btn-toggle-to-beatstar" class="px-3 py-1.5 bg-zinc-900 border border-fuchsia-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
-            <span data-i18n="jumpToTxt">Ir a</span> <img src="BeatstarWhiteLogo.png" class="h-3 w-auto object-contain">
-        </button>
-    </div>
-</div>
+                            <div class="flex flex-col items-start justify-center shrink-0">
+                                <div class="h-12 w-full flex items-center">
+                                    <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full w-auto object-contain object-left scale-110 origin-left">
+                                </div>
+                                <div class="block sm:hidden mt-0.5 text-[10px] font-bold text-orange-400">
+                                    <span id="counter-tapwave-mobile">Total: 0 Skins</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 shrink-0">
+                                <div class="text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400 hidden sm:block">
+                                    <span id="counter-tapwave">Total: 0 Skins</span>
+                                </div>
+                                <button id="btn-toggle-to-beatstar" class="px-3 py-1.5 bg-zinc-900 border border-fuchsia-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
+                                    <span data-i18n="jumpToTxt">Ir a</span> <img src="BeatstarWhiteLogo.png" class="h-3 w-auto object-contain">
+                                </button>
+                            </div>
+                        </div>
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                             <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px] landscape-pc-table">
                                 <thead>
@@ -1073,28 +1104,5 @@ More content coming soon">
     </footer>
 
     <script type="module" src="js/app.js"></script>
-
-    <script>
-        function toggleBoogiePassword(inputId, btnElement) {
-            var input = document.getElementById(inputId);
-            var icon = btnElement ? btnElement.querySelector('i') : null;
-
-            if (input) {
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    if (icon) {
-                        icon.classList.remove('fa-eye');
-                        icon.classList.add('fa-eye-slash');
-                    }
-                } else {
-                    input.type = 'password';
-                    if (icon) {
-                        icon.classList.remove('fa-eye-slash');
-                        icon.classList.add('fa-eye');
-                    }
-                }
-            }
-        }
-    </script>
 </body>
 </html>
