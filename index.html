@@ -236,28 +236,29 @@ More content coming soon">
 
     <!-- Modal Tutorial Pop-up -->
     <div id="tutorial-modal" class="fixed inset-0 z-[170] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
-        <div class="bg-[#11091c] border border-fuchsia-900/60 rounded-2xl w-full max-w-lg p-5 flex flex-col gap-4 shadow-2xl relative">
+        <div class="bg-[#11091c] border border-fuchsia-900/60 rounded-2xl w-full max-w-lg p-5 flex flex-col gap-3 shadow-2xl relative">
             <button id="btn-close-tutorial" class="absolute top-3 right-3 text-zinc-400 hover:text-white text-lg w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-900/80 border border-fuchsia-800/30">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             
-            <div class="text-center pt-1">
-                <span id="tut-step-counter" class="text-[10px] font-black uppercase tracking-widest text-fuchsia-400">PASO 1 / 4</span>
-                <h3 id="tut-title" class="text-lg font-bold text-white mt-1"></h3>
+            <div class="text-center pt-0 -mt-1">
+                <span id="tut-step-counter" class="text-[10px] font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">PASO 1 / 4</span>
+                <h3 id="tut-title" class="text-lg font-bold text-white leading-tight"></h3>
             </div>
 
             <div class="w-full h-48 sm:h-56 bg-zinc-950 rounded-xl border border-fuchsia-950/80 overflow-hidden flex items-center justify-center">
                 <img id="tut-gif" src="GifWeb1.gif" alt="Tutorial GIF" class="w-full h-full object-contain">
             </div>
 
-            <p id="tut-desc" class="text-xs sm:text-sm text-zinc-300 text-center min-h-[60px] flex items-center justify-center px-2 leading-relaxed"></p>
+            <div id="tut-desc" class="text-xs sm:text-sm text-zinc-300 text-center min-h-[60px] flex items-center justify-center px-2 leading-relaxed"></div>
 
             <div class="flex items-center justify-between gap-3 pt-2 border-t border-fuchsia-950/60">
                 <button id="btn-tut-prev" class="px-4 py-2 bg-zinc-900 border border-fuchsia-800/40 rounded-xl text-xs font-bold text-zinc-300 hover:text-white hover:bg-fuchsia-950 transition hidden" data-i18n="btnPrev">
                     Anterior
                 </button>
                 <div class="flex-grow"></div>
-                <button id="btn-tut-next" class="px-5 py-2 bg-fuchsia-600 hover:bg-fuchsia-500 rounded-xl text-xs font-bold text-white transition shadow-lg shadow-fuchsia-950" data-i18n="btnNext">
+                <!-- Botón siguiente sin glow (sin shadow-lg ni shadow-fuchsia-950) -->
+                <button id="btn-tut-next" class="px-5 py-2 bg-fuchsia-600 hover:bg-fuchsia-500 rounded-xl text-xs font-bold text-white transition" data-i18n="btnNext">
                     Siguiente
                 </button>
             </div>
