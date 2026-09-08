@@ -195,7 +195,7 @@ function manageRotationTimer() {
 function startRotationTimer() {
     rotationIntervalId = setInterval(() => {
         nextNotification();
-    }, 15000);
+    }, 10000);
 }
 
 function stopRotationTimer() {
