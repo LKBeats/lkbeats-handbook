@@ -362,14 +362,21 @@ export function initSkinsModule(state) {
 
         const hasActiveFilter = !!activeSkinGenreFilter;
 
-        const cB = document.getElementById('counter-beatstar');
-        const cT = document.getElementById('counter-tapwave');
+const cB = document.getElementById('counter-beatstar');
+const cBMobile = document.getElementById('counter-beatstar-mobile');
+const cT = document.getElementById('counter-tapwave');
+const cTMobile = document.getElementById('counter-tapwave-mobile');
 
-        const totalBeatstarAll = cosmetics.filter(c => c.platform !== 'TapWave').length;
-        const totalTapwaveAll = cosmetics.filter(c => c.platform === 'TapWave').length;
+const totalBeatstarAll = cosmetics.filter(c => c.platform !== 'TapWave').length;
+const totalTapwaveAll = cosmetics.filter(c => c.platform === 'TapWave').length;
 
-        if (cB) cB.innerText = hasActiveFilter ? `Skins: ${beatstarList.length}` : `Total: ${totalBeatstarAll} Skins`;
-        if (cT) cT.innerText = hasActiveFilter ? `Skins: ${tapwaveList.length}` : `Total: ${totalTapwaveAll} Skins`;
+const beatstarText = hasActiveFilter ? `Skins: ${beatstarList.length}` : `Total: ${totalBeatstarAll} Skins`;
+const tapwaveText = hasActiveFilter ? `Skins: ${tapwaveList.length}` : `Total: ${totalTapwaveAll} Skins`;
+
+if (cB) cB.innerText = beatstarText;
+if (cBMobile) cBMobile.innerText = beatstarText;
+if (cT) cT.innerText = tapwaveText;
+if (cTMobile) cTMobile.innerText = tapwaveText;
 
         const currentSubPlatformList = (currentSelectedSkinSubPlatform === 'TapWave') ? tapwaveList : beatstarList;
         if (currentSubPlatformList.length === 0) {
