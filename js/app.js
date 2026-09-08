@@ -1151,11 +1151,28 @@ function updateTutorialStepUI() {
     const titleEl = document.getElementById('tut-title');
     const descEl = document.getElementById('tut-desc');
     const gifEl = document.getElementById('tut-gif');
+    const stepLabel = isEn ? 'STEP' : 'PASO';
 
-    if (counterEl) counterEl.innerText = `PASO ${currentTutStep} / 4`;
+    if (counterEl) counterEl.innerText = `${stepLabel} ${currentTutStep} / 4`;
     if (titleEl) titleEl.innerText = dict[stepData.titleKey] || '';
-    if (descEl) descEl.innerHTML = dict[stepData.descKey] || '';
     if (gifEl) gifEl.src = stepData.gif;
+    if (currentTutStep === 3) {
+        const mainDesc = dict[stepData.descKey] || '';
+        const noteText = isEn 
+            ? 'NOTE: Discretion is advised.' 
+            : 'NOTA: Se recomienda discreción.';
+        
+        if (descEl) {
+            descEl.innerHTML = `
+                <div class="flex flex-col items-center justify-center gap-1.5 w-full text-center">
+                    <span>${mainDesc}</span>
+                    <span class="text-red-500 font-extrabold text-xs block mt-1">${noteText}</span>
+                </div>
+            `;
+        }
+    } else {
+        if (descEl) descEl.innerHTML = dict[stepData.descKey] || '';
+    }
 
     const btnPrev = document.getElementById('btn-tut-prev');
     const btnNext = document.getElementById('btn-tut-next');
