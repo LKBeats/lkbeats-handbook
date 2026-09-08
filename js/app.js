@@ -138,7 +138,6 @@ function renderNotifDiffTagHtml(diffVal, editionVal, diffDeluxeVal, isEn = false
         const stdDiff = diffVal || 'Normal';
         const dlxDiff = diffDeluxeVal || diffVal || 'Hard';
 
-        // Si ambas dificultades son exactamente iguales, solo mostramos una etiqueta
         if (stdDiff === dlxDiff) {
             return getSingleDiffTagHtml(stdDiff, isEn);
         }
@@ -200,7 +199,6 @@ function renderNotifEditionTagHtml(editionVal) {
     `;
 }
 
-// Constante de 7 días en milisegundos
 const SEVEN_DAYS_IN_MS = 7 * 24 * 60 * 60 * 1000;
 
 function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
@@ -214,7 +212,6 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
         return;
     }
 
-    // Verificar si la notificación sobrepasó los 7 días desde su creación
     const rawDate = activeNotif.createdAt || activeNotif.timestamp;
     if (rawDate) {
         const notifTime = typeof rawDate === 'number' ? rawDate : new Date(rawDate).getTime();
@@ -222,7 +219,6 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
 
         if (!isNaN(notifTime) && (now - notifTime > SEVEN_DAYS_IN_MS)) {
             banner.classList.add('hidden');
-            // Elimina la notificación expirada directamente en la base de datos de Firebase
             if (activeNotif.id) {
                 deleteNotificationManually(activeNotif.id);
             }
@@ -232,7 +228,6 @@ function drawNotificationBanner(activeNotif, meta = latestNotifMeta) {
 
     banner.classList.remove('hidden');
 
-    // Aplicar animación de salida antes de cambiar el contenido si ya tenía elementos
     if (content.innerHTML.trim() !== "") {
         content.classList.remove('anim-notif-enter');
         content.classList.add('anim-notif-leave');
@@ -250,12 +245,10 @@ function updateBannerContent(activeNotif, meta, banner, content) {
     content.classList.remove('anim-notif-leave');
     content.classList.add('anim-notif-enter');
 
-    // Reaccionar con la animación CSS de entrada
     content.classList.remove('anim-notif-enter');
-    void content.offsetWidth; // Forzar reflow del DOM
+    void content.offsetWidth;
     content.classList.add('anim-notif-enter');
 
-    // Remover elementos previos adjuntos directo al banner (botón X y barra de progreso)
     document.getElementById('btn-banner-delete-x')?.remove();
     document.getElementById('notif-progress-container')?.remove();
 
@@ -276,7 +269,6 @@ function updateBannerContent(activeNotif, meta, banner, content) {
         banner.appendChild(deleteBtn);
     }
 
-    // Inyectar la barra de progreso al borde inferior del banner contenedor
     if (meta.totalActive > 1) {
         const progressBox = document.createElement('div');
         progressBox.id = 'notif-progress-container';
@@ -316,7 +308,6 @@ function updateBannerContent(activeNotif, meta, banner, content) {
     }
 
     if (activeNotif.category === 'chart') {
-        // Búsqueda de respaldo en el arreglo global levels por si la notificación no traía diffDeluxe
         const matchedLevel = levels.find(l => 
             l.song?.toLowerCase() === activeNotif.song?.toLowerCase() && 
             l.artist?.toLowerCase() === activeNotif.artist?.toLowerCase()
@@ -328,27 +319,22 @@ function updateBannerContent(activeNotif, meta, banner, content) {
 
         content.innerHTML = `
             <div class="flex flex-row items-center justify-between gap-2 sm:gap-4 w-full pr-6 sm:pr-8">
-                <!-- Información principal de la canción (Izquierda) -->
                 <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1">
                     <img src="${activeNotif.artOrIcon}" class="w-14 h-14 sm:w-20 sm:h-20 rounded-xl object-cover border border-white shadow-lg shrink-0">
                     <div class="min-w-0 flex-1">
                         <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-orange-400 block mb-0.5">${notifTitle}</span>
                         <h3 class="text-xs sm:text-base font-black text-white leading-snug tracking-wide whitespace-normal break-words">${activeNotif.song}</h3>
-<p class="text-[11px] sm:text-sm text-zinc-400 font-bold whitespace-normal break-words">${activeNotif.artist}</p>
+                        <p class="text-[11px] sm:text-sm text-zinc-400 font-bold whitespace-normal break-words">${activeNotif.artist}</p>
                     </div>
                 </div>
 
-                <!-- Etiquetas organizadas en 3 filas alineadas a la derecha (Derecha) -->
                 <div class="flex flex-col items-end gap-1 sm:gap-1.5 shrink-0">
-                    <!-- Fila 1: Géneros -->
                     <div class="flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
                         ${renderNotifGenresBadgesHtml(activeNotif.genre)}
                     </div>
-                    <!-- Fila 2: Dificultad (Standard / Deluxe correspondiente) -->
                     <div class="flex items-center justify-end gap-1 sm:gap-1.5">
                         ${renderNotifDiffTagHtml(finalDiff, finalEdition, finalDiffDeluxe, isEn)}
                     </div>
-                    <!-- Fila 3: Ediciones -->
                     <div class="flex items-center justify-end gap-1 sm:gap-1.5">
                         ${renderNotifEditionTagHtml(finalEdition)}
                     </div>
@@ -366,7 +352,7 @@ function updateBannerContent(activeNotif, meta, banner, content) {
                     <div class="min-w-0 flex-1">
                         <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-fuchsia-400 block mb-0.5">${notifTitle}</span>
                         <h3 class="text-xs sm:text-base font-black text-white leading-snug tracking-wide whitespace-normal break-words">${activeNotif.skinName}</h3>
-<p class="text-[11px] sm:text-sm text-zinc-400 font-bold whitespace-normal break-words">${activeNotif.artist}</p>
+                        <p class="text-[11px] sm:text-sm text-zinc-400 font-bold whitespace-normal break-words">${activeNotif.artist}</p>
                     </div>
                 </div>
 
@@ -433,7 +419,7 @@ function closeAllActiveModalsAndMenus() {
     let wasModalOpen = false;
     const modalIds = [
         'beatstar-edition-modal', 'explicit-warning-modal', 'confirm-delete-modal',
-        'boogie-auth-modal', 'boogie-exit-modal', 'download-custom-modal', 'thanks-custom-modal'
+        'boogie-auth-modal', 'boogie-exit-modal', 'download-custom-modal', 'thanks-custom-modal', 'tutorial-modal'
     ];
 
     modalIds.forEach(id => {
@@ -519,12 +505,12 @@ function navigateTo(view, pushState = true) {
             footerBoogieBox.classList.add('hidden');
             footerBoogieBox.classList.remove('md:flex');
         }
+        checkFirstTimeTutorial();
     }
 
     if (view === 'cosmetics') resetCosmeticsSubmenuWorkspace();
     if (pushState) history.pushState({ view: view }, '', '');
 
-    // Garantizar que la ventana y el scroll se muevan arriba inmediatamente
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 }
 
@@ -1095,7 +1081,6 @@ try {
         chartsModule.renderLevelsTable();
         updateDashboardCounts();
         
-        // Re-dibujar notificación cuando cargan o se actualizan los niveles para reflejar dificultades reales
         if (latestActiveNotification) {
             drawNotificationBanner(latestActiveNotification);
         }
@@ -1147,7 +1132,71 @@ try {
 }
 
 // =========================================================
-// 7. LISTENERS DE EVENTOS DOM
+// 7. TUTORIAL POP-UP LOGIC & SETUP
+// =========================================================
+let currentTutStep = 1;
+
+const tutorialSteps = [
+    { gif: 'GifWeb1.gif', titleKey: 'tutTitle1', descKey: 'tutDesc1' },
+    { gif: 'GifWeb2.gif', titleKey: 'tutTitle2', descKey: 'tutDesc2' },
+    { gif: 'GifWeb3.gif', titleKey: 'tutTitle3', descKey: 'tutDesc3' },
+    { gif: 'GifWeb4.gif', titleKey: 'tutTitle4', descKey: 'tutDesc4' }
+];
+
+function updateTutorialStepUI() {
+    const stepData = tutorialSteps[currentTutStep - 1];
+    const dict = translations[currentLanguage] || translations.es;
+
+    const counterEl = document.getElementById('tut-step-counter');
+    const titleEl = document.getElementById('tut-title');
+    const descEl = document.getElementById('tut-desc');
+    const gifEl = document.getElementById('tut-gif');
+
+    if (counterEl) counterEl.innerText = `PASO ${currentTutStep} / 4`;
+    if (titleEl) titleEl.innerText = dict[stepData.titleKey] || '';
+    if (descEl) descEl.innerHTML = dict[stepData.descKey] || '';
+    if (gifEl) gifEl.src = stepData.gif;
+
+    const btnPrev = document.getElementById('btn-tut-prev');
+    const btnNext = document.getElementById('btn-tut-next');
+
+    if (btnPrev) {
+        if (currentTutStep === 1) {
+            btnPrev.classList.add('hidden');
+        } else {
+            btnPrev.classList.remove('hidden');
+            btnPrev.innerText = dict.btnPrev || "Anterior";
+        }
+    }
+
+    if (btnNext) {
+        if (currentTutStep === 4) {
+            btnNext.innerText = dict.btnFinish || "Finalizar";
+        } else {
+            btnNext.innerText = dict.btnNext || "Siguiente";
+        }
+    }
+}
+
+export function openTutorialModal() {
+    currentTutStep = 1;
+    updateTutorialStepUI();
+    document.getElementById('tutorial-modal')?.classList.remove('hidden');
+}
+
+function closeTutorialModal() {
+    document.getElementById('tutorial-modal')?.classList.add('hidden');
+    localStorage.setItem('hasSeenTutorialHandbook', 'true');
+}
+
+export function checkFirstTimeTutorial() {
+    if (!localStorage.getItem('hasSeenTutorialHandbook')) {
+        setTimeout(openTutorialModal, 400);
+    }
+}
+
+// =========================================================
+// 8. LISTENERS DE EVENTOS DOM
 // =========================================================
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -1243,7 +1292,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('download-modal-btn-confirm')?.addEventListener('click', () => {
-        // Detiene todos los audios/videos activos en charts y skins
         stopAllMedia();
 
         if (currentActiveDownloadUrl) {
@@ -1346,6 +1394,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pendingDeleteActionCallback) pendingDeleteActionCallback();
         pendingDeleteActionCallback = null;
         document.getElementById('confirm-delete-modal')?.classList.add('hidden');
+    });
+
+    // Listeners del Tutorial
+    document.getElementById('btn-open-tutorial-charts')?.addEventListener('click', openTutorialModal);
+    document.getElementById('btn-open-tutorial-skins')?.addEventListener('click', openTutorialModal);
+    document.getElementById('btn-close-tutorial')?.addEventListener('click', closeTutorialModal);
+
+    document.getElementById('btn-tut-prev')?.addEventListener('click', () => {
+        if (currentTutStep > 1) {
+            currentTutStep--;
+            updateTutorialStepUI();
+        }
+    });
+
+    document.getElementById('btn-tut-next')?.addEventListener('click', () => {
+        if (currentTutStep < 4) {
+            currentTutStep++;
+            updateTutorialStepUI();
+        } else {
+            closeTutorialModal();
+        }
     });
 
     chartsModule.buildGenresSelector();

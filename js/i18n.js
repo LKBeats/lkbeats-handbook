@@ -96,7 +96,18 @@ export const translations = {
         btnDeleteFile: "Borrar Archivo",
         btnFileDeletePending: "Activado",
         btnDeleteDate: "Borrar Fecha",
-        btnDateDeletePending: "Activado"
+        btnDateDeletePending: "Activado",
+        tutTitle1: "Descargar contenido",
+	tutDesc1: "Para descargar un chart / skin, ve a la sección de Descarga y selecciona la opción de descarga que más prefieras.",
+	tutTitle2: "Selección de Edición",
+	tutDesc2: "Para cambiar entre la edición Standard y Deluxe de un chart, oprime el arte de la canción que cuente con ambas ediciones y selecciona la versión que quieras ver o descargar.",
+	tutTitle3: "Contenido Explícito",
+	tutDesc3: "Si una canción cuenta con una letra explícita, verás un botón “E” en el arte de la canción, oprime el botón y confirma habilitar el contenido explícito para descargar y escuchar la canción sin censura.<br><br><strong class='text-fuchsia-400'>NOTA: Se recomienda discreción.</strong>",
+	tutTitle4: "Versión Móvil",
+	tutDesc4: "En la versión móvil, puedes desplazar la lista hacia la izquierda y derecha para ver todo el contenido de las listas, los demás botones también funcionan en la versión móvil.",
+	btnPrev: "Anterior",
+	btnNext: "Siguiente",
+	btnFinish: "Finalizar"
     },
     en: {
         tagUpdate: "LAST UPDATE", storyTitle: "Welcome to the LKBeats Handbook",
@@ -194,6 +205,17 @@ export const translations = {
         btnDeleteFile: "Delete File",
         btnFileDeletePending: "Active",
         btnDeleteDate: "Delete Date",
-        btnDateDeletePending: "Active"
+        btnDateDeletePending: "Active",
+	tutTitle1: "Download Content",
+	tutDesc1: "To download a chart / skin, go to the Download section and select your preferred download option.",
+	tutTitle2: "Edition Selection",
+	tutDesc2: "To switch between Standard and Deluxe edition of a chart, tap the song art that features both editions and select the version you want to view or download.",
+	tutTitle3: "Explicit Content",
+	tutDesc3: "If a song has explicit lyrics, you will see an “E” button on the song art. Tap the button and confirm enabling explicit content to download and listen to the uncensored song.<br><br><strong class='text-fuchsia-400'>NOTE: Viewer discretion is advised.</strong>",
+	tutTitle4: "Mobile Version",
+	tutDesc4: "On the mobile version, you can scroll the table left and right to view all list content. All other buttons also work on mobile.",
+	btnPrev: "Previous",
+	btnNext: "Next",
+	btnFinish: "Finish"
     }
 };
