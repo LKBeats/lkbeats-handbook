@@ -964,16 +964,25 @@ More content coming soon">
 
                     <div id="container-workspace-beatstar" class="hidden flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
-                            <div class="h-10 max-w-[50%] sm:max-w-[240px] flex-grow sm:flex-initial">
-                                <img src="BeatstarWhiteLogo.png" alt="Beatstar" class="h-full w-full sm:w-auto object-contain object-left">
-                            </div>
-                            <div class="flex items-center gap-3 shrink-0">
-                                <div class="text-xs font-bold bg-fuchsia-950/50 border border-fuchsia-800/40 px-3 py-1.5 rounded-xl text-fuchsia-400 hidden sm:block"><span id="counter-beatstar">Total: 0 Skins</span></div>
-                                <button id="btn-toggle-to-tapwave" class="px-3 py-1.5 bg-zinc-900 border border-orange-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
-                                    <span data-i18n="jumpToTxt">Ir a</span> <img src="TapWaveWhiteLogo.png" class="h-3.5 w-auto object-contain">
-                                </button>
-                            </div>
-                        </div>
+    <div class="flex flex-col items-start justify-center shrink-0">
+        <div class="h-10 w-full">
+            <img src="BeatstarWhiteLogo.png" alt="Beatstar" class="h-full w-auto object-contain object-left">
+        </div>
+        <!-- Texto debajo del logo únicamente en móvil vertical -->
+        <div class="block sm:hidden mt-0.5 text-[10px] font-bold text-fuchsia-400">
+            <span id="counter-beatstar-mobile">Total: 0 Skins</span>
+        </div>
+    </div>
+    <div class="flex items-center gap-3 shrink-0">
+        <!-- Insignia original para PC y Móvil Horizontal -->
+        <div class="text-xs font-bold bg-fuchsia-950/50 border border-fuchsia-800/40 px-3 py-1.5 rounded-xl text-fuchsia-400 hidden sm:block">
+            <span id="counter-beatstar">Total: 0 Skins</span>
+        </div>
+        <button id="btn-toggle-to-tapwave" class="px-3 py-1.5 bg-zinc-900 border border-orange-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
+            <span data-i18n="jumpToTxt">Ir a</span> <img src="TapWaveWhiteLogo.png" class="h-3.5 w-auto object-contain">
+        </button>
+    </div>
+</div>
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                             <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px] landscape-pc-table">
                                 <thead>
@@ -1002,16 +1011,25 @@ More content coming soon">
                         </div>
 
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
-                            <div class="h-12 max-w-[50%] sm:max-w-[340px] flex-grow sm:flex-initial flex items-center">
-                                <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full w-full sm:w-auto object-contain object-left scale-110 sm:scale-110 origin-left">
-                            </div>
-                            <div class="flex items-center gap-3 shrink-0">
-                                <div class="text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400 hidden sm:block"><span id="counter-tapwave">Total: 0 Skins</span></div>
-                                <button id="btn-toggle-to-beatstar" class="px-3 py-1.5 bg-zinc-900 border border-fuchsia-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
-                                    <span data-i18n="jumpToTxt">Ir a</span> <img src="BeatstarWhiteLogo.png" class="h-3 w-auto object-contain">
-                                </button>
-                            </div>
-                        </div>
+    <div class="flex flex-col items-start justify-center shrink-0">
+        <div class="h-12 w-full flex items-center">
+            <img src="TapWaveWhiteLogo.png" alt="TapWave" class="h-full w-auto object-contain object-left scale-110 origin-left">
+        </div>
+        <!-- Texto debajo del logo únicamente en móvil vertical -->
+        <div class="block sm:hidden mt-0.5 text-[10px] font-bold text-orange-400">
+            <span id="counter-tapwave-mobile">Total: 0 Skins</span>
+        </div>
+    </div>
+    <div class="flex items-center gap-3 shrink-0">
+        <!-- Insignia original para PC y Móvil Horizontal -->
+        <div class="text-xs font-bold bg-orange-950/50 border border-orange-800/40 px-3 py-1.5 rounded-xl text-orange-400 hidden sm:block">
+            <span id="counter-tapwave">Total: 0 Skins</span>
+        </div>
+        <button id="btn-toggle-to-beatstar" class="px-3 py-1.5 bg-zinc-900 border border-fuchsia-500/30 rounded-xl text-xs font-bold text-zinc-300 hover:text-white transition flex items-center gap-2">
+            <span data-i18n="jumpToTxt">Ir a</span> <img src="BeatstarWhiteLogo.png" class="h-3 w-auto object-contain">
+        </button>
+    </div>
+</div>
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                             <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-[850px] landscape-pc-table">
                                 <thead>
