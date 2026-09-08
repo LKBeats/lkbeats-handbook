@@ -1146,16 +1146,22 @@ const tutorialSteps = [
 function updateTutorialStepUI() {
     const stepData = tutorialSteps[currentTutStep - 1];
     const dict = translations[currentLanguage] || translations.es;
+    // Declaración correcta de la variable
+    const isEn = currentLanguage === 'en';
 
     const counterEl = document.getElementById('tut-step-counter');
     const titleEl = document.getElementById('tut-title');
     const descEl = document.getElementById('tut-desc');
     const gifEl = document.getElementById('tut-gif');
-    const stepLabel = isEn ? 'STEP' : 'PASO';
 
+    // 1. Contador de pasos traducido
+    const stepLabel = isEn ? 'STEP' : 'PASO';
     if (counterEl) counterEl.innerText = `${stepLabel} ${currentTutStep} / 4`;
+
     if (titleEl) titleEl.innerText = dict[stepData.titleKey] || '';
     if (gifEl) gifEl.src = stepData.gif;
+
+    // 2. Descripción y nota roja en el Paso 3
     if (currentTutStep === 3) {
         const mainDesc = dict[stepData.descKey] || '';
         const noteText = isEn 
@@ -1182,15 +1188,15 @@ function updateTutorialStepUI() {
             btnPrev.classList.add('hidden');
         } else {
             btnPrev.classList.remove('hidden');
-            btnPrev.innerText = dict.btnPrev || "Anterior";
+            btnPrev.innerText = dict.btnPrev || (isEn ? "Previous" : "Anterior");
         }
     }
 
     if (btnNext) {
         if (currentTutStep === 4) {
-            btnNext.innerText = dict.btnFinish || "Finalizar";
+            btnNext.innerText = dict.btnFinish || (isEn ? "Finish" : "Finalizar");
         } else {
-            btnNext.innerText = dict.btnNext || "Siguiente";
+            btnNext.innerText = dict.btnNext || (isEn ? "Next" : "Siguiente");
         }
     }
 }
