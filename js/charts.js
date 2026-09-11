@@ -398,7 +398,14 @@ export function initChartsModule(state) {
                 }
             });
         }
-        if (activeLvlEditionFilter) filtered = filtered.filter(l => (l.editionMode === activeLvlEditionFilter) || (l.editionMode === 'Both') || (l.edition === activeLvlEditionFilter));
+
+        if (activeLvlEditionFilter) {
+    filtered = filtered.filter(l => {
+        const editionMode = l.editionMode || (l.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
+        if (editionMode === 'Both') return true;
+        return editionMode === activeLvlEditionFilter;
+    });
+}
 
         const hasActiveFilters = activeLvlGenreFilter || activeLvlDiffFilter || activeLvlEditionFilter;
         const counterLbl = document.getElementById('lbl-counter-charts');
@@ -424,9 +431,11 @@ export function initChartsModule(state) {
         filtered.forEach((lvl) => {
             const isDual = (lvl.editionMode === 'Both');
             
-            if (!activeChartSelectedEditions[lvl.id]) {
-                activeChartSelectedEditions[lvl.id] = (lvl.editionMode === 'Deluxe') ? 'Deluxe' : 'Standard';
-            }
+            if (activeLvlEditionFilter) {
+   		 activeChartSelectedEditions[lvl.id] = activeLvlEditionFilter;
+		} else if (!activeChartSelectedEditions[lvl.id]) {
+  		  activeChartSelectedEditions[lvl.id] = (lvl.editionMode === 'Deluxe') ? 'Deluxe' : 'Standard';
+		}
 
             const currentSelectedEdition = activeChartSelectedEditions[lvl.id];
             const isDeluxeActive = (currentSelectedEdition === 'Deluxe');
