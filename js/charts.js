@@ -431,10 +431,22 @@ export function initChartsModule(state) {
         filtered.forEach((lvl) => {
             const isDual = (lvl.editionMode === 'Both');
             
-            if (activeLvlEditionFilter) {
-   		 activeChartSelectedEditions[lvl.id] = activeLvlEditionFilter;
+            const stdDiff = lvl.diff || 'Normal';
+		const dlxDiff = lvl.diffDeluxe || 'Extreme';
+		const editionMode = lvl.editionMode || (lvl.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
+
+		if (activeLvlEditionFilter) {
+		    activeChartSelectedEditions[lvl.id] = activeLvlEditionFilter;
+		} else if (activeLvlDiffFilter && editionMode === 'Both') {
+		    // Si la dificultad filtrada está en Standard (o en ambas), fuerza la versión Standard
+		    if (stdDiff === activeLvlDiffFilter) {
+		        activeChartSelectedEditions[lvl.id] = 'Standard';
+		    } else if (dlxDiff === activeLvlDiffFilter) {
+       		 // Si solo está en Deluxe, cambia automáticamente a Deluxe
+        		activeChartSelectedEditions[lvl.id] = 'Deluxe';
+    }
 		} else if (!activeChartSelectedEditions[lvl.id]) {
-  		  activeChartSelectedEditions[lvl.id] = (lvl.editionMode === 'Deluxe') ? 'Deluxe' : 'Standard';
+		    activeChartSelectedEditions[lvl.id] = (editionMode === 'Deluxe') ? 'Deluxe' : 'Standard';
 		}
 
             const currentSelectedEdition = activeChartSelectedEditions[lvl.id];
