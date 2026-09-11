@@ -971,11 +971,15 @@ function buildCustomDropdownMenus() {
         const iconHard = getDynamicIconMarkup('diff_Hard', '#f97316', 'fa-solid fa-layer-group');
         const iconExtreme = getDynamicIconMarkup('diff_Extreme', '#ef4444', 'fa-solid fa-layer-group');
 
+        const txtNormal = translations[currentLanguage].diffNormal;
+        const txtHard = translations[currentLanguage].diffHard;
+        const txtExtreme = translations[currentLanguage].diffExtreme;
+
         dLvlDiff.innerHTML = `
             <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value=""><span>${allTxt}</span></div>
-            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-400 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value="Normal">${iconNormal} <span>Normal</span></div>
-            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-orange-400 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value="Hard">${iconHard} <span>Hard</span></div>
-            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-red-500 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value="Extreme">${iconExtreme} <span>Extreme</span></div>
+            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-400 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value="Normal">${iconNormal} <span>${txtNormal}</span></div>
+            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-orange-400 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value="Hard">${iconHard} <span>${txtHard}</span></div>
+            <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-red-500 font-extrabold flex items-center gap-2" data-type="lvlDiff" data-value="Extreme">${iconExtreme} <span>${txtExtreme}</span></div>
         `;
     }
 
