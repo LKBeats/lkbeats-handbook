@@ -211,7 +211,7 @@ export function initChartsModule(state) {
         buildGenresSelector();
     }
 
-        function validateFormStateAndCheckChanges() {
+    function validateFormStateAndCheckChanges() {
         const submitBtn = document.getElementById('lvlSubmitBtn');
         if (!submitBtn) return;
 
@@ -382,13 +382,36 @@ export function initChartsModule(state) {
         const fragment = document.createDocumentFragment();
         let filtered = sortAscendingByDate(levels);
 
-        if (activeLvlGenreFilter) filtered = filtered.filter(l => l.genre && l.genre.toLowerCase().includes(activeLvlGenreFilter.toLowerCase()));
+        // 1. Filtro por Género
+        if (activeLvlGenreFilter) {
+            filtered = filtered.filter(l => l.genre && l.genre.toLowerCase().includes(activeLvlGenreFilter.toLowerCase()));
+        }
+
+        // 2. Filtro por Edición
+        if (activeLvlEditionFilter) {
+            filtered = filtered.filter(l => {
+                const editionMode = l.editionMode || (l.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
+                if (editionMode === 'Both') return true;
+                return editionMode === activeLvlEditionFilter;
+            });
+        }
+
+        // 3. Filtro por Dificultad (respetando si hay un filtro de Edición activo o si es "Both")
         if (activeLvlDiffFilter) {
             filtered = filtered.filter(l => {
+                const editionMode = l.editionMode || (l.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
                 const stdDiff = l.diff || 'Normal';
                 const dlxDiff = l.diffDeluxe || 'Extreme';
-                const editionMode = l.editionMode || (l.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
 
+                // Caso 1: Si hay un filtro de edición activo, solo validamos esa versión
+                if (activeLvlEditionFilter === 'Standard') {
+                    return stdDiff === activeLvlDiffFilter;
+                }
+                if (activeLvlEditionFilter === 'Deluxe') {
+                    return dlxDiff === activeLvlDiffFilter;
+                }
+
+                // Caso 2: Sin filtro de edición, la canción pasa si CUALQUIERA de sus versiones coincide
                 if (editionMode === 'Both') {
                     return stdDiff === activeLvlDiffFilter || dlxDiff === activeLvlDiffFilter;
                 } else if (editionMode === 'Deluxe') {
@@ -398,14 +421,6 @@ export function initChartsModule(state) {
                 }
             });
         }
-
-        if (activeLvlEditionFilter) {
-    filtered = filtered.filter(l => {
-        const editionMode = l.editionMode || (l.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
-        if (editionMode === 'Both') return true;
-        return editionMode === activeLvlEditionFilter;
-    });
-}
 
         const hasActiveFilters = activeLvlGenreFilter || activeLvlDiffFilter || activeLvlEditionFilter;
         const counterLbl = document.getElementById('lbl-counter-charts');
@@ -432,22 +447,21 @@ export function initChartsModule(state) {
             const isDual = (lvl.editionMode === 'Both');
             
             const stdDiff = lvl.diff || 'Normal';
-		const dlxDiff = lvl.diffDeluxe || 'Extreme';
-		const editionMode = lvl.editionMode || (lvl.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
+            const dlxDiff = lvl.diffDeluxe || 'Extreme';
+            const editionMode = lvl.editionMode || (lvl.edition === 'Deluxe' ? 'Deluxe' : 'Standard');
 
-		if (activeLvlEditionFilter) {
-		    activeChartSelectedEditions[lvl.id] = activeLvlEditionFilter;
-		} else if (activeLvlDiffFilter && editionMode === 'Both') {
-		    // Si la dificultad filtrada está en Standard (o en ambas), fuerza la versión Standard
-		    if (stdDiff === activeLvlDiffFilter) {
-		        activeChartSelectedEditions[lvl.id] = 'Standard';
-		    } else if (dlxDiff === activeLvlDiffFilter) {
-       		 // Si solo está en Deluxe, cambia automáticamente a Deluxe
-        		activeChartSelectedEditions[lvl.id] = 'Deluxe';
-    }
-		} else if (!activeChartSelectedEditions[lvl.id]) {
-		    activeChartSelectedEditions[lvl.id] = (editionMode === 'Deluxe') ? 'Deluxe' : 'Standard';
-		}
+            // Determinar la edición visible en pantalla según los filtros activos
+            if (activeLvlEditionFilter) {
+                activeChartSelectedEditions[lvl.id] = activeLvlEditionFilter;
+            } else if (activeLvlDiffFilter && editionMode === 'Both') {
+                if (stdDiff === activeLvlDiffFilter) {
+                    activeChartSelectedEditions[lvl.id] = 'Standard';
+                } else if (dlxDiff === activeLvlDiffFilter) {
+                    activeChartSelectedEditions[lvl.id] = 'Deluxe';
+                }
+            } else if (!activeChartSelectedEditions[lvl.id]) {
+                activeChartSelectedEditions[lvl.id] = (editionMode === 'Deluxe') ? 'Deluxe' : 'Standard';
+            }
 
             const currentSelectedEdition = activeChartSelectedEditions[lvl.id];
             const isDeluxeActive = (currentSelectedEdition === 'Deluxe');
@@ -908,7 +922,7 @@ export function initChartsModule(state) {
                             // 5. Eliminar notificación si el chart borrado contaba con una activa
                             await checkAndDeleteNotifOnRecordDelete('chart', lvl.song);
 
-                            // 4. Reiniciar formulario
+                            // 6. Reiniciar formulario
                             resetLevelFormState();
                         } catch (err) {
                             console.error("Error al borrar el chart y sus archivos:", err);
