@@ -27,6 +27,8 @@ if ('scrollRestoration' in history) {
 // Desplazar la ventana al inicio de forma inmediata al cargar la página
 window.addEventListener('load', () => {
     window.scrollTo(0, 0);
+    // Establecer el estado inicial de navegación
+    history.replaceState({ view: 'home' }, '', '');
 });
 
 // =========================================================
@@ -457,6 +459,23 @@ function closeAllActiveModalsAndMenus() {
     return wasModalOpen;
 }
 
+// Interceptar el botón "Atrás" del navegador y gestos de móvil
+window.addEventListener('popstate', (event) => {
+    // 1. Si hay algún modal o desplegable abierto, cerrarlo primero
+    const closedAnyModal = closeAllActiveModalsAndMenus();
+    if (closedAnyModal) {
+        return;
+    }
+
+    // 2. Si no había modales abiertos, navegar a la vista previa del historial (si existe)
+    if (event.state && event.state.view) {
+        navigateTo(event.state.view, false);
+    } else {
+        // En caso de regresar al estado inicial/Home
+        navigateTo('home', false);
+    }
+});
+
 function stopAllMedia() {
     stopGlobalAudioPreview();
 
@@ -637,6 +656,10 @@ function triggerDownloadAlert(url) {
     }
     document.getElementById('thanks-custom-modal')?.classList.add('hidden');
     document.getElementById('download-custom-modal')?.classList.remove('hidden');
+
+    // Registrar estado en el historial para permitir cerrar con botón "atrás"
+    history.pushState({ modalOpen: true, modalId: 'download-custom-modal' }, '', '');
+
 }
 
 function openBeatstarEditionSelectionModal(lvl) {
@@ -697,6 +720,7 @@ function openBeatstarEditionSelectionModal(lvl) {
     }
 
     modal.classList.remove('hidden');
+    history.pushState({ modalOpen: true, modalId: 'beatstar-edition-modal' }, '', '');
 }
 
 function buildVisualAssetsGenresList() {
@@ -1209,6 +1233,7 @@ export function openTutorialModal() {
     currentTutStep = 1;
     updateTutorialStepUI();
     document.getElementById('tutorial-modal')?.classList.remove('hidden');
+    history.pushState({ modalOpen: true, modalId: 'tutorial-modal' }, '', '');
 }
 
 function closeTutorialModal() {
@@ -1284,7 +1309,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('download-modal-btn-close')?.addEventListener('click', () => {
-        stopAllMedia();
         document.getElementById('download-custom-modal')?.classList.add('hidden');
     });
     

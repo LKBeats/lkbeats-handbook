@@ -158,6 +158,10 @@ export function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canva
         return;
     }
 
+if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+}
+
     stopGlobalAudioPreview();
 
     document.querySelectorAll('video').forEach(vid => {
@@ -192,7 +196,7 @@ export function toggleAudioPreviewEngine(audioUrl, btnElement, imgElement, canva
     audio.src = audioUrl;
     audio.dataset.url = audioUrl;
     audio.preload = "auto";
-    audio.loop = isModalOpen;
+    audio.loop = true;
 
     const handleCanPlayThrough = () => {
         if (activeAudioElement !== audio) return;
@@ -257,3 +261,27 @@ export function getActiveAudioElement() {
 export function getAudioAnalyser() {
     return audioAnalyser;
 }
+
+// Manejo de reproducción continua en segundo plano para navegadores móviles
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        // Pausar solo la animación del canvas para ahorrar recursos en segundo plano,
+        // sin interrumpir la reproducción de la etiqueta <audio>
+        if (canvasAnimationId) {
+            cancelAnimationFrame(canvasAnimationId);
+            canvasAnimationId = null;
+        }
+    } else {
+        // Al regresar a la pestaña, si hay un audio activo reproduciéndose,
+        // reactivar el AudioContext y el visualizador canvas
+        if (activeAudioElement && !activeAudioElement.paused) {
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            if (activeCanvas && audioAnalyser && activeArtContainer) {
+                const themeColor = activeAudioElement.dataset.themeColor || "#d946ef";
+                startRadialCanvasVisualizer(activeCanvas, audioAnalyser, activeArtContainer, themeColor);
+            }
+        }
+    }
+});
