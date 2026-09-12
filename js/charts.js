@@ -692,8 +692,9 @@ export function initChartsModule(state) {
                 const containerBox = tr.querySelector('.target-art-outer-container');
                 const analyser = (typeof getAudioAnalyser === 'function') ? getAudioAnalyser() : null;
                 if (canvas && analyser && typeof startRadialCanvasVisualizer === 'function') {
-                    startRadialCanvasVisualizer(canvas, analyser, containerBox, targetAudioThemeColor);
-                }
+                    const currentColor = activeAudio.dataset.themeColor || targetAudioThemeColor;
+       		     startRadialCanvasVisualizer(canvas, analyser, containerBox, currentColor);
+   		 }
             }
 
             if (isDual) {

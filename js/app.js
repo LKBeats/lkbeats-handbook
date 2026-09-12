@@ -1325,7 +1325,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     document.getElementById('btn-close-beatstar-modal')?.addEventListener('click', () => {
         const activeAudio = getActiveAudioElement();
-        if (activeAudio) activeAudio.loop = false;
+        if (activeAudio) activeAudio.loop = true;
         
         document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
         chartsModule.renderLevelsTable();
@@ -1372,7 +1372,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const activeAudio = getActiveAudioElement();
-            if (activeAudio) activeAudio.loop = false;
+
+            if (activeAudio) {
+
+            // Se asigna el color correspondiente a la edición Standard
+
+            activeAudio.dataset.themeColor = "#d946ef"; 
+            activeAudio.loop = true;
+        }
             
             document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
             chartsModule.renderLevelsTable();
@@ -1390,8 +1397,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const activeAudio = getActiveAudioElement();
-            if (activeAudio) activeAudio.loop = false;
-            
+
+            if (activeAudio) {
+
+            // Se asigna el color correspondiente a la edición Deluxe
+
+            activeAudio.dataset.themeColor = "#facc15"; 
+            activeAudio.loop = true;
+        }
+
             document.getElementById('beatstar-edition-modal')?.classList.add('hidden');
             chartsModule.renderLevelsTable();
         }

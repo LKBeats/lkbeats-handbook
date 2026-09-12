@@ -195,6 +195,7 @@ if (audioCtx && audioCtx.state === 'suspended') {
     audio.crossOrigin = "anonymous";
     audio.src = audioUrl;
     audio.dataset.url = audioUrl;
+    audio.dataset.themeColor = themeColor;
     audio.preload = "auto";
     audio.loop = true;
 
