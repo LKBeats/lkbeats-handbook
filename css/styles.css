@@ -488,3 +488,94 @@
         font-size: 0.7rem !important;         /* tamaño de texto reducido */
     }
 }
+
+/* Ajuste de escala para dispositivos móviles en orientación horizontal (Landscape) */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    html {
+        zoom: 0.6;
+    }
+
+    /* Portada visible y bien proporcionada (120px) */
+    .target-art-outer-container {
+        width: 120px !important;
+        height: 120px !important;
+        max-width: 120px !important;
+        max-height: 120px !important;
+        position: relative !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Imagen interna ajustada al nuevo cuadro de 120px */
+    .target-art-outer-container img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    /* Canvas expandido sin transform (Renderizado 100% nítido) */
+    .target-art-outer-container canvas {
+        width: 160% !important;
+        height: 160% !important;
+        position: absolute !important;
+        top: -30% !important;
+        left: -30% !important;
+        transform: none !important;
+        pointer-events: none !important;
+    }
+}
+
+/* Escala de modales y avisos en móvil horizontal (Landscape) */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+
+    /* Contenedores internos de los modales (Ediciones, Descarga, Explícito) */
+    #beatstar-edition-modal > div,
+    #download-custom-modal > div,
+    #explicit-warning-modal > div {
+        transform: scale(1.25) !important;
+        transform-origin: center center !important;
+        max-width: 90vw !important;
+    }
+
+    /* Contenedor del modal de video de agradecimiento */
+    #thanks-custom-modal > div {
+        transform: scale(1.2) !important;
+        transform-origin: center center !important;
+        max-width: 95vw !important;
+    }
+
+    /* Ajuste de tamaño para el video de agradecimiento */
+    #download-thanks-video {
+        max-height: 70vh !important;
+        object-fit: contain !important;
+    }
+}
+
+@media screen and (max-width: 640px) and (orientation: portrait) {
+    html {
+        zoom: 1 !important;
+        height: 100%;
+    }
+
+    body {
+        /* 100dvh fuerza a que ocupe exactamente la pantalla visible en móviles */
+        min-height: 100dvh !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    /* El contenedor principal empuja al footer ocupando todo el espacio libre */
+    main, 
+    #view-home, 
+    #view-levels, 
+    #view-cosmetics {
+        flex: 1 0 auto !important;
+        width: 100% !important;
+    }
+
+    /* El pie de página se clava al fondo sin subir */
+    footer {
+        margin-top: auto !important;
+        width: 100% !important;
+        flex-shrink: 0 !important;
+    }
+}
