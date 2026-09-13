@@ -508,6 +508,14 @@ export function initChartsModule(state) {
             const activeAudio = (typeof getActiveAudioElement === 'function') ? getActiveAudioElement() : null;
             const isThisAudioPlaying = activeAudio && !activeAudio.paused && activeAudio.dataset.url === currentAudioUrl;
 
+            // Determinar el color correcto según la edición activa producida tras aplicar un filtro
+            const targetAudioThemeColor = isDeluxeActive ? "#facc15" : "#d946ef";
+
+            // Si esta canción se encuentra sonando, actualizar dinámicamente el color asignado a la reproducción actual
+            if (isThisAudioPlaying) {
+                activeAudio.dataset.themeColor = targetAudioThemeColor;
+            }
+
             const audioBtnIcon = isThisAudioPlaying ? 'fa-stop' : 'fa-play';
             const artShapeClass = isThisAudioPlaying ? 'art-circle-shape art-container-circular' : '';
 
@@ -608,8 +616,6 @@ export function initChartsModule(state) {
                 </button>
             ` : '';
 
-            const targetAudioThemeColor = isDeluxeActive ? "#facc15" : "#d946ef";
-
             tr.innerHTML = `
                 <td class="p-2 sm:p-4 text-center align-middle">
                     <div class="flex flex-col items-center justify-center relative">
@@ -693,8 +699,8 @@ export function initChartsModule(state) {
                 const analyser = (typeof getAudioAnalyser === 'function') ? getAudioAnalyser() : null;
                 if (canvas && analyser && typeof startRadialCanvasVisualizer === 'function') {
                     const currentColor = activeAudio.dataset.themeColor || targetAudioThemeColor;
-       		     startRadialCanvasVisualizer(canvas, analyser, containerBox, currentColor);
-   		 }
+                    startRadialCanvasVisualizer(canvas, analyser, containerBox, currentColor);
+                }
             }
 
             if (isDual) {
