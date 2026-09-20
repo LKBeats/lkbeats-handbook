@@ -256,6 +256,8 @@ export function initSkinsModule(state) {
         document.getElementById('box-brand-select-existing')?.classList.add('hidden');
         document.getElementById('btn-brand-mode-upload')?.classList.replace('bg-zinc-900', 'bg-fuchsia-950/60');
         document.getElementById('btn-brand-mode-existing')?.classList.replace('bg-fuchsia-950/60', 'bg-zinc-900');
+
+	renderCosmeticsTables();
     }
 
     function validateSkinFormStateAndCheckChanges() {
@@ -773,7 +775,7 @@ if (cTMobile) cTMobile.innerText = tapwaveText;
 
                 // Eliminar notificación de tipo ZIP si se eliminó el archivo .zip de la skin
                 if (isZipDeleted) {
-                    await checkAndDeleteNotifOnZipDelete('skin', cos.name);
+                    await checkAndDeleteNotifOnZipDelete('skin', data.name);
                 }
 
                 // Registro automático de notificación
