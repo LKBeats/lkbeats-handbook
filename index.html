@@ -394,64 +394,7 @@ More content coming soon">
                     <span data-i18n="btnSaveThanksVideos">Subir y Guardar Videos</span>
                 </button>
             </div>
-
-            <div id="visual-assets-panel-box" class="hidden bg-[#11091c] border border-fuchsia-500/40 rounded-2xl p-6 shadow-2xl relative w-full mb-10">
-                <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-fuchsia-500 to-orange-500"></div>
-                <h2 class="font-display font-black text-base text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="visualAssetsMenuTitle">Panel de Assets Visuales Dinámicos</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs mb-4">
-                    <div class="space-y-2 bg-black/30 p-3 rounded-xl border border-fuchsia-950/40">
-                        <div class="font-black text-fuchsia-400 uppercase tracking-wider mb-2 border-b border-fuchsia-950/30 pb-1" data-i18n="formGenre">Géneros</div>
-                        <div id="asset-upload-genres-list" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
-                    </div>
-                    <div class="space-y-2 bg-black/30 p-3 rounded-xl border border-fuchsia-950/40">
-                        <div class="font-black text-orange-400 uppercase tracking-wider mb-2 border-b border-fuchsia-950/30 pb-1" data-i18n="formDifficulty">Dificultades</div>
-                        <div class="space-y-3">
-                            <div>
-                                <div class="flex justify-between items-center mb-0.5">
-                                    <label class="font-bold text-zinc-400 uppercase">Normal (Gris)</label>
-                                    <button type="button" class="btn-clear-visual-asset text-red-400 hover:text-red-300 font-bold text-[10px]" data-asset-key="diff_Normal" data-i18n="btnDelete">Eliminar</button>
-                                </div>
-                                <input type="file" data-asset-key="diff_Normal" accept="image/*" class="visual-asset-file-uploader w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded text-zinc-400">
-                            </div>
-                            <div>
-                                <div class="flex justify-between items-center mb-0.5">
-                                    <label class="font-bold text-zinc-400 uppercase">Hard (Naranja)</label>
-                                    <button type="button" class="btn-clear-visual-asset text-red-400 hover:text-red-300 font-bold text-[10px]" data-asset-key="diff_Hard" data-i18n="btnDelete">Eliminar</button>
-                                </div>
-                                <input type="file" data-asset-key="diff_Hard" accept="image/*" class="visual-asset-file-uploader w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded text-zinc-400">
-                            </div>
-                            <div>
-                                <div class="flex justify-between items-center mb-0.5">
-                                    <label class="font-bold text-zinc-400 uppercase">Extreme (Rojo)</label>
-                                    <button type="button" class="btn-clear-visual-asset text-red-400 hover:text-red-300 font-bold text-[10px]" data-asset-key="diff_Extreme" data-i18n="btnDelete">Eliminar</button>
-                                </div>
-                                <input type="file" data-asset-key="diff_Extreme" accept="image/*" class="visual-asset-file-uploader w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded text-zinc-400">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="space-y-2 bg-black/30 p-3 rounded-xl border border-fuchsia-950/40">
-                        <div class="font-black text-yellow-400 uppercase tracking-wider mb-2 border-b border-fuchsia-950/30 pb-1" data-i18n="formEdition">Edición</div>
-                        <div class="space-y-3">
-                            <div>
-                                <div class="flex justify-between items-center mb-0.5">
-                                    <label class="font-bold text-zinc-400 uppercase">Standard (Gris)</label>
-                                    <button type="button" class="btn-clear-visual-asset text-red-400 hover:text-red-300 font-bold text-[10px]" data-asset-key="edit_Standard" data-i18n="btnDelete">Eliminar</button>
-                                </div>
-                                <input type="file" data-asset-key="edit_Standard" accept="image/*" class="visual-asset-file-uploader w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded text-zinc-400">
-                            </div>
-                            <div>
-                                <div class="flex justify-between items-center mb-0.5">
-                                    <label class="font-bold text-zinc-400 uppercase">Deluxe (Dorado)</label>
-                                    <button type="button" class="btn-clear-visual-asset text-red-400 hover:text-red-300 font-bold text-[10px]" data-asset-key="edit_Deluxe" data-i18n="btnDelete">Eliminar</button>
-                                </div>
-                                <input type="file" data-asset-key="edit_Deluxe" accept="image/*" class="visual-asset-file-uploader w-full bg-[#05020a] border border-fuchsia-950 p-1.5 rounded text-zinc-400">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            
             <div id="footer-links-management-box" class="hidden bg-[#11091c] border border-orange-500/30 rounded-2xl p-6 shadow-xl relative w-full mb-10">
                 <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-orange-500 to-yellow-500"></div>
                 <h2 class="font-display font-black text-sm text-zinc-100 uppercase tracking-wide mb-4 pb-1 border-b border-fuchsia-950/60" data-i18n="footerMenuTitle">Links del Menú Inferior</h2>
