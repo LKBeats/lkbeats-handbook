@@ -10,10 +10,10 @@ import {
 export function initSkinsModule(state) {
     const {
         skinUniversalGenreList,
+        staticVisualAssets,
         getCosmetics,
         getCurrentLanguage,
         getIsCreatorMode,
-        getGlobalVisualAssets,
         getCurrentSelectedSkinSubPlatform,
         getBrandCustomNamesMap,
         showLoadingOverlay,
@@ -312,18 +312,13 @@ export function initSkinsModule(state) {
 
     function renderGenresBadgesHtml(raw) {
         if (!raw) return '';
-        const globalVisualAssets = getGlobalVisualAssets();
         return raw.split(' / ').map(g => {
             const trimmed = g.trim();
             const matched = skinUniversalGenreList.find(item => item.label.toLowerCase() === trimmed.toLowerCase());
             const color = matched ? matched.color : '#f97316';
+            const assetSrc = staticVisualAssets.genre[trimmed] || (matched ? matched.file : 'Pop.png');
             
-            const safeKey = trimmed.replace('/', '');
-            const dynamicAssetSrc = globalVisualAssets[`genre_${safeKey}`];
-            
-            const graphicElement = dynamicAssetSrc 
-                ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
-                : `<span class="w-2 h-2 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
+            const graphicElement = `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${assetSrc}'); mask-image: url('${assetSrc}');"></span>`;
 
             return `
                 <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-black" style="color:${color}; border-color:${color}40; background:${color}10">

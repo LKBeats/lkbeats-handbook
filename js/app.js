@@ -35,25 +35,47 @@ window.addEventListener('load', () => {
 // 1. DECLARACIÓN DE CONSTANTES Y VARIABLES DE ESTADO GLOBALES
 // =========================================================
 const genreList = [
-    { color: "#bf2726", label: "Rock" },
-    { color: "#da6128", label: "Alternative" },
-    { color: "#02fe03", label: "Classical" },
-    { color: "#84532f", label: "Country" },
-    { color: "#8836c7", label: "Dance/EDM" },
-    { color: "#2660d2", label: "Hip-Hop" },
-    { color: "#c43d73", label: "Pop" },
-    { color: "#019ac4", label: "RnB" }
+    { color: "#bf2726", label: "Rock", file: "Rock.png" },
+    { color: "#da6128", label: "Alternative", file: "Alternative.png" },
+    { color: "#02fe03", label: "Classical", file: "Classical.png" },
+    { color: "#84532f", label: "Country", file: "Country.png" },
+    { color: "#8836c7", label: "Dance/EDM", file: "DanceEDM.png" },
+    { color: "#2660d2", label: "Hip-Hop", file: "HipHop.png" },
+    { color: "#c43d73", label: "Pop", file: "Pop.png" },
+    { color: "#019ac4", label: "RnB", file: "RnB.png" }
 ];
 
 const skinUniversalGenreList = [
-    { color: "#c43d73", label: "Pop" },
-    { color: "#da6128", label: "Alternative" },
-    { color: "#8836c7", label: "Dance/EDM" },
-    { color: "#bf2726", label: "Rock" },
-    { color: "#2660d2", label: "Hip-Hop" },
-    { color: "#84532f", label: "Country" },
-    { color: "#019ac4", label: "RnB" }
+    { color: "#c43d73", label: "Pop", file: "Pop.png" },
+    { color: "#da6128", label: "Alternative", file: "Alternative.png" },
+    { color: "#8836c7", label: "Dance/EDM", file: "DanceEDM.png" },
+    { color: "#bf2726", label: "Rock", file: "Rock.png" },
+    { color: "#2660d2", label: "Hip-Hop", file: "HipHop.png" },
+    { color: "#84532f", label: "Country", file: "Country.png" },
+    { color: "#019ac4", label: "RnB", file: "RnB.png" }
 ];
+
+const staticVisualAssets = {
+    genre: {
+        "Rock": "Rock.png",
+        "Alternative": "Alternative.png",
+        "Classical": "Classical.png",
+        "Country": "Country.png",
+        "Dance/EDM": "DanceEDM.png",
+        "Hip-Hop": "HipHop.png",
+        "Pop": "Pop.png",
+        "RnB": "RnB.png"
+    },
+    diff: {
+        "Normal": "DifficultyLevel.png",
+        "Hard": "DifficultyLevel.png",
+        "Extreme": "DifficultyExtreme.png"
+    },
+    edit: {
+        "Standard": "Standard.png",
+        "Deluxe": "Deluxe.png"
+    }
+};
 
 let isCreatorMode = false;
 let currentLanguage = localStorage.getItem('nexus_lang') || 'es';
@@ -89,12 +111,10 @@ function renderNotifGenresBadgesHtml(rawGenre) {
         const trimmed = g.trim();
         const matched = genreList.find(item => item.label.toLowerCase() === trimmed.toLowerCase());
         const color = matched ? matched.color : '#f97316';
+        const assetSrc = staticVisualAssets.genre[trimmed] || (matched ? matched.file : null);
         
-        const safeKey = trimmed.replace('/', '');
-        const dynamicAssetSrc = globalVisualAssets[`genre_${safeKey}`] || globalVisualAssets[`genre_${trimmed}`];
-        
-        const graphicElement = dynamicAssetSrc 
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
+        const graphicElement = assetSrc 
+            ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${assetSrc}'); mask-image: url('${assetSrc}');"></span>`
             : `<span class="w-2.5 h-2.5 sm:w-2.5 sm:h-2.5 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
 
         return `
@@ -120,10 +140,8 @@ function getSingleDiffTagHtml(diffVal, isEn = false) {
         label = isEn ? 'Normal' : 'Normal';
     }
 
-    const dynamicAsset = globalVisualAssets[`diff_${diffVal}`];
-    const graphicMarkup = dynamicAsset
-        ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
-        : `<i class="fa-solid fa-layer-group text-[10px]"></i>`;
+    const assetSrc = staticVisualAssets.diff[diffVal] || 'DifficultyLevel.png';
+    const graphicMarkup = `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${assetSrc}'); mask-image: url('${assetSrc}');"></span>`;
 
     return `
         <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider" style="color:${color}; border-color:${color}50; background:${color}15" title="${label}">
@@ -158,16 +176,11 @@ function renderNotifDiffTagHtml(diffVal, editionVal, diffDeluxeVal, isEn = false
 
 function renderNotifEditionTagHtml(editionVal) {
     if (editionVal === 'Both' || editionVal === 'Standard + Deluxe') {
-        const stdAsset = globalVisualAssets[`edit_Standard`];
-        const dlxAsset = globalVisualAssets[`edit_Deluxe`];
+        const stdAsset = staticVisualAssets.edit["Standard"];
+        const dlxAsset = staticVisualAssets.edit["Deluxe"];
 
-        const stdMarkup = stdAsset
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: #71717a; -webkit-mask-image: url('${stdAsset}'); mask-image: url('${stdAsset}');"></span>`
-            : `<i class="fa-solid fa-star text-[10px]"></i>`;
-
-        const dlxMarkup = dlxAsset
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: #facc15; -webkit-mask-image: url('${dlxAsset}'); mask-image: url('${dlxAsset}');"></span>`
-            : `<i class="fa-solid fa-star text-[10px]"></i>`;
+        const stdMarkup = `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: #71717a; -webkit-mask-image: url('${stdAsset}'); mask-image: url('${stdAsset}');"></span>`;
+        const dlxMarkup = `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: #facc15; -webkit-mask-image: url('${dlxAsset}'); mask-image: url('${dlxAsset}');"></span>`;
 
         return `
             <div class="inline-flex items-center justify-end gap-1 sm:gap-1.5 flex-wrap">
@@ -188,10 +201,8 @@ function renderNotifEditionTagHtml(editionVal) {
     const label = editionVal || 'Standard';
     const glowClass = isDeluxe ? 'glow-gold' : '';
 
-    const dynamicAsset = globalVisualAssets[`edit_${editionVal}`];
-    const graphicMarkup = dynamicAsset
-        ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
-        : `<i class="fa-solid fa-star text-[10px]"></i>`;
+    const assetSrc = staticVisualAssets.edit[editionVal] || (isDeluxe ? "Deluxe.png" : "Standard.png");
+    const graphicMarkup = `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${assetSrc}'); mask-image: url('${assetSrc}');"></span>`;
 
     return `
         <div class="inline-flex items-center justify-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded border text-[10px] sm:text-[11px] font-black uppercase tracking-wider ${glowClass}" style="color:${color}; border-color:${color}50; background:${color}15" title="${label}">
@@ -723,68 +734,6 @@ function openBeatstarEditionSelectionModal(lvl) {
     history.pushState({ modalOpen: true, modalId: 'beatstar-edition-modal' }, '', '');
 }
 
-function buildVisualAssetsGenresList() {
-    const container = document.getElementById('asset-upload-genres-list');
-    if (!container) return;
-
-    container.innerHTML = '';
-    genreList.forEach(g => {
-        const safeKey = g.label.replace('/', '');
-        const currentAsset = globalVisualAssets[`genre_${safeKey}`] || '';
-
-        const item = document.createElement('div');
-        item.className = 'bg-[#05020a] p-2 rounded border border-fuchsia-950/60 flex flex-col gap-1';
-        item.innerHTML = `
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 rounded-full shrink-0" style="background-color: ${g.color}"></span>
-                    <span class="font-bold text-zinc-300 text-xs">${g.label}</span>
-                </div>
-                <button type="button" class="btn-clear-visual-asset text-red-400 hover:text-red-300 font-bold text-[10px]" data-asset-key="genre_${safeKey}">Eliminar</button>
-            </div>
-            <input type="file" data-asset-key="genre_${safeKey}" accept="image/*" class="visual-asset-file-uploader w-full bg-[#11091c] border border-fuchsia-950 p-1 rounded text-zinc-400 text-[11px]">
-        `;
-        container.appendChild(item);
-    });
-
-    container.querySelectorAll('.visual-asset-file-uploader').forEach(input => {
-        input.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            const assetKey = e.target.getAttribute('data-asset-key');
-            if (file && assetKey) {
-                showLoadingOverlay();
-                try {
-                    const uploadedUrl = await uploadFileToCloudflareR2(file, 'visual_assets');
-                    if (uploadedUrl) {
-                        await set(ref(db, `visual_assets/${assetKey}`), uploadedUrl);
-                    }
-                } catch (err) {
-                    console.error("Error al subir asset:", err);
-                } finally {
-                    hideLoadingOverlay();
-                }
-            }
-        });
-    });
-
-    container.querySelectorAll('.btn-clear-visual-asset').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            const assetKey = btn.getAttribute('data-asset-key');
-            if (assetKey && globalVisualAssets[assetKey]) {
-                showLoadingOverlay();
-                try {
-                    await deleteFileFromCloudflareR2(globalVisualAssets[assetKey]);
-                    await remove(ref(db, `visual_assets/${assetKey}`));
-                } catch (err) {
-                    console.error("Error al eliminar asset:", err);
-                } finally {
-                    hideLoadingOverlay();
-                }
-            }
-        });
-    });
-}
-
 function resetBoogieAuthModal() {
     document.getElementById('boogie-auth-modal')?.classList.add('hidden');
     const errorMsgEl = document.getElementById('boogie-auth-error-msg');
@@ -804,11 +753,11 @@ function resetBoogieAuthModal() {
 const stateForModules = {
     genreList,
     skinUniversalGenreList,
+    staticVisualAssets,
     getLevels: () => levels,
     getCosmetics: () => cosmetics,
     getCurrentLanguage: () => currentLanguage,
     getIsCreatorMode: () => isCreatorMode,
-    getGlobalVisualAssets: () => globalVisualAssets,
     getActiveChartSelectedEditions: () => activeChartSelectedEditions,
     getActiveChartExplicitStates: () => activeChartExplicitStates,
     getCurrentSelectedSkinSubPlatform: () => currentSelectedSkinSubPlatform,
@@ -834,7 +783,7 @@ const chartsModule = initChartsModule(stateForModules);
 const skinsModule = initSkinsModule(stateForModules);
 
 function applyRoleUIVisibility() {
-    ['level-form-container', 'cosmetic-form-container', 'footer-links-management-box', 'visual-assets-panel-box', 'thanks-videos-panel-box'].forEach(id => {
+    ['level-form-container', 'cosmetic-form-container', 'footer-links-management-box', 'thanks-videos-panel-box'].forEach(id => {
         document.getElementById(id)?.classList.toggle('hidden', !isCreatorMode);
     });
     document.querySelectorAll('.creator-action-header').forEach(el => el.classList.toggle('hidden', !isCreatorMode));
@@ -864,18 +813,14 @@ function applyRoleUIVisibility() {
 function updateCMSHeaderIcons() {
     const iconStdBox = document.getElementById('cms-icon-standard');
     const iconDlxBox = document.getElementById('cms-icon-deluxe');
-    const stdAsset = globalVisualAssets[`edit_Standard`];
-    const dlxAsset = globalVisualAssets[`edit_Deluxe`];
+    const stdAsset = staticVisualAssets.edit["Standard"];
+    const dlxAsset = staticVisualAssets.edit["Deluxe"];
 
     if (iconStdBox) {
-        iconStdBox.innerHTML = stdAsset
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5 align-middle" style="color: #71717a; -webkit-mask-image: url('${stdAsset}'); mask-image: url('${stdAsset}');"></span>`
-            : `<i class="fa-solid fa-layer-group text-zinc-400"></i>`;
+        iconStdBox.innerHTML = `<span class="dynamic-color-mask w-3.5 h-3.5 align-middle" style="color: #71717a; -webkit-mask-image: url('${stdAsset}'); mask-image: url('${stdAsset}');"></span>`;
     }
     if (iconDlxBox) {
-        iconDlxBox.innerHTML = dlxAsset
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5 align-middle" style="color: #facc15; -webkit-mask-image: url('${dlxAsset}'); mask-image: url('${dlxAsset}');"></span>`
-            : `<i class="fa-solid fa-star text-yellow-400"></i>`;
+        iconDlxBox.innerHTML = `<span class="dynamic-color-mask w-3.5 h-3.5 align-middle" style="color: #facc15; -webkit-mask-image: url('${dlxAsset}'); mask-image: url('${dlxAsset}');"></span>`;
     }
 }
 
@@ -926,11 +871,8 @@ function updateCustomDropdownButtonUI(btnId, labelId, val, categoryType) {
     if (categoryType === 'genre') {
         const matched = genreList.find(g => g.label.toLowerCase() === val.toLowerCase());
         const color = matched ? matched.color : '#f97316';
-        const safeKey = val.replace('/', '');
-        const imgAsset = globalVisualAssets[`genre_${safeKey}`];
-        const graphicEl = imgAsset
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
-            : `<span class="w-2.5 h-2.5 rounded-full inline-block shrink-0" style="background-color:${color}"></span>`;
+        const imgAsset = staticVisualAssets.genre[val] || (matched ? matched.file : 'Pop.png');
+        const graphicEl = `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`;
 
         label.innerHTML = `${graphicEl} <span class="truncate">${val}</span>`;
         btn.style.backgroundColor = `${color}20`;
@@ -942,10 +884,8 @@ function updateCustomDropdownButtonUI(btnId, labelId, val, categoryType) {
         if (val === 'Hard') { color = '#f97316'; displayLabel = translations[currentLanguage].diffHard; }
         if (val === 'Extreme') { color = '#ef4444'; displayLabel = translations[currentLanguage].diffExtreme; }
 
-        const imgAsset = globalVisualAssets[`diff_${val}`];
-        const graphicEl = imgAsset
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
-            : `<i class="fa-solid fa-layer-group text-[10px]"></i>`;
+        const imgAsset = staticVisualAssets.diff[val] || 'DifficultyLevel.png';
+        const graphicEl = `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`;
 
         label.innerHTML = `${graphicEl} <span class="truncate">${displayLabel}</span>`;
         btn.style.backgroundColor = `${color}20`;
@@ -953,10 +893,8 @@ function updateCustomDropdownButtonUI(btnId, labelId, val, categoryType) {
         btn.style.color = color;
     } else if (categoryType === 'edition') {
         let color = (val === 'Deluxe') ? '#facc15' : '#71717a';
-        const imgAsset = globalVisualAssets[`edit_${val}`];
-        const graphicEl = imgAsset
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
-            : `<i class="fa-solid fa-star text-[10px]"></i>`;
+        const imgAsset = staticVisualAssets.edit[val] || (val === 'Deluxe' ? 'Deluxe.png' : 'Standard.png');
+        const graphicEl = `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`;
 
         label.innerHTML = `${graphicEl} <span class="truncate">${val}</span>`;
         btn.style.backgroundColor = `${color}20`;
@@ -972,28 +910,22 @@ function buildCustomDropdownMenus() {
     if (dLvlGenre) {
         dLvlGenre.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlGenre" data-value=""><span>${allTxt}</span></div>`;
         genreList.forEach(g => {
-            const safeKey = g.label.replace('/', '');
-            const imgAsset = globalVisualAssets[`genre_${safeKey}`];
-            const graphicEl = imgAsset
-                ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${g.color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
-                : `<span class="w-2.5 h-2.5 rounded-full inline-block shrink-0" style="background-color:${g.color}"></span>`;
+            const imgAsset = staticVisualAssets.genre[g.label] || g.file;
+            const graphicEl = `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${g.color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`;
 
             dLvlGenre.innerHTML += `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer font-extrabold flex items-center gap-2" style="color:${g.color}" data-type="lvlGenre" data-value="${g.label}">${graphicEl} <span>${g.label}</span></div>`;
         });
     }
 
-    const getDynamicIconMarkup = (assetKey, color, fallbackIconClass) => {
-        const imgAsset = globalVisualAssets[assetKey];
-        return imgAsset
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0 inline-block align-middle" style="color: ${color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
-            : `<i class="${fallbackIconClass} text-[10px]"></i>`;
+    const getStaticIconMarkup = (assetPath, color) => {
+        return `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0 inline-block align-middle" style="color: ${color}; -webkit-mask-image: url('${assetPath}'); mask-image: url('${assetPath}');"></span>`;
     };
 
     const dLvlDiff = document.getElementById('dropdown-custom-lvl-diff');
     if (dLvlDiff) {
-        const iconNormal = getDynamicIconMarkup('diff_Normal', '#71717a', 'fa-solid fa-layer-group');
-        const iconHard = getDynamicIconMarkup('diff_Hard', '#f97316', 'fa-solid fa-layer-group');
-        const iconExtreme = getDynamicIconMarkup('diff_Extreme', '#ef4444', 'fa-solid fa-layer-group');
+        const iconNormal = getStaticIconMarkup(staticVisualAssets.diff["Normal"], '#71717a');
+        const iconHard = getStaticIconMarkup(staticVisualAssets.diff["Hard"], '#f97316');
+        const iconExtreme = getStaticIconMarkup(staticVisualAssets.diff["Extreme"], '#ef4444');
 
         const txtNormal = translations[currentLanguage].diffNormal;
         const txtHard = translations[currentLanguage].diffHard;
@@ -1009,8 +941,8 @@ function buildCustomDropdownMenus() {
 
     const dLvlEdition = document.getElementById('dropdown-custom-lvl-edition');
     if (dLvlEdition) {
-        const iconStandard = getDynamicIconMarkup('edit_Standard', '#71717a', 'fa-solid fa-star');
-        const iconDeluxe = getDynamicIconMarkup('edit_Deluxe', '#facc15', 'fa-solid fa-star');
+        const iconStandard = getStaticIconMarkup(staticVisualAssets.edit["Standard"], '#71717a');
+        const iconDeluxe = getStaticIconMarkup(staticVisualAssets.edit["Deluxe"], '#facc15');
 
         dLvlEdition.innerHTML = `
             <div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="lvlEdition" data-value=""><span>${allTxt}</span></div>
@@ -1023,11 +955,8 @@ function buildCustomDropdownMenus() {
     if (dSkinGenre) {
         dSkinGenre.innerHTML = `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer text-zinc-300 font-extrabold flex items-center gap-2" data-type="skinGenre" data-value=""><span>${allTxt}</span></div>`;
         skinUniversalGenreList.forEach(g => {
-            const safeKey = g.label.replace('/', '');
-            const imgAsset = globalVisualAssets[`genre_${safeKey}`];
-            const graphicEl = imgAsset
-                ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${g.color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`
-                : `<span class="w-2.5 h-2.5 rounded-full inline-block shrink-0" style="background-color:${g.color}"></span>`;
+            const imgAsset = staticVisualAssets.genre[g.label] || g.file;
+            const graphicEl = `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${g.color}; -webkit-mask-image: url('${imgAsset}'); mask-image: url('${imgAsset}');"></span>`;
 
             dSkinGenre.innerHTML += `<div class="custom-opt-item p-2 hover:bg-fuchsia-950/40 cursor-pointer font-extrabold flex items-center gap-2" style="color:${g.color}" data-type="skinGenre" data-value="${g.label}">${graphicEl} <span>${g.label}</span></div>`;
         });
@@ -1130,18 +1059,7 @@ try {
         });
         skinsModule.populateExistingBrandsDropdown();
         skinsModule.renderCosmeticsTables();
-    });
-    onValue(ref(db, 'visual_assets'), (snap) => {
-        globalVisualAssets = snap.val() || {};
-        buildCustomDropdownMenus();
-        buildVisualAssetsGenresList();
-        updateCMSHeaderIcons();
-        chartsModule.renderLevelsTable();
-        
-        if (latestActiveNotification) {
-            drawNotificationBanner(latestActiveNotification);
-        }
-    });
+    });    
     onValue(ref(db, 'thanks_videos'), (snap) => {
         globalThanksVideos = snap.val() ? Object.values(snap.val()) : [];
     });
@@ -1484,7 +1402,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     chartsModule.buildGenresSelector();
     skinsModule.buildSkinGenresSelector();
-    buildVisualAssetsGenresList();
     applyLanguagePack();
 });
 

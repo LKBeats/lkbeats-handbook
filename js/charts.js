@@ -11,10 +11,10 @@ import {
 export function initChartsModule(state) {
     const {
         genreList,
+        staticVisualAssets,
         getLevels,
         getCurrentLanguage,
         getIsCreatorMode,
-        getGlobalVisualAssets,
         getActiveChartSelectedEditions,
         getActiveChartExplicitStates,
         getActiveAudioElement,
@@ -292,18 +292,13 @@ export function initChartsModule(state) {
 
     function renderGenresBadgesHtml(raw) {
         if (!raw) return '';
-        const globalVisualAssets = getGlobalVisualAssets();
         return raw.split(' / ').map(g => {
             const trimmed = g.trim();
             const matched = genreList.find(item => item.label.toLowerCase() === trimmed.toLowerCase());
             const color = matched ? matched.color : '#f97316';
+            const assetSrc = staticVisualAssets.genre[trimmed] || (matched ? matched.file : 'Pop.png');
             
-            const safeKey = trimmed.replace('/', '');
-            const dynamicAssetSrc = globalVisualAssets[`genre_${safeKey}`];
-            
-            const graphicElement = dynamicAssetSrc 
-                ? `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAssetSrc}'); mask-image: url('${dynamicAssetSrc}');"></span>`
-                : `<span class="w-2 h-2 rounded-full inline-block shrink-0" style="background-color: ${color}"></span>`;
+            const graphicElement = `<span class="dynamic-color-mask w-3.5 h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${assetSrc}'); mask-image: url('${assetSrc}');"></span>`;
 
             return `
                 <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-black" style="color:${color}; border-color:${color}40; background:${color}10">
@@ -330,26 +325,20 @@ export function initChartsModule(state) {
             styleClass = 'bg-red-500/10 border-red-500/30 text-red-500';
         }
 
-        const globalVisualAssets = getGlobalVisualAssets();
-        const dynamicAsset = globalVisualAssets[`diff_${diffVal}`];
-        const graphicMarkup = dynamicAsset
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
-            : `<i class="fa-solid fa-layer-group"></i>`;
+        const assetSrc = staticVisualAssets.diff[diffVal] || 'DifficultyLevel.png';
+        const graphicMarkup = `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${color}; -webkit-mask-image: url('${assetSrc}'); mask-image: url('${assetSrc}');"></span>`;
 
         return `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${styleClass} font-black uppercase text-[10px]">${graphicMarkup} <span>${label}</span></div>`;
     }
 
     function renderEditionTagMarkup(editionVal) {
-        const globalVisualAssets = getGlobalVisualAssets();
         const isDeluxe = editionVal === 'Deluxe';
         const color = isDeluxe ? '#facc15' : '#71717a';
         const label = editionVal || 'Standard';
         const glowClass = isDeluxe ? 'glow-gold' : '';
 
-        const dynamicAsset = globalVisualAssets[`edit_${editionVal}`];
-        const graphicMarkup = dynamicAsset
-            ? `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${dynamicAsset}'); mask-image: url('${dynamicAsset}');"></span>`
-            : `<i class="fa-solid fa-star text-[10px]"></i>`;
+        const assetSrc = staticVisualAssets.edit[editionVal] || (isDeluxe ? "Deluxe.png" : "Standard.png");
+        const graphicMarkup = `<span class="dynamic-color-mask w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 shrink-0" style="color: ${color}; -webkit-mask-image: url('${assetSrc}'); mask-image: url('${assetSrc}');"></span>`;
 
         return `
             <div class="inline-flex items-center justify-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-black uppercase tracking-wider ${glowClass}" style="color:${color}; border-color:${color}50; background:${color}15" title="${label}">
@@ -373,8 +362,7 @@ export function initChartsModule(state) {
         if (!tbody) return; 
 
         const lang = getCurrentLanguage();
-        const isCreatorMode = getIsCreatorMode();
-        const globalVisualAssets = getGlobalVisualAssets();
+        const isCreatorMode = getIsCreatorMode();        
         const activeChartSelectedEditions = getActiveChartSelectedEditions();
         const activeChartExplicitStates = getActiveChartExplicitStates();
         const levels = getLevels();
@@ -524,17 +512,17 @@ export function initChartsModule(state) {
 
             let editionGraphicMarkup = '';
             if (isDual) {
-                const dynamicStdAsset = globalVisualAssets[`edit_Standard`];
-                const dynamicDlxAsset = globalVisualAssets[`edit_Deluxe`];
+                const stdAsset = staticVisualAssets.edit["Standard"];
+                const dlxAsset = staticVisualAssets.edit["Deluxe"];
 
                 editionGraphicMarkup = `
                     <div class="inline-flex items-center gap-1.5 flex-wrap">
                         <div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400 font-black text-[10px] uppercase truncate">
-                            ${dynamicStdAsset ? `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: #71717a; -webkit-mask-image: url('${dynamicStdAsset}'); mask-image: url('${dynamicStdAsset}');"></span>` : ''}
+                            <span class="dynamic-color-mask w-3.5 h-3.5" style="color: #71717a; -webkit-mask-image: url('${stdAsset}'); mask-image: url('${stdAsset}');"></span>
                             <span>Standard</span>
                         </div>
                         <div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded glow-gold bg-yellow-500/10 text-yellow-400 border border-yellow-500/40 font-black text-[10px] uppercase truncate">
-                            ${dynamicDlxAsset ? `<span class="dynamic-color-mask w-3.5 h-3.5" style="color: #facc15; -webkit-mask-image: url('${dynamicDlxAsset}'); mask-image: url('${dynamicDlxAsset}');"></span>` : ''}
+                            <span class="dynamic-color-mask w-3.5 h-3.5" style="color: #facc15; -webkit-mask-image: url('${dlxAsset}'); mask-image: url('${dlxAsset}');"></span>
                             <span>Deluxe</span>
                         </div>
                     </div>
@@ -542,11 +530,9 @@ export function initChartsModule(state) {
             } else {
                 const targetEditionHex = isDeluxeActive ? "#facc15" : "#71717a";
                 const editionContainerClass = isDeluxeActive ? "glow-gold bg-yellow-500/10 text-yellow-400 border border-yellow-500/40" : "bg-zinc-900 border border-zinc-800 text-zinc-400";
-                const dynamicEditionAsset = globalVisualAssets[isDeluxeActive ? `edit_Deluxe` : `edit_Standard`];
+                const editionAsset = staticVisualAssets.edit[isDeluxeActive ? 'Deluxe' : 'Standard'];
 
-                editionGraphicMarkup = dynamicEditionAsset
-                    ? `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${editionContainerClass} font-black text-[10px] uppercase truncate"><span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${targetEditionHex}; -webkit-mask-image: url('${dynamicEditionAsset}'); mask-image: url('${dynamicEditionAsset}');"></span><span>${isDeluxeActive ? 'Deluxe' : 'Standard'}</span></div>`
-                    : `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${editionContainerClass} font-black text-[10px] uppercase truncate"><span>${isDeluxeActive ? 'Deluxe' : 'Standard'}</span></div>`;
+                editionGraphicMarkup = `<div class="w-max max-w-full inline-flex items-center gap-1.5 px-2 py-0.5 rounded ${editionContainerClass} font-black text-[10px] uppercase truncate"><span class="dynamic-color-mask w-3.5 h-3.5" style="color: ${targetEditionHex}; -webkit-mask-image: url('${editionAsset}'); mask-image: url('${editionAsset}');"></span><span>${isDeluxeActive ? 'Deluxe' : 'Standard'}</span></div>`;
             }
 
             const hasAudio = !!currentAudioUrl;
