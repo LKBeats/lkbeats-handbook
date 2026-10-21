@@ -63,11 +63,12 @@ export function initChartsModule(state) {
         container.innerHTML = '';
 
         genreList.forEach(g => {
+            const assetSrc = staticVisualAssets.genre[g.label] || g.file;
             const item = document.createElement('label');
             item.className = "flex items-center gap-3 p-1.5 hover:bg-zinc-900 rounded cursor-pointer text-zinc-300";
             item.innerHTML = `
                 <input type="checkbox" name="lvlGenres" value="${g.label}" class="genre-checkbox accent-fuchsia-500">
-                <span class="w-3.5 h-3.5 rounded-full inline-block shrink-0 shadow" style="background-color: ${g.color}"></span>
+                <span class="dynamic-color-mask w-4 h-4 shrink-0" style="color: ${g.color}; -webkit-mask-image: url('${assetSrc}'); mask-image: url('${assetSrc}');"></span>
                 <span class="font-extrabold text-sm text-zinc-200">${g.label}</span>
             `;
             item.querySelector('input').addEventListener('change', (e) => {
@@ -566,14 +567,14 @@ export function initChartsModule(state) {
             if (lvl.isCollab) {
                 let collabSubContent = '';
                 if (lvl.collabLogo) {
-                    collabSubContent = `<img src="${lvl.collabLogo}" class="h-4 w-auto object-contain max-w-[80px] rounded">`;
+                    collabSubContent = `<img src="${lvl.collabLogo}" class="h-7 w-auto object-contain max-w-[120px] rounded">`;
                 } else if (lvl.collabAuthor) {
                     collabSubContent = `<span class="text-zinc-200 font-bold">${lvl.collabAuthor}</span>`;
                 }
 
                 badgesMarkup += `
-                    <div class="mt-1 text-[10px] font-black text-fuchsia-400 uppercase tracking-wider flex flex-col gap-1 bg-fuchsia-950/40 border border-fuchsia-800/40 px-2 py-1 rounded-md w-max">
-                        <div class="flex items-center gap-1">
+                    <div class="mt-1 text-[10px] font-black text-fuchsia-400 tracking-wider flex flex-col gap-1 bg-fuchsia-950/40 border border-fuchsia-800/40 px-2 py-1 rounded-md w-max">
+                        <div class="flex items-center gap-1 uppercase">
                             <i class="fa-solid fa-xmark text-fuchsia-400 font-black"></i>
                             <span>${translations[lang].lblCollabMessage}</span>
                         </div>
@@ -694,13 +695,21 @@ export function initChartsModule(state) {
                 artBox?.addEventListener('click', () => {
                     openBeatstarEditionSelectionModal(lvl);
                     
+                    const modalCanvas = document.getElementById('modal-edition-canvas');
+                    
                     if (currentAudioUrl) {
-                        const modalCanvas = document.getElementById('modal-edition-canvas');
                         const modalImg = document.getElementById('modal-edition-art-img');
                         const modalContainer = document.getElementById('modal-edition-art-container');
                         const targetColor = isDeluxeActive ? "#facc15" : "#d946ef";
 
                         toggleAudioPreviewEngine(currentAudioUrl, null, modalImg, modalCanvas, modalContainer, true, targetColor, true);
+                    } else {
+
+                        // Si la canción no tiene audio preview, limpiamos el canvas del modal para evitar que herede el visualizador de otro audio sonando
+                        if (modalCanvas) {
+                            const ctx = modalCanvas.getContext('2d');
+                            ctx.clearRect(0, 0, modalCanvas.width, modalCanvas.height);
+                        }
                     }
                 });
             }

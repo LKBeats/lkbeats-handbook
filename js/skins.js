@@ -156,11 +156,12 @@ export function initSkinsModule(state) {
         if (!container) return;
         container.innerHTML = '';
         skinUniversalGenreList.forEach(g => {
+            const assetSrc = staticVisualAssets.genre[g.label] || g.file;
             const item = document.createElement('label');
             item.className = "flex items-center gap-3 p-1.5 hover:bg-zinc-900 rounded cursor-pointer text-zinc-300";
             item.innerHTML = `
                 <input type="checkbox" name="skinGenres" value="${g.label}" class="skin-genre-checkbox accent-[#d946ef]">
-                <span class="w-3.5 h-3.5 rounded-full inline-block shrink-0 shadow" style="background-color: ${g.color}"></span>
+                <span class="dynamic-color-mask w-4 h-4 shrink-0" style="color: ${g.color}; -webkit-mask-image: url('${assetSrc}'); mask-image: url('${assetSrc}');"></span>
                 <span class="font-extrabold text-sm text-zinc-200">${g.label}</span>
             `;
             item.querySelector('input').addEventListener('change', (e) => {

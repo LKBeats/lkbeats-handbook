@@ -63,6 +63,12 @@ export function stopGlobalAudioPreview() {
     currentRotationAngle = 0;
 }
 
+export function clearCanvasVisualizer(canvas) {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
 export function startRadialCanvasVisualizer(canvas, analyser, containerElement, themeColor = "#d946ef") {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -116,22 +122,28 @@ export function startRadialCanvasVisualizer(canvas, analyser, containerElement, 
             // Ajuste de sensibilidad contenido proporcional al video de Beatstar
             let normalized = Math.min(1, (rawValue / 255) * 1.55);
             let barHeight = Math.min(15, Math.pow(normalized, 1.15) * 15);
-            if (rawValue > 8 && barHeight < 2) {
-                barHeight = 2;
-            }
 
             const startX = centerX + Math.cos(angle) * radius;
             const startY = centerY + Math.sin(angle) * radius;
-            const endX = centerX + Math.cos(angle) * (radius + barHeight);
-            const endY = centerY + Math.sin(angle) * (radius + barHeight);
 
-            ctx.strokeStyle = themeColor;
-            ctx.lineWidth = 2.2;
-            ctx.lineCap = 'round';
-            ctx.beginPath();
-            ctx.moveTo(startX, startY);
-            ctx.lineTo(endX, endY);
-            ctx.stroke();
+            // Si no hay sonido o la altura es casi cero, se dibuja un punto en el origen de la barra
+            if (barHeight <= 0.5) {
+                ctx.fillStyle = themeColor;
+                ctx.beginPath();
+                ctx.arc(startX, startY, 1.1, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                const endX = centerX + Math.cos(angle) * (radius + barHeight);
+                const endY = centerY + Math.sin(angle) * (radius + barHeight);
+
+                ctx.strokeStyle = themeColor;
+                ctx.lineWidth = 2.2;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                ctx.stroke();
+            }
         }
     }
     draw();
