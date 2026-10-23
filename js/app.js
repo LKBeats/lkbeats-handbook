@@ -863,7 +863,7 @@ function updateCustomDropdownButtonUI(btnId, labelId, val, categoryType) {
     if (!val || val === "") {
         label.innerHTML = `<span>${translations[currentLanguage].filterAll}</span>`;
         btn.style.backgroundColor = '#05020a';
-        btn.style.borderColor = '#1e112a'; // Restablece el borde predeterminado de la interfaz
+        btn.style.borderColor = '';
         btn.style.color = '#d4d4d8';
         return;
     }
