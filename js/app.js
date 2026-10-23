@@ -863,7 +863,7 @@ function updateCustomDropdownButtonUI(btnId, labelId, val, categoryType) {
     if (!val) {
         label.innerHTML = `<span>${translations[currentLanguage].filterAll}</span>`;
         btn.style.backgroundColor = '#05020a';
-        btn.style.borderColor = '#4c1d95';
+        btn.style.borderColor = '';
         btn.style.color = '#d4d4d8';
         return;
     }
@@ -1352,20 +1352,42 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-custom-skin-genre')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('dropdown-custom-skin-genre')?.classList.toggle('hidden'); });
 
     document.getElementById('btn-clear-lvl-filters')?.addEventListener('click', () => {
-        chartsModule.setLvlGenreFilter("");
-        chartsModule.setLvlDiffFilter("");
-        chartsModule.setLvlEditionFilter("");
-        updateCustomDropdownButtonUI('btn-custom-lvl-genre', 'label-custom-lvl-genre', "", 'genre');
-        updateCustomDropdownButtonUI('btn-custom-lvl-diff', 'label-custom-lvl-diff', "", 'diff');
-        updateCustomDropdownButtonUI('btn-custom-lvl-edition', 'label-custom-lvl-edition', "", 'edition');
-        chartsModule.renderLevelsTable();
-    });
+    chartsModule.setLvlGenreFilter("");
+    chartsModule.setLvlDiffFilter("");
+    chartsModule.setLvlEditionFilter("");
+    chartsModule.setLvlSearchQuery(""); // <--- Limpiar término de búsqueda
+    
+    const searchInput = document.getElementById('input-search-lvl');
+    if (searchInput) searchInput.value = "";
+
+    updateCustomDropdownButtonUI('btn-custom-lvl-genre', 'label-custom-lvl-genre', "", 'genre');
+    updateCustomDropdownButtonUI('btn-custom-lvl-diff', 'label-custom-lvl-diff', "", 'diff');
+    updateCustomDropdownButtonUI('btn-custom-lvl-edition', 'label-custom-lvl-edition', "", 'edition');
+    chartsModule.renderLevelsTable();
+});
+
+    // Listener para la barra de búsqueda de Charts
+document.getElementById('input-search-lvl')?.addEventListener('input', (e) => {
+    chartsModule.setLvlSearchQuery(e.target.value);
+    chartsModule.renderLevelsTable();
+});
 
     document.getElementById('btn-clear-skin-filters')?.addEventListener('click', () => {
-        skinsModule.setSkinGenreFilter("");
-        updateCustomDropdownButtonUI('btn-custom-skin-genre', 'label-custom-skin-genre', "", 'genre');
-        skinsModule.renderCosmeticsTables();
-    });
+    skinsModule.setSkinGenreFilter("");
+    skinsModule.setSkinSearchQuery(""); // <--- Limpiar término de búsqueda
+    
+    const searchInput = document.getElementById('input-search-skin');
+    if (searchInput) searchInput.value = "";
+
+    updateCustomDropdownButtonUI('btn-custom-skin-genre', 'label-custom-skin-genre', "", 'genre');
+    skinsModule.renderCosmeticsTables();
+});
+
+// Listener para la barra de búsqueda de Skins
+document.getElementById('input-search-skin')?.addEventListener('input', (e) => {
+    skinsModule.setSkinSearchQuery(e.target.value);
+    skinsModule.renderCosmeticsTables();
+});
 
     document.addEventListener('click', () => {
         ['dropdown-custom-lvl-genre', 'dropdown-custom-lvl-diff', 'dropdown-custom-lvl-edition', 'dropdown-custom-skin-genre'].forEach(id => {

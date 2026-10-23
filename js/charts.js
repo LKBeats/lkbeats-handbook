@@ -34,8 +34,17 @@ export function initChartsModule(state) {
     let activeLvlGenreFilter = "";
     let activeLvlDiffFilter = "";
     let activeLvlEditionFilter = "";
+    let activeLvlSearchQuery = "";
 
     let pendingExplicitActivationChartId = null;
+
+function normalizeText(str) {
+    return (str || '')
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9 ]/g, "");
+}
 
     // Estado para gestionar los borrados diferidos de archivos y fechas
     let pendingDeletes = {
@@ -411,7 +420,18 @@ export function initChartsModule(state) {
             });
         }
 
-        const hasActiveFilters = activeLvlGenreFilter || activeLvlDiffFilter || activeLvlEditionFilter;
+	// 4. Filtro por Búsqueda (Canción / Artista / Colaborador)
+	if (activeLvlSearchQuery.trim() !== "") {
+	const query = normalizeText(activeLvlSearchQuery);
+    	filtered = filtered.filter(l => {
+        const song = normalizeText(l.song);
+        const artist = normalizeText(l.artist);
+        const collab = normalizeText(l.collabAuthor);
+        return song.includes(query) || artist.includes(query) || collab.includes(query);
+    });
+}
+
+        const hasActiveFilters = activeLvlGenreFilter || activeLvlDiffFilter || activeLvlEditionFilter || activeLvlSearchQuery.trim() !== "";
         const counterLbl = document.getElementById('lbl-counter-charts');
         if (counterLbl) {
             counterLbl.innerText = hasActiveFilters ? `Charts: ${filtered.length}` : `Total: ${levels.length} Charts`;
@@ -1197,6 +1217,7 @@ export function initChartsModule(state) {
         setPendingExplicitActivationChartId: (val) => { pendingExplicitActivationChartId = val; },
         setLvlGenreFilter: (val) => { activeLvlGenreFilter = val; },
         setLvlDiffFilter: (val) => { activeLvlDiffFilter = val; },
-        setLvlEditionFilter: (val) => { activeLvlEditionFilter = val; }
+        setLvlEditionFilter: (val) => { activeLvlEditionFilter = val; },
+	setLvlSearchQuery: (val) => { activeLvlSearchQuery = val; }
     };
 }

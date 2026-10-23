@@ -104,6 +104,8 @@ export const translations = {
 	tutDesc3: "Si una canción cuenta con una letra explícita, verás un botón “E” en el arte de la canción, oprime el botón y confirma habilitar el contenido explícito para descargar y escuchar la canción sin censura.",
 	tutTitle4: "Versión Móvil",
 	tutDesc4: "En la versión móvil, puedes desplazar la lista hacia la izquierda y derecha para ver todo el contenido de las listas, los demás botones también funcionan en la versión móvil.",
+	searchPlaceholder: "Buscar canción o artista...",
+	searchSkinPlaceholder: "Buscar skin o artista...",
 	btnPrev: "Anterior",
 	btnNext: "Siguiente",
 	btnFinish: "Finalizar"
@@ -212,6 +214,8 @@ export const translations = {
 	tutDesc3: "If a song has explicit lyrics, you will see an “E” button on the song art. Tap the button and confirm enabling explicit content to download and listen to the uncensored song.",
 	tutTitle4: "Mobile Version",
 	tutDesc4: "On the mobile version, you can scroll the table left and right to view all the content. All other buttons also work on mobile.",
+	searchPlaceholder: "Search song or artist...",
+	searchSkinPlaceholder: "Search skin or artist...",
 	btnPrev: "Previous",
 	btnNext: "Next",
 	btnFinish: "Finish"

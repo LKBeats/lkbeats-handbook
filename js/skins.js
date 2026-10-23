@@ -26,6 +26,16 @@ export function initSkinsModule(state) {
     } = state;
 
     let activeSkinGenreFilter = "";
+    let activeSkinSearchQuery = "";
+
+function normalizeText(str) {
+    return (str || '')
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9 ]/g, "");
+}
+
     let editingCosBrandUrlsList = [];
 
     let pendingSkinDeletes = {
@@ -353,32 +363,53 @@ export function initSkinsModule(state) {
         const fragT = document.createDocumentFragment();
 
         let filtered = sortAscendingByDate(cosmetics);
-        if (activeSkinGenreFilter) filtered = filtered.filter(c => c.genre && c.genre.toLowerCase().includes(activeSkinGenreFilter.toLowerCase()));
+
+        // 1. Filtro por Género
+        if (activeSkinGenreFilter) {
+            filtered = filtered.filter(c => c.genre && c.genre.toLowerCase().includes(activeSkinGenreFilter.toLowerCase()));
+        }
+
+        // 2. Filtro por Búsqueda (Nombre / Artista)
+        if (activeSkinSearchQuery.trim() !== "") {
+            const query = normalizeText(activeSkinSearchQuery);
+            filtered = filtered.filter(c => {
+                const name = normalizeText(c.name);
+                const artist = normalizeText(c.artist);
+                return name.includes(query) || artist.includes(query);
+            });
+        }
 
         const beatstarList = filtered.filter(c => c.platform !== 'TapWave');
         const tapwaveList = filtered.filter(c => c.platform === 'TapWave');
 
-        const hasActiveFilter = !!activeSkinGenreFilter;
+        const hasActiveFilter = !!activeSkinGenreFilter || activeSkinSearchQuery.trim() !== "";
 
-const cB = document.getElementById('counter-beatstar');
-const cBMobile = document.getElementById('counter-beatstar-mobile');
-const cT = document.getElementById('counter-tapwave');
-const cTMobile = document.getElementById('counter-tapwave-mobile');
+        const cB = document.getElementById('counter-beatstar');
+        const cBMobile = document.getElementById('counter-beatstar-mobile');
+        const cT = document.getElementById('counter-tapwave');
+        const cTMobile = document.getElementById('counter-tapwave-mobile');
 
-const totalBeatstarAll = cosmetics.filter(c => c.platform !== 'TapWave').length;
-const totalTapwaveAll = cosmetics.filter(c => c.platform === 'TapWave').length;
+        const totalBeatstarAll = cosmetics.filter(c => c.platform !== 'TapWave').length;
+        const totalTapwaveAll = cosmetics.filter(c => c.platform === 'TapWave').length;
 
-const beatstarText = hasActiveFilter ? `Skins: ${beatstarList.length}` : `Total: ${totalBeatstarAll} Skins`;
-const tapwaveText = hasActiveFilter ? `Skins: ${tapwaveList.length}` : `Total: ${totalTapwaveAll} Skins`;
+        const beatstarText = hasActiveFilter ? `Skins: ${beatstarList.length}` : `Total: ${totalBeatstarAll} Skins`;
+        const tapwaveText = hasActiveFilter ? `Skins: ${tapwaveList.length}` : `Total: ${totalTapwaveAll} Skins`;
 
-if (cB) cB.innerText = beatstarText;
-if (cBMobile) cBMobile.innerText = beatstarText;
-if (cT) cT.innerText = tapwaveText;
-if (cTMobile) cTMobile.innerText = tapwaveText;
+        if (cB) cB.innerText = beatstarText;
+        if (cBMobile) cBMobile.innerText = beatstarText;
+        if (cT) cT.innerText = tapwaveText;
+        if (cTMobile) cTMobile.innerText = tapwaveText;
 
-        const currentSubPlatformList = (currentSelectedSkinSubPlatform === 'TapWave') ? tapwaveList : beatstarList;
+        const isTapwaveActive = (currentSelectedSkinSubPlatform === 'TapWave');
+        const currentSubPlatformList = isTapwaveActive ? tapwaveList : beatstarList;
+
+        // Limpieza de ambas tablas siempre
+        tbodyB.innerHTML = '';
+        tbodyT.innerHTML = '';
+
+        // Si la lista de la plataforma activa no tiene elementos, mostramos a Boogie
         if (currentSubPlatformList.length === 0) {
-            const targetTbody = (currentSelectedSkinSubPlatform === 'TapWave') ? tbodyT : tbodyB;
+            const targetTbody = isTapwaveActive ? tbodyT : tbodyB;
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td colspan="5" class="p-8 text-center">
@@ -388,11 +419,11 @@ if (cTMobile) cTMobile.innerText = tapwaveText;
                     </div>
                 </td>
             `;
-            targetTbody.innerHTML = '';
             targetTbody.appendChild(tr);
             return;
         }
 
+        // Construcción de filas si existen resultados
         filtered.forEach((cos) => {
             const isT = (cos.platform === 'TapWave');
 
@@ -485,105 +516,9 @@ if (cTMobile) cTMobile.innerText = tapwaveText;
                 tr.querySelector('.btn-direct-skin-download')?.addEventListener('click', () => triggerDownloadAlert(cos.skinDirectUrl));
             }
 
-            tr.querySelector('.btn-edit-cos')?.addEventListener('click', () => {
-                resetCosmeticFormState();
-
-                document.getElementById('editingCosId').value = cos.id;
-                document.getElementById('cosName').value = cos.name;
-                document.getElementById('cosArtist').value = cos.artist; 
-                document.getElementById('cosDate').value = cos.date || '';
-                document.getElementById('cosDl1').value = cos.dl1 || '';
-                document.getElementById('cosDl2').value = cos.dl2 || '';
-                document.getElementById('cosIsExclusive').checked = !!cos.isExclusive;
-                
-                setupSkinFileOrDeleteSlot('slot-cos-icon', !!cos.icon && cos.icon !== 'BoxSprite_MerchSkin2.png', 'icon');
-                setupSkinFileOrDeleteSlot('slot-cos-video', !!cos.video, 'video');
-                setupSkinFileOrDeleteSlot('slot-cos-zip', !!cos.skinDirectUrl, 'zip');
-                setupSkinFileOrDeleteSlot('slot-cos-date', !!cos.date, 'date', true);
-
-                const submitBtn = document.getElementById('cosSubmitBtn');
-                if (submitBtn) {
-                    const span = submitBtn.querySelector('span');
-                    if (span) span.innerText = translations[lang].btnSaveChanges;
-                    else submitBtn.innerText = translations[lang].btnSaveChanges;
-                }
-                
-                const pBox = document.getElementById('cosIconPreviewBox');
-                const pImg = document.getElementById('cosIconPreviewImg');
-                if (cos.icon && !pendingSkinDeletes.icon) {
-                    pImg.src = cos.icon;
-                    pBox.classList.remove('hidden');
-                } else { pBox.classList.add('hidden'); }
-
-                editingCosBrandUrlsList = cos.insp ? cos.insp.split(/[\s,]+/).filter(url => url.trim() !== "") : [];
-                renderBrandManagementFormInterface();
-
-                const skinGenresArray = cos.genre ? cos.genre.split(' / ').map(g => g.trim().toLowerCase()) : [];
-                const modeInput = document.getElementById('cosSelectedGenreMode');
-                const btnUniversal = document.getElementById('btn-skin-universal-genre');
-                const skinCheckboxes = document.querySelectorAll('.skin-genre-checkbox');
-
-                const isUniversalGenre = skinUniversalGenreList.every(g => skinGenresArray.includes(g.label.toLowerCase()));
-
-                if (isUniversalGenre) {
-                    modeInput.value = 'universal';
-                    skinCheckboxes.forEach(cb => { cb.checked = true; cb.disabled = true; });
-                    if (btnUniversal) btnUniversal.classList.replace('bg-fuchsia-600', 'bg-emerald-600');
-                } else {
-                    modeInput.value = 'single';
-                    skinCheckboxes.forEach(cb => {
-                        cb.disabled = false;
-                        cb.checked = skinGenresArray.includes(cb.value.trim().toLowerCase());
-                    });
-                    if (btnUniversal) btnUniversal.classList.replace('bg-emerald-600', 'bg-fuchsia-600');
-                }
-
-                validateSkinFormStateAndCheckChanges();
-            });
-
-            tr.querySelector('.btn-del-cos')?.addEventListener('click', () => {
-                requestUserDeleteConfirmation(async () => {
-                    if (db) {
-                        showLoadingOverlay();
-                        try {
-                            // 1. Recopilar icono, video y archivo ZIP de la skin
-                            const filesToDelete = [
-                                cos.icon,
-                                cos.video,
-                                cos.skinDirectUrl
-                            ].filter(url => url && url.trim() !== "" && url !== "BoxSprite_MerchSkin2.png");
-
-                            // 2. Eliminarlos de Cloudflare R2 en paralelo
-                            if (filesToDelete.length > 0) {
-                                await Promise.all(filesToDelete.map(url => deleteFileFromCloudflareR2(url)));
-                            }
-
-                            // 3. Eliminar de Firebase
-                            await remove(ref(db, 'cosmetics/' + cos.id));
-
-                            // 4. ACTUALIZAR FECHA DE ÚLTIMA ACTUALIZACIÓN AUTOMÁTICAMENTE
-                            await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
-
-                            // 5. Eliminar notificación si la skin borrada contaba con una activa
-                            await checkAndDeleteNotifOnRecordDelete('skin', cos.name);
-
-                            // 6. Reiniciar formulario
-                            resetCosmeticFormState();
-                        } catch (err) {
-                            console.error("Error al borrar la skin y sus archivos:", err);
-                            alert("Ocurrió un error al intentar eliminar los archivos de la skin.");
-                        } finally {
-                            hideLoadingOverlay();
-                        }
-                    }
-                });
-            });
-
             if (isT) fragT.appendChild(tr); else fragB.appendChild(tr);
         });
 
-        tbodyB.innerHTML = '';
-        tbodyT.innerHTML = '';
         tbodyB.appendChild(fragB);
         tbodyT.appendChild(fragT);
     }
@@ -816,6 +751,7 @@ if (cTMobile) cTMobile.innerText = tapwaveText;
         populateExistingBrandsDropdown,
         resetCosmeticFormState,
         renderCosmeticsTables,
-        setSkinGenreFilter: (val) => { activeSkinGenreFilter = val; }
+        setSkinGenreFilter: (val) => { activeSkinGenreFilter = val; },
+	setSkinSearchQuery: (val) => { activeSkinSearchQuery = val; }
     };
 }
