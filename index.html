@@ -724,50 +724,61 @@ More content coming soon">
 
                 <div id="levels-table-container" class="w-full overflow-hidden flex flex-col space-y-4 flex-grow">
                     <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex flex-col sm:flex-row landscape-pc-flex-row items-start sm:items-center justify-between gap-4">
-                        <div class="flex flex-col items-start justify-center shrink-0">
-                            <div class="text-xl sm:text-2xl font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">
-                                Charts / <span data-i18n="bannerSongs">Canciones</span>
-                            </div>
-                            <div class="block mt-0.5 text-[10px] sm:text-xs font-bold text-orange-400">
-                                <span id="lbl-counter-charts">Total: 0 Charts</span>
-                            </div>
-                        </div>
 
-                        <div class="flex flex-wrap items-center justify-center sm:justify-end gap-2.5 w-full sm:w-auto ml-auto text-xs">
-                            <div class="flex flex-col relative">
-                                <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterGenre">Género</label>
-                                <button id="btn-custom-lvl-genre" type="button" class="w-32 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
-                                    <span id="label-custom-lvl-genre" class="truncate flex items-center gap-1.5">Todos</span>
-                                    <i class="fa-solid fa-chevron-down text-[9px] text-zinc-400 ml-1"></i>
-                                </button>
-                                <div id="dropdown-custom-lvl-genre" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#11091c] border border-fuchsia-500/40 rounded-xl shadow-2xl overflow-hidden z-50 max-h-52 overflow-y-auto divide-y divide-fuchsia-950/40"></div>
-                            </div>
+	<!-- TITULO + BUSCADOR ALINEADO A LA IZQUIERDA -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 shrink-0 w-full sm:w-auto">
+        <div class="flex flex-col items-start justify-center shrink-0">
+            <div class="text-xl sm:text-2xl font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">
+                Charts / <span data-i18n="bannerSongs">Canciones</span>
+            </div>
+            <div class="block mt-0.5 text-[10px] sm:text-xs font-bold text-orange-400">
+                <span id="lbl-counter-charts">Total: 0 Charts</span>
+            </div>
+        </div>
 
-                            <div class="flex flex-col relative">
-                                <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterDiff">Dificultad</label>
-                                <button id="btn-custom-lvl-diff" type="button" class="w-32 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
-                                    <span id="label-custom-lvl-diff" class="truncate flex items-center gap-1.5">Todos</span>
-                                    <i class="fa-solid fa-chevron-down text-[9px] text-zinc-400 ml-1"></i>
-                                </button>
-                                <div id="dropdown-custom-lvl-diff" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#11091c] border border-fuchsia-500/40 rounded-xl shadow-2xl overflow-hidden z-50 divide-y divide-fuchsia-950/40"></div>
-                            </div>
+        <!-- BARRA DE BÚSQUEDA A LA IZQUIERDA -->
+        <div class="relative flex items-center h-[34px] w-full sm:w-52">
+            <i class="fa-solid fa-magnifying-glass text-zinc-500 text-xs absolute left-3 pointer-events-none"></i>
+    	<input type="text" id="input-search-lvl" data-i18n-ph="searchPlaceholder" placeholder="Buscar canción o artista..." class="w-full bg-[#05020a] border border-fuchsia-950 rounded-xl pl-9 pr-3 py-1.5 text-xs text-zinc-100 font-extrabold focus:outline-none focus:border-fuchsia-500 transition-colors h-full">
+	</div>
+    </div>
 
-                            <div class="flex flex-col relative">
-                                <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterEdit">Edición</label>
-                                <button id="btn-custom-lvl-edition" type="button" class="w-32 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
-                                    <span id="label-custom-lvl-edition" class="truncate flex items-center gap-1.5">Todos</span>
-                                    <i class="fa-solid fa-chevron-down text-[9px] text-zinc-400 ml-1"></i>
-                                </button>
-                                <div id="dropdown-custom-lvl-edition" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#11091c] border border-fuchsia-500/40 rounded-xl shadow-2xl overflow-hidden z-50 divide-y divide-fuchsia-950/40"></div>
-                            </div>
+    <!-- FILTROS (DERECHA) -->
+    <div class="flex flex-wrap items-center justify-center sm:justify-end gap-2.5 w-full sm:w-auto ml-auto text-xs">
+        <div class="flex flex-col relative">
+            <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterGenre">Género</label>
+            <button id="btn-custom-lvl-genre" type="button" class="w-32 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
+                <span id="label-custom-lvl-genre" class="truncate flex items-center gap-1.5">Todos</span>
+                <i class="fa-solid fa-chevron-down text-[9px] text-zinc-400 ml-1"></i>
+            </button>
+            <div id="dropdown-custom-lvl-genre" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#11091c] border border-fuchsia-500/40 rounded-xl shadow-2xl overflow-hidden z-50 max-h-52 overflow-y-auto divide-y divide-fuchsia-950/40"></div>
+        </div>
 
-                            <div class="flex flex-col justify-end">
-                                <button id="btn-clear-lvl-filters" class="h-[34px] mt-auto px-3 py-1.5 bg-red-950/50 border border-red-800/40 text-red-400 rounded-xl font-bold hover:bg-red-900/60 transition flex items-center gap-1">
-                                    <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btnClearFilters">Limpiar</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+        <div class="flex flex-col relative">
+            <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterDiff">Dificultad</label>
+            <button id="btn-custom-lvl-diff" type="button" class="w-32 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
+                <span id="label-custom-lvl-diff" class="truncate flex items-center gap-1.5">Todos</span>
+                <i class="fa-solid fa-chevron-down text-[9px] text-zinc-400 ml-1"></i>
+            </button>
+            <div id="dropdown-custom-lvl-diff" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#11091c] border border-fuchsia-500/40 rounded-xl shadow-2xl overflow-hidden z-50 divide-y divide-fuchsia-950/40"></div>
+        </div>
+
+        <div class="flex flex-col relative">
+            <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterEdit">Edición</label>
+            <button id="btn-custom-lvl-edition" type="button" class="w-32 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
+                <span id="label-custom-lvl-edition" class="truncate flex items-center gap-1.5">Todos</span>
+                <i class="fa-solid fa-chevron-down text-[9px] text-zinc-400 ml-1"></i>
+            </button>
+            <div id="dropdown-custom-lvl-edition" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#11091c] border border-fuchsia-500/40 rounded-xl shadow-2xl overflow-hidden z-50 divide-y divide-fuchsia-950/40"></div>
+        </div>
+
+        <div class="flex flex-col justify-end">
+            <button id="btn-clear-lvl-filters" class="h-[34px] mt-auto px-3 py-1.5 bg-red-950/50 border border-fuchsia-950 text-red-400 rounded-xl font-bold hover:bg-red-900/60 transition flex items-center gap-1">
+                <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btnClearFilters">Limpiar</span>
+            </button>
+        </div>
+    </div>
+</div>
 
                     <div id="levels-table-wrapper" class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl overflow-x-auto shadow-2xl">
                         <table class="w-full text-left border-collapse min-w-[700px] sm:min-w-[900px] landscape-pc-table">
@@ -926,25 +937,37 @@ More content coming soon">
 
                 <div id="cosmetics-table-container" class="w-full overflow-hidden flex flex-col space-y-4 flex-grow">
                     <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex flex-col sm:flex-row landscape-pc-flex-row items-start sm:items-center justify-between gap-4">
-                        <div class="text-xl sm:text-2xl font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500 shrink-0" data-i18n="navCosmetics">Skins</div>
-                        
-                        <div class="flex flex-wrap items-center justify-center sm:justify-end gap-2.5 w-full sm:w-auto ml-auto text-xs">
-                            <div class="flex flex-col relative">
-                                <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterGenre">Género</label>
-                                <button id="btn-custom-skin-genre" type="button" class="w-36 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
-                                    <span id="label-custom-skin-genre" class="truncate flex items-center gap-1.5">Todos</span>
-                                    <i class="fa-solid fa-chevron-down text-[9px] text-zinc-400 ml-1"></i>
-                                </button>
-                                <div id="dropdown-custom-skin-genre" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#11091c] border border-fuchsia-500/40 rounded-xl shadow-2xl overflow-hidden z-50 max-h-52 overflow-y-auto divide-y divide-fuchsia-950/40"></div>
-                            </div>
+                        <!-- TITULO + BUSCADOR ALINEADO A LA IZQUIERDA -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 shrink-0 w-full sm:w-auto">
+        <div class="text-xl sm:text-2xl font-black tracking-wide uppercase text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500 shrink-0" data-i18n="navCosmetics">
+            Skins
+        </div>
 
-                            <div class="flex flex-col justify-end">
-                                <button id="btn-clear-skin-filters" class="h-[34px] mt-auto px-3 py-1.5 bg-red-950/50 border border-red-800/40 text-red-400 rounded-xl font-bold hover:bg-red-900/60 transition flex items-center gap-1">
-                                    <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btnClearFilters">Limpiar</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+        <!-- BARRA DE BÚSQUEDA A LA IZQUIERDA -->
+        <div class="relative flex items-center h-[34px] w-full sm:w-52">
+            <i class="fa-solid fa-magnifying-glass text-zinc-500 text-xs absolute left-3 pointer-events-none"></i>
+   	 <input type="text" id="input-search-skin" data-i18n-ph="searchSkinPlaceholder" placeholder="Buscar skin o artista..." class="w-full bg-[#05020a] border border-fuchsia-950 rounded-xl pl-9 pr-3 py-1.5 text-xs text-zinc-100 font-extrabold focus:outline-none focus:border-fuchsia-500 transition-colors h-full">
+	</div>
+    </div>
+    
+    <!-- FILTROS (DERECHA) -->
+    <div class="flex flex-wrap items-center justify-center sm:justify-end gap-2.5 w-full sm:w-auto ml-auto text-xs">
+        <div class="flex flex-col relative">
+            <label class="text-[10px] font-black text-zinc-400 uppercase tracking-wider mb-1" data-i18n="lblFilterGenre">Género</label>
+            <button id="btn-custom-skin-genre" type="button" class="w-36 bg-[#05020a] border border-fuchsia-950 rounded-xl px-2.5 py-1.5 text-zinc-300 font-extrabold flex items-center justify-between shadow-lg focus:outline-none transition-colors">
+                <span id="label-custom-skin-genre" class="truncate flex items-center gap-1.5">Todos</span>
+                <i class="fa-solid fa-chevron-down text-[9px] text-zinc-400 ml-1"></i>
+            </button>
+            <div id="dropdown-custom-skin-genre" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#11091c] border border-fuchsia-500/40 rounded-xl shadow-2xl overflow-hidden z-50 max-h-52 overflow-y-auto divide-y divide-fuchsia-950/40"></div>
+        </div>
+
+        <div class="flex flex-col justify-end">
+            <button id="btn-clear-skin-filters" class="h-[34px] mt-auto px-3 py-1.5 bg-red-950/50 border border-fuchsia-950 text-red-400 rounded-xl font-bold hover:bg-red-900/60 transition flex items-center gap-1">
+                <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btnClearFilters">Limpiar</span>
+            </button>
+        </div>
+    </div>
+</div>
 
                     <div id="container-workspace-beatstar" class="hidden flex-col space-y-3 w-full">
                         <div class="w-full bg-[#11091c] border border-fuchsia-950/60 rounded-2xl p-4 flex items-center justify-between gap-4">
