@@ -860,10 +860,10 @@ function updateCustomDropdownButtonUI(btnId, labelId, val, categoryType) {
     const label = document.getElementById(labelId);
     if (!btn || !label) return;
 
-    if (!val) {
+    if (!val || val === "") {
         label.innerHTML = `<span>${translations[currentLanguage].filterAll}</span>`;
         btn.style.backgroundColor = '#05020a';
-        btn.style.borderColor = '';
+        btn.style.borderColor = '#1e112a'; // Restablece el borde predeterminado de la interfaz
         btn.style.color = '#d4d4d8';
         return;
     }
@@ -1355,7 +1355,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chartsModule.setLvlGenreFilter("");
     chartsModule.setLvlDiffFilter("");
     chartsModule.setLvlEditionFilter("");
-    chartsModule.setLvlSearchQuery(""); // <--- Limpiar término de búsqueda
+    chartsModule.setLvlSearchQuery(""); // Limpiar término de búsqueda
     
     const searchInput = document.getElementById('input-search-lvl');
     if (searchInput) searchInput.value = "";
@@ -1363,6 +1363,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCustomDropdownButtonUI('btn-custom-lvl-genre', 'label-custom-lvl-genre', "", 'genre');
     updateCustomDropdownButtonUI('btn-custom-lvl-diff', 'label-custom-lvl-diff', "", 'diff');
     updateCustomDropdownButtonUI('btn-custom-lvl-edition', 'label-custom-lvl-edition', "", 'edition');
+    
     chartsModule.renderLevelsTable();
 });
 
@@ -1374,11 +1375,12 @@ document.getElementById('input-search-lvl')?.addEventListener('input', (e) => {
 
     document.getElementById('btn-clear-skin-filters')?.addEventListener('click', () => {
     skinsModule.setSkinGenreFilter("");
-    skinsModule.setSkinSearchQuery(""); // <--- Limpiar término de búsqueda
+    skinsModule.setSkinSearchQuery(""); // Limpiar término de búsqueda
     
     const searchInput = document.getElementById('input-search-skin');
     if (searchInput) searchInput.value = "";
 
+    // Restablecer estilos visuales de contorno e interior del desplegable de Skins
     updateCustomDropdownButtonUI('btn-custom-skin-genre', 'label-custom-skin-genre', "", 'genre');
     skinsModule.renderCosmeticsTables();
 });
