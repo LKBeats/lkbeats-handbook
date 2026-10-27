@@ -35,7 +35,7 @@
     animation: spin-clockwise 50s linear infinite;
 }
 
-/* Regla EXCLUSIVA para Móvil Vertical (Portrait) /
+/* Regla EXCLUSIVA para Móvil Vertical (Portrait) */
 @media screen and (orientation: portrait) and (max-width: 600px) {
     .bg-spinning-swirl {
         width: 250vw;
