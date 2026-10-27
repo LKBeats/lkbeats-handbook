@@ -35,7 +35,7 @@
     animation: spin-clockwise 50s linear infinite;
 }
 
-/* Regla EXCLUSIVA para Móvil Vertical (Portrait) que ya funciona bien */
+/* Regla EXCLUSIVA para Móvil Vertical (Portrait) /
 @media screen and (orientation: portrait) and (max-width: 600px) {
     .bg-spinning-swirl {
         width: 250vw;
@@ -155,9 +155,10 @@
 
     /* Fix 1: Modal Menú de Selección de Ediciones Optimizado */
     #beatstar-edition-modal .bg-\[\#11091c\]\/95 {
-        gap: 1.25rem !important;
-        padding: 0.75rem 1.25rem !important;
+        gap: 2rem !important;
+        padding: 2rem 2.5rem !important;
         max-width: 580px !important;
+        max-height: 79vh !important;
     }
     #beatstar-edition-modal .landscape-pc-edition-layout {
         align-items: center !important;
@@ -214,9 +215,9 @@
         margin-top: 0.15rem !important;
     }
     #btn-close-beatstar-modal {
-        margin-top: 0.5rem !important;
-        padding-top: 0.45rem !important;
-        padding-bottom: 0.45rem !important;
+        margin-top: 0.9rem !important;
+        padding-top: 0.625rem !important;
+        padding-bottom: 0.625rem !important;
         font-size: 0.7rem !important;
         border-radius: 0.75rem !important;
     }
@@ -246,6 +247,12 @@
         justify-content: center !important;
         font-size: 1.25rem !important;
         padding: 0 !important;
+        background-color: rgba(39, 39, 42, 0.8) !important;
+        border: 1px solid rgba(113, 113, 122, 0.5) !important;
+        border-radius: 9999px !important;
+        line-height: 1 !important;
+        transition: all 0.2s ease !important;
+        z-index: 50 !important;
     }
     #thanks-custom-modal #thanks-modal-btn-close i {
         display: flex !important;
@@ -297,9 +304,9 @@
     }
     #download-custom-modal a, 
     #download-custom-modal button {
-        padding-top: 0.4rem !important;
-        padding-bottom: 0.4rem !important;
-        font-size: 0.7rem !important;
+        padding-top: 0.875rem !important;
+        padding-bottom: 0.875rem !important;
+        font-size: 0.75rem !important;
     }
 
     #nav-shortcuts {
@@ -380,6 +387,18 @@
     #thanks-custom-modal #thanks-modal-btn-close {
         top: 1.25rem !important;
         right: 1.25rem !important;
+        width: 2.25rem !important;
+        height: 2.25rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: rgba(39, 39, 42, 0.8) !important;
+        border: 1px solid rgba(113, 113, 122, 0.5) !important;
+        border-radius: 9999px !important;        
+        line-height: 1 !important;
+        padding: 0 !important;
+        transition: all 0.2s ease !important;
+        z-index: 50 !important;
     }
 
     /* --- 2. MODAL SELECCIÓN DE EDICIONES --- */
@@ -403,7 +422,7 @@
 
     #modal-edition-song-title {
         font-size: 1.1rem !important;
-        margin-top: 0.65rem !important;
+        margin-top: 1.25rem !important;
         letter-spacing: 0.05em !important;
     }
 
