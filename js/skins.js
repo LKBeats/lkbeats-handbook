@@ -516,6 +516,94 @@ function normalizeText(str) {
                 tr.querySelector('.btn-direct-skin-download')?.addEventListener('click', () => triggerDownloadAlert(cos.skinDirectUrl));
             }
 
+	tr.querySelector('.btn-edit-cos')?.addEventListener('click', () => {
+                resetCosmeticFormState();
+
+                document.getElementById('editingCosId').value = cos.id;
+                document.getElementById('cosName').value = cos.name || '';
+                document.getElementById('cosArtist').value = cos.artist || '';
+                document.getElementById('cosDate').value = cos.date || '';
+                document.getElementById('cosDl1').value = cos.dl1 || '';
+                document.getElementById('cosDl2').value = cos.dl2 || '';
+                document.getElementById('cosIsExclusive').checked = !!cos.isExclusive;
+
+                // Cargar géneros
+
+                const isUniversal = cos.genre && cos.genre.includes('/');
+                if (isUniversal) {
+                    document.getElementById('cosSelectedGenreMode').value = 'universal';
+                    const btnU = document.getElementById('btn-skin-universal-genre');
+                    if (btnU) btnU.classList.replace('bg-fuchsia-600', 'bg-emerald-600');
+                    document.querySelectorAll('.skin-genre-checkbox').forEach(cb => { 
+                        cb.checked = true; 
+                        cb.disabled = true; 
+                    });
+                } else {
+                    document.getElementById('cosSelectedGenreMode').value = 'single';
+                    const btnU = document.getElementById('btn-skin-universal-genre');
+                    if (btnU) btnU.classList.replace('bg-emerald-600', 'bg-fuchsia-600');
+                    document.querySelectorAll('.skin-genre-checkbox').forEach(cb => {
+                        cb.checked = (cb.value.trim().toLowerCase() === (cos.genre || '').trim().toLowerCase());
+                        cb.disabled = false;
+                    });
+                }
+
+                // Cargar inspiraciones / marcas
+
+                editingCosBrandUrlsList = cos.insp ? cos.insp.split(/[\s,]+/).filter(u => u.trim() !== "") : [];
+                renderBrandManagementFormInterface();
+
+                // Slots de borrado para archivos existentes
+
+                setupSkinFileOrDeleteSlot('slot-cos-icon', !!cos.icon && cos.icon !== 'BoxSprite_MerchSkin2.png', 'icon');
+                setupSkinFileOrDeleteSlot('slot-cos-video', !!cos.video, 'video');
+                setupSkinFileOrDeleteSlot('slot-cos-zip', !!cos.skinDirectUrl, 'zip');
+                setupSkinFileOrDeleteSlot('slot-cos-date', !!cos.date, 'date', true);
+
+                // Cambiar texto de botón submit
+                const submitBtn = document.getElementById('cosSubmitBtn');
+                if (submitBtn) {
+                    const span = submitBtn.querySelector('span');
+                    if (span) span.innerText = translations[lang].btnSaveChanges;
+                    else submitBtn.innerText = translations[lang].btnSaveChanges;
+                }
+
+                document.getElementById('cosmetic-form-container')?.classList.remove('hidden');
+                validateSkinFormStateAndCheckChanges();
+            });
+
+            // Evento para Eliminar Skin
+
+            tr.querySelector('.btn-del-cos')?.addEventListener('click', () => {
+                requestUserDeleteConfirmation(async () => {
+                    if (db) {
+                        showLoadingOverlay();
+                        try {
+                            const filesToDelete = [
+                                cos.icon !== 'BoxSprite_MerchSkin2.png' ? cos.icon : null,
+                                cos.video,
+                                cos.skinDirectUrl
+                            ].filter(url => url && url.trim() !== "");
+
+                            if (filesToDelete.length > 0) {
+                                await Promise.all(filesToDelete.map(url => deleteFileFromCloudflareR2(url)));
+                            }
+
+                            await remove(ref(db, 'cosmetics/' + cos.id));
+                            await set(ref(db, 'last_update_date'), new Date().toISOString().split('T')[0]);
+                            await checkAndDeleteNotifOnRecordDelete('skin', cos.name);
+
+                            resetCosmeticFormState();
+                        } catch (err) {
+                            console.error("Error al eliminar la skin:", err);
+                            alert("Ocurrió un error al intentar eliminar la skin.");
+                        } finally {
+                            hideLoadingOverlay();
+                        }
+                    }
+                });
+            });
+
             if (isT) fragT.appendChild(tr); else fragB.appendChild(tr);
         });
 
