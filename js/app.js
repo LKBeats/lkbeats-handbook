@@ -1261,23 +1261,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('download-modal-btn-confirm')?.addEventListener('click', () => {
-        stopAllMedia();
+    stopAllMedia();
 
-        if (currentActiveDownloadUrl) {
-            window.open(currentActiveDownloadUrl, '_blank');
-        }
-        document.getElementById('download-custom-modal')?.classList.add('hidden');
+    if (currentActiveDownloadUrl) {
+        // En lugar de window.open, forzamos un elemento <a> asíncrono directo o navegación directa
+        const tempLink = document.createElement('a');
+        tempLink.href = currentActiveDownloadUrl;
+        tempLink.rel = 'noopener noreferrer';
+        // Esto le indica al navegador que descargue en la misma pestaña si es posible o inicie el stream de archivo
+        tempLink.download = ''; 
+        document.body.appendChild(tempLink);
+        tempLink.click();
+        document.body.removeChild(tempLink);
+    }
 
-        if (globalThanksVideos && globalThanksVideos.length > 0) {
-            const randomVid = globalThanksVideos[Math.floor(Math.random() * globalThanksVideos.length)];
-            const thanksVid = document.getElementById('download-thanks-video');
-            if (thanksVid && randomVid) {
-                thanksVid.src = randomVid;
-                thanksVid.play().catch(() => {});
-                document.getElementById('thanks-custom-modal')?.classList.remove('hidden');
-            }
+    document.getElementById('download-custom-modal')?.classList.add('hidden');
+
+    if (globalThanksVideos && globalThanksVideos.length > 0) {
+        const randomVid = globalThanksVideos[Math.floor(Math.random() * globalThanksVideos.length)];
+        const thanksVid = document.getElementById('download-thanks-video');
+        if (thanksVid && randomVid) {
+            thanksVid.src = randomVid;
+            thanksVid.play().catch(() => {});
+            document.getElementById('thanks-custom-modal')?.classList.remove('hidden');
         }
-    });
+    }
+});
 
     document.getElementById('modal-opt-standard')?.addEventListener('click', () => {
         if (activeModalBeatstarChart) {
