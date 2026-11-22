@@ -1127,7 +1127,12 @@ function normalizeText(str) {
 
             // Registro automático de notificación
             const isNewRecord = !editingId;
-            const zipAddedToExisting = !!editingId && !existingLvl.chartDirectUrl && !!chartDirectUrl;
+            const stdZipAdded = !existingLvl.chartDirectUrl && !!chartDirectUrl;
+            const dlxZipAdded = !existingLvl.chartDirectUrlDeluxe && !!chartDirectUrlDeluxe;
+            const stdExpZipAdded = !existingLvl.zipExplicit && !!zipExplicit;
+            const dlxExpZipAdded = !existingLvl.zipDeluxeExplicit && !!zipDeluxeExplicit;
+
+            const zipAddedToExisting = !!editingId && (stdZipAdded || dlxZipAdded || stdExpZipAdded || dlxExpZipAdded);
 
             if (isNewRecord) {
                 await createOrUpdateNotification('chart', {
@@ -1138,6 +1143,7 @@ function normalizeText(str) {
                     artOrIcon: art || 'free_song_Image.png',
                     genre: genre,
                     diff: document.getElementById('lvlDiff').value,
+                    diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
                     edition: editionMode
                 });
             } else if (zipAddedToExisting) {
@@ -1149,6 +1155,7 @@ function normalizeText(str) {
                     artOrIcon: art || 'free_song_Image.png',
                     genre: genre,
                     diff: document.getElementById('lvlDiff').value,
+                    diffDeluxe: document.getElementById('lvlDiffDeluxe').value,
                     edition: editionMode
                 });
             }
